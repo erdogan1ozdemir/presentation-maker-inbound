@@ -1,0 +1,21 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "presentation-maker-inbound",
+  "description": "Inbound ajans standardında SEO/GEO performans sunumu üretici. Inbound Design System görseli, icerik-dili-rehberi dil standardı ve GSC/GA4/SEOmonitor/Ahrefs veri şemalarıyla düzenlenebilir PPTX üretir.",
+  "owner": {
+    "name": "Erdoğan Özdemir",
+    "email": "erdogan.ozdemir@inbound.com.tr"
+  },
+  "plugins": [
+    {
+      "name": "inbound-sunum",
+      "description": "SEO/GEO performans değerlendirme sunumu (PPTX) üretir: aylık, çeyreklik, yarıyıl ve etki/migrasyon analizi modlarında. Üretime başlamadan önce sunumun amacını, dönemini ve hangi verilerin dahil edileceğini sorar; elde olmayan export'ları nasıl alınacağıyla birlikte net olarak ister. Inbound Design System token'larını ve içerik dili rehberini uygular; teslim öncesi yerleşim, dil ve rakam denetimi çalıştırır.",
+      "author": {
+        "name": "Erdoğan Özdemir"
+      },
+      "category": "productivity",
+      "source": "./plugins/inbound-sunum",
+      "homepage": "https://github.com/erdogan1ozdemir/presentation-maker-inbound"
+    }
+  ]
+}

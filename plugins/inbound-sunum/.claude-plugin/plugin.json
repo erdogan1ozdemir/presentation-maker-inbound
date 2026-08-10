@@ -1,0 +1,19 @@
+{
+  "name": "inbound-sunum",
+  "description": "Inbound ajans standardında SEO/GEO performans değerlendirme sunumu (PPTX) üretir - aylık, çeyreklik, yarıyıl ve etki/migrasyon analizi modlarında. Inbound Design System görselini, icerik-dili-rehberi dil standardını ve GSC/GA4/Keyword Planner/SEOmonitor/Ahrefs veri şemalarını uygular. Üretime başlamadan önce sunumun amacını, dönemini ve hangi verilerin dahil edileceğini sorar; elde olmayan export'ları nasıl alınacağıyla birlikte net olarak ister.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Erdoğan Özdemir",
+    "email": "erdogan.ozdemir@inbound.com.tr"
+  },
+  "homepage": "https://github.com/erdogan1ozdemir/presentation-maker-inbound",
+  "keywords": [
+    "seo",
+    "geo",
+    "pptx",
+    "sunum",
+    "presentation",
+    "design-system",
+    "reporting"
+  ]
+}
