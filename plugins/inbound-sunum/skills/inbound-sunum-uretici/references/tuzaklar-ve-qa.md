@@ -193,7 +193,34 @@ bağlanır ve doğrulayıcı hata verir.
 Türkçe karakterler doğrudan temiz UTF-8 yazılır. `sed`/`perl` ile UTF-8 bilinçsiz
 düzeltme yapılmaz - `Â·` tipi çift kodlama üretir. Düzeltme Python ile yapılır.
 
-### 3.6. Scratchpad kalıcı değil
+### 3.6. HTML önizleme ile PPTX arasında sessiz ayrışma
+
+İki çıktı aynı `deck.json`'dan üretiliyor ama farklı yerleşim motorları kullanıyor:
+PPTX mutlak konumlandırma, HTML akış. Ayrışma yaşanmış üç nokta ve çözümleri:
+
+- **Tablo satır yüksekliği.** HTML satır yüksekliğini padding + içerikten türetir,
+  PPTX hesaplanan sabit değeri kullanır. 9 satırlı bir tabloda ~45px fark ölçüldü.
+  Çözüm: `table_layout()` tek kaynak, HTML `<colgroup>` ve satır `height` ile
+  aynı geometriyi uygular.
+- **Ayraç numerali.** HTML sabit CSS punto, PPTX hesaplanan punto kullanıyordu.
+  Çözüm: `separator_layout()` tek kaynak; satır kırılması da Python'da yapılıp
+  HTML'e `<br>` olarak veriliyor (tarayıcının sarma davranışına bırakılmıyor).
+- **Metin sarma noktası.** PIL'in advance genişlikleri ile tarayıcı yerleşimi
+  arasında kerning kaynaklı küçük fark var; tarayıcı bazen bir kelime önce sarar.
+  Çözüm: `WRAP_SAFETY = 0.985` ile ölçüm muhafazakâr tarafa çekildi, üretici
+  tarayıcıdan önce uyarıyor.
+
+**Kural:** yeni bir blok tipi eklenirken geometri hesabı tek fonksiyonda tutulur ve
+her iki renderer onu çağırır. Önizlemedeki taşma işaretleyicisi ile üreticinin
+uyarısı aynı slaytlarda çıkmıyorsa ayrışma vardır.
+
+### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
+
+Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font
+yüksekliğiyle ölçüm alıp yanlış taşma alarmı üretir. Beklemeyle çözüldü; kendi
+ölçümünü yaparken de fonts.ready + iki `requestAnimationFrame` bekle.
+
+### 3.8. Scratchpad kalıcı değil
 
 Ara dosyalar (script, unpacked klasör) silinebilir. Yeniden kullanılacak kod ve
 `deck.json` **proje klasörüne** kopyalanır.
@@ -224,6 +251,15 @@ de son okuma yapılır.
 10. Q1 verisinin Q2 başlığı altında durması; tablo başlığında mükerrer ay etiketi
     (Jan/Feb/Mar iki kez).
 11. Grafiğin yanlış seriyi göstermesi.
+
+**Denetleyici yanlış pozitifleri (gerçek kullanımda çıktı)**
+Bunlar destede hata değil; `qa_deck.py` içinde muafiyetleri tanımlı:
+- Marka adının **tablo hücrelerinde** küçük harfle geçmesi (query metni
+  "flormar maskara", domain "flormar.com.tr") yazım varyantı değildir.
+- Marka adının **tırnak içinde** geçmesi literal filtre ifadesidir
+  ("query içinde \"flormar\" geçmesine göre").
+- "zayıflama / zayıflamıştır" rehberin nötr teknik fiil sözlüğünde yer alır;
+  yasak olan sıfat kullanımıdır ("zayıf halka").
 
 **Dil**
 12. Register kayması: resmi "-mektedir" akışı içinde tek slaytta konuşma dili

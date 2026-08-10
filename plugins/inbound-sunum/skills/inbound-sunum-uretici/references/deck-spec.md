@@ -105,6 +105,11 @@ ayraçlarda farklı punto vermek destede görsel tutarsızlık üretir.
 Aynı kolondaki bloklar dikey yığılır. `mt` / `mb` üst/alt boşluk ekler. `at: [x,y,w,h]`
 mutlak konum için kaçış kapısıdır, nadiren gerekir.
 
+**`col: "full"`** bloğu tüm kolonların altına, tam genişlikte yerleştirir. Çok
+kolonlu slaytlarda yorum katmanı için bunu kullan: iki tablo yan yana, altta tek
+yorum bloğu (slayt kataloğunda C30 ve C33'ün deseni). `col` verilmeyen blok ilk
+boş kolona düşer, tam genişliğe yayılmaz.
+
 **Gövde alt sınırı 636 px.** Altında logo ve kaynak şeridi var. Bu sınırı aşan blok
 uyarı üretir; uyarıyı görmezden geçmek PPTX'te logonun üstüne binen tablo demektir.
 
@@ -137,6 +142,10 @@ uyarı üretir; uyarıyı görmezden geçmek PPTX'te logonun üstüne binen tabl
 - `bold_rows` negatif index kabul eder: `-1` son satır (Total / Grand Total).
 - `col_w` verilmezse kolon genişlikleri **ölçülen içerikten** hesaplanır; ilk kolon
   esner, sayısal kolonlar içeriğini korur.
+- Kolon genişlikleri ve satır yükseklikleri `inbound_deck.table_layout()` içinde
+  hesaplanır ve **HTML önizleme aynı fonksiyonu kullanır**. Tarayıcının kendi
+  padding+içerik hesabına bırakılsaydı HTML tabloları PPTX'ten uzun render edilirdi
+  (9 satırlı bir tabloda ~45px fark ölçüldü) ve iki çıktı aynı sınırda okunmazdı.
 - Satır uzunlukları `head` ile eşit olmalı; QA denetler.
 
 ### insights

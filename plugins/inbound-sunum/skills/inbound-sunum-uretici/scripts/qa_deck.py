@@ -81,6 +81,13 @@ HARSH_CONTEXT_OK = re.compile(
     r"\s*(hata|sorun)", re.IGNORECASE)
 JUDGMENT = ["hata", "sorun"]
 
+# Rehberin notr teknik fiil sozlugu ("dusus, gerileme, daralma, ... zayiflama")
+# yasak sifatin turevlerini mesru kiliyor: "zayiflamistir" kabul, "zayif" degil.
+HARSH_ALLOWED_FORMS = {
+    "zayıf": re.compile(r"zayıfla"),
+    "hata":  re.compile(r"hatas[ıi]z|hatal[ıi] kosu"),
+}
+
 TOOL_LEAK = ["claude", "claude code", "mcp", "playwright", "skill",
              "anthropic", "python-pptx", "pptxgenjs", "matplotlib",
              "dataforseo", "screaming frog", "markitdown"]
@@ -189,7 +196,14 @@ def check_language(spec, rep):
                         "'potansiyel taşımaktadır / değerlendirilebilir'e çevir")
 
         for bad, good in HARSH.items():
-            if re.search(r"\b" + re.escape(bad), low):
+            allow = HARSH_ALLOWED_FORMS.get(bad)
+            hit = False
+            for m in re.finditer(r"\b" + re.escape(bad), low):
+                if allow and allow.match(low, m.start()):
+                    continue
+                hit = True
+                break
+            if hit:
                 rep.err(where, "keskin/abartı kelime", f"'{bad}'",
                         f"'{good}' kullan")
 
@@ -320,16 +334,33 @@ def check_structure(spec, rep):
                 rep.warn("YAPI", "ajanda-ayraç başlık farkı",
                          f"'{al}' vs '{st}'", "aynı adlandırmayı kullan")
 
-    # marka yazim tutarliligi
+    # Marka yazim tutarliligi. Yalnizca destenin KENDI sesinde aranir:
+    # tablo satirlarindaki query metinleri ("flormar maskara"), domain adlari
+    # ("flormar.com.tr") ve URL yollari markanin kucuk harfli halini mesru
+    # olarak icerir; bunlari varyant saymak yanlis pozitif uretiyordu.
     brand = (spec.get("meta") or {}).get("brand")
     if brand:
         variants = set()
-        for _w, raw in collect(spec):
-            for m in re.finditer(re.escape(brand), plain(raw), re.IGNORECASE):
+        for where, raw in collect(spec):
+            if ".rows" in where or ".head" in where:
+                continue                      # veri hucreleri: query/URL/domain
+            t = plain(raw)
+            quoted = [(q.start(), q.end()) for q in
+                      re.finditer(r"[\"'\u201c\u201d\u2018\u2019][^\"'\u201c\u201d\u2018\u2019]{1,60}"
+                                  r"[\"'\u201c\u201d\u2018\u2019]", t)]
+            for m in re.finditer(re.escape(brand), t, re.IGNORECASE):
+                if any(a <= m.start() < b for a, b in quoted):
+                    continue              # literal filtre ifadesi / alinti
+                tail = t[m.end():m.end() + 6]
+                if re.match(r"\.(com|net|org|tr|ae|de|es|co)\b", tail):
+                    continue                  # domain adi
+                if re.search(r"[/\w.-]$", t[max(0, m.start() - 1):m.start()]):
+                    continue                  # URL yolu icinde
                 variants.add(m.group(0))
         if len(variants) > 1:
             rep.err("YAPI", "marka yazım tutarlılığı",
-                    f"{sorted(variants)}",
+                    f"{sorted(variants)} (deste kendi sesinde; tablo hücreleri "
+                    f"ve domain adları hariç)",
                     f"tüm destede tek yazım: '{brand}'")
 
     if slides and slides[-1].get("type") != "closing":

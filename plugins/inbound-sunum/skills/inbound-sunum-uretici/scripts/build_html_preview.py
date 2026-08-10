@@ -26,7 +26,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
     BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
-    _delta_kind, fit_pt, parse_runs, plain, separator_layout, text_w, wrap_lines,
+    _delta_kind, fit_pt, parse_runs, plain, separator_layout, table_layout,
+    text_w, wrap_lines,
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -93,8 +94,12 @@ def pt(v):
 # ----------------------------------------------------------------------------
 
 def h_table(b):
-    head, rows = b.get("head") or [], b.get("rows") or []
-    ncol = max([len(head)] + [len(r) for r in rows] or [1])
+    # Geometri inbound_deck.table_layout ile hesaplanir: kolon genislikleri ve
+    # satir yukseklikleri PPTX ile birebir ayni olur. Tarayicinin kendi
+    # padding+icerik hesabina birakilsa tablolar PPTX'ten uzun render ediliyordu.
+    L = table_layout(b, b.get("_w") or (STAGE_W - M_L - M_R))
+    head, rows, ncol = L["head"], L["rows"], L["ncol"]
+    widths, row_hs, head_h = L["widths"], L["row_hs"], L["head_h"]
     align = (b.get("align") or ("l" + "c" * (ncol - 1)))
     align = (align + "c" * ncol)[:ncol]
     A = {"l": "left", "c": "center", "r": "right"}
@@ -112,15 +117,17 @@ def h_table(b):
     o = []
     if b.get("title"):
         o.append(f'<div class="blk-title">{esc(plain(b["title"]))}</div>')
-    o.append('<table class="dt" style="font-size:%s">' % pt(fp))
-    o.append("<thead><tr>")
+    o.append('<table class="dt" style="font-size:%s;table-layout:fixed">' % pt(fp))
+    o.append("<colgroup>" + "".join(f'<col style="width:{wd:.2f}px">'
+                                    for wd in widths) + "</colgroup>")
+    o.append(f'<thead><tr style="height:{head_h:.0f}px">')
     for ci in range(ncol):
-        o.append(f'<th style="text-align:{A[align[ci]]}">'
-                 f'{esc(plain(str(head[ci] if ci < len(head) else "")))}</th>')
+        o.append(f'<th style="text-align:{A[align[ci]]};height:{head_h:.0f}px">'
+                 f'{esc(plain(str(head[ci])))}</th>')
     o.append("</tr></thead><tbody>")
     for ri, r in enumerate(rows):
         cls = ' class="hl-row"' if ri in hl else ""
-        o.append(f"<tr{cls}>")
+        o.append(f'<tr{cls} style="height:{row_hs[ri]:.0f}px">')
         for ci in range(ncol):
             v = str(r[ci]) if ci < len(r) else ""
             k = _delta_kind(plain(v)) if ci in dcols else None
@@ -421,27 +428,36 @@ def sl_content(s, base):
     tot = float(sum(grid))
     colw = [(avail - gap * (len(grid) - 1)) * g / tot for g in grid]
     cols = [[] for _ in grid]
+    full = []                       # col:"full" -> izgaranin altinda tam genislik
     auto = 0
     for b in s.get("blocks") or []:
         c = b.get("col")
-        if c is None:
-            c = auto % len(grid)
-            auto += 1
-        c = max(0, min(c, len(grid) - 1))
         bb = dict(b)
-        bb["_w"] = colw[c]
+        if c == "full":
+            bb["_w"] = avail
+            target = full
+        else:
+            if c is None:
+                c = auto % len(grid)
+                auto += 1
+            c = max(0, min(c, len(grid) - 1))
+            bb["_w"] = colw[c]
+            target = cols[c]
         if b.get("type") == "image":
-            cols[c].append(h_image(bb, base))
+            target.append(h_image(bb, base))
         else:
             fn = HB.get(b.get("type"))
-            cols[c].append(fn(bb) if fn else
-                           f'<div class="missing">[bilinmeyen blok: '
-                           f'{esc(b.get("type"))}]</div>')
+            target.append(fn(bb) if fn else
+                          f'<div class="missing">[bilinmeyen blok: '
+                          f'{esc(b.get("type"))}]</div>')
     o.append(f'<div class="cols" style="grid-template-columns:'
              f'{" ".join(f"{w:.2f}px" for w in colw)};gap:{gap}px">')
     for c in cols:
         o.append('<div class="col">' + "".join(c) + "</div>")
-    o.append("</div></div>")
+    o.append("</div>")
+    if full:
+        o.append('<div class="col full-row">' + "".join(full) + "</div>")
+    o.append("</div>")
 
     if s.get("footnotes"):
         fns = s["footnotes"]
@@ -476,6 +492,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .slide.dark .sub{color:#cfe0dc}
 .cols{display:grid;margin-top:20px;align-items:start}
 .col>*{margin-bottom:20px}
+.full-row{margin-top:20px}
 .col>*:last-child{margin-bottom:0}
 .breadcrumb-top{position:absolute;top:28px;left:48px;right:48px;font-size:12px;
   white-space:nowrap;overflow:hidden}
@@ -519,8 +536,10 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .dt{width:100%%;border-collapse:collapse;font-family:'%(body)s';
   box-shadow:0 2px 8px rgba(16,51,47,.06)}
 .dt th{background:#%(teal)s;color:#fff;font-family:'%(disp)s';font-weight:700;
-  font-size:12px;letter-spacing:.04em;padding:9px 12px}
-.dt td{padding:8px 12px;border-top:1px solid #%(line)s}
+  font-size:12px;letter-spacing:.04em;padding:0 12px;vertical-align:middle;
+  box-sizing:border-box;overflow:hidden}
+.dt td{padding:0 12px;border-top:1px solid #%(line)s;vertical-align:middle;
+  box-sizing:border-box;overflow:hidden}
 .dt tbody tr:last-child td{border-bottom:1px solid #%(line)s}
 .dt tr.hl-row td{background:#%(coraltint)s}
 .blk-title{font-family:'%(disp)s';font-weight:700;font-size:18px;margin-bottom:8px}
@@ -584,11 +603,11 @@ SELFCHECK_JS = """
 <script>
 /* Govde alt siniri 636px: altinda logo + kaynak pill seridi var.
    Bu siniri asan blok PPTX'te logo/kaynak uzerine biner. */
-(function(){
+function inboundSelfCheck(){
   var LIMIT = 636;
   document.querySelectorAll('.slide').forEach(function(sl){
     var sb = sl.getBoundingClientRect(), hits = 0;
-    sl.querySelectorAll('.body .col > *').forEach(function(el){
+    sl.querySelectorAll('.body .col > *, .body .full-row > *').forEach(function(el){
       var r = el.getBoundingClientRect();
       if (r.height && (r.bottom - sb.top) > LIMIT + 1){ el.classList.add('ovf'); hits++; }
     });
@@ -599,7 +618,15 @@ SELFCHECK_JS = """
       sl.appendChild(b);
     }
   });
-})();
+}
+/* Fontlar yerlesmeden olcum alinirsa gecici olarak daha uzun yukseklikler
+   okunuyor ve yanlis tasma alarmi uretiliyor. Web fontlari hazir olana kadar
+   beklenir; boylece isaretleyici PPTX ureticisinin olcumuyle ayni sonucu verir. */
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(function(){ requestAnimationFrame(inboundSelfCheck); });
+} else {
+  window.addEventListener('load', inboundSelfCheck);
+}
 </script>
 """
 

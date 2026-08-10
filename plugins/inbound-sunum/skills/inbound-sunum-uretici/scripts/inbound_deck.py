@@ -168,9 +168,17 @@ def text_w(s: str, pt: float, family: str = F_BODY, bold: bool = False) -> float
         return len(s) * size_px * 0.52
 
 
+# PIL'in advance genislikleri ile tarayicinin yerlesimi arasinda kucuk bir fark
+# var (kerning ve letter-spacing kaynakli); tarayici bazen bir kelime once
+# sariyor. Bu pay, olcumu muhafazakar tarafa cekerek PPTX ureticisinin
+# tarayicidan ONCE uyarmasini saglar - iki cikti ayni sinirda okunur.
+WRAP_SAFETY = 0.985
+
+
 def wrap_lines(s: str, max_w: float, pt: float, family: str = F_BODY,
-               bold: bool = False) -> list:
+               bold: bool = False, safety: float = WRAP_SAFETY) -> list:
     """Kelime bazli sarma; olculmus genisliklere gore satirlara boler."""
+    max_w = max_w * safety
     words, lines, cur = s.split(), [], ""
     for w in words:
         trial = (cur + " " + w).strip()
@@ -455,39 +463,17 @@ def _delta_kind(v: str):
     return None
 
 
-def block_table(slide, b, x, y, w, ctx, idx):
+def table_layout(b, w):
     """
-    b = {
-      type: "table",
-      head: ["Kategori","Impression","Click","Degisim"],
-      rows: [["Armaturler","1.2M","48.2K","+%8.1"], ...],
-      align: "lccc",              # kolon hizalama (l/c/r), varsayilan ilk sol digerleri orta
-      delta_cols: [3],            # delta renk kodu uygulanacak kolonlar (auto tespit de var)
-      wash: true,                 # delta hucrelerine yesil/kirmizi zemin (deck/HTML standardi)
-      highlight_rows: [2],        # coral-tint vurgu satiri (kendi marka)
-      bold_rows: [-1],            # kalin satir (Total / Grand Total)
-      col_w: [40,20,20,20],       # yuzde; verilmezse olcumden turetilir
-      row_h: 26
-    }
+    Tablo geometrisini hesaplar: kolon genislikleri, satir yukseklikleri, baslik
+    yuksekligi. HTML onizleme de bu fonksiyonu kullanir - aksi halde tarayici
+    satir yuksekligini padding+icerikten turetiyor ve tablolar PPTX'ten daha
+    uzun render ediliyordu (9 satirda ~45px fark). Tek kaynak, iki cikti.
     """
-    head = b.get("head") or []
+    head = list(b.get("head") or [])
     rows = b.get("rows") or []
     ncol = max([len(head)] + [len(r) for r in rows] or [1])
-    head = list(head) + [""] * (ncol - len(head))
-
-    align = b.get("align") or ("l" + "c" * (ncol - 1))
-    align = (align + "c" * ncol)[:ncol]
-    wash = b.get("wash", True)
-    hl_rows = set(b.get("highlight_rows") or [])
-    bold_rows = {r if r >= 0 else len(rows) + r for r in (b.get("bold_rows") or [])}
-
-    delta_cols = set(b.get("delta_cols") or [])
-    if not delta_cols:
-        for ci in range(ncol):
-            vals = [r[ci] for r in rows if ci < len(r)]
-            if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
-                delta_cols.add(ci)
-
+    head += [""] * (ncol - len(head))
     pad = 12
     th_pt, td_pt = PT["xs"], b.get("font_pt", PT["table"])
 
@@ -502,7 +488,7 @@ def block_table(slide, b, x, y, w, ctx, idx):
                 if ci < len(r):
                     mx = max(mx, text_w(plain(str(r[ci])), td_pt, F_BODY, True))
             need.append(mx + pad * 2)
-        # ilk kolon esnek, sayisal kolonlar olculen genisligi korur
+        # ilk kolon esner, sayisal kolonlar olculen genisligi korur
         fixed = sum(need[1:])
         first = max(need[0], w - fixed)
         widths = [first] + need[1:]
@@ -512,17 +498,42 @@ def block_table(slide, b, x, y, w, ctx, idx):
 
     row_h = b.get("row_h", 26)
     head_h = b.get("head_h", 30)
-
-    # ilk kolonda sarma gerekiyorsa satir yuksekligini buyut
     row_hs = []
     for r in rows:
         n = len(wrap_lines(plain(str(r[0] if r else "")), widths[0] - pad * 2,
-                           td_pt)) if ncol else 1
+                           td_pt, safety=1.0)) if ncol else 1
         row_hs.append(max(row_h, n * td_pt * PX_PER_PT * 1.35 + 10))
 
-    total_h = head_h + sum(row_hs)
-    if b.get("title"):
-        total_h += PT["h4"] * PX_PER_PT * 1.3 + 8
+    title_h = (PT["h4"] * PX_PER_PT * 1.3 + 8) if b.get("title") else 0
+    return dict(head=head, rows=rows, ncol=ncol, pad=pad, th_pt=th_pt,
+                td_pt=td_pt, widths=widths, row_hs=row_hs, head_h=head_h,
+                title_h=title_h, total_h=title_h + head_h + sum(row_hs))
+
+
+def block_table(slide, b, x, y, w, ctx, idx):
+    """
+    b = {type:"table", head:[...], rows:[[...]], align:"lccc", delta_cols:[3],
+         wash:true, highlight_rows:[2], bold_rows:[-1], col_w:[40,20,20,20],
+         row_h:26, head_h:30, font_pt:9.5, title:"opsiyonel"}
+    Geometri table_layout ile hesaplanir; HTML onizleme ayni fonksiyonu kullanir.
+    """
+    L = table_layout(b, w)
+    head, rows, ncol = L["head"], L["rows"], L["ncol"]
+    pad, th_pt, td_pt = L["pad"], L["th_pt"], L["td_pt"]
+    widths, row_hs, head_h = L["widths"], L["row_hs"], L["head_h"]
+
+    align = b.get("align") or ("l" + "c" * (ncol - 1))
+    align = (align + "c" * ncol)[:ncol]
+    wash = b.get("wash", True)
+    hl_rows = set(b.get("highlight_rows") or [])
+    bold_rows = {r if r >= 0 else len(rows) + r for r in (b.get("bold_rows") or [])}
+
+    delta_cols = set(b.get("delta_cols") or [])
+    if not delta_cols:
+        for ci in range(ncol):
+            vals = [r[ci] for r in rows if ci < len(r)]
+            if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
+                delta_cols.add(ci)
 
     y0 = y
     if b.get("title"):
@@ -1151,6 +1162,18 @@ def s_content(slide, spec, ctx, idx):
             fn(slide, b, x, y, w, ctx, idx)
             continue
         col = b.get("col")
+        if col == "full":
+            # Tum kolonlarin altinda, tam genislikte. Slayt katalogunda sik gecen
+            # "iki tablo yan yana, altta yorum paragrafi" deseni (C30, C33) icin.
+            y = max(cursor) + (b.get("mt") or 0)
+            used = fn(slide, b, M_L, y, avail, ctx, idx)
+            nxt = y + used + b.get("mb", 20)
+            cursor = [nxt] * len(cursor)
+            if y + used > bottom + 2:
+                ctx.warn(f"TASMA S{idx}: '{b.get('type')}' blogu (tam genislik) "
+                         f"y={y+used:.0f}px, alt sinir {bottom:.0f}px - "
+                         f"{y+used-bottom:.0f}px asiyor")
+            continue
         if col is None:
             col = auto % len(grid)
             auto += 1
