@@ -169,11 +169,19 @@ katmanı olmalı** - yorumsuz tablo QA hatası.
 ```json
 { "type": "kpi", "cols": 4, "h": 132,
   "cards": [
-    { "value": "174.7K", "label": "Organic Sessions", "delta": "+%10.4 MoM" },
-    { "value": "52.4", "unit": "%", "label": "Organik Payı", "delta": "+1.8p MoM" },
-    { "value": "%2.89", "label": "Organic CR", "delta": "-%0.4 MoM", "accent": "coral" }
+    { "value": "63.6K", "label": "Click",
+      "deltas": [ {"label": "MoM", "value": "+%8.3"},
+                  {"label": "YoY", "value": "-%18.9"} ] },
+    { "value": "5.1", "label": "Avg. Position",
+      "deltas": [ {"label": "MoM", "value": "+0.2"},
+                  {"label": "YoY", "value": "+2.0"} ], "accent": "coral" }
   ] }
 ```
+
+**Delta satırı `deltas` ile verilir:** etiket önce, değer sonra - `MoM  +%8.3
+YoY  -%18.9`. Etiket normal ağırlıkta ve hafif soluk, değer kalın; okuma sırası
+"hangi karşılaştırma" → "ne kadar" olur. Tek delta için de aynı alan kullanılır.
+Eski `delta` string alanı hâlâ çalışıyor ama etiket-değer ayrımı vermiyor.
 
 Kart zemini varsayılan teal; son kart (3+ kartta) coral olur. `accent` ile
 elle seçilir. `value` karta sığmazsa puntosu otomatik küçülür.
@@ -193,6 +201,15 @@ Düzenlenebilir vektör şekil olarak çizilir, native PPTX chart kullanılmaz
 (PowerPoint kategori eksenini "1,2,3" gösteriyor). `stacked: true` yığılmış bar
 yapar ve etiket toplamı gösterir. Renk paleti: önceki dönem `gold`, güncel dönem
 `gray_bar`, kendi kanalın/markanın `coral`.
+
+**`invert: true`** küçük değerin iyi olduğu metrikler için (ortalama pozisyon).
+Bar yükseklikleri ters çevrilir, böylece iyileşme yukarı doğru okunur - pozisyon
+1'e yaklaştıkça bar yükselir. Dipnotta "ters eksenli" olduğu belirtilir, aksi
+halde okuyucu grafiği tersine yorumlar. `line` bloğunda da geçerli.
+
+**Ölçekleri farklı iki metriği aynı grafiğe koyma.** Impression (milyon) ile click
+(bin) aynı eksende okunmaz; çarpanla ölçeklemek ("Click ×20") müşteri destesinde
+hoş durmuyor. İki ayrı ince grafik alt alta verilir, her biri kendi ölçeğinde.
 
 ### line
 

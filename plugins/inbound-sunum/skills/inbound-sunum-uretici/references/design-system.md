@@ -140,7 +140,7 @@ Kapak, ajanda ve bölüm ayracının ölçüleri **VitrA Şubat 2026 destesinden
 | Slayt | Zemin | Ayırt edici |
 |---|---|---|
 | Kapak | coral `#FF7B52` | Sol kenara yaslanmış soluk big-O (`cover-art-front.png`, 403×720). Ortalanmış başlık **47.5 pt SemiBold** `paper` (y=275), 22 px boşluk, altında dönem satırı **43 pt SemiBold**. Alt-ortada wordmark (563, 635, 153×32) |
-| Ajanda | `paper_bg` `#FEFFFA` | Sol 640 px coral panel (`agenda-panel.png`, sağ köşeleri yuvarlak) + üzerinde big-O. Panelde ortalanmış **48 pt Regular** başlık (y=313). Sol altta beyaz logo (31, 632, 52×51). Sağda x=665 w=573 numaralı liste: numara **20 pt Regular**, etiket **20 pt Bold**, ikisi de `ink`; blok dikeyde ortalanır |
+| Ajanda | `paper_bg` `#FEFFFA` | Sol 640 px coral panel (`agenda-panel.png`, sağ köşeleri yuvarlak) + üzerinde big-O. Panelde ortalanmış **48 pt Regular** başlık (y=313). Sol altta beyaz logo (31, 632, 52×51). Sağda x=665 w=573 numaralı liste: numara **20 pt Regular** `ink3`, 8 px boşluk, etiket **20 pt Bold** `ink`; maddeler arası 26 px; blok dikeyde ortalanır |
 | Bölüm ayracı | teal `#10332F` | Sabit konumlu **200 pt ExtraBold** numeral, renk `sep_num` `#254E49`, yatay merkezi x=146 (filigran gibi davranır, başlığa göre yer değiştirmez). Başlık sayfa ortasında **37 pt ExtraBold** `paper`. Üst-alt **coral** accent 43×11 px |
 | İçerik | beyaz | Breadcrumb + başlık + dönem alt başlığı + blok ızgarası + dipnot + logo + kaynak |
 | Kapanış | teal | Ortalanmış başlık, wordmark |
@@ -163,6 +163,14 @@ Koyu zeminde beyaz olur.
 
 **Coral highlight bar (`.hl`) slayt başlıklarında kullanılmaz.** Başlıklar düz koyu
 teal. Coral bar yalnızca gövde metni, insight cümlesi ve alıntı içinde vurgu için.
+
+**KPI delta satırı:** etiket önce, değer sonra - `MoM  +%8.3    YoY  -%18.9`.
+Etiket gövde fontunda normal ağırlıkta ve hafif soluk, değer display fontunda
+kalın. Okuma sırası "hangi karşılaştırma" → "ne kadar" olur.
+
+**Ters eksenli grafik:** ortalama pozisyon gibi küçük değerin iyi olduğu
+metriklerde bar yükseklikleri ters çevrilir (`invert: true`), iyileşme yukarı
+okunur. Dipnotta ters eksenli olduğu yazılır.
 
 **Insight işareti `➔`** (heavy rightward) ve **her zaman coral**; zemin açık ya da
 koyu olsun ok rengi değişmez. `→`, `•` veya emoji ok değil. Tek sembol

@@ -30,7 +30,7 @@ from inbound_deck import (  # noqa: E402
     COVER_SUB_GAP,
     AGENDA_PANEL_W, AGENDA_TITLE_PT, AGENDA_TITLE_Y, AGENDA_EYEBROW_XY,
     AGENDA_LOGO, AGENDA_LIST_X, AGENDA_LIST_W, AGENDA_ITEM_PT, AGENDA_ITEM_LH,
-    AGENDA_ITEM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
+    AGENDA_ITEM_GAP, AGENDA_ITEM_NUM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
     _delta_kind, fit_pt, parse_runs, plain, separator_layout, table_layout,
     text_w, wrap_lines,
 )
@@ -188,8 +188,16 @@ def h_kpi(b):
                     f'{esc(c.get("unit",""))}</span>' if c.get("unit") else "")
                  + "</div>")
         o.append(f'<div class="kpi-l">{esc(plain(str(c.get("label","")))).upper()}</div>')
-        if c.get("delta"):
-            o.append(f'<div class="kpi-d">{esc(plain(c["delta"]))}</div>')
+        deltas = c.get("deltas")
+        if not deltas and c.get("delta"):
+            deltas = [{"label": "", "value": c["delta"]}]
+        if deltas:
+            parts = []
+            for dd in deltas:
+                lb = str(dd.get("label", "")).strip()
+                parts.append((f'<span class="kpi-dl">{esc(lb)}</span>' if lb else "")
+                             + f'<b>{esc(str(dd.get("value","")))}</b>')
+            o.append('<div class="kpi-d">' + "".join(parts) + "</div>")
         o.append("</div>")
     o.append("</div>")
     return "".join(o)
@@ -213,6 +221,7 @@ def h_bar(b):
     stacked = b.get("stacked", False)
     h = b.get("h", 260)
     plot_h = h - 56 - (22 if b.get("title") else 0)
+    inv = b.get("invert", False)
     if stacked:
         vmax = max(sum(float(s["data"][i] or 0) for s in series)
                    for i in range(len(cats)))
@@ -237,7 +246,7 @@ def h_bar(b):
         o.append('<div class="grp%s">' % (" stk" if stacked else ""))
         for s in series:
             v = float(s["data"][i] or 0)
-            bh = plot_h * v / vmax
+            bh = plot_h * (1 - v / vmax) if inv else plot_h * v / vmax
             col = C.get(s.get("color", "gray_bar"), s.get("color"))
             lbl = (f'<span class="vl">{_fmt(v)}</span>'
                    if b.get("value_labels", True) and not stacked else "")
@@ -257,6 +266,7 @@ def h_line(b):
     h = b.get("h", 260)
     plot_h = h - 56 - (22 if b.get("title") else 0)
     W = b.get("_w", STAGE_W - M_L - M_R)
+    inv = b.get("invert", False)
     vals = [float(v or 0) for s in series for v in s["data"]]
     vmin, vmax = (min(vals), max(vals)) if vals else (0, 1)
     if vmax == vmin:
@@ -287,7 +297,8 @@ def h_line(b):
         pts = []
         for i, v in enumerate(s["data"][:n]):
             vx = step * i if n > 1 else W / 2
-            vy = plot_h - plot_h * ((float(v or 0) - base) / span)
+            frac = (float(v or 0) - base) / span
+            vy = plot_h - plot_h * ((1 - frac) if inv else frac)
             pts.append(f"{vx:.1f},{vy:.1f}")
         o.append(f'<polyline points="{" ".join(pts)}" fill="none" stroke="#{col}" '
                  f'stroke-width="2.25"/>')
@@ -422,15 +433,16 @@ def sl_agenda(s):
         no = (it.get("no") if isinstance(it, dict) else None) or f"{i+1:02d}"
         label = plain(it.get("label") if isinstance(it, dict) else str(it))
         rows.append((str(no), wrap_lines(label, AGENDA_LIST_W, ipt, F_DISPLAY, True)))
-    total = sum(nlh * (1 + len(w)) for _n, w in rows) + AGENDA_ITEM_GAP * max(0, len(rows) - 1)
+    total = (sum(nlh * (1 + len(w)) + AGENDA_ITEM_NUM_GAP for _n, w in rows)
+             + AGENDA_ITEM_GAP * max(0, len(rows) - 1))
     y = max(40.0, (STAGE_H - total) / 2)
     lst = []
     for no, wrapped in rows:
         lst.append(f'<div style="position:absolute;left:{AGENDA_LIST_X}px;'
                    f'top:{y:.1f}px;width:{AGENDA_LIST_W}px;font-family:\'{F_DISPLAY}\';'
                    f'font-weight:400;font-size:{ipt*PX_PER_PT:.1f}px;'
-                   f'line-height:{AGENDA_ITEM_LH};color:#{C["ink"]}">{esc(no)}</div>')
-        y += nlh
+                   f'line-height:{AGENDA_ITEM_LH};color:#{C["ink3"]}">{esc(no)}</div>')
+        y += nlh + AGENDA_ITEM_NUM_GAP
         lst.append(f'<div style="position:absolute;left:{AGENDA_LIST_X}px;'
                    f'top:{y:.1f}px;width:{AGENDA_LIST_W}px;font-family:\'{F_DISPLAY}\';'
                    f'font-weight:700;font-size:{ipt*PX_PER_PT:.1f}px;'
@@ -639,7 +651,10 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
   display:flex;flex-direction:column;justify-content:center}
 .kpi-v{font-family:'%(disp)s';font-weight:700;line-height:1;letter-spacing:-.02em}
 .kpi-l{font-size:12px;opacity:.92;letter-spacing:.04em;margin-top:10px}
-.kpi-d{font-family:'%(disp)s';font-weight:700;font-size:13.3px;margin-top:7px}
+.kpi-d{font-family:'%(disp)s';font-weight:400;font-size:13.3px;margin-top:7px}
+.kpi-d b{font-family:'%(disp)s';font-weight:700}
+.kpi-d .kpi-dl{font-family:'%(body)s';font-weight:400;opacity:.85;margin-right:6px}
+.kpi-d b+.kpi-dl{margin-left:22px}
 /* chart */
 .lg{display:flex;gap:24px;font-size:10px;color:#%(ink2)s;margin-bottom:6px}
 .lg span{display:inline-flex;align-items:center;gap:6px}

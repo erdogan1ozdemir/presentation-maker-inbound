@@ -226,30 +226,36 @@ her biri sorgu kümesi etiketleriyle.
 
 **C15 GSC aylık metrik serisi - iki slayt** (ev standardı)
 
-VitrA ve Özdilekteyim destelerindeki desen: aylık metrikler **grafik yerine tablo**
-olarak, 13-15 aylık seri halinde verilir ve aynı slaytın altında YoY / MoM mini
-tabloları ayrıca gösterilir. Metrikler ikiye bölünür, tek slayta yığılmaz:
+VitrA ve Özdilekteyim destelerindeki desen. Slayt iskeleti üç katman:
+**üstte grafik, ortada değişim notu, en altta tam seri tablosu.**
 
 *C15a - Aylık Impression & Click*
-- Ana tablo (`col: "full"`): satırlar `Impression`, `Click`, `MoM (Click)`;
-  kolonlar aylar (`Tem'25` … `Tem'26`). `font_pt: 10`, `align: "l" + "c"*N`.
-- Altında iki mini tablo yan yana (`grid: [50,50]`, `col: 0` ve `col: 1`), VitrA
-  şekli: `["", "<P0>", "<P1>", "% Değişim"]` başlığı + `YoY` ve `MoM` satırları.
-  Blok başlığı metrik adı olur (`Click`, `Impression`).
-- Altında `col: "full"` yorum katmanı.
+```
+bar  (Impression, 13 ay, gold)          h≈84
+bar  (Click, 13 ay, gray_bar)           h≈84   ← ayrı grafik, ayrı ölçek
+note (label: "Değişim")                        ← MoM ve YoY tek satırda
+table (Metrik × 13 ay)                         ← tam seri, slaytın en altı
+```
+- İki metrik **ayrı grafiklerde** verilir. Ölçekleri farklı olduğu için aynı
+  eksende okunmaz; çarpanla ölçeklemek müşteri destesinde hoş durmuyor.
+- Değişim notu: `Click MoM +%8.3 · YoY -%18.9 · Impression MoM +%6.8 · YoY -%44.6`
+  biçiminde tek `note` bloğu. Ayrı mini tablolara gerek yok; not yeterli.
+- Tablo en altta, `font_pt: 10`, `align: "l" + "c"*13`.
 
 *C15b - Aylık CTR & Pozisyon*
-- Aynı yapı; ana tablo satırları `CTR` ve `Avg. Position`.
-- Mini tablolarda değişim **puan** olarak: CTR `+1.13p`, pozisyon
-  `+2.0 iyileşme`. Pozisyonda düşen değer iyileşmedir; dipnotta yazılır.
+- Aynı iskelet; iki bar: CTR (coral) ve Avg. Position (`invert: true`).
+- **Pozisyon grafiği ters eksenli çizilir**: pozisyon 1'e yaklaştıkça bar
+  yükselir, yani iyileşme yukarı okunur. Dipnotta bu açıkça yazılır - aksi halde
+  okuyucu grafiği tersine yorumlar.
+- Değişim notu: CTR puan (p) olarak, pozisyon "iyileşme" olarak.
 - Ortalama pozisyon cihazlar arasında **impression ağırlıklı** hesaplanır ve bu
-  dipnotta belirtilir. Tek cihaz (yalnızca mobil) verilecekse etikette yazılır.
+  dipnotta belirtilir.
 
-**Neden iki slayt:** dört metriği tek tabloya koymak 15 kolonda okunmaz hale
-getiriyor. Karosel olarak ardışık iki slayt vermek ev pratiğidir.
+**Neden iki slayt:** dört metriği tek slayta yığmak hem grafiği hem tabloyu
+okunmaz hale getiriyor. Karosel olarak ardışık iki slayt ev pratiğidir.
 
-**Zorunlu:** olay dipnotları (`footnotes`) ve GSC 16 ay penceresi nedeniyle serinin
-nerede başladığının belirtilmesi.
+**Zorunlu:** olay dipnotları ve GSC 16 ay penceresi nedeniyle serinin nerede
+başladığının belirtilmesi.
 
 **C16 AI Overview'ın CTR'a etkisi**
 AI Overview yayına alınma tarihi işaretli CTR trendi. Tarih net yazılır: "18 Şubat'ta

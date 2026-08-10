@@ -107,7 +107,8 @@ AGENDA_LOGO = (31, 632, 52, 51)
 AGENDA_LIST_X, AGENDA_LIST_W = 665, 573
 AGENDA_ITEM_PT = 20.0
 AGENDA_ITEM_LH = 0.95
-AGENDA_ITEM_GAP = 18
+AGENDA_ITEM_NUM_GAP = 8    # numara ile etiket arasi
+AGENDA_ITEM_GAP = 26       # maddeler arasi
 
 SEP_NUM_PT, SEP_NUM_W = 200.0, 800          # Bricolage ExtraBold
 SEP_NUM_CX = 146                            # numeral yatay merkezi (sabit)
@@ -718,10 +719,28 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
         ly = vy + vpt * PX_PER_PT * 1.05 + 8
         textbox(slide, cx + 12, ly, cw - 24, 18, plain(str(c.get("label", ""))).upper(),
                 pt=PT["micro"], color="white", align="c", line_pct=1.1)
-        if c.get("delta"):
-            textbox(slide, cx + 12, ly + 20, cw - 24, 18, c["delta"], pt=PT["xs"],
-                    family=F_DISPLAY, bold=True, color="white", align="c",
-                    line_pct=1.1)
+
+        # Delta satiri: etiket once, deger sonra ("MoM  +%8.3    YoY  -%18.9").
+        # Etiket normal agirlikta ve hafif soluk, deger kalin - okuma sirasi
+        # "hangi karsilastirma" -> "ne kadar" seklinde olur.
+        deltas = c.get("deltas")
+        if not deltas and c.get("delta"):
+            deltas = [{"label": "", "value": c["delta"]}]
+        if deltas:
+            runs = []
+            for di, dd in enumerate(deltas):
+                if di:
+                    runs.append(("     ", dict(bold=False, color="white",
+                                               family=F_BODY)))
+                lb = str(dd.get("label", "")).strip()
+                if lb:
+                    runs.append((lb + "  ", dict(bold=False, color="white",
+                                                 family=F_BODY)))
+                runs.append((str(dd.get("value", "")),
+                             dict(bold=True, color="white", family=F_DISPLAY)))
+            textbox(slide, cx + 8, ly + 20, cw - 16, 18, runs, pt=PT["xs"],
+                    family=F_BODY, color="white", align="c", line_pct=1.1,
+                    wrap=False)
 
     h = rows * ch + (rows - 1) * gap
     ctx.boxes.append((idx, "kpi", x, y, w, h))
@@ -789,6 +808,9 @@ def block_bar(slide, b, x, y, w, ctx, idx):
     else:
         vmax = max((max(float(v or 0) for v in s["data"]) for s in series), default=1)
     vmax = vmax * 1.12 or 1
+    # invert: kucuk degerin iyi oldugu metrikler (ortalama pozisyon). Bar
+    # yukseklikleri ters cevrilir, boylece iyilesme yukari dogru okunur.
+    inv = b.get("invert", False)
 
     # yatay izgara
     for k in range(1, 4):
@@ -823,7 +845,7 @@ def block_bar(slide, b, x, y, w, ctx, idx):
         else:
             for si, s in enumerate(series):
                 v = float(s["data"][i] or 0)
-                bh = plot_h * v / vmax
+                bh = plot_h * (1 - v / vmax) if inv else plot_h * v / vmax
                 bx = cx + si * (bw + 4)
                 if bh >= 1:
                     rect(slide, bx, plot_bot - bh, bw, bh,
@@ -868,6 +890,7 @@ def block_line(slide, b, x, y, w, ctx, idx):
 
     plot_top, plot_bot = y + 14, y0 + h - 20
     plot_h = max(40, plot_bot - plot_top)
+    inv = b.get("invert", False)
     vals = [float(v or 0) for s in series for v in s["data"]]
     vmin, vmax = (min(vals), max(vals)) if vals else (0, 1)
     if vmax == vmin:
@@ -887,7 +910,8 @@ def block_line(slide, b, x, y, w, ctx, idx):
         pts = []
         for i, v in enumerate(s["data"][:n]):
             vx = x + step * i if n > 1 else x + w / 2
-            vy = plot_bot - plot_h * ((float(v or 0) - base) / span)
+            frac = (float(v or 0) - base) / span
+            vy = plot_bot - plot_h * ((1 - frac) if inv else frac)
             pts.append((vx, vy))
         if len(pts) > 1:
             ff = slide.shapes.build_freeform(px(pts[0][0]), px(pts[0][1]))
@@ -1122,7 +1146,8 @@ def s_agenda(slide, spec, ctx, idx):
         label = plain(it.get("label") if isinstance(it, dict) else str(it))
         wrapped = wrap_lines(label, AGENDA_LIST_W, ipt, F_DISPLAY, True)
         rows.append((str(no), wrapped))
-    total = sum(nlh * (1 + len(w)) for _n, w in rows) + AGENDA_ITEM_GAP * max(0, len(rows) - 1)
+    total = (sum(nlh * (1 + len(w)) + AGENDA_ITEM_NUM_GAP for _n, w in rows)
+             + AGENDA_ITEM_GAP * max(0, len(rows) - 1))
     y = (STAGE_H - total) / 2
     if y < 40:
         y = 40
@@ -1131,9 +1156,9 @@ def s_agenda(slide, spec, ctx, idx):
                  f"kucultmek degerlendirilebilir")
     for no, wrapped in rows:
         textbox(slide, AGENDA_LIST_X, y, AGENDA_LIST_W, nlh, no, pt=ipt,
-                family=F_DISPLAY, bold=False, color="ink", line_pct=AGENDA_ITEM_LH,
+                family=F_DISPLAY, bold=False, color="ink3", line_pct=AGENDA_ITEM_LH,
                 wrap=False)
-        y += nlh
+        y += nlh + AGENDA_ITEM_NUM_GAP
         textbox(slide, AGENDA_LIST_X, y, AGENDA_LIST_W, nlh * len(wrapped),
                 [parse_runs(ln, "ink") for ln in wrapped], pt=ipt,
                 family=F_DISPLAY, bold=True, color="ink",

@@ -53,6 +53,27 @@ iptal edildi.
 **Kural:** keskin sıçramada önce ölçüm setini ve tanımını kontrol et, sonra sonucu
 yorumla.
 
+### 1.3b. Share of Voice / endeks metriklerinde taban değişimi
+
+Ahrefs Share of Voice gibi endeks metrikleri, takip edilen kelime havuzunun toplam
+tıklama potansiyeline göre normalize edilir. Havuz değişirse SoV değerleri dönemler
+arası karşılaştırılamaz hale gelir - ama bu değişim veride görünmez.
+
+**Kontrol yöntemi:** aynı tarih kesitinde SoV ile tahmini trafik arasındaki oran tüm
+domainlerde sabittir. Bu oranı iki dönem için hesapla:
+
+- Oran dönemler arası yakınsa (±%10) SoV karşılaştırılabilir.
+- Oran belirgin biçimde kaymışsa ve **tüm domainlerde aynı oranda** kaymışsa, bu
+  organik bir değişim değil taban değişimidir.
+
+Gerçek örnek (Flormar Temmuz 2026): MoM'da oran 515.8 → 544.5 (%5.6 fark, geçerli);
+YoY'da 3899.8 → 544.5 (~7x, tüm domainlerde aynı). YoY SoV karşılaştırması iptal
+edildi, YoY için karşılaştırılabilir kalan **tahmini organik trafik** kullanıldı ve
+gerekçe dipnota yazıldı.
+
+**Kural:** endeks metriklerinde dönemsel kıyas yapmadan önce taban kontrolü çalıştır.
+Tüm aktörlerin aynı yönde ve aynı oranda hareket etmesi organik değildir.
+
 ### 1.4. Aynı isimli metriğin farklı formülü
 
 Aracın "Source Visibility" metriği **yanıt bazlıydı** (kaynak gösterildiği yanıt ÷
