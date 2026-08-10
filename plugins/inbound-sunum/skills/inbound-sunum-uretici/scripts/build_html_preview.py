@@ -26,6 +26,11 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
     BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
+    COVER_ART_W, COVER_WM, COVER_TITLE_PT, COVER_SUB_PT, COVER_TITLE_Y,
+    COVER_SUB_GAP,
+    AGENDA_PANEL_W, AGENDA_TITLE_PT, AGENDA_TITLE_Y, AGENDA_EYEBROW_XY,
+    AGENDA_LOGO, AGENDA_LIST_X, AGENDA_LIST_W, AGENDA_ITEM_PT, AGENDA_ITEM_LH,
+    AGENDA_ITEM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
     _delta_kind, fit_pt, parse_runs, plain, separator_layout, table_layout,
     text_w, wrap_lines,
 )
@@ -44,28 +49,30 @@ def _b64(path, mime):
 
 
 def _fonts_css():
-    """Fontlari data URI olarak gomer - onizleme tek dosya olarak tasinabilir."""
-    faces, spec = [], [
-        (F_DISPLAY, 300, "BricolageGrotesque-Light.ttf"),
-        (F_DISPLAY, 400, "BricolageGrotesque-Regular.ttf"),
-        (F_DISPLAY, 500, "BricolageGrotesque-Medium.ttf"),
-        (F_DISPLAY, 600, "BricolageGrotesque-SemiBold.ttf"),
-        (F_DISPLAY, 700, "BricolageGrotesque-Bold.ttf"),
-        (F_BODY, 300, "Outfit-Light.ttf"),
-        (F_BODY, 400, "Outfit-Regular.ttf"),
-        (F_BODY, 600, "Outfit-SemiBold.ttf"),
-        (F_BODY, 700, "Outfit-Bold.ttf"),
-    ]
-    for fam, wt, fn in spec:
+    """
+    Variable TTF'leri data URI olarak gomer. Tek dosya tum agirliklari tasidigi
+    icin font-weight araligi tanimlanir; tarayici ara agirliklari kendisi uretir.
+    Onizleme boylece tek dosya olarak tasinabilir ve fontlar sistemde kurulu
+    olmasa da dogru render edilir.
+    """
+    faces = []
+    for fam, fn, rng in ((F_DISPLAY, "BricolageGrotesque-var.ttf", "200 800"),
+                         (F_BODY, "Outfit-var.ttf", "100 900")):
         uri = _b64(os.path.join(DS, "fonts", fn), "font/ttf")
         if uri:
             faces.append(f"@font-face{{font-family:'{fam}';src:url({uri}) "
-                         f"format('truetype');font-weight:{wt};font-display:block;}}")
+                         f"format('truetype');font-weight:{rng};"
+                         f"font-display:block;}}")
     return "\n".join(faces)
 
 
 def _logo(name):
     return _b64(os.path.join(DS, "logos", name), "image/png")
+
+
+def _sl(name):
+    """Kapak / ajanda / ayrac gorseli (data URI)."""
+    return _b64(os.path.join(DS, "vitra-slides", name), "image/png")
 
 
 def esc(s):
@@ -144,6 +151,8 @@ def h_table(b):
                     style.append(f"background:#{C['red_wash']}")
             elif ri in bold_rows:
                 style.append(f"font-weight:700;font-family:'{F_DISPLAY}'")
+            if ci:
+                style.append("white-space:nowrap")
             o.append(f'<td style="{";".join(style)}">{esc(v)}</td>')
         o.append("</tr>")
     o.append("</tbody></table>")
@@ -154,10 +163,10 @@ def h_insights(b):
     o = []
     if b.get("title"):
         o.append(f'<div class="ins-title">{esc(plain(b["title"])).upper()}</div>')
-    fp = b.get("font_pt", PT["sm"])
+    fp = min(b.get("font_pt", PT["body"]), 12)
     o.append(f'<ul class="ins" style="font-size:{pt(fp)}">')
     for it in b.get("items") or []:
-        o.append(f"<li>{runs_html(it, 'white' if b.get('dark') else 'ink')}</li>")
+        o.append(f"<li>{runs_html(it, 'paper' if b.get('dark') else 'ink')}</li>")
     o.append("</ul>")
     return "".join(o)
 
@@ -311,9 +320,11 @@ def h_panels(b):
 
 
 def h_note(b):
+    fp = min(b.get("font_pt", PT["body"]), 12)
     return (f'<div class="note" style="background:#{C.get(b.get("fill","mint"))}">'
             f'<div class="n-label">{esc(plain(b.get("label","NOT"))).upper()}</div>'
-            f'<div class="n-text">{runs_html(b.get("text",""))}</div></div>')
+            f'<div class="n-text" style="font-size:{pt(fp)}">'
+            f'{runs_html(b.get("text",""))}</div></div>')
 
 
 def h_text(b):
@@ -321,7 +332,7 @@ def h_text(b):
     o = []
     if b.get("title"):
         o.append(f'<div class="blk-title">{esc(plain(b["title"]))}</div>')
-    fp = b.get("font_pt", PT["sm"])
+    fp = min(b.get("font_pt", PT["body"]), 12)
     for p_ in paras:
         o.append(f'<p class="tx" style="font-size:{pt(fp)}">'
                  f'{runs_html(p_, b.get("color","ink"))}</p>')
@@ -346,48 +357,121 @@ HB = {"table": h_table, "insights": h_insights, "kpi": h_kpi, "bar": h_bar,
 # ----------------------------------------------------------------------------
 
 def sl_cover(s):
+    """VitrA kapagi: coral zemin, sol soluk big-O, ortalanmis baslik + donem."""
     lines = s.get("title_lines") or [plain(s.get("title", ""))]
-    tpt = s.get("title_pt", 54)
-    body = "<br>".join(esc(l) for l in lines)
-    sub = (f'<p class="cv-sub">{esc(plain(s["subtitle"]))}</p>'
-           if s.get("subtitle") else "")
-    bigo = _logo("inbound-big-o-white.png")
-    wm = _logo("inbound-wordmark-white.png")
-    return (f'<div class="slide coral cover">'
-            f'<img class="bigo" src="{bigo}">'
-            f'<div class="cv"><h1 style="font-size:{pt(tpt)}">{body}</h1>{sub}</div>'
-            f'<img class="wm" src="{wm}"></div>')
+    avail = STAGE_W - 120
+    tpt = s.get("title_pt", COVER_TITLE_PT)
+    for ln in lines:
+        tpt = min(tpt, fit_pt(ln, avail, tpt, 24, F_DISPLAY, weight=600))
+    lh = tpt * PX_PER_PT * 1.07
+    y = s.get("title_y", COVER_TITLE_Y)
+    body = "".join(
+        f'<div style="position:absolute;left:60px;top:{y+i*lh:.1f}px;width:{avail}px;'
+        f'height:{lh:.1f}px;text-align:center;font-family:\'{F_DISPLAY}\';'
+        f'font-weight:600;font-size:{tpt*PX_PER_PT:.1f}px;line-height:1.07;'
+        f'color:#{C["paper"]};white-space:nowrap">{esc(ln)}</div>'
+        for i, ln in enumerate(lines))
+    sub = ""
+    if s.get("subtitle"):
+        spt = fit_pt(plain(s["subtitle"]), avail, s.get("subtitle_pt", COVER_SUB_PT),
+                     16, F_DISPLAY, weight=600)
+        sy = y + len(lines) * lh + COVER_SUB_GAP
+        sub = (f'<div style="position:absolute;left:60px;top:{sy:.1f}px;'
+               f'width:{avail}px;text-align:center;font-family:\'{F_DISPLAY}\';'
+               f'font-weight:600;font-size:{spt*PX_PER_PT:.1f}px;line-height:1.05;'
+               f'color:#{C["paper"]};white-space:nowrap">'
+               f'{esc(plain(s["subtitle"]))}</div>')
+    wx, wy, ww, wh = COVER_WM
+    return (f'<div class="slide coral">'
+            f'<img src="{_sl("cover-art-front.png")}" style="position:absolute;'
+            f'left:0;top:0;width:{COVER_ART_W}px;height:{STAGE_H}px">'
+            f'{body}{sub}'
+            f'<img src="{_sl("wordmark-cover.png")}" style="position:absolute;'
+            f'left:{wx}px;top:{wy}px;width:{ww}px;height:{wh}px"></div>')
 
 
 def sl_agenda(s):
+    """VitrA ajandasi: sol coral panel + baslik, sagda numarali liste."""
     lines = s.get("title_lines") or [plain(s.get("title", "SUNUM AKIŞI"))]
+    tpt = s.get("title_pt", AGENDA_TITLE_PT)
+    for ln in lines:
+        tpt = min(tpt, fit_pt(ln, AGENDA_PANEL_W - 60, tpt, 20, F_DISPLAY,
+                              bold=False, weight=400))
+    lh = tpt * PX_PER_PT * 1.15
+    ty = s.get("title_y", AGENDA_TITLE_Y) - (len(lines) - 1) * lh / 2
+    title = "".join(
+        f'<div style="position:absolute;left:-3px;top:{ty+i*lh:.1f}px;'
+        f'width:{AGENDA_PANEL_W+6}px;text-align:center;font-family:\'{F_DISPLAY}\';'
+        f'font-weight:400;font-size:{tpt*PX_PER_PT:.1f}px;line-height:1.15;'
+        f'color:#{C["paper"]};white-space:nowrap">{esc(ln)}</div>'
+        for i, ln in enumerate(lines))
+
+    eyebrow = ""
+    if s.get("kicker"):
+        ex, ey = AGENDA_EYEBROW_XY
+        eyebrow = (f'<div style="position:absolute;left:{ex}px;top:{ey}px;'
+                   f'font-family:\'{F_BODY}\';font-size:10px;letter-spacing:.1em;'
+                   f'color:#{C["paper"]}">'
+                   f'{esc(plain(s["kicker"]).upper())}</div>')
+
     items = s.get("items") or []
-    li = []
+    ipt = s.get("item_pt", AGENDA_ITEM_PT)
+    nlh = ipt * PX_PER_PT * AGENDA_ITEM_LH
+    rows = []
     for i, it in enumerate(items):
         no = (it.get("no") if isinstance(it, dict) else None) or f"{i+1:02d}"
-        lb = it.get("label") if isinstance(it, dict) else str(it)
-        li.append(f'<div class="ag-item"><div class="ag-no">{esc(no)}</div>'
-                  f'<div class="ag-lb">{esc(plain(lb))}</div></div>')
-    return (f'<div class="slide agenda">'
-            f'<div class="ag-l"><div class="ag-k">'
-            f'{esc(plain(s.get("kicker","")).upper())}</div>'
-            f'<div class="ag-t">{"<br>".join(esc(l) for l in lines)}</div>'
-            f'<img class="ag-logo" src="{_logo("inbound-o-white.png")}"></div>'
-            f'<div class="ag-r">{"".join(li)}</div></div>')
+        label = plain(it.get("label") if isinstance(it, dict) else str(it))
+        rows.append((str(no), wrap_lines(label, AGENDA_LIST_W, ipt, F_DISPLAY, True)))
+    total = sum(nlh * (1 + len(w)) for _n, w in rows) + AGENDA_ITEM_GAP * max(0, len(rows) - 1)
+    y = max(40.0, (STAGE_H - total) / 2)
+    lst = []
+    for no, wrapped in rows:
+        lst.append(f'<div style="position:absolute;left:{AGENDA_LIST_X}px;'
+                   f'top:{y:.1f}px;width:{AGENDA_LIST_W}px;font-family:\'{F_DISPLAY}\';'
+                   f'font-weight:400;font-size:{ipt*PX_PER_PT:.1f}px;'
+                   f'line-height:{AGENDA_ITEM_LH};color:#{C["ink"]}">{esc(no)}</div>')
+        y += nlh
+        lst.append(f'<div style="position:absolute;left:{AGENDA_LIST_X}px;'
+                   f'top:{y:.1f}px;width:{AGENDA_LIST_W}px;font-family:\'{F_DISPLAY}\';'
+                   f'font-weight:700;font-size:{ipt*PX_PER_PT:.1f}px;'
+                   f'line-height:{AGENDA_ITEM_LH};color:#{C["ink"]}">'
+                   + "<br>".join(esc(l) for l in wrapped) + "</div>")
+        y += nlh * len(wrapped) + AGENDA_ITEM_GAP
+
+    lx, ly, lw_, lh_ = AGENDA_LOGO
+    return (f'<div class="slide" style="background:#{C["paper_bg"]}">'
+            f'<img src="{_sl("agenda-panel.png")}" style="position:absolute;'
+            f'left:-8px;top:0;width:{AGENDA_PANEL_W}px;height:{STAGE_H}px">'
+            f'<img src="{_sl("cover-art-front.png")}" style="position:absolute;'
+            f'left:-8px;top:0;width:{COVER_ART_W}px;height:{STAGE_H}px">'
+            f'{eyebrow}{title}'
+            f'<img src="{_sl("agenda-logo-inner.png")}" style="position:absolute;'
+            f'left:{lx}px;top:{ly}px;width:{lw_}px;height:{lh_}px">'
+            f'{"".join(lst)}</div>')
 
 
 def sl_separator(s):
-    # Yerlesim inbound_deck.separator_layout ile hesaplanir: satir kirilmasi ve
-    # punto tek yerde belirlenir, boylece HTML ve PPTX birebir ayni gorunur.
-    # Tarayicinin kendi sarma davranisina birakilsa iki cikti ayrisirdi.
+    """VitrA ayraci: teal zemin, sabit konumlu soluk numeral, coral accent."""
     L = separator_layout(s)
-    body = "<br>".join(esc(ln) for ln in L["lines"])
-    return (f'<div class="slide dark sepslide">'
-            f'<div class="sep-no" style="font-size:{pt(L["npt"])}">'
-            f'{esc(L["num"])}</div>'
-            f'<div class="sep-c"><span class="acc"></span>'
-            f'<h1 style="font-size:{pt(L["tpt"])}">{body}</h1>'
-            f'<span class="acc"></span></div><div></div></div>')
+    accx = (STAGE_W - SEP_ACC_W) / 2
+    num = ""
+    if L["num"]:
+        num = (f'<div style="position:absolute;left:{L["num_x"]-20:.1f}px;'
+               f'top:{L["cy"]-L["num_h"]*0.52:.1f}px;width:{L["nw"]+40:.1f}px;'
+               f'text-align:center;font-family:\'{F_DISPLAY}\';font-weight:800;'
+               f'font-size:{L["npt"]*PX_PER_PT:.1f}px;line-height:0.9;'
+               f'color:#{C["sep_num"]}">{esc(L["num"])}</div>')
+    title = (f'<div style="position:absolute;left:0;top:{L["title_y"]:.1f}px;'
+             f'width:{STAGE_W}px;text-align:center;font-family:\'{F_DISPLAY}\';'
+             f'font-weight:800;font-size:{L["tpt"]*PX_PER_PT:.1f}px;'
+             f'line-height:1.08;color:#{C["paper"]}">'
+             + "<br>".join(esc(ln) for ln in L["lines"]) + "</div>")
+    acc = "".join(
+        f'<div style="position:absolute;left:{accx:.1f}px;top:{yy:.1f}px;'
+        f'width:{SEP_ACC_W}px;height:{SEP_ACC_H}px;background:#{C["coral"]};'
+        f'border-radius:3px"></div>' for yy in (L["acc_top_y"], L["acc_bot_y"]))
+    return (f'<div class="slide" style="background:#{C["teal"]}">'
+            f'{num}{acc}{title}</div>')
 
 
 def sl_closing(s):
@@ -488,7 +572,7 @@ html,body{margin:0;padding:0;background:#0b1f1c;font-family:'%(body)s'}
   letter-spacing:.1em;padding:0 0 6px 2px}
 h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0}
 .body{position:absolute;left:%(ml)spx;right:%(mr)spx;top:%(tt)spx;bottom:84px}
-.sub{font-size:14px;color:#%(ink2)s;margin:10px 0 0;line-height:1.45}
+.sub{font-size:15px;color:#%(ink2)s;margin:10px 0 0;line-height:1.45}
 .slide.dark .sub{color:#cfe0dc}
 .cols{display:grid;margin-top:20px;align-items:start}
 .col>*{margin-bottom:20px}
@@ -502,7 +586,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .logo-bl{position:absolute;left:44px;bottom:32px;width:36px;height:36px}
 .source-pill{position:absolute;left:100px;bottom:36px;background:#%(coral)s;color:#fff;
   font-family:'%(disp)s';font-weight:700;font-size:11px;padding:6px 12px;border-radius:8px}
-.fns{position:absolute;left:%(ml)spx;right:%(mr)spx;bottom:88px;font-size:10px;
+.fns{position:absolute;left:%(ml)spx;right:%(mr)spx;bottom:88px;font-size:12px;
   color:#%(ink3)s;line-height:1.4}
 .fns div{margin-bottom:2px}
 /* cover / closing */
@@ -545,18 +629,17 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .blk-title{font-family:'%(disp)s';font-weight:700;font-size:18px;margin-bottom:8px}
 /* insights */
 .ins{list-style:none;padding:0;margin:0}
-.ins li{position:relative;padding-left:22px;margin-bottom:12px;line-height:1.5}
-.ins li:before{content:"➔";position:absolute;left:0;top:0;color:#%(teal)s}
-.slide.dark .ins li:before{color:#%(coral)s}
-.ins-title{font-family:'%(disp)s';font-weight:700;font-size:10px;letter-spacing:.06em;
-  color:#%(coral)s;margin-bottom:8px}
+.ins li{position:relative;padding-left:26px;margin-bottom:12px;line-height:1.5}
+.ins li:before{content:"➔";position:absolute;left:0;top:0;color:#%(coral)s}
+.ins-title{font-family:'%(disp)s';font-weight:700;font-size:13.3px;letter-spacing:.05em;
+  color:#%(coral)s;margin-bottom:10px}
 /* kpi */
 .kpi{display:grid}
 .kpi-card{color:#fff;border-radius:16px;padding:22px 18px;text-align:center;
   display:flex;flex-direction:column;justify-content:center}
 .kpi-v{font-family:'%(disp)s';font-weight:700;line-height:1;letter-spacing:-.02em}
-.kpi-l{font-size:11px;opacity:.9;letter-spacing:.04em;margin-top:10px}
-.kpi-d{font-family:'%(disp)s';font-weight:700;font-size:12px;margin-top:6px}
+.kpi-l{font-size:12px;opacity:.92;letter-spacing:.04em;margin-top:10px}
+.kpi-d{font-family:'%(disp)s';font-weight:700;font-size:13.3px;margin-top:7px}
 /* chart */
 .lg{display:flex;gap:24px;font-size:10px;color:#%(ink2)s;margin-bottom:6px}
 .lg span{display:inline-flex;align-items:center;gap:6px}
@@ -579,16 +662,16 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .panels{display:grid}
 .panel{border:1px solid #%(line)s;border-radius:16px;padding:18px}
 .p-title{font-family:'%(disp)s';font-weight:700;font-size:18px}
-.p-sub{font-size:10px;color:#%(ink3)s;margin-top:6px;line-height:1.4}
+.p-sub{font-size:12px;color:#%(ink3)s;margin-top:6px;line-height:1.4}
 .panel ul{list-style:none;padding:0;margin:8px 0 0}
-.panel li{position:relative;padding-left:14px;margin-bottom:6px;font-size:14px;line-height:1.45}
+.panel li{position:relative;padding-left:14px;margin-bottom:7px;line-height:1.45}
 .panel li:before{content:"\\2022";position:absolute;left:0;color:#%(coral)s}
 /* note */
-.note{border-radius:12px;padding:14px}
-.n-label{font-family:'%(disp)s';font-weight:700;font-size:10px;letter-spacing:.06em;
-  color:#%(coraldeep)s;margin-bottom:6px}
-.n-text{font-size:12px;line-height:1.5}
-.tx{font-size:14px;line-height:1.55;margin:0 0 8px}
+.note{border-radius:12px;padding:16px}
+.n-label{font-family:'%(disp)s';font-weight:700;font-size:13.3px;letter-spacing:.05em;
+  color:#%(coraldeep)s;margin-bottom:8px}
+.n-text{line-height:1.5}
+.tx{line-height:1.55;margin:0 0 8px}
 .blk-img{border-radius:12px;display:block}
 .missing{background:#%(redwash)s;color:#%(red)s;padding:10px;border-radius:8px;font-size:12px}
 /* self-check isaretleyicileri: HTML esnek kutu oldugu icin tasmayi sessizce

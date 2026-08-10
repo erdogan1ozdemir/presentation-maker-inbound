@@ -71,6 +71,10 @@ C = {
     "green_wash": "C8E6C9",
     "gold":       "F5A623",
     "gray_bar":   "4A4A4A",
+    # VitrA destesinden olculmus deger token'lari
+    "paper":      "FEFEF7",   # koyu/coral zemin uzerindeki metin (saf beyaz degil)
+    "paper_bg":   "FEFFFA",   # ajanda slayti zemini
+    "sep_num":    "254E49",   # ayrac numerali (teal uzerinde soluk)
 }
 
 F_DISPLAY = "Bricolage Grotesque"
@@ -85,13 +89,36 @@ LOGO_XY = (44, 652)
 LOGO_WH = 36
 SOURCE_XY = (100, 658)
 
-# Bolum ayraci: numeral ile slayt kenari ve baslik arasi minimum aciklik.
-# Baslik bu paydan sonra kalan genislige sarilir; punto sabit kalir.
-SEP_NUM_GAP = 24
-SEP_ACC_W, SEP_ACC_H = 60, 3.5     # accent cizgi (Design System: 60x3.5px pill)
-SEP_ACC_GAP = 28                   # accent cizgi ile baslik blogu arasi
+# ---- Kapak / ajanda / ayrac: VitrA destesinden olculmus degerler ----------
+# Kaynak deste 2560x1440 olceginde; asagidaki degerler 1280x720 sahneye
+# donusturulmus hali (punto ve koordinat /2).
+COVER_TITLE_PT, COVER_TITLE_W = 47.5, 600   # Bricolage SemiBold
+COVER_SUB_PT,   COVER_SUB_W   = 43.0, 600
+COVER_TITLE_Y = 275
+COVER_SUB_GAP = 22                 # baslik blogu ile donem satiri arasi
+COVER_ART_W = 403                  # sol dekoratif big-O genisligi
+COVER_WM = (563, 635, 153, 32)     # wordmark x,y,w,h
 
-# Punto olcegi (px * 0.75)
+AGENDA_PANEL_W = 640               # sol coral panel
+AGENDA_TITLE_PT, AGENDA_TITLE_W = 48.0, 400
+AGENDA_TITLE_Y = 313
+AGENDA_EYEBROW_XY = (27, 20)
+AGENDA_LOGO = (31, 632, 52, 51)
+AGENDA_LIST_X, AGENDA_LIST_W = 665, 573
+AGENDA_ITEM_PT = 20.0
+AGENDA_ITEM_LH = 0.95
+AGENDA_ITEM_GAP = 18
+
+SEP_NUM_PT, SEP_NUM_W = 200.0, 800          # Bricolage ExtraBold
+SEP_NUM_CX = 146                            # numeral yatay merkezi (sabit)
+SEP_TITLE_PT, SEP_TITLE_W = 37.0, 800
+SEP_ACC_W, SEP_ACC_H = 43, 11               # accent cizgi (coral, VitrA olcusu)
+SEP_ACC_GAP = 24                            # accent ile baslik blogu arasi
+SEP_TITLE_MAX_W = 1080                      # bunu asan baslik alt satira kayar
+
+# Punto olcegi. Govde metni okunabilirlik icin yukseltildi; 12pt tavan olarak
+# sabit - bunun uzeri slaytta fazla buyuk duruyor. Bos alan kalacaksa yaziyi
+# buyutmek tercih edilir, kucuk punto ile bosluk birakmak degil.
 PT = {
     "cover":      66,
     "section":    45,
@@ -99,15 +126,16 @@ PT = {
     "h1":         27,
     "h2":         21,
     "h3":         18,
-    "h4":         13.5,
-    "lead":       13.5,
-    "body":       12,
-    "sm":         10.5,
-    "table":      9.5,
-    "xs":         9,
-    "pill":       8,
-    "micro":      7.5,
+    "h4":         13.5,     # blok basligi (baslik, govde degil)
+    "lead":       12,
+    "body":       12,       # insight, metin, not kutusu govdesi - TAVAN
+    "sm":         11,       # panel maddeleri, ikincil govde
+    "table":      10.5,     # tablo govdesi
+    "xs":         10,       # tablo basligi, kpi delta
+    "pill":       8.5,      # kaynak pill
+    "micro":      9,        # dipnot, grafik etiketi, kpi etiketi
 }
+BODY_PT_MAX = 12            # govde metni bu puntoyu asmaz
 
 # ----------------------------------------------------------------------------
 # Font olcumu (gercek TTF, PIL)
@@ -115,50 +143,61 @@ PT = {
 
 _FONT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          "..", "assets", "design-system", "fonts")
-_TTF = {
-    (F_DISPLAY, 300): "BricolageGrotesque-Light.ttf",
-    (F_DISPLAY, 400): "BricolageGrotesque-Regular.ttf",
-    (F_DISPLAY, 500): "BricolageGrotesque-Medium.ttf",
-    (F_DISPLAY, 600): "BricolageGrotesque-SemiBold.ttf",
-    (F_DISPLAY, 700): "BricolageGrotesque-Bold.ttf",
-    (F_DISPLAY, 800): "BricolageGrotesque-ExtraBold.ttf",
-    (F_BODY, 300): "Outfit-Light.ttf",
-    (F_BODY, 400): "Outfit-Regular.ttf",
-    (F_BODY, 500): "Outfit-Medium.ttf",
-    (F_BODY, 600): "Outfit-SemiBold.ttf",
-    (F_BODY, 700): "Outfit-Bold.ttf",
-    (F_BODY, 800): "Outfit-ExtraBold.ttf",
-}
+# Variable TTF: tek dosya tum agirliklari tasiyor. wght ekseni istenen agirliga
+# cekilir; Bricolage'da ayrica opsz (optik boyut) ekseni var ve punto degerine
+# gore 12-96 arasina kirpilir.
+_VAR = {F_DISPLAY: "BricolageGrotesque-var.ttf", F_BODY: "Outfit-var.ttf"}
 _cache: dict = {}
 _HAVE_PIL = True
+FONT_LOAD_ERROR = None          # yuklenemezse sebebi burada durur
 try:
     from PIL import ImageFont
 except Exception:          # pragma: no cover
     _HAVE_PIL = False
+    FONT_LOAD_ERROR = "Pillow kurulu degil"
 
 
 def _font(family: str, weight: int, size_px: float):
+    """Variable fontu istenen agirlik ve optik boyutta dondurur."""
+    global FONT_LOAD_ERROR
     key = (family, weight, round(size_px, 1))
     if key in _cache:
         return _cache[key]
     if not _HAVE_PIL:
         return None
-    name = _TTF.get((family, weight)) or _TTF.get((family, 400))
-    path = os.path.normpath(os.path.join(_FONT_DIR, name))
+    path = os.path.normpath(os.path.join(_FONT_DIR, _VAR.get(family, "")))
+    f = None
     try:
-        f = ImageFont.truetype(path, int(round(size_px)))
-    except Exception:
+        f = ImageFont.truetype(path, max(1, int(round(size_px))))
+        axes = f.get_variation_axes()
+        vals = []
+        for a in axes:
+            nm = a["name"]
+            nm = nm.decode("utf-8", "ignore") if isinstance(nm, bytes) else str(nm)
+            if "eight" in nm or nm == "wght":
+                vals.append(max(a["minimum"], min(a["maximum"], weight)))
+            elif "ptical" in nm or nm == "opsz":
+                pt_ = size_px * PT_PER_PX
+                vals.append(max(a["minimum"], min(a["maximum"], pt_)))
+            else:
+                vals.append(a["default"])
+        if vals:
+            f.set_variation_by_axes(vals)
+    except Exception as e:
+        if FONT_LOAD_ERROR is None:
+            FONT_LOAD_ERROR = f"{os.path.basename(path)}: {e}"
         f = None
     _cache[key] = f
     return f
 
 
-def text_w(s: str, pt: float, family: str = F_BODY, bold: bool = False) -> float:
-    """Metin genisligi (px). PIL yoksa karakter genisligi yaklasimina duser."""
+def text_w(s: str, pt: float, family: str = F_BODY, bold: bool = False,
+           weight: int = None) -> float:
+    """Metin genisligi (px). Font yuklenemezse karakter genisligi yaklasimina duser."""
     if not s:
         return 0.0
     size_px = pt * PX_PER_PT
-    f = _font(family, 700 if bold else 400, size_px)
+    f = _font(family, weight if weight else (700 if bold else 400), size_px)
     if f is None:
         return len(s) * size_px * 0.52
     try:
@@ -176,13 +215,14 @@ WRAP_SAFETY = 0.985
 
 
 def wrap_lines(s: str, max_w: float, pt: float, family: str = F_BODY,
-               bold: bool = False, safety: float = WRAP_SAFETY) -> list:
+               bold: bool = False, safety: float = WRAP_SAFETY,
+               weight: int = None) -> list:
     """Kelime bazli sarma; olculmus genisliklere gore satirlara boler."""
     max_w = max_w * safety
     words, lines, cur = s.split(), [], ""
     for w in words:
         trial = (cur + " " + w).strip()
-        if cur and text_w(trial, pt, family, bold) > max_w:
+        if cur and text_w(trial, pt, family, bold, weight) > max_w:
             lines.append(cur)
             cur = w
         else:
@@ -193,10 +233,10 @@ def wrap_lines(s: str, max_w: float, pt: float, family: str = F_BODY,
 
 
 def fit_pt(s: str, max_w: float, start_pt: float, min_pt: float = 15,
-           family: str = F_DISPLAY, bold: bool = True) -> float:
+           family: str = F_DISPLAY, bold: bool = True, weight: int = None) -> float:
     """Tek satira sigana kadar puntoyu kucultur (Design System: baslik sarmaz)."""
     p = start_pt
-    while p > min_pt and text_w(s, p, family, bold) > max_w:
+    while p > min_pt and text_w(s, p, family, bold, weight) > max_w:
         p -= 0.5
     return p
 
@@ -358,6 +398,10 @@ class Ctx:
     def logo(self, name):
         return os.path.join(self.assets, "design-system", "logos", name)
 
+    def slide_img(self, name):
+        """Kapak / ajanda / ayrac gorselleri (VitrA destesinden cikarilmis)."""
+        return os.path.join(self.assets, "design-system", "vitra-slides", name)
+
     def resolve(self, p):
         if not p:
             return p
@@ -397,9 +441,9 @@ def chrome(slide, spec, ctx, idx, dark=False):
 
     if spec.get("subtitle"):
         sub = spec["subtitle"]
-        lines = wrap_lines(plain(sub), avail, PT["sm"])
-        h = len(lines) * PT["sm"] * PX_PER_PT * 1.45
-        textbox(slide, M_L, y, avail, h, sub, pt=PT["sm"],
+        lines = wrap_lines(plain(sub), avail, PT["lead"])
+        h = len(lines) * PT["lead"] * PX_PER_PT * 1.45
+        textbox(slide, M_L, y, avail, h, sub, pt=PT["lead"],
                 color="white" if inv else "ink2", line_pct=1.45)
         y += h + 16
 
@@ -436,11 +480,11 @@ def footnotes(slide, notes, ctx, idx):
     paras, total = [], 0
     for n in notes:
         ls = wrap_lines(plain(n), avail, PT["micro"])
-        total += len(ls) * PT["micro"] * PX_PER_PT * 1.4
+        total += len(ls) * PT["micro"] * PX_PER_PT * 1.45
         paras.append(parse_runs(n, "ink3"))
     y = BODY_BOTTOM - total
     textbox(slide, M_L, y, avail, total, paras, pt=PT["micro"],
-            color="ink3", line_pct=1.4, space_after=2)
+            color="ink3", line_pct=1.45, space_after=2)
     return y - 12
 
 
@@ -481,20 +525,42 @@ def table_layout(b, w):
         tot = float(sum(b["col_w"]))
         widths = [w * c / tot for c in b["col_w"]]
     else:
+        # Her hucre, cizilecegi font ve agirlikla olculur. Delta hucreleri ve
+        # kalin satirlar F_DISPLAY bold ile render ediliyor; olcumu F_BODY ile
+        # yapmak kolonu daraltip "+%92.8" gibi degerlerin iki satira kirilmasina
+        # yol aciyordu.
+        bold_rows_m = {r if r >= 0 else len(rows) + r
+                       for r in (b.get("bold_rows") or [])}
+        delta_m = set(b.get("delta_cols") or [])
+        if not delta_m:
+            for ci in range(ncol):
+                vals = [r[ci] for r in rows if ci < len(r)]
+                if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
+                    delta_m.add(ci)
         need = []
         for ci in range(ncol):
             mx = text_w(plain(str(head[ci])), th_pt, F_DISPLAY, True)
-            for r in rows:
-                if ci < len(r):
-                    mx = max(mx, text_w(plain(str(r[ci])), td_pt, F_BODY, True))
+            for ri, r in enumerate(rows):
+                if ci >= len(r):
+                    continue
+                val = plain(str(r[ci]))
+                strong = (ci in delta_m and _delta_kind(val)) or ri in bold_rows_m
+                mx = max(mx, text_w(val, td_pt,
+                                    F_DISPLAY if strong else F_BODY, bool(strong)))
             need.append(mx + pad * 2)
         # ilk kolon esner, sayisal kolonlar olculen genisligi korur
         fixed = sum(need[1:])
         first = max(need[0], w - fixed)
         widths = [first] + need[1:]
-        scale = w / sum(widths)
-        if scale < 1:
-            widths = [wd * scale for wd in widths]
+        if sum(widths) > w:
+            # Once ilk kolon (etiket) daraltilir; etiket sarabilir, sayisal
+            # kolonlar sarmaz. Yetmezse hepsi oransal daraltilir ve uyarilir.
+            over = sum(widths) - w
+            take = min(over, max(0.0, widths[0] - 90))
+            widths[0] -= take
+            if sum(widths) > w + 0.5:
+                sc = w / sum(widths)
+                widths = [wd * sc for wd in widths]
 
     row_h = b.get("row_h", 26)
     head_h = b.get("head_h", 30)
@@ -570,7 +636,8 @@ def block_table(slide, b, x, y, w, ctx, idx):
                     rect(slide, cx, y, widths[ci], rh, fill="red_wash")
             textbox(slide, cx + pad, y, widths[ci] - pad * 2, rh, val,
                     pt=td_pt, family=F_DISPLAY if bold else F_BODY, bold=bold,
-                    color=col, align=align[ci], anchor="m", line_pct=1.3)
+                    color=col, align=align[ci], anchor="m", line_pct=1.3,
+                    wrap=(ci == 0))
             cx += widths[ci]
         hline(slide, x, y, w, "line", 0.75)
         y += rh
@@ -588,20 +655,21 @@ def block_insights(slide, b, x, y, w, ctx, idx):
     """b = {type:"insights", title?:"TREND OKUMALARI", items:[".."], dark?:false}"""
     items = b.get("items") or []
     dark = b.get("dark", False)
-    base = "white" if dark else "ink"
-    y0, ind, gap = y, 22, b.get("gap", 12)
+    base = "paper" if dark else "ink"
+    y0, ind, gap = y, 26, b.get("gap", 12)
 
     if b.get("title"):
-        textbox(slide, x, y, w, 18, plain(b["title"]).upper(), pt=PT["micro"],
+        textbox(slide, x, y, w, 20, plain(b["title"]).upper(), pt=PT["xs"],
                 family=F_DISPLAY, bold=True, color="coral", line_pct=1.0)
-        y += 22
+        y += 24
 
-    pt_ = b.get("font_pt", PT["sm"])
+    pt_ = min(b.get("font_pt", PT["body"]), BODY_PT_MAX)
     for it in items:
         lines = wrap_lines(plain(it), w - ind, pt_)
         h = len(lines) * pt_ * PX_PER_PT * 1.5
-        textbox(slide, x, y, 16, pt_ * PX_PER_PT * 1.5, "➔", pt=pt_,
-                family=F_BODY, color="coral" if dark else "teal", line_pct=1.5)
+        # ok her zaman coral: Design System'de insight isareti marka turuncusu
+        textbox(slide, x, y, 18, pt_ * PX_PER_PT * 1.5, "➔", pt=pt_,
+                family=F_BODY, color="coral", line_pct=1.5)
         textbox(slide, x + ind, y, w - ind, h, it, pt=pt_, color=base, line_pct=1.5)
         y += h + gap
 
@@ -648,10 +716,10 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
                     bold=True, color="white", align="c", line_pct=1.0, wrap=False)
 
         ly = vy + vpt * PX_PER_PT * 1.05 + 8
-        textbox(slide, cx + 12, ly, cw - 24, 16, plain(str(c.get("label", ""))).upper(),
+        textbox(slide, cx + 12, ly, cw - 24, 18, plain(str(c.get("label", ""))).upper(),
                 pt=PT["micro"], color="white", align="c", line_pct=1.1)
         if c.get("delta"):
-            textbox(slide, cx + 12, ly + 18, cw - 24, 16, c["delta"], pt=PT["xs"],
+            textbox(slide, cx + 12, ly + 20, cw - 24, 18, c["delta"], pt=PT["xs"],
                     family=F_DISPLAY, bold=True, color="white", align="c",
                     line_pct=1.1)
 
@@ -906,23 +974,23 @@ def block_panels(slide, b, x, y, w, ctx, idx):
 def block_note(slide, b, x, y, w, ctx, idx):
     """b = {type:"note", label:"YONTEM", text:"..", fill?:"mint"}"""
     label = plain(b.get("label", "NOT")).upper()
-    pad = 14
-    pt_ = b.get("font_pt", PT["xs"])
+    pad = 16
+    pt_ = min(b.get("font_pt", PT["body"]), BODY_PT_MAX)
     lines = wrap_lines(plain(b.get("text", "")), w - pad * 2, pt_)
     th = len(lines) * pt_ * PX_PER_PT * 1.5
-    h = pad + PT["micro"] * PX_PER_PT * 1.2 + 6 + th + pad
+    h = pad + PT["xs"] * PX_PER_PT * 1.2 + 8 + th + pad
     rect(slide, x, y, w, h, fill=b.get("fill", "mint"), radius=12)
-    textbox(slide, x + pad, y + pad, w - pad * 2, PT["micro"] * PX_PER_PT * 1.2,
-            label, pt=PT["micro"], family=F_DISPLAY, bold=True, color="coral_deep",
+    textbox(slide, x + pad, y + pad, w - pad * 2, PT["xs"] * PX_PER_PT * 1.2,
+            label, pt=PT["xs"], family=F_DISPLAY, bold=True, color="coral_deep",
             line_pct=1.2)
-    textbox(slide, x + pad, y + pad + PT["micro"] * PX_PER_PT * 1.2 + 6,
+    textbox(slide, x + pad, y + pad + PT["xs"] * PX_PER_PT * 1.2 + 8,
             w - pad * 2, th, b.get("text", ""), pt=pt_, color="ink", line_pct=1.5)
     ctx.boxes.append((idx, "note", x, y, w, h))
     return h
 
 
 def block_text(slide, b, x, y, w, ctx, idx):
-    pt_ = b.get("font_pt", PT["sm"])
+    pt_ = min(b.get("font_pt", PT["body"]), BODY_PT_MAX)
     paras = b.get("paras") or ([b["text"]] if b.get("text") else [])
     total = 0
     rendered = []
@@ -965,104 +1033,142 @@ BLOCKS = {
 # ----------------------------------------------------------------------------
 
 def s_cover(slide, spec, ctx, idx):
-    bg = spec.get("bg", "coral")
-    set_bg(slide, bg)
-    big = ctx.logo("inbound-big-o-white.png")
-    if os.path.exists(big):
-        pic = picture(slide, big, 800, -300, h=1400)
-        if pic:
-            _fade(pic, 14000)
+    """
+    VitrA destesindeki kapak: coral zemin, sol kenara yaslanmis soluk big-O,
+    ortalanmis marka + deste tipi basligi, hemen altinda neredeyse ayni puntoda
+    donem satiri, alt-ortada wordmark. Metin rengi saf beyaz degil paper (#FEFEF7).
+    """
+    set_bg(slide, spec.get("bg", "coral"))
+    art = ctx.slide_img("cover-art-front.png")
+    if os.path.exists(art):
+        picture(slide, art, 0, 0, w=COVER_ART_W, h=STAGE_H)
 
+    avail = STAGE_W - 120
     title = plain(spec.get("title", ""))
-    lines = spec.get("title_lines") or [title]
-    tpt = spec.get("title_pt", 54)
+    lines = spec.get("title_lines") or ([title] if title else [])
+    tpt = spec.get("title_pt", COVER_TITLE_PT)
     for ln in lines:
-        while tpt > 26 and text_w(ln, tpt, F_DISPLAY, True) > STAGE_W - 200:
-            tpt -= 1
-    lh = tpt * PX_PER_PT * 1.08
-    block_h = len(lines) * lh + (34 if spec.get("subtitle") else 0)
-    y = (STAGE_H - block_h) / 2 - 30
-    for ln in lines:
-        textbox(slide, 80, y, STAGE_W - 160, lh, ln, pt=tpt, family=F_DISPLAY,
-                bold=True, color="white", align="c", line_pct=1.08, wrap=False)
-        y += lh
-    if spec.get("subtitle"):
-        textbox(slide, 120, y + 14, STAGE_W - 240, 30, plain(spec["subtitle"]),
-                pt=PT["h4"], color="white", align="c", line_pct=1.3)
+        tpt = min(tpt, fit_pt(ln, avail, tpt, 24, F_DISPLAY, weight=COVER_TITLE_W))
+    lh = tpt * PX_PER_PT * 1.07
 
-    wm = ctx.logo("inbound-wordmark-white.png")
+    y = spec.get("title_y", COVER_TITLE_Y)
+    for ln in lines:
+        textbox(slide, 60, y, avail, lh, ln, pt=tpt, family=F_DISPLAY, bold=True,
+                color="paper", align="c", line_pct=1.07, wrap=False)
+        y += lh
+
+    if spec.get("subtitle"):
+        spt = spec.get("subtitle_pt", COVER_SUB_PT)
+        sub = plain(spec["subtitle"])
+        spt = fit_pt(sub, avail, spt, 16, F_DISPLAY, weight=COVER_SUB_W)
+        y += COVER_SUB_GAP
+        textbox(slide, 60, y, avail, spt * PX_PER_PT * 1.05, sub, pt=spt,
+                family=F_DISPLAY, bold=True, color="paper", align="c",
+                line_pct=1.05, wrap=False)
+
+    wm = ctx.slide_img("wordmark-cover.png")
     if os.path.exists(wm):
-        pic = picture(slide, wm, 0, STAGE_H - 94, h=34)
-        if pic:
-            pic.left = px((STAGE_W - pic.width / PX) / 2)
+        x, wy, ww, wh = COVER_WM
+        picture(slide, wm, x, wy, w=ww, h=wh)
 
 
 def s_agenda(slide, spec, ctx, idx):
-    lw = STAGE_W * 0.45
-    rect(slide, 0, 0, lw, STAGE_H, fill="coral")
-    kicker = plain(spec.get("kicker", ""))
-    if kicker:
-        textbox(slide, 50, 250, lw - 100, 18, kicker.upper(), pt=PT["micro"],
-                family=F_DISPLAY, color="white", line_pct=1.0)
-    title_lines = spec.get("title_lines") or plain(
-        spec.get("title", "SUNUM AKIŞI")).split(" ")
-    tpt = 46
-    for ln in title_lines:
-        while tpt > 24 and text_w(ln, tpt, F_DISPLAY, False) > lw - 100:
-            tpt -= 1
-    y = 276
-    for ln in title_lines:
-        textbox(slide, 50, y, lw - 100, tpt * PX_PER_PT * 1.05, ln, pt=tpt,
-                family=F_DISPLAY, bold=False, color="white", line_pct=1.05,
-                wrap=False)
-        y += tpt * PX_PER_PT * 1.05
-    lg = ctx.logo("inbound-o-white.png")
-    picture(slide, lg, 44, STAGE_H - 76, w=36, h=36)
+    """
+    VitrA ajandasi: kirik-beyaz zemin, sol yarida coral panel (sag kenarlari
+    yuvarlatilmis) + uzerinde soluk big-O, panelde ortalanmis tek satir baslik,
+    sol altta beyaz logo. Sagda numarali liste: numara ustte normal, etiket
+    altta kalin, teal renkte; blok dikeyde ortalanir.
+    """
+    set_bg(slide, spec.get("bg", "paper_bg"))
+    panel = ctx.slide_img("agenda-panel.png")
+    if os.path.exists(panel):
+        picture(slide, panel, -8, 0, w=AGENDA_PANEL_W, h=STAGE_H)
+    else:
+        rect(slide, 0, 0, AGENDA_PANEL_W, STAGE_H, fill="coral")
+    art = ctx.slide_img("cover-art-front.png")
+    if os.path.exists(art):
+        picture(slide, art, -8, 0, w=COVER_ART_W, h=STAGE_H)
 
+    if spec.get("kicker"):
+        textbox(slide, AGENDA_EYEBROW_XY[0], AGENDA_EYEBROW_XY[1],
+                AGENDA_PANEL_W - 60, 18, plain(spec["kicker"]).upper(),
+                pt=10, family=F_BODY, color="paper", line_pct=1.0)
+
+    lines = spec.get("title_lines") or [plain(spec.get("title", "SUNUM AKIŞI"))]
+    tpt = spec.get("title_pt", AGENDA_TITLE_PT)
+    for ln in lines:
+        tpt = min(tpt, fit_pt(ln, AGENDA_PANEL_W - 60, tpt, 20, F_DISPLAY,
+                              bold=False, weight=AGENDA_TITLE_W))
+    lh = tpt * PX_PER_PT * 1.15
+    ty = spec.get("title_y", AGENDA_TITLE_Y) - (len(lines) - 1) * lh / 2
+    for ln in lines:
+        textbox(slide, -3, ty, AGENDA_PANEL_W + 6, lh, ln, pt=tpt,
+                family=F_DISPLAY, bold=False, color="paper", align="c",
+                line_pct=1.15, wrap=False)
+        ty += lh
+
+    lg = ctx.slide_img("agenda-logo-inner.png")
+    if os.path.exists(lg):
+        x, ly, lw_, lh_ = AGENDA_LOGO
+        picture(slide, lg, x, ly, w=lw_, h=lh_)
+
+    # sag kolon: numarali liste, dikeyde ortalanmis
     items = spec.get("items") or []
-    rx, rw = lw + 60, STAGE_W - lw - 120
-    top, bot = 64, STAGE_H - 64
-    n = max(1, len(items))
-    slot = (bot - top) / n
+    ipt = spec.get("item_pt", AGENDA_ITEM_PT)
+    nlh = ipt * PX_PER_PT * AGENDA_ITEM_LH
+    rows = []
     for i, it in enumerate(items):
-        iy = top + slot * i
-        num = it.get("no") if isinstance(it, dict) else None
-        label = it.get("label") if isinstance(it, dict) else str(it)
-        num = num or f"{i+1:02d}"
-        textbox(slide, rx, iy, rw, 20, str(num), pt=PT["h4"], color="ink3",
-                line_pct=1.0)
-        lpt = PT["h3"]
-        while lpt > 12 and text_w(plain(label), lpt, F_DISPLAY, True) > rw:
-            lpt -= 0.5
-        textbox(slide, rx, iy + 22, rw, lpt * PX_PER_PT * 1.25, plain(label),
-                pt=lpt, family=F_DISPLAY, bold=True, color="ink", line_pct=1.25)
+        no = (it.get("no") if isinstance(it, dict) else None) or f"{i+1:02d}"
+        label = plain(it.get("label") if isinstance(it, dict) else str(it))
+        wrapped = wrap_lines(label, AGENDA_LIST_W, ipt, F_DISPLAY, True)
+        rows.append((str(no), wrapped))
+    total = sum(nlh * (1 + len(w)) for _n, w in rows) + AGENDA_ITEM_GAP * max(0, len(rows) - 1)
+    y = (STAGE_H - total) / 2
+    if y < 40:
+        y = 40
+        ctx.warn(f"S{idx}: ajanda listesi {len(rows)} madde ile dikeyde sigmiyor, "
+                 f"ust sinira yaslandi - madde sayisini azaltmak veya item_pt "
+                 f"kucultmek degerlendirilebilir")
+    for no, wrapped in rows:
+        textbox(slide, AGENDA_LIST_X, y, AGENDA_LIST_W, nlh, no, pt=ipt,
+                family=F_DISPLAY, bold=False, color="ink", line_pct=AGENDA_ITEM_LH,
+                wrap=False)
+        y += nlh
+        textbox(slide, AGENDA_LIST_X, y, AGENDA_LIST_W, nlh * len(wrapped),
+                [parse_runs(ln, "ink") for ln in wrapped], pt=ipt,
+                family=F_DISPLAY, bold=True, color="ink",
+                line_pct=AGENDA_ITEM_LH, wrap=False)
+        y += nlh * len(wrapped) + AGENDA_ITEM_GAP
 
 
 def separator_layout(spec):
     """
-    Ayrac slaytinin yerlesimini hesaplar. HTML onizleme de ayni fonksiyonu
-    kullanir; satir kirilmasi tek yerde belirlendigi icin iki cikti birebir
-    ayni gorunur (tarayicinin sarma davranisina guvenilmez).
+    Ayrac yerlesimi - VitrA destesinden olculmus degerlerle.
 
-    Punto SABITTIR - ne numeral ne baslik kucultulur. Baslik sigmiyorsa alt
-    satira kayar, accent cizgiler ve numeral coklu satira gore konumlanir.
-    Numerali bosluga gore olceklendirmek, boyutunu baslik uzunlugunun
-    fonksiyonu yapiyor ve ayni destede farkli boyutta numeraller uretiyordu.
+    Numeral SABIT konumdadir: 200pt ExtraBold, sep_num renginde, yatay merkezi
+    x=146. VitrA'da numeral bir filigran gibi davraniyor; basligin genisligine
+    gore yer degistirmiyor ve gerektiginde basligin arkasinda kaliyor. Punto da
+    sabittir - numerali basliga gore olceklendirmek ayni destede farkli boyutta
+    numeraller uretiyordu.
+
+    Baslik sayfa ortasinda, 37pt ExtraBold, paper renginde. SEP_TITLE_MAX_W'yi
+    asarsa alt satira kayar; accent cizgiler (coral) blok yuksekligine gore
+    simetrik olarak acilir ve blok dikeyde ortalanir.
+
+    HTML onizleme de bu fonksiyonu kullanir; satir kirilmasi tek yerde belirlenir.
     """
     title = plain(spec.get("title", ""))
-    tpt = spec.get("title_pt", PT["section"])
+    tpt = spec.get("title_pt", SEP_TITLE_PT)
     num = str(spec.get("no", "") or "")
-    npt = spec.get("no_pt", PT["section_num"])
-    nw = text_w(num, npt, F_DISPLAY, True) if num else 0.0
+    npt = spec.get("no_pt", SEP_NUM_PT)
+    nw = text_w(num, npt, F_DISPLAY, True, SEP_NUM_W) if num else 0.0
 
-    # Baslik max genisligi: iki yanda numeral bolgesi + aciklik ayrildiktan sonra
-    # kalan. Numeral sol bosluga ortalandigi icin sag tarafa da simetrik pay
-    # birakilir, boylece baslik sayfa ortasinda kalir.
-    max_tw = (STAGE_W - 2 * (nw + 2 * SEP_NUM_GAP)) if num else (STAGE_W - 200)
-    lines = wrap_lines(title, max_tw, tpt, F_DISPLAY, True)
-    tw = max((text_w(ln, tpt, F_DISPLAY, True) for ln in lines), default=0.0)
+    max_tw = spec.get("title_max_w", SEP_TITLE_MAX_W)
+    lines = wrap_lines(title, max_tw, tpt, F_DISPLAY, True, weight=SEP_TITLE_W)
+    tw = max((text_w(ln, tpt, F_DISPLAY, True, SEP_TITLE_W) for ln in lines),
+             default=0.0)
 
-    lh = tpt * PX_PER_PT * 1.1
+    lh = tpt * PX_PER_PT * 1.08
     th = len(lines) * lh
     cy = STAGE_H / 2
     total_h = SEP_ACC_H + SEP_ACC_GAP + th + SEP_ACC_GAP + SEP_ACC_H
@@ -1072,6 +1178,7 @@ def separator_layout(spec):
         title=title, lines=lines, tpt=tpt, tw=tw, th=th, lh=lh,
         tx=(STAGE_W - tw) / 2, num=num, npt=npt, nw=nw,
         max_tw=max_tw, cy=cy,
+        num_x=SEP_NUM_CX - nw / 2, num_h=npt * PX_PER_PT,
         acc_top_y=top,
         title_y=top + SEP_ACC_H + SEP_ACC_GAP,
         acc_bot_y=top + SEP_ACC_H + SEP_ACC_GAP + th + SEP_ACC_GAP,
@@ -1079,33 +1186,28 @@ def separator_layout(spec):
 
 
 def s_separator(slide, spec, ctx, idx):
-    set_bg(slide, "teal")
+    set_bg(slide, spec.get("bg", "teal"))
     L = separator_layout(spec)
 
     if len(L["lines"]) > 2:
         ctx.warn(f"S{idx}: ayrac basligi {len(L['lines'])} satira sarildi - iki "
-                 f"satir tasarimin sinirir. Basligi kisaltmak onerilir "
+                 f"satir tasarimin rahat siniri. Basligi kisaltmak onerilir "
                  f"('{L['title']}')")
-    if L["tw"] > L["max_tw"] + 2:
-        ctx.warn(f"S{idx}: ayrac basliginda bolunemeyen uzun kelime var, "
-                 f"{L['tw'] - L['max_tw']:.0f}px numeral bolgesine giriyor "
-                 f"('{L['title']}')")
+
+    # numeral once cizilir: filigran olarak basligin arkasinda kalir
+    if L["num"]:
+        textbox(slide, L["num_x"] - 20, L["cy"] - L["num_h"] * 0.52,
+                L["nw"] + 40, L["num_h"], L["num"], pt=L["npt"],
+                family=F_DISPLAY, bold=True, color="sep_num", align="c",
+                line_pct=0.9, wrap=False)
 
     accx = (STAGE_W - SEP_ACC_W) / 2
-    rect(slide, accx, L["acc_top_y"], SEP_ACC_W, SEP_ACC_H, fill="white", radius=2)
-    textbox(slide, L["tx"] - 20, L["title_y"], L["tw"] + 40, L["th"],
-            [parse_runs(ln, "white") for ln in L["lines"]], pt=L["tpt"],
-            family=F_DISPLAY, bold=True, color="white", align="c",
-            line_pct=1.1, wrap=False)
-    rect(slide, accx, L["acc_bot_y"], SEP_ACC_W, SEP_ACC_H, fill="white", radius=2)
-
-    if L["num"]:
-        # Numeral, baslik blogunun dikey merkezine hizalanir; coklu satirda da
-        # blogun ortasinda kalir.
-        nh = L["npt"] * PX_PER_PT
-        textbox(slide, (L["tx"] - L["nw"]) / 2, L["cy"] - nh * 0.52,
-                L["nw"] + 20, nh, L["num"], pt=L["npt"], family=F_DISPLAY,
-                bold=True, color="teal_soft", align="c", line_pct=0.9, wrap=False)
+    rect(slide, accx, L["acc_top_y"], SEP_ACC_W, SEP_ACC_H, fill="coral", radius=3)
+    textbox(slide, L["tx"] - 30, L["title_y"], L["tw"] + 60, L["th"],
+            [parse_runs(ln, "paper") for ln in L["lines"]], pt=L["tpt"],
+            family=F_DISPLAY, bold=True, color="paper", align="c",
+            line_pct=1.08, wrap=False)
+    rect(slide, accx, L["acc_bot_y"], SEP_ACC_W, SEP_ACC_H, fill="coral", radius=3)
 
 
 def s_closing(slide, spec, ctx, idx):
@@ -1272,8 +1374,12 @@ def main():
 
     ctx, n = build(spec, out, assets, base, check_only=a.check)
 
-    if not _HAVE_PIL:
-        print("UYARI: PIL yok - font olcumu yaklasik, tasma tespiti zayif.")
+    if FONT_LOAD_ERROR:
+        print(f"\n!!! FONT UYARISI: gercek font metrigi kullanilamiyor "
+              f"({FONT_LOAD_ERROR}).\n    Olcum karakter genisligi yaklasimina "
+              f"dustu; tasma tespiti ve baslik auto-shrink guvenilir degil.\n"
+              f"    assets/design-system/fonts/ altindaki variable TTF'leri "
+              f"kontrol et.\n")
     print(f"{n} slayt {'dogrulandi' if a.check else 'uretildi'}"
           f"{'' if a.check else ' -> ' + out}")
     if ctx.warnings:

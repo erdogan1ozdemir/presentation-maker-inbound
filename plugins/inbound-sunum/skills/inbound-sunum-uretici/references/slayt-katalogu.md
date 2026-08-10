@@ -224,10 +224,32 @@ Dört büyük rakam: `Impression (YoY)`, `Click (YoY)`, `Impression (QoQ)`, `Cli
 Altında iki `panels` kolonu: `YILLIK BÜYÜME ÖNCÜLERİ` ve `CLICK DÜŞÜŞÜNÜN KAYNAKLARI`,
 her biri sorgu kümesi etiketleriyle.
 
-**C15 GSC organik trafik trendi**
-Impression + click çift eksenli trend (`bar` + `line` veya iki `bar` serisi) + 3-5
-cümlelik okuma. Çeyreklikte grafik yerine iki mini tablo.
-**Zorunlu:** olay dipnotları (`footnotes`).
+**C15 GSC aylık metrik serisi - iki slayt** (ev standardı)
+
+VitrA ve Özdilekteyim destelerindeki desen: aylık metrikler **grafik yerine tablo**
+olarak, 13-15 aylık seri halinde verilir ve aynı slaytın altında YoY / MoM mini
+tabloları ayrıca gösterilir. Metrikler ikiye bölünür, tek slayta yığılmaz:
+
+*C15a - Aylık Impression & Click*
+- Ana tablo (`col: "full"`): satırlar `Impression`, `Click`, `MoM (Click)`;
+  kolonlar aylar (`Tem'25` … `Tem'26`). `font_pt: 10`, `align: "l" + "c"*N`.
+- Altında iki mini tablo yan yana (`grid: [50,50]`, `col: 0` ve `col: 1`), VitrA
+  şekli: `["", "<P0>", "<P1>", "% Değişim"]` başlığı + `YoY` ve `MoM` satırları.
+  Blok başlığı metrik adı olur (`Click`, `Impression`).
+- Altında `col: "full"` yorum katmanı.
+
+*C15b - Aylık CTR & Pozisyon*
+- Aynı yapı; ana tablo satırları `CTR` ve `Avg. Position`.
+- Mini tablolarda değişim **puan** olarak: CTR `+1.13p`, pozisyon
+  `+2.0 iyileşme`. Pozisyonda düşen değer iyileşmedir; dipnotta yazılır.
+- Ortalama pozisyon cihazlar arasında **impression ağırlıklı** hesaplanır ve bu
+  dipnotta belirtilir. Tek cihaz (yalnızca mobil) verilecekse etikette yazılır.
+
+**Neden iki slayt:** dört metriği tek tabloya koymak 15 kolonda okunmaz hale
+getiriyor. Karosel olarak ardışık iki slayt vermek ev pratiğidir.
+
+**Zorunlu:** olay dipnotları (`footnotes`) ve GSC 16 ay penceresi nedeniyle serinin
+nerede başladığının belirtilmesi.
 
 **C16 AI Overview'ın CTR'a etkisi**
 AI Overview yayına alınma tarihi işaretli CTR trendi. Tarih net yazılır: "18 Şubat'ta

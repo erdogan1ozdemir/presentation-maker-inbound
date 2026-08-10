@@ -22,8 +22,23 @@ eklerken buraya bakılır.
 | Logo | x 44, y 652, 36 × 36 | Her içerik slaytında |
 | Kaynak pill | x 100, y 658 | Coral zemin, beyaz kalın 11 px |
 
-Punto ölçeği px × 0.75 ile pt'ye çevrilir: 36 px başlık = 27 pt, 14 px gövde =
-10.5 pt, 13 px tablo = 9.75 pt, 12 px tablo başlığı = 9 pt.
+### Punto ölçeği ve 12 pt tavanı
+
+| Rol | Punto | Nerede |
+|---|---|---|
+| Slayt başlığı (h1) | 27 | İçerik slaytı başlığı |
+| Blok başlığı (h4) | 13.5 | Tablo/grafik blok başlığı |
+| Gövde (body) | **12** | Insight, metin bloğu, not kutusu gövdesi |
+| İkincil (sm) | 11 | Panel maddeleri |
+| Tablo gövdesi | 10.5 | |
+| Tablo başlığı (xs) | 10 | KPI delta, insight blok başlığı |
+| Dipnot (micro) | 9 | Grafik etiketi, KPI etiketi |
+| Kaynak pill | 8.5 | |
+
+**12 pt gövde metni için tavandır** (`BODY_PT_MAX`); üstü slaytta fazla büyük duruyor.
+Buna karşılık boş alan kalacaksa yazıyı büyütmek tercih edilir - küçük punto ile
+boşluk bırakmak okunabilirliği düşürüyor. Blok başlıkları ve slayt başlıkları bu
+tavanın dışındadır; onlar başlıktır, gövde değil.
 
 ---
 
@@ -118,13 +133,26 @@ büyük harfle yazmak en temizi.
 
 ## Slayt gramerleri
 
+Kapak, ajanda ve bölüm ayracının ölçüleri **VitrA Şubat 2026 destesinden birebir
+ölçülmüştür** (kaynak deste 2560×1440; değerler 1280×720 sahneye çevrildi). Görseller
+`assets/design-system/vitra-slides/` altında.
+
 | Slayt | Zemin | Ayırt edici |
 |---|---|---|
-| Kapak | coral (veya teal) | Ortalanmış display başlık, alt-orta wordmark, sağ üstte %14 opak big-O |
-| Ajanda | sol %45 coral panel + beyaz sağ | Sol panelde Light ağırlıklı büyük başlık, sağda numaralı liste |
-| Bölüm ayracı | teal | Sol marjda `teal_soft` 210 px numeral, ortada başlık, üst-alt beyaz accent çizgi |
+| Kapak | coral `#FF7B52` | Sol kenara yaslanmış soluk big-O (`cover-art-front.png`, 403×720). Ortalanmış başlık **47.5 pt SemiBold** `paper` (y=275), 22 px boşluk, altında dönem satırı **43 pt SemiBold**. Alt-ortada wordmark (563, 635, 153×32) |
+| Ajanda | `paper_bg` `#FEFFFA` | Sol 640 px coral panel (`agenda-panel.png`, sağ köşeleri yuvarlak) + üzerinde big-O. Panelde ortalanmış **48 pt Regular** başlık (y=313). Sol altta beyaz logo (31, 632, 52×51). Sağda x=665 w=573 numaralı liste: numara **20 pt Regular**, etiket **20 pt Bold**, ikisi de `ink`; blok dikeyde ortalanır |
+| Bölüm ayracı | teal `#10332F` | Sabit konumlu **200 pt ExtraBold** numeral, renk `sep_num` `#254E49`, yatay merkezi x=146 (filigran gibi davranır, başlığa göre yer değiştirmez). Başlık sayfa ortasında **37 pt ExtraBold** `paper`. Üst-alt **coral** accent 43×11 px |
 | İçerik | beyaz | Breadcrumb + başlık + dönem alt başlığı + blok ızgarası + dipnot + logo + kaynak |
 | Kapanış | teal | Ortalanmış başlık, wordmark |
+
+**Kapak metni kısa tutulur:** `<Marka> SEO Değerlendirme` + alt satırda yalnızca dönem
+("Temmuz 2026"). Tarih aralığı, YoY/MoM ibaresi ve kapsam notu kapakta yer almaz;
+bunlar içerik slaytlarının alt başlığında zaten veriliyor.
+
+**Ayraçta punto sabittir, başlık sarar.** Numeral ve başlık puntosu deste genelinde
+değişmez; 1080 px'i aşan başlık alt satıra kayar, accent çizgiler blok yüksekliğine
+göre simetrik açılır ve blok dikeyde ortalanır (merkez her durumda 360 px). Numerali
+başlığa göre ölçeklendirmek aynı destede farklı boyutta numeraller üretiyordu.
 
 **Logo kuralı:** her içerik slaytının sol altında `inbound-o-teal.png` (koyu
 zeminde `inbound-o-white.png`). Bölüm ayraçlarında logo **yok**. Kapak ve kapanışta
@@ -136,7 +164,8 @@ Koyu zeminde beyaz olur.
 **Coral highlight bar (`.hl`) slayt başlıklarında kullanılmaz.** Başlıklar düz koyu
 teal. Coral bar yalnızca gövde metni, insight cümlesi ve alıntı içinde vurgu için.
 
-**Insight işareti `➔`** (heavy rightward). `→`, `•` veya emoji ok değil. Tek sembol
+**Insight işareti `➔`** (heavy rightward) ve **her zaman coral**; zemin açık ya da
+koyu olsun ok rengi değişmez. `→`, `•` veya emoji ok değil. Tek sembol
 setine sadık kalınır: `➔` insight başlatıcı, `→` önce-sonra dönüşümü, `↑ ↓` yön,
 `✓ ▲` özet blok maddesi. `⇒ ➜ ⚠` ve emoji oklar kullanılmaz.
 

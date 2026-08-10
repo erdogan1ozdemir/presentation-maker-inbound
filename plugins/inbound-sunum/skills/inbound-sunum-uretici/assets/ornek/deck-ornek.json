@@ -9,30 +9,59 @@
   "slides": [
     {
       "type": "cover",
-      "title_lines": ["Örnek Marka |", "Aylık SEO Değerlendirme"],
-      "title_pt": 50,
-      "subtitle": "Haziran 2026 (1 - 30 Haz 2026) | MoM ve YoY karşılaştırma"
+      "title_lines": [
+        "Örnek Marka SEO Değerlendirme"
+      ],
+      "subtitle": "Haziran 2026"
     },
     {
       "type": "agenda",
       "kicker": "Haziran 2026",
-      "title_lines": ["SUNUM", "AKIŞI"],
+      "title_lines": [
+        "SUNUM",
+        "AKIŞI"
+      ],
       "items": [
-        { "no": "01", "label": "Arama Hacmi ve Rekabet" },
-        { "no": "02", "label": "GA4 Organik Trafik" },
-        { "no": "03", "label": "Search Console Metrikleri" },
-        { "no": "04", "label": "Sıralama ve Görünürlük" },
-        { "no": "05", "label": "Değerlendirme ve Öneriler" }
+        {
+          "no": "01",
+          "label": "Arama Hacmi ve Rekabet"
+        },
+        {
+          "no": "02",
+          "label": "GA4 Organik Trafik"
+        },
+        {
+          "no": "03",
+          "label": "Search Console Metrikleri"
+        },
+        {
+          "no": "04",
+          "label": "Sıralama ve Görünürlük"
+        },
+        {
+          "no": "05",
+          "label": "Değerlendirme ve Öneriler"
+        }
       ]
     },
-    { "type": "separator", "no": "01", "title": "Arama Hacmi ve Rekabet" },
+    {
+      "type": "separator",
+      "no": "01",
+      "title": "Arama Hacmi ve Rekabet"
+    },
     {
       "type": "content",
-      "breadcrumb": ["ARAMA HACMİ", "Marka ve Kategori Talebi"],
+      "breadcrumb": [
+        "ARAMA HACMİ",
+        "Marka ve Kategori Talebi"
+      ],
       "title": "Marka ve Non-Brand Arama Hacmi Gelişimi",
       "subtitle": "Haziran 2026 (1 - 30 Haz 2026) & Haziran 2025 | YoY karşılaştırma",
       "source": "Keyword Planner",
-      "grid": [58, 42],
+      "grid": [
+        58,
+        42
+      ],
       "footnotes": [
         "*** Arama hacimleri Keyword Planner tarafından bucket'lı raporlanır; değişim oranları genel yön için okunur.",
         "* 2026 Nisan ayında kategori ağacı güncellemesi yapılmıştır."
@@ -41,15 +70,49 @@
         {
           "type": "table",
           "col": 0,
-          "head": ["Kelime Seti", "Haz 25 Avg.", "Haz 26 Avg.", "YoY", "MoM"],
-          "rows": [
-            ["Only Brand", "33.1K", "33.1K", "%0", "+%4.2"],
-            ["Brand + Kategori", "18.6K", "21.2K", "+%13.8", "+%2.1"],
-            ["Non-Brand", "412.0K", "338.4K", "-%17.9", "-%6.3"],
-            ["Grand Total", "463.7K", "392.7K", "-%15.3", "-%5.4"]
+          "head": [
+            "Kelime Seti",
+            "Haz 25 Avg.",
+            "Haz 26 Avg.",
+            "YoY",
+            "MoM"
           ],
-          "bold_rows": [-1],
-          "highlight_rows": [1]
+          "rows": [
+            [
+              "Only Brand",
+              "33.1K",
+              "33.1K",
+              "%0",
+              "+%4.2"
+            ],
+            [
+              "Brand + Kategori",
+              "18.6K",
+              "21.2K",
+              "+%13.8",
+              "+%2.1"
+            ],
+            [
+              "Non-Brand",
+              "412.0K",
+              "338.4K",
+              "-%17.9",
+              "-%6.3"
+            ],
+            [
+              "Grand Total",
+              "463.7K",
+              "392.7K",
+              "-%15.3",
+              "-%5.4"
+            ]
+          ],
+          "bold_rows": [
+            -1
+          ],
+          "highlight_rows": [
+            1
+          ]
         },
         {
           "type": "insights",
@@ -63,61 +126,172 @@
         }
       ]
     },
-    { "type": "separator", "no": "02", "title": "GA4 Organik Trafik" },
+    {
+      "type": "separator",
+      "no": "02",
+      "title": "GA4 Organik Trafik"
+    },
     {
       "type": "content",
-      "breadcrumb": ["GA4", "Organik Trafik Ölçümlemesi"],
+      "breadcrumb": [
+        "GA4",
+        "Organik Trafik Ölçümlemesi"
+      ],
       "title": "Organik Session ve Revenue Gelişimi",
       "subtitle": "Haziran 2026 (1 - 30 Haz 2026) | Organic Search kanalı | web + app kapsam",
       "source": "GA4 - Organic Search · Aylık",
-      "grid": [100],
+      "grid": [
+        100
+      ],
       "blocks": [
         {
           "type": "kpi",
           "cols": 4,
           "cards": [
-            { "value": "174.7K", "label": "Organic Sessions", "delta": "+%10.4 MoM" },
-            { "value": "52.4", "unit": "%", "label": "Organik Payı", "delta": "+1.8p MoM" },
-            { "value": "₺1.30M", "label": "Organic Revenue", "delta": "+%19.2 YoY" },
-            { "value": "%2.89", "label": "Organic CR", "delta": "-%0.4 MoM", "accent": "coral" }
+            {
+              "value": "174.7K",
+              "label": "Organic Sessions",
+              "delta": "+%10.4 MoM"
+            },
+            {
+              "value": "52.4",
+              "unit": "%",
+              "label": "Organik Payı",
+              "delta": "+1.8p MoM"
+            },
+            {
+              "value": "₺1.30M",
+              "label": "Organic Revenue",
+              "delta": "+%19.2 YoY"
+            },
+            {
+              "value": "%2.89",
+              "label": "Organic CR",
+              "delta": "-%0.4 MoM",
+              "accent": "coral"
+            }
           ]
         },
         {
           "type": "bar",
           "mt": 8,
           "h": 186,
-          "cats": ["Oca", "Şub", "Mar", "Nis", "May", "Haz"],
+          "cats": [
+            "Oca",
+            "Şub",
+            "Mar",
+            "Nis",
+            "May",
+            "Haz"
+          ],
           "series": [
-            { "name": "2025 Sessions", "data": [128000, 131000, 140000, 145000, 152000, 158300], "color": "gold" },
-            { "name": "2026 Sessions", "data": [141000, 149000, 156000, 163000, 168000, 174700], "color": "gray_bar" }
+            {
+              "name": "2025 Sessions",
+              "data": [
+                128000,
+                131000,
+                140000,
+                145000,
+                152000,
+                158300
+              ],
+              "color": "gold"
+            },
+            {
+              "name": "2026 Sessions",
+              "data": [
+                141000,
+                149000,
+                156000,
+                163000,
+                168000,
+                174700
+              ],
+              "color": "gray_bar"
+            }
           ]
         },
         {
           "type": "insights",
           "mt": 4,
-          "items": ["Haziran ayında gelen toplam ziyaretin {b:333K} hacminin {b:%52.4}'ünü {b:174.7K} ile organik kanal oluşturmaktadır. Session {g:+%10.4} artarken revenue {g:+%19.2} yükselmiştir; dönüşüm eğiliminin güçlendiğine işaret eder."]
+          "items": [
+            "Haziran ayında gelen toplam ziyaretin {b:333K} hacminin {b:%52.4}'ünü {b:174.7K} ile organik kanal oluşturmaktadır. Session {g:+%10.4} artarken revenue {g:+%19.2} yükselmiştir; dönüşüm eğiliminin güçlendiğine işaret eder."
+          ]
         }
       ]
     },
-    { "type": "separator", "no": "03", "title": "Search Console Metrikleri" },
+    {
+      "type": "separator",
+      "no": "03",
+      "title": "Search Console Metrikleri"
+    },
     {
       "type": "content",
-      "breadcrumb": ["SEARCH CONSOLE", "Brand ve Non-Brand Kırılımı"],
+      "breadcrumb": [
+        "SEARCH CONSOLE",
+        "Brand ve Non-Brand Kırılımı"
+      ],
       "title": "Impression, Click ve CTR Kırılımı",
       "subtitle": "Haziran 2026 & Haziran 2025 | YoY karşılaştırma | Brand = Örnek Marka yazım varyantları",
       "source": "Google Search Console · Aylık",
-      "grid": [100],
-      "footnotes": ["Total satırı ham toplamdır; brand ve non-brand ayrımına girmeyen artık ayrıca gösterilmez."],
+      "grid": [
+        100
+      ],
+      "footnotes": [
+        "Total satırı ham toplamdır; brand ve non-brand ayrımına girmeyen artık ayrıca gösterilmez."
+      ],
       "blocks": [
         {
           "type": "table",
-          "head": ["Sorgu Kümesi", "Imp Haz 25", "Imp Haz 26", "Imp YoY", "Click Haz 25", "Click Haz 26", "Click YoY", "CTR Haz 26", "CTR Δ"],
-          "rows": [
-            ["Total", "6.42M", "7.11M", "+%10.7", "214.4K", "241.3K", "+%12.5", "%3.39", "+0.05p"],
-            ["Branded Queries", "1.88M", "1.91M", "+%1.6", "132.1K", "134.8K", "+%2.0", "%7.06", "+0.03p"],
-            ["Non-Branded Queries", "4.54M", "5.20M", "+%14.5", "82.3K", "106.5K", "+%29.4", "%2.05", "+0.24p"]
+          "head": [
+            "Sorgu Kümesi",
+            "Imp Haz 25",
+            "Imp Haz 26",
+            "Imp YoY",
+            "Click Haz 25",
+            "Click Haz 26",
+            "Click YoY",
+            "CTR Haz 26",
+            "CTR Δ"
           ],
-          "bold_rows": [0],
+          "rows": [
+            [
+              "Total",
+              "6.42M",
+              "7.11M",
+              "+%10.7",
+              "214.4K",
+              "241.3K",
+              "+%12.5",
+              "%3.39",
+              "+0.05p"
+            ],
+            [
+              "Branded Queries",
+              "1.88M",
+              "1.91M",
+              "+%1.6",
+              "132.1K",
+              "134.8K",
+              "+%2.0",
+              "%7.06",
+              "+0.03p"
+            ],
+            [
+              "Non-Branded Queries",
+              "4.54M",
+              "5.20M",
+              "+%14.5",
+              "82.3K",
+              "106.5K",
+              "+%29.4",
+              "%2.05",
+              "+0.24p"
+            ]
+          ],
+          "bold_rows": [
+            0
+          ],
           "font_pt": 9
         },
         {
@@ -130,27 +304,71 @@
         }
       ]
     },
-    { "type": "separator", "no": "04", "title": "Sıralama ve Görünürlük" },
+    {
+      "type": "separator",
+      "no": "04",
+      "title": "Sıralama ve Görünürlük"
+    },
     {
       "type": "content",
-      "breadcrumb": ["GÖRÜNÜRLÜK", "Rakip Karşılaştırması"],
+      "breadcrumb": [
+        "GÖRÜNÜRLÜK",
+        "Rakip Karşılaştırması"
+      ],
       "title": "Rakip Görünürlük ve AI Search Share of Voice",
       "subtitle": "Haziran 2026 | Mobil ve desktop visibility · takip edilen 2.300 hedef anahtar kelime",
       "source": "SEOmonitor",
-      "grid": [55, 45],
-      "footnotes": ["*AI Share of Voice, takip edilen kelimelerin arama hacimlerine ve bu kelimelerdeki AI yanıtlarında bahsedilme ve linklenme oranına göre hesaplanır."],
+      "grid": [
+        55,
+        45
+      ],
+      "footnotes": [
+        "*AI Share of Voice, takip edilen kelimelerin arama hacimlerine ve bu kelimelerdeki AI yanıtlarında bahsedilme ve linklenme oranına göre hesaplanır."
+      ],
       "blocks": [
         {
           "type": "table",
           "col": 0,
-          "head": ["Domain", "Mobil Vis.", "Δ Mobil", "Desktop Vis.", "AI SoV"],
-          "rows": [
-            ["Rakip A", "%24.8", "+%1.2", "%26.1", "%18.4"],
-            ["Örnek Marka", "%19.3", "+%2.7", "%20.4", "%22.1"],
-            ["Rakip B", "%17.6", "-%0.8", "%18.2", "%11.3"],
-            ["Rakip C", "%12.1", "-%2.4", "%12.9", "%7.6"]
+          "head": [
+            "Domain",
+            "Mobil Vis.",
+            "Δ Mobil",
+            "Desktop Vis.",
+            "AI SoV"
           ],
-          "highlight_rows": [1]
+          "rows": [
+            [
+              "Rakip A",
+              "%24.8",
+              "+%1.2",
+              "%26.1",
+              "%18.4"
+            ],
+            [
+              "Örnek Marka",
+              "%19.3",
+              "+%2.7",
+              "%20.4",
+              "%22.1"
+            ],
+            [
+              "Rakip B",
+              "%17.6",
+              "-%0.8",
+              "%18.2",
+              "%11.3"
+            ],
+            [
+              "Rakip C",
+              "%12.1",
+              "-%2.4",
+              "%12.9",
+              "%7.6"
+            ]
+          ],
+          "highlight_rows": [
+            1
+          ]
         },
         {
           "type": "note",
@@ -169,13 +387,22 @@
         }
       ]
     },
-    { "type": "separator", "no": "05", "title": "Değerlendirme ve Öneriler" },
+    {
+      "type": "separator",
+      "no": "05",
+      "title": "Değerlendirme ve Öneriler"
+    },
     {
       "type": "content",
-      "breadcrumb": ["DEĞERLENDİRME", "Öncelikli Aksiyonlar"],
+      "breadcrumb": [
+        "DEĞERLENDİRME",
+        "Öncelikli Aksiyonlar"
+      ],
       "title": "Öncelikli Aksiyonlar ve Sonraki Dönem Odakları",
       "subtitle": "Haziran 2026 analizi ışığında üç başlıkta öneri seti",
-      "grid": [100],
+      "grid": [
+        100
+      ],
       "blocks": [
         {
           "type": "panels",
@@ -210,10 +437,15 @@
         {
           "type": "text",
           "mt": 6,
-          "paras": ["Aksiyonların önceliklendirilmesi marka ekibinin stratejik tercihleri ve öncelikleriyle güncellenebilir."]
+          "paras": [
+            "Aksiyonların önceliklendirilmesi marka ekibinin stratejik tercihleri ve öncelikleriyle güncellenebilir."
+          ]
         }
       ]
     },
-    { "type": "closing", "title": "Teşekkürler" }
+    {
+      "type": "closing",
+      "title": "Teşekkürler"
+    }
   ]
 }

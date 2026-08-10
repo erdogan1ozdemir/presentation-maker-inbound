@@ -28,14 +28,17 @@ farklı büyük/küçük harf varyantları geçiyorsa `qa_deck.py` hata verir.
 
 ```json
 { "type": "cover",
-  "title_lines": ["Marka |", "Aylık SEO Değerlendirme"],
-  "title_pt": 50,
-  "subtitle": "Haziran 2026 (1 - 30 Haz 2026) | MoM ve YoY karşılaştırma",
-  "bg": "coral" }
+  "title_lines": ["Marka SEO Değerlendirme"],
+  "subtitle": "Haziran 2026" }
 ```
 
-`title_lines` satır kırmasını sen kontrol edersin. `bg`: `coral` (varsayılan) veya
-`teal`. Wordmark alt-ortaya, dekoratif big-O sağ üste otomatik gelir.
+Kapak metni kısa tutulur: marka + deste tipi, alt satırda **yalnızca dönem**. Tarih
+aralığı, YoY/MoM ibaresi ve kapsam notu kapağa yazılmaz - bunlar içerik slaytlarının
+alt başlığında veriliyor.
+
+Başlık 47.5 pt SemiBold, dönem 43 pt SemiBold, ikisi de `paper` (#FEFEF7). Sığmayan
+başlık otomatik küçülür. Sol kenardaki soluk big-O ve alt-ortadaki wordmark otomatik
+gelir. `title_pt` / `subtitle_pt` ile punto, `title_y` ile dikey konum ezilebilir.
 
 ### agenda
 
@@ -157,8 +160,9 @@ uyarı üretir; uyarıyı görmezden geçmek PPTX'te logonun üstüne binen tabl
   "gap": 12, "font_pt": 10.5, "dark": false }
 ```
 
-`➔` ok otomatik. **Her veri bloğunun yanında/altında bir yorum katmanı olmalı** -
-yorumsuz tablo QA hatası.
+`➔` ok otomatik ve **coral**. Varsayılan punto 12 (gövde tavanı); `font_pt` ile
+düşürülebilir ama 12'nin üstüne çıkmaz. **Her veri bloğunun yanında/altında bir yorum
+katmanı olmalı** - yorumsuz tablo QA hatası.
 
 ### kpi
 
