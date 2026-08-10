@@ -85,6 +85,12 @@ LOGO_XY = (44, 652)
 LOGO_WH = 36
 SOURCE_XY = (100, 658)
 
+# Bolum ayraci: numeral ile slayt kenari ve baslik arasi minimum aciklik.
+# Baslik bu paydan sonra kalan genislige sarilir; punto sabit kalir.
+SEP_NUM_GAP = 24
+SEP_ACC_W, SEP_ACC_H = 60, 3.5     # accent cizgi (Design System: 60x3.5px pill)
+SEP_ACC_GAP = 28                   # accent cizgi ile baslik blogu arasi
+
 # Punto olcegi (px * 0.75)
 PT = {
     "cover":      66,
@@ -1021,36 +1027,74 @@ def s_agenda(slide, spec, ctx, idx):
                 pt=lpt, family=F_DISPLAY, bold=True, color="ink", line_pct=1.25)
 
 
-def s_separator(slide, spec, ctx, idx):
-    set_bg(slide, "teal")
+def separator_layout(spec):
+    """
+    Ayrac slaytinin yerlesimini hesaplar. HTML onizleme de ayni fonksiyonu
+    kullanir; satir kirilmasi tek yerde belirlendigi icin iki cikti birebir
+    ayni gorunur (tarayicinin sarma davranisina guvenilmez).
+
+    Punto SABITTIR - ne numeral ne baslik kucultulur. Baslik sigmiyorsa alt
+    satira kayar, accent cizgiler ve numeral coklu satira gore konumlanir.
+    Numerali bosluga gore olceklendirmek, boyutunu baslik uzunlugunun
+    fonksiyonu yapiyor ve ayni destede farkli boyutta numeraller uretiyordu.
+    """
     title = plain(spec.get("title", ""))
     tpt = spec.get("title_pt", PT["section"])
-    while tpt > 22 and text_w(title, tpt, F_DISPLAY, True) > STAGE_W * 0.62:
-        tpt -= 1
-    tw = text_w(title, tpt, F_DISPLAY, True)
-    tx = (STAGE_W - tw) / 2
-    cy = STAGE_H / 2
-
     num = str(spec.get("no", "") or "")
-    if num:
-        npt = PT["section_num"]
-        nw = text_w(num, npt, F_DISPLAY, True)
-        while nw > tx * 0.8 and npt > 60:
-            npt -= 4
-            nw = text_w(num, npt, F_DISPLAY, True)
-        nh = npt * PX_PER_PT
-        textbox(slide, (tx - nw) / 2, cy - nh * 0.52, nw + 20, nh, num, pt=npt,
-                family=F_DISPLAY, bold=True, color="teal_soft", align="c",
-                line_pct=0.9, wrap=False)
+    npt = spec.get("no_pt", PT["section_num"])
+    nw = text_w(num, npt, F_DISPLAY, True) if num else 0.0
 
-    th = tpt * PX_PER_PT * 1.1
-    rect(slide, (STAGE_W - 60) / 2, cy - th / 2 - 30, 60, 3.5, fill="white",
-         radius=2)
-    textbox(slide, tx - 20, cy - th / 2, tw + 40, th, title, pt=tpt,
-            family=F_DISPLAY, bold=True, color="white", align="c", line_pct=1.1,
-            wrap=False)
-    rect(slide, (STAGE_W - 60) / 2, cy + th / 2 + 26, 60, 3.5, fill="white",
-         radius=2)
+    # Baslik max genisligi: iki yanda numeral bolgesi + aciklik ayrildiktan sonra
+    # kalan. Numeral sol bosluga ortalandigi icin sag tarafa da simetrik pay
+    # birakilir, boylece baslik sayfa ortasinda kalir.
+    max_tw = (STAGE_W - 2 * (nw + 2 * SEP_NUM_GAP)) if num else (STAGE_W - 200)
+    lines = wrap_lines(title, max_tw, tpt, F_DISPLAY, True)
+    tw = max((text_w(ln, tpt, F_DISPLAY, True) for ln in lines), default=0.0)
+
+    lh = tpt * PX_PER_PT * 1.1
+    th = len(lines) * lh
+    cy = STAGE_H / 2
+    total_h = SEP_ACC_H + SEP_ACC_GAP + th + SEP_ACC_GAP + SEP_ACC_H
+    top = cy - total_h / 2
+
+    return dict(
+        title=title, lines=lines, tpt=tpt, tw=tw, th=th, lh=lh,
+        tx=(STAGE_W - tw) / 2, num=num, npt=npt, nw=nw,
+        max_tw=max_tw, cy=cy,
+        acc_top_y=top,
+        title_y=top + SEP_ACC_H + SEP_ACC_GAP,
+        acc_bot_y=top + SEP_ACC_H + SEP_ACC_GAP + th + SEP_ACC_GAP,
+    )
+
+
+def s_separator(slide, spec, ctx, idx):
+    set_bg(slide, "teal")
+    L = separator_layout(spec)
+
+    if len(L["lines"]) > 2:
+        ctx.warn(f"S{idx}: ayrac basligi {len(L['lines'])} satira sarildi - iki "
+                 f"satir tasarimin sinirir. Basligi kisaltmak onerilir "
+                 f"('{L['title']}')")
+    if L["tw"] > L["max_tw"] + 2:
+        ctx.warn(f"S{idx}: ayrac basliginda bolunemeyen uzun kelime var, "
+                 f"{L['tw'] - L['max_tw']:.0f}px numeral bolgesine giriyor "
+                 f"('{L['title']}')")
+
+    accx = (STAGE_W - SEP_ACC_W) / 2
+    rect(slide, accx, L["acc_top_y"], SEP_ACC_W, SEP_ACC_H, fill="white", radius=2)
+    textbox(slide, L["tx"] - 20, L["title_y"], L["tw"] + 40, L["th"],
+            [parse_runs(ln, "white") for ln in L["lines"]], pt=L["tpt"],
+            family=F_DISPLAY, bold=True, color="white", align="c",
+            line_pct=1.1, wrap=False)
+    rect(slide, accx, L["acc_bot_y"], SEP_ACC_W, SEP_ACC_H, fill="white", radius=2)
+
+    if L["num"]:
+        # Numeral, baslik blogunun dikey merkezine hizalanir; coklu satirda da
+        # blogun ortasinda kalir.
+        nh = L["npt"] * PX_PER_PT
+        textbox(slide, (L["tx"] - L["nw"]) / 2, L["cy"] - nh * 0.52,
+                L["nw"] + 20, nh, L["num"], pt=L["npt"], family=F_DISPLAY,
+                bold=True, color="teal_soft", align="c", line_pct=0.9, wrap=False)
 
 
 def s_closing(slide, spec, ctx, idx):

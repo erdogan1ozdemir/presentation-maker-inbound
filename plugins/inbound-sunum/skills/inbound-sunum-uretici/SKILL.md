@@ -265,9 +265,14 @@ PPTX'in 13.333×7.5 inch'i. Aynı koordinat sistemi olduğu için HTML önizleme
 piksel olarak render edilemez; görsel kontrolün tek yolu bu önizlemedir.
 
 Üretici, çizimden önce gerçek TTF üzerinden metin genişliği ölçer. Bunun üç sonucu
-var: uzun başlık tek satıra sığana kadar puntosu küçülür (Design System kuralı:
-slayt başlığı sarmaz), tablo kolon genişlikleri içeriğe göre hesaplanır, ve gövde
-alt sınırını aşan blok uyarı üretir. Uyarı çıktıysa blok yüksekliğini düşür,
+var: içerik slaytı başlığı tek satıra sığana kadar puntosu küçülür (Design System
+kuralı: içerik başlığı sarmaz), tablo kolon genişlikleri içeriğe göre hesaplanır, ve
+gövde alt sınırını aşan blok uyarı üretir.
+
+**Bölüm ayracında kural terstir:** numeral ve başlık puntosu her ayraçta sabittir,
+uzun başlık alt satıra kayar ve accent çizgiler çok satırlı bloğa göre açılır. Punto
+küçültmek numeral boyutunu başlık uzunluğunun fonksiyonu yapardı ve destede farklı
+boyutta numeraller üretirdi. Uyarı çıktıysa blok yüksekliğini düşür,
 `font_pt` küçült veya slaytı ikiye böl - uyarıyı görmezden gelme, o blok PPTX'te
 logo ve kaynak şeridinin üstüne biner.
 

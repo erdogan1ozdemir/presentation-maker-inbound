@@ -25,8 +25,8 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
-    BODY_BOTTOM, TITLE_TOP, _delta_kind, fit_pt, parse_runs, plain, text_w,
-    wrap_lines,
+    BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
+    _delta_kind, fit_pt, parse_runs, plain, separator_layout, text_w, wrap_lines,
 )
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -370,12 +370,16 @@ def sl_agenda(s):
 
 
 def sl_separator(s):
-    title = plain(s.get("title", ""))
-    tpt = s.get("title_pt", PT["section"])
+    # Yerlesim inbound_deck.separator_layout ile hesaplanir: satir kirilmasi ve
+    # punto tek yerde belirlenir, boylece HTML ve PPTX birebir ayni gorunur.
+    # Tarayicinin kendi sarma davranisina birakilsa iki cikti ayrisirdi.
+    L = separator_layout(s)
+    body = "<br>".join(esc(ln) for ln in L["lines"])
     return (f'<div class="slide dark sepslide">'
-            f'<div class="sep-no">{esc(str(s.get("no","") or ""))}</div>'
+            f'<div class="sep-no" style="font-size:{pt(L["npt"])}">'
+            f'{esc(L["num"])}</div>'
             f'<div class="sep-c"><span class="acc"></span>'
-            f'<h1 style="font-size:{pt(tpt)}">{esc(title)}</h1>'
+            f'<h1 style="font-size:{pt(L["tpt"])}">{body}</h1>'
             f'<span class="acc"></span></div><div></div></div>')
 
 
@@ -508,9 +512,9 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .sepslide .sep-no{justify-self:center;font-family:'%(disp)s';font-weight:700;font-size:210px;
   color:#%(tealsoft)s;line-height:.9}
 .sepslide .sep-c{text-align:center}
-.sepslide .sep-c h1{color:#fff;white-space:nowrap}
-.acc{display:block;width:60px;height:3.5px;background:#fff;border-radius:999px;margin:0 auto 28px}
-.sepslide .sep-c .acc:last-child{margin:28px auto 0}
+.sepslide .sep-c h1{color:#fff;line-height:1.1}
+.acc{display:block;width:%(accw)spx;height:%(acch)spx;background:#fff;border-radius:999px;margin:0 auto %(accgap)spx}
+.sepslide .sep-c .acc:last-child{margin:%(accgap)spx auto 0}
 /* table */
 .dt{width:100%%;border-collapse:collapse;font-family:'%(body)s';
   box-shadow:0 2px 8px rgba(16,51,47,.06)}
@@ -618,7 +622,8 @@ def render(spec, base):
                      linesoft=C["line_soft"], coraltint=C["coral_tint"],
                      coraldeep=C["coral_deep"], tealsoft=C["teal_soft"],
                      redwash=C["red_wash"], red=C["red"], ml=M_L, mr=M_R,
-                     tt=TITLE_TOP)
+                     tt=TITLE_TOP, accw=SEP_ACC_W, acch=SEP_ACC_H,
+                     accgap=SEP_ACC_GAP)
     return (f'<!doctype html><meta charset="utf-8"><title>{esc(head_title)}</title>'
             f"<style>{_fonts_css()}\n{css}</style>"
             f'<div class="wrap">{"".join(parts)}</div>'

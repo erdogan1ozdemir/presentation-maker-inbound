@@ -88,9 +88,24 @@ Inter, system-ui veya başka bir yüz birincil olarak kullanılmaz. Fallback yal
 kurulu olmadan Bricolage/Outfit yerine fallback görünür. `assets/design-system/fonts/`
 klasörünü deste ile birlikte ilet.
 
-**Başlık tek satırda kalır.** Uzun başlık sarmaz, puntosu küçülür. Üretici bunu
-gerçek font metriğiyle ölçüp otomatik yapar ve 27 pt altına düştüğünde uyarır -
-o uyarı "başlığı kısaltmayı düşün" demektir.
+**İçerik slaytı başlığı tek satırda kalır.** Uzun başlık sarmaz, puntosu küçülür.
+Üretici bunu gerçek font metriğiyle ölçüp otomatik yapar ve 27 pt altına düştüğünde
+uyarır - o uyarı "başlığı kısaltmayı düşün" demektir.
+
+**Bölüm ayracında kural terstir: punto sabit, başlık sarar.** Numeral her ayraçta
+157 pt (210 px), başlık her ayraçta 45 pt (60 px) - hiçbiri küçültülmez. Başlık
+sığmıyorsa alt satıra kayar; accent çizgiler ve numeral çok satırlı bloğa göre
+konumlanır ve blok dikeyde ortalanır (merkez her durumda 360 px).
+
+Bu, vendor'daki `DESIGN-SYSTEM-README.md`'nin "ayraç başlığı tek satır, sarmaz"
+ifadesinden **bilinçli bir ayrılmadır.** Gerekçe: numeralin puntosunu başlığa kalan
+boşluğa göre ölçeklendirmek, numeral boyutunu başlık uzunluğunun fonksiyonu yapıyor
+ve aynı destede farklı boyutta numeraller üretiyordu (örnekte 157 pt ve 141 pt bir
+arada). Tutarlı numeral boyutu, tek satır zorunluluğundan daha önemli.
+
+Başlık genişliği sınırı numeral bölgesinden türetilir: iki yanda numeral (218 px) +
+24 px açıklık ayrıldıktan sonra kalan **748 px**. Bunun üstündeki başlık sarar. Üç
+satıra taşan başlıkta uyarı verilir - iki satır tasarımın rahat sınırı.
 
 **Büyük harfli etiketlerde İngilizce terim tuzağı:** CSS `text-transform:uppercase`
 Türkçe locale'de İngilizce terimlerin "i" harfini "İ"ye çeviriyor (VİSİBİLİTY,
@@ -107,7 +122,7 @@ büyük harfle yazmak en temizi.
 |---|---|---|
 | Kapak | coral (veya teal) | Ortalanmış display başlık, alt-orta wordmark, sağ üstte %14 opak big-O |
 | Ajanda | sol %45 coral panel + beyaz sağ | Sol panelde Light ağırlıklı büyük başlık, sağda numaralı liste |
-| Bölüm ayracı | teal | Sol marjda `teal_soft` 210 px numeral, ortada tek satır başlık, üst-alt beyaz accent çizgi |
+| Bölüm ayracı | teal | Sol marjda `teal_soft` 210 px numeral, ortada başlık, üst-alt beyaz accent çizgi |
 | İçerik | beyaz | Breadcrumb + başlık + dönem alt başlığı + blok ızgarası + dipnot + logo + kaynak |
 | Kapanış | teal | Ortalanmış başlık, wordmark |
 

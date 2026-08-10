@@ -56,9 +56,15 @@ bölüm varken destede 4 bölüm olduğu yaşandı.
 { "type": "separator", "no": "01", "title": "Arama Hacmi ve Rekabet" }
 ```
 
-Koyu teal zemin, soluk numeral sol marjda, başlık sayfa ortasında tek satır,
-üstünde ve altında beyaz accent çizgi. Numaralar ajandayla birebir eşleşir ve
-tekrarlanmaz.
+Koyu teal zemin, soluk numeral sol marjda, başlık sayfa ortasında, üstünde ve altında
+beyaz accent çizgi. Numaralar ajandayla birebir eşleşir ve tekrarlanmaz.
+
+**Punto sabittir:** numeral 157 pt, başlık 45 pt - deste genelinde her ayraçta aynı.
+Başlık 748 px'i aşarsa alt satıra kayar; accent çizgiler ve numeral çok satırlı bloğa
+göre konumlanır, blok dikeyde ortalanır. Üç satıra taşarsa uyarı verilir.
+
+`title_pt` ve `no_pt` ile puntolar geçersiz kılınabilir ama gerek yoktur - farklı
+ayraçlarda farklı punto vermek destede görsel tutarsızlık üretir.
 
 ### closing
 
