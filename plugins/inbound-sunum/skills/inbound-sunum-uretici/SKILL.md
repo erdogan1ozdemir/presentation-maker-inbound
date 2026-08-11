@@ -87,8 +87,8 @@ söyle - kullanıcı neyi kapattığını bilerek kapatsın:
 | Google Search Console | Click/impression/CTR/pozisyon, brand-non-brand, sayfa & query | `mcp__gsc__*` ile **canlı çekilebilir** (16 ay sınırı) |
 | GA4 | Session, revenue, kanal, ürün funnel, AI referral | Genelde **kullanıcı export'u** |
 | Keyword Planner | Arama hacmi: marka, marka+kategori, non-brand, rakip | Kullanıcı export'u |
-| SEOmonitor | Visibility, Share of Clicks, AI Search SoV, AI Overview SoV | Panel export'u |
-| Ahrefs | Sıralama dağılımı (ilk 3/10/100), backlink, DR | MCP varsa canlı |
+| SEOmonitor | Visibility, Share of Clicks, AI Overview SoV, kategori visibility, kelime bazlı sıra | `mcp__*__seomonitor_*` ile **canlı çekilebilir** |
+| Ahrefs | Sıralama dağılımı (ilk 3/10/100), backlink, DR, tam URL çözümleme | MCP varsa canlı |
 | AI visibility izleme | Mention, citation, prompt coverage, sentiment | `mcp__inbound-db__*` |
 | CrUX | LCP, INP, CLS | cruxvis.withgoogle.com |
 | DataForSEO | Yedek SERP/hacim doğrulama | MCP |

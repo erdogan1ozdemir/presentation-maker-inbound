@@ -74,6 +74,24 @@ gerekçe dipnota yazıldı.
 **Kural:** endeks metriklerinde dönemsel kıyas yapmadan önce taban kontrolü çalıştır.
 Tüm aktörlerin aynı yönde ve aynı oranda hareket etmesi organik değildir.
 
+### 1.3c. Aynı metriğin iki endpoint'te tekrarlanması
+
+SEOmonitor'de `get_share_of_voice` (organic) ile `get_daily_share_of_clicks` aynı
+değeri döndürüyor. Destede iki ayrı tablo olarak vermek aynı veriyi iki kez
+göstermek olur; tek başlık altında verilir.
+
+**Kural:** yeni bir kaynak kullanılırken iki endpoint'in aynı tarihteki değerleri
+karşılaştırılır. Birebir aynıysa aynı metriktir, farklı isimlerle sunulmaz.
+
+### 1.3d. Snapshot metriği dönemsel seri sanmak
+
+SEOmonitor AI Search SoV, iki farklı tarih için sorulduğunda birebir aynı değerleri
+döndürebiliyor (Flormar: 30 Haz ve 31 Tem çağrıları impression_score 188033,
+508 mention, total 1164798 - tamamen aynı). Bu bir günlük seri değil snapshot.
+
+**Kural:** dönemsel kıyas yapmadan önce iki tarihin değerleri karşılaştırılır.
+Aynıysa yalnızca mevcut durum olarak sunulur ve dipnotta belirtilir.
+
 ### 1.4. Aynı isimli metriğin farklı formülü
 
 Aracın "Source Visibility" metriği **yanıt bazlıydı** (kaynak gösterildiği yanıt ÷
@@ -174,6 +192,30 @@ Her tablo için üç soruyu yanıtla ve **tüm slaytlarda aynı cevabı ver**:
 
 Bir slaytta bile farklıysa dipnot ile tablo çelişir. Gerçek bir denetimde bu şekilde
 dört hata yakalandı.
+
+### 2.6. GSC page URL'lerinin kesilmesi
+
+GSC MCP sayfa URL'lerini **100 karakterde kesiyor** (hem `get_advanced_search_analytics`
+hem `compare_search_periods`). Uzun ürün URL'lerinde slug'ın sonu ve barkod
+kayboluyor; dahası birden fazla ürün varyantı aynı 100 karakterlik ön eki
+paylaşabiliyor.
+
+Kesilen URL'in eksik kısmını tamamlamak **uydurmadır** - varyantlar arasında
+seçim yapılamaz. Doğru yol üç adım:
+
+1. Ahrefs `site-explorer-top-pages` ile tam URL adaylarını çıkar
+   (`select: "raw_url,sum_traffic"`, gerekiyorsa `where` ile slug filtresi).
+2. Her aday için GSC'ye `filter_dimension: page`, `filter_operator: equals`,
+   `filter_expression: <tam URL>` ile sor; `dimensions: device` kullanılırsa üç
+   satırın toplamı o URL'in dönem toplamıdır.
+3. Hangi adayın aradığın click değerini verdiği böyle kesinleşir.
+
+Gerçek örnek: `sheer-up-...-ruj-pembe-8682536012` ön ekini dört farklı ürün
+paylaşıyordu; nokta sorgu ile `...8682536012096/` doğrulandı (Tem 26: 1.023 click,
+Tem 25: 1.801 click).
+
+**Kural:** sayfa tablosunda kısaltılmış URL kullanılmaz. Tam URL doğrulanamıyorsa
+o satır tablodan çıkarılır.
 
 ---
 

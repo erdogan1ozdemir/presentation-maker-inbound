@@ -41,7 +41,7 @@ açtığını yaz. Kullanıcı neyi kapattığını bilerek kapatsın.
 | 1 | Google Search Console | Click/impression/CTR/pozisyon, brand-non-brand kırılımı, sayfa ve query hareketleri | Destenin omurgası gider; sunum yapılamaz |
 | 2 | GA4 | Organik session, kanal dağılımı, revenue/transaction, ürün funnel, AI referral | Trafik ve ticari sonuç katmanı çıkar |
 | 3 | Keyword Planner | Marka, marka+kategori, non-brand ve rakip arama hacmi | **Talep-performans ayrıştırması yapılamaz**, düşüş yorumları bağlamsız kalır |
-| 4 | SEOmonitor | Visibility (mobil/desktop), Share of Clicks, AI Search SoV, AI Overview SoV, kategori bazlı visibility | Rakip karşılaştırma bölümü çıkar |
+| 4 | SEOmonitor | Visibility (mobil/desktop), Share of Clicks, AI Overview SoV, kategori bazlı visibility, kelime bazlı sıra | Rakip karşılaştırma ve görünürlük bölümü çıkar |
 | 5 | Ahrefs | İlk 3/10/100 sıralama dağılımı trendi, backlink, DR | Sıralama trendi slaytı çıkar |
 | 6 | AI visibility izleme | Mention, citation, prompt coverage, sentiment, AI Overview tetiklenme | GEO bölümü çıkar |
 | 7 | CrUX | LCP, INP, CLS | Core Web Vitals slaytı çıkar |
@@ -77,8 +77,9 @@ Bunlar veri değil, kullanıcının elindeki bilgi. Sorulmazsa deste eksik çık
    rakipler ayrılıyor mu? Sıra tüm destede sabit kalır.
 3. **Brand kelime seti:** marka yazım varyantları (yanlış yazımlar dahil), üçüncü
    parti markalar brand'e mi non-brand'e mi yazılacak.
-4. **Takip edilen kelime sayısı:** SEOmonitor projesinden okunur, slayt metnine
-   birebir girer ("2.300 hedef anahtar kelime takip edilmektedir"). Uydurulmaz.
+4. **Takip edilen kelime sayısı:** SEOmonitor kampanyasının `keywords_count`
+   alanından okunur, slayt metnine birebir girer ("599 hedef anahtar kelime takip
+   edilmektedir"). Uydurulmaz.
 5. **Kategori seti:** kategori kırılımlı tabloların satır seti ve URL→kategori
    eşleme kuralı.
 6. **Önceki dönem destesi var mı?** Varsa metrik tanımları, brand kelime seti ve
@@ -183,36 +184,48 @@ Bucket'lar olduğu gibi kullanılır, yeniden hesaplanmaz.
 
 ### 2.4. SEOmonitor
 
-**SEOmonitor MCP kurulu değildir**; veriye canlı erişim yok. Panel export'u veya
-ekran görüntüsüyle gelir. Ekran görüntüsü slayda yapıştırılmaz, **tabloya çevrilir**.
+**Canlı çekilebilir** (`mcp__*__seomonitor_*`). Kullanıcıdan export istenmez.
 
-**Alternatif:** görünürlük ve rakip karşılaştırması için Ahrefs Rank Tracker canlı
-erişilebilir ve büyük ölçüde aynı soruyu yanıtlar:
+**İlk adım her zaman campaign kimliği:** `seomonitor_get_tracked_campaigns` ile
+kampanya listesi çekilir ve markanın `campaign_id`'si bulunur. Aynı çağrı
+`campaign_info` içinde kritik iki alanı da verir:
 
-| SEOmonitor metriği | Ahrefs karşılığı | Araç |
-|---|---|---|
-| Visibility | Share of Voice | `rank-tracker-competitors-domains` |
-| Rakip görünürlük tablosu | aynı tool, domain bazında | aynı |
-| Sıralama dağılımı (ilk 3/10/100) | position kovaları | `rank-tracker-overview` |
-| Kelime bazlı before→after | `position` + `position_prev` | aynı |
-| Share of Clicks | **karşılığı yok** | - |
-| AI Search SoV / AI Overview SoV | `brand-radar-*` (ayrı metrik tanımı) | Ahrefs Brand Radar |
+- `primary_device` - raporun hangi cihazı esas alacağı
+- `max_tracked_position_desktop` / `max_tracked_position_mobile` - iki cihaz
+  **farklı derinlikte** takip edilebiliyor (ör. mobil 100, desktop 20). Sığ takip
+  edilen cihazda tavana oturan kelime "o sırada" değil **takip dışı** demektir;
+  cihazın kötü performansı olarak okunmaz.
 
-Ahrefs kullanıldığında **kaynak notu Ahrefs olarak yazılır**, SEOmonitor olarak
-değil. Share of Clicks gerekiyorsa kullanıcıdan SEOmonitor export'u istenir;
-gelmezse o metrik destede yer almaz.
+`keywords_count` slayt metnindeki "N hedef anahtar kelime takip edilmektedir"
+ifadesine birebir girer.
 
-Ahrefs Share of Voice'ta dönemsel kıyas yapmadan önce taban kontrolü çalıştırılır
-(bkz. `tuzaklar-ve-qa.md` 1.3b) - SoV endeks metriğidir ve kelime havuzu değişince
-dönemler arası karşılaştırılamaz hale gelir.
+**Çekim listesi:**
 
-> Visibility: mobil ve desktop, marka + rakip seti, dönem başı-sonu.
-> Share of Clicks: dönem karşılaştırmalı.
-> AI Search SoV ve AI Overview SoV: ikisi **farklı metrik**, hangisi olduğu
-> etiketiyle alınır.
-> Kategori bazlı visibility: kategori seti bazında dönem karşılaştırması.
-> Kelime bazlı: pozisyon değişimi (before → after), en çok artan/düşen.
-> Takip edilen kelime sayısı da not edilir.
+| # | Tool | Ne verir | Kullanıldığı slayt |
+|---|---|---|---|
+| S1 | `get_tracked_campaigns` | campaign_id, keywords_count, primary_device, takip derinliği, güncel visibility (desktop/mobile/blended + 7/30 gün trend) | Görünürlük KPI |
+| S2 | `get_share_of_voice` (tarih başına) | Organic SoV + AI Overview SoV + AI Search SoV, domain bazında; AI tarafında `brand_mentions` / `brand_citations` / `website_citations` kırılımı | Rakip görünürlük, AI Overview rekabeti |
+| S3 | `get_daily_share_of_clicks` | Günlük Share of Clicks, domain bazında | Share of Clicks |
+| S4 | `get_daily_group_visibility` | Grup (kategori) bazında günlük visibility | Kategori bazında visibility |
+| S5 | `get_keyword_groups` | Kategori/klasör ağacı - kategori slaytlarının satır seti | Kategori kırılımı |
+| S6 | `get_daily_keyword_ranks` | Kelime bazlı günlük sıra (before→after) | Kelime hareketleri |
+
+`get_share_of_voice`'ta `metrics_weighted_by_search_volume: 1` verilir; ağırlıksız
+değer kelime sayısına göre hesaplanır ve hacim farkını görmezden gelir.
+
+**Bu kaynakta yaşanmış iki tuzak:**
+
+1. **Organic Share of Voice ile Share of Clicks aynı metriktir.** İki ayrı endpoint
+   aynı değeri döndürüyor (Flormar 31 Tem 2026: SoV `0.076279` / traffic `34369.54`
+   ve SoC `0.0763` / monthly_clicks `34370`). Destede **tek başlık altında** verilir;
+   ikisini ayrı metrik gibi sunmak aynı veriyi iki kez göstermek olur.
+2. **AI Search SoV günlük seri değil, snapshot olabilir.** Flormar'da 30 Haz ve
+   31 Tem çağrıları birebir aynı değerleri döndürdü (impression_score 188033,
+   508 mention, total 1164798). Dönemsel kıyas yapılmadan önce iki tarihin
+   değerleri karşılaştırılır; aynıysa yalnızca mevcut durum olarak sunulur.
+   AI Overview SoV bu sorunu göstermiyor, günlük değişiyor.
+
+Panel ekran görüntüsü kullanılacaksa slayda yapıştırılmaz, **tabloya çevrilir**.
 
 ### 2.5. Ahrefs
 
@@ -277,7 +290,8 @@ kullanıcıya söyle.
 
 | Kaynak | Araçlar | Sınır |
 |---|---|---|
-| GSC | `mcp__gsc__get_advanced_search_analytics`, `compare_search_periods`, `list_properties` | 16 ay retention. Query ve page kırılımı ayrı çekilir |
+| GSC | `mcp__gsc__get_advanced_search_analytics`, `compare_search_periods`, `list_properties` | 16 ay retention. Query ve page kırılımı ayrı çekilir. **Page URL'leri 100 karakterde kesilir** - uzun ürün URL'leri için bkz. `tuzaklar-ve-qa.md` 2.6 |
+| SEOmonitor | `seomonitor_get_tracked_campaigns` ile campaign_id, sonra `get_share_of_voice` · `get_daily_share_of_clicks` · `get_daily_group_visibility` · `get_keyword_groups` | Cihaz takip derinliği farklı olabilir; `primary_device` esas alınır |
 | Ahrefs | `mcp__bc3c...__site-explorer-*`, `rank-tracker-*`, `gsc-*` | Abonelik limitleri |
 | AI visibility | `mcp__inbound-db__*` (`visibility_stats`, `competitor_stats`, `top_citations`, `query`) | Hazır fonksiyonlar önce denenir, elle formül kurulmaz |
 | DataForSEO | `mcp__dataforseo__*` | location_name **"Turkiye"** (Turkey değil) |
