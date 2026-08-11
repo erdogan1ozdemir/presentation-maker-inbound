@@ -182,23 +182,33 @@ Hacimler bucket'lı gelir (27.1K, 33.1K, 40.5K). Bu yüzden değişimler %0, %18
 gibi tekrar eden değerlerde kümelenir; normaldir, her rakip için ayrı sebep aranmaz.
 Bucket'lar olduğu gibi kullanılır, yeniden hesaplanmaz.
 
-**MCP alternatifi ve kaynak seçimi.** Keyword Planner MCP bağlı değilse DataForSEO
-`kw_data_google_ads_search_volume` (`location_name: "Turkiye"`, `language_code: "tr"`)
-aynı Google Ads verisini canlı verir - tek çağrıda birden çok kelime, son 12 ayın
-`monthly_searches` kırılımıyla.
+**MCP alternatifi.** Keyword Planner MCP bağlı değilse DataForSEO aynı Google Ads
+verisini canlı verir:
 
-Ancak bucket'lama **aylık YoY karşılaştırmasını taşımaz**: tek terim için seri
-yalnızca 74000 / 90500 / 110000 basamaklarında hareket eder, bu da gerçek olmayan
-sıfır değişimler ve sıçramalar üretir. Bu nedenle:
+- `kw_data_google_ads_search_volume` - tek çağrıda birden çok kelime, son 12 ayın
+  `monthly_searches` kırılımıyla. Set toplamları için elverişli.
+- `dataforseo_labs_google_historical_keyword_data` - uzun geçmiş (Ağustos 2021'e
+  kadar). Her `history` kaydı bir snapshot'tır ve `keyword_info.monthly_searches`
+  içinde son 12 ayı taşır; yıl × ay matrisi için snapshot'lar birleştirilir (aynı
+  ay birden çok snapshot'ta varsa en yenisi alınır). Çok kelimede yanıt büyür,
+  script ile işlenir.
 
-- **Aylık trend tablosu / grafiği (C04, C04b):** Ahrefs
-  `keywords-explorer-volume-history` (`keyword`, `country`, `date_from`, `date_to`)
-  kullanılır - sürekli seri verir, YoY karşılaştırmasına uygundur.
-- **Set bazlı toplam ve göreli büyüklük (C05-C08):** Keyword Planner / Google Ads
-  verisi kullanılır.
-- İki kaynak **aynı metrik için tek tabloda birleştirilmez**. Aynı terim iki blokta
-  farklı değerle görünecekse çekirdek terim ikinci bloktan çıkarılır ve her blok
-  kendi kaynak dipnotunu taşır.
+**Marka adı hacminde kelime ve ülke seçimi (bağlayıcı):**
+
+- Kelime **yalnızca marka adının kendisi**: `flormar`, `vitra`. Ürün kırılımı
+  brand hacmine katılmaz.
+- Ülke, markanın hizmet ettiği pazar ve **SEOmonitor kampanyasının takip ettiği
+  pazar**: TR'de takip ediliyorsa `location_name: "Turkiye"`, UK'de takip
+  ediliyorsa Birleşik Krallık. Kampanya pazarı ile hacim ülkesi ayrışırsa tablo
+  yanlış pazarı ölçer.
+- Tek terimde bucket etkisi ay bazında YoY'u taşımaz (bkz. tuzaklar 2.9):
+  aylık değerler gösterilir, değişim dönem toplamı üzerinden verilir.
+- Ahrefs `keywords-explorer-volume-history` sürekli seri verir ve çapraz kontrol
+  olarak kullanılabilir; iki kaynak seviye ve yön olarak ayrışabildiği için
+  **tek metrik tek kaynak** kuralı korunur, ikisi yan yana konmaz.
+
+**Non-brand hacmi SEOmonitor'den alınabilir** (ayrı export gerekmez): bkz. 2.4,
+`get_group_data`.
 
 ### 2.4. SEOmonitor
 
@@ -225,8 +235,20 @@ ifadesine birebir girer.
 | S2 | `get_share_of_voice` (tarih başına) | Organic SoV + AI Overview SoV + AI Search SoV, domain bazında; AI tarafında `brand_mentions` / `brand_citations` / `website_citations` kırılımı | Rakip görünürlük, AI Overview rekabeti |
 | S3 | `get_daily_share_of_clicks` | Günlük Share of Clicks, domain bazında | Share of Clicks |
 | S4 | `get_daily_group_visibility` | Grup (kategori) bazında günlük visibility | Kategori bazında visibility |
-| S5 | `get_keyword_groups` | Kategori/klasör ağacı - kategori slaytlarının satır seti | Kategori kırılımı |
+| S5 | `get_keyword_groups` | Kategori/klasör ağacı - kategori slaytlarının satır seti; `Brand` klasörü `group_id: -1` | Kategori kırılımı |
 | S6 | `get_daily_keyword_ranks` | Kelime bazlı günlük sıra (before→after) | Kelime hareketleri |
+| S7 | `get_group_data` | Grup başına kelime sayısı, **13 aylık arama hacmi serisi**, `year_over_year` oranı, visibility, avg rank, intent dağılımı, opportunity | Non-brand hacim slaytı (C04c), kategori kırılımı |
+| S8 | `get_top_keywords` (`group_id: -1`, `metric: volume`) | Brand grubundaki kelimeler ve hacimleri | Brand seti tanımı |
+
+**`get_group_data` notları:**
+- `search_data.search_volume` gruptaki kelimelerin hacim **toplamıdır** (ortalama
+  değil). Brand grubunda `get_top_keywords` ile kelime hacimleri toplanarak
+  doğrulanabilir - birebir eşleşir.
+- `search_data.year_over_year` oran döner: `-0.05` = -%5.
+- `search_data.monthly_searches` 13 ay verir (cari aydan bir önceki aya kadar);
+  aylık trend grafiği bundan kurulur.
+- Kategori toplamı + Brand grubu, kampanyanın toplam kelime sayısını tutmayabilir;
+  fark ungrouped ve çalışma gruplarındadır ve dipnotta belirtilir.
 
 `get_share_of_voice`'ta `metrics_weighted_by_search_volume: 1` verilir; ağırlıksız
 değer kelime sayısına göre hesaplanır ve hacim farkını görmezden gelir.

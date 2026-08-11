@@ -265,6 +265,31 @@ kampanya domaini yerine o rakibin serisini verir; kampanyanın kendisi için
 ancak rakip × dönem sayısı arttıkça çekim maliyeti hızla büyür, tablo kapsamı
 (kaç rakip, kaç dönem) baştan belirlenir.
 
+**Kapsamı çekim maliyeti belirlemez.** Visibility rakip başına ayrı çağrı
+gerektirdiği için tabloyu Share of Click'ten daha az domainle bırakmak kolaydır;
+bu bir veri sınırı değil tercihtir ve iki tablo yan yana konduğunda okunurluğu
+bozar. Aynı slayttaki iki tablo aynı domain setini taşır (bkz. slayt kataloğu
+C20b). Domain sayısı azaltılacaksa **iki tabloda birlikte** azaltılır.
+
+### 2.9. Tek terimde Google Ads bant etkisi
+
+Google Ads / Keyword Planner arama hacmini bant halinde döndürür. Bir kelime
+setinde bu etki toplamda dengelenir, ancak **tek terimde** seri yalnızca birkaç
+basamakta hareket eder. Gerçek örnek: `flormar` için 24 ayın tamamında sadece
+üç değer görüldü (74.0K / 90.5K / 110.0K), dolayısıyla ay bazında YoY yalnızca
++%0.0, +%22.3 ve -%18.2 üretiyordu.
+
+**Kural:** tek terimli marka hacmi slaytında ay bazında YoY satırı yazılmaz.
+Aylık değerler matriste gösterilir, değişim **dönem toplamı** üzerinden verilir,
+bandın varlığı dipnotta nötr dille belirtilir. Sürekli seri gerekiyorsa Ahrefs
+`keywords-explorer-volume-history` çapraz kontrol olarak kullanılabilir; iki
+kaynak hem seviye hem yön olarak ayrışabildiği için **tek metrik tek kaynak**
+kuralı korunur, ikisi yan yana konmaz.
+
+Ayrıca Google Ads verisi cari aya kadar gelmez: rapor dönemi Temmuz'ken tablo
+Haziran'da bitebilir. Oluşmamış aylar `-` ile bırakılır ve dipnotta belirtilir;
+tahmin yazılmaz.
+
 ---
 
 ## 3. Teknik üretim tuzakları
@@ -321,9 +346,20 @@ PPTX mutlak konumlandırma, HTML akış. Ayrışma yaşanmış üç nokta ve ç�
   Çözüm: `WRAP_SAFETY = 0.985` ile ölçüm muhafazakâr tarafa çekildi, üretici
   tarayıcıdan önce uyarıyor.
 
-**Kural:** yeni bir blok tipi eklenirken geometri hesabı tek fonksiyonda tutulur ve
-her iki renderer onu çağırır. Önizlemedeki taşma işaretleyicisi ile üreticinin
-uyarısı aynı slaytlarda çıkmıyorsa ayrışma vardır.
+- **Sayı biçimleyicisinin üç kopyası.** K/M kısaltmasını yapan fonksiyon üç yerde
+  ayrı ayrı duruyordu: `inbound_deck._fmt_val`, `inbound_deck._fmt_axis` (bar
+  bloğu) ve `build_html_preview._fmt`. Üçünde de `.replace(".0K", "K")` vardı ve
+  bu, aynı seride **"665K" ile "711.7K" karışımı** üretiyordu (665000 tam sayıya
+  denk geldiği için ondalığı düşüyor). Rehber tek rakam formatı istiyor
+  (Bölüm 6.1). Çözüm: `_fmt_val` tek kaynak, diğer ikisi ona delege ediyor ve
+  K/M her zaman tek ondalıklı basılıyor. Bir biçim değişikliği yapıldığında
+  `grep -n '\.0K\|\.0M' scripts/*.py` ile kopya kalmadığı doğrulanır.
+
+**Kural:** yeni bir blok tipi eklenirken geometri hesabı **ve sayı biçimlemesi**
+tek fonksiyonda tutulur ve her iki renderer onu çağırır. Önizlemedeki taşma
+işaretleyicisi ile üreticinin uyarısı aynı slaytlarda çıkmıyorsa ayrışma vardır.
+Rakam biçimi ayrışması taşma uyarısı üretmez, bu yüzden teslim öncesi aynı değer
+iki çıktıda karşılaştırılır (`grep` ile PPTX XML ve HTML üzerinde).
 
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 

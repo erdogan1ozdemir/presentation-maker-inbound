@@ -143,23 +143,59 @@ Cari yılın oluşmamış ayları `-` ile bırakılır; tahmin yazılmaz.
 Insight: "Only brand arama hacmi Mart ayında geçtiğimiz yıla göre aynı kalmıştır."
 Kaynak: `Keyword Planner`
 
-**Kaynak seçimi (aylık trend için bağlayıcı):** Keyword Planner hacimleri
-kovalanmış döner (tek terim için yalnızca 74000 / 90500 / 110000 gibi basamaklar).
-Ay bazında YoY karşılaştırması bu seriyle güvenilir kurulamaz. Aylık trend tablosu
-için sürekli seri veren **Ahrefs `keywords-explorer-volume-history`** kullanılır
-(keyword + country + tarih aralığı). Keyword Planner, marka + ürün terimlerinin
-**göreli büyüklüğü** için ikinci blokta kullanılabilir; bu durumda iki kaynak tek
-tabloda birleştirilmez, her blok kendi dipnotunu taşır ve aynı terim iki blokta
-farklı değerle görünecekse çekirdek terim ikinci bloktan çıkarılır.
+**Kelime ve ülke seçimi (bağlayıcı):**
+- Kelime **yalnızca marka adının kendisidir**: Flormar için `flormar`, VitrA için
+  `vitra`. Ürün kırılımı (`flormar maskara`, `vitra klozet`) brand hacmine
+  katılmaz - ölçülen şey marka talebidir, marka + ürün talebi değil.
+- Ülke, markanın hizmet ettiği pazardır ve **SEOmonitor kampanyasının takip
+  ettiği pazardan** alınır: kelimeler TR'de takip ediliyorsa Türkiye, UK'de
+  takip ediliyorsa Birleşik Krallık. Kampanya pazarı ile hacim ülkesi ayrışırsa
+  tablo yanlış pazarı ölçer.
+- Kaynak: Keyword Planner ya da MCP üzerinden DataForSEO
+  `dataforseo_labs_google_historical_keyword_data` (`location_name`,
+  `language_code`). Her `history` kaydı bir snapshot'tır ve son 12 ayı taşır;
+  uzun seri için snapshot'lar birleştirilir (aynı ay birden çok snapshot'ta
+  varsa en yenisi alınır).
 
-**C04b Marka hacmi + marka/ürün kırılımı (tek slayt)**
-`grid: [52, 48]`. `table` (col `full`, başlık "Aylık Arama Hacmi") = yıl × ay
-matrisi + YoY satırı; `table` (col 0, başlık "Marka + Ürün Terimleri") = keyword |
-aylık ortalama hacim; `insights` (col 1).
-Insight üçlüsü: dönem toplamı + YoY bandı → cari ay YoY → hacmin yoğunlaştığı
-marka + ürün başlıkları.
-Bu slayt branded impression daralmasının talep kaynaklı olup olmadığını
-sınamak için GSC brand/non-brand slaytının hemen ardına konur.
+**Tek terimde bant sorunu ve YoY satırı.** Google Ads tek bir terim için hacmi
+bant halinde döndürür; 24 ayda yalnızca birkaç basamak görülebilir (gerçek örnek:
+`flormar` için 74.0K / 90.5K / 110.0K). Bu durumda **ay bazında YoY satırı
+yazılmaz** - o satır talep hareketi değil bant geçişi gösterir ve tekrar eden
++%0.0 / +%22.3 / -%18.2 değerleri üretir. Değişim **dönem toplamı** üzerinden
+verilir (Oca-Haz 2026 vs Oca-Haz 2025 gibi) ve dipnotta bandın varlığı nötr
+biçimde belirtilir. Matriste aylık değerler yine gösterilir; okuyucu seviyeyi ve
+mevsimselliği görür.
+
+Sürekli aylık seri gerekiyorsa Ahrefs `keywords-explorer-volume-history` çapraz
+kontrol olarak kullanılabilir; ancak iki kaynak hem seviye hem yön olarak
+ayrışabilir (aynı terimde Ahrefs ~49K / Google Ads ~85K, bir dönemde biri -%1.7
+diğeri +%6.9). **Tek metrik tek kaynak:** ikisi yan yana konmaz, biri seçilir.
+
+**C04b Marka adı arama hacmi (tek slayt)**
+`grid: [46, 54]`. `kpi` (col 0, iki kart: dönem toplamı + YoY deltası, aylık
+ortalama) · `insights` (col 1) · `table` (col `full`, başlık "Aylık Arama Hacmi")
+= yıl × ay matrisi, 2-3 yıl satırı, oluşmamış aylar `-`.
+Insight üçlüsü: dönem toplamı + YoY → aylık ortalama ve en yüksek ay → marka
+talebinin GSC branded impression hareketiyle ilişkisi.
+Bu slayt **"Arama Hacmi ve Pazar Talebi" bölümünde, yönetici özetinin hemen
+ardına** konur; performans bölümlerinin bağlamını kurar.
+
+**C04c Non-brand takip edilen kelimelerin arama hacmi (SEOmonitor)**
+Brand slaytının eşi. Veri: SEOmonitor `get_group_data`, üst düzey kategori
+klasörlerinin `group_ids` listesiyle; Brand grubu için `group_id: -1`.
+`grid: [56, 44]`. `table` (col 0, başlık "Kategori Kırılımı") kolonları:
+`Kategori | Keyword | Aylık Hacim | YoY | Visibility`, son satır `Toplam`
+(`highlight_rows` ile). `insights` (col 1). `bar` (col `full`) = kategori
+toplamlarının 13 aylık serisi.
+
+Notlar:
+- Grup `search_volume` alanı, gruptaki kelimelerin hacimlerinin **toplamıdır**
+  (ortalama değil). Brand grubunda kelime hacimleri toplanarak doğrulanabilir.
+- `search_data.year_over_year` oran döner (-0.05 = -%5).
+- Kampanyada takip edilen toplam kelime sayısı ile kategori + Brand toplamı
+  eşleşmiyorsa fark dipnotta belirtilir (ungrouped ve çalışma grupları).
+- Insight üçlüsü: toplam hacim + YoY → hacmin yoğunlaştığı kategori → hacme
+  karşılık visibility'nin düşük kaldığı kategori (açık alan) → brand payı.
 
 **C05 Marka + kategori arama hacmi** - C04 yapısı, `brand_category` seti.
 Insight YoY + MoM birlikte.
@@ -318,6 +354,13 @@ Insight sırası: kendi hareketimiz → pozitif ayrışan rakip → en yüksek d
 (col 1, başlık **"Visibility Score"**), altında `insights` (col `full`).
 Kolonlar her iki tabloda aynı: `Domain | <önceki yıl> | <önceki dönem> | <dönem> | MoM | YoY`.
 Kendi domain iki tabloda da `highlight_rows` ile işaretlenir.
+
+**İki tablo aynı domain setini ve aynı satır sırasını taşır.** Share of Click
+yanıtı günlük top 10 döndürdüğü için domain listesi oradan çıkar; visibility ise
+`domain` parametresiyle tek tek çekilir, dolayısıyla listeyi eksik bırakmak
+teknik bir zorunluluk değil tercihtir. Satır sırası Share of Click'in cari dönem
+değerine göre kurulur ve visibility tablosunda aynen tekrarlanır; böylece iki
+tablo satır satır okunur. Sıralama ölçütü dipnotta belirtilir.
 
 **Bağlayıcı kural - iki metrik ayrı tutulur.** Visibility Score, takip edilen
 kelime setinde markanın görünürlük oranıdır ve SEOmonitor panelinde görülen

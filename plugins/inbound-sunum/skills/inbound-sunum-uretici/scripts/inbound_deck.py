@@ -752,14 +752,10 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
 # ----------------------------------------------------------------------------
 
 def _fmt_axis(v):
-    a = abs(v)
-    if a >= 1_000_000:
-        return f"{v/1_000_000:.1f}M".replace(".0M", "M")
-    if a >= 1_000:
-        return f"{v/1_000:.1f}K".replace(".0K", "K")
-    if a and a < 10:
-        return f"{v:.1f}"
-    return f"{v:.0f}"
+    """bar blogu icin bicimleyici - tek kaynak _fmt_val (asagida tanimli).
+    Ayri bir kopya tutulmaz; ucu de ayrisirsa ayni seride "665K" ile "711.7K"
+    karisimi olusuyor (bkz. tuzaklar 3.6)."""
+    return _fmt_val(v, "auto")
 
 
 def block_bar(slide, b, x, y, w, ctx, idx):
@@ -954,10 +950,12 @@ def _fmt_val(v, fmt):
     if fmt == "pos":
         return f"{v:.1f}"
     a = abs(v)
+    # K/M her zaman tek ondalikli: ayni seride "665K" ile "711.7K" karisimi olmaz
+    # (Icerik Dili Rehberi 6.1 - tek rakam formati).
     if fmt == "M" or (fmt == "auto" and a >= 1_000_000):
-        return f"{v/1_000_000:.1f}M".replace(".0M", "M")
+        return f"{v/1_000_000:.1f}M"
     if fmt == "K" or (fmt == "auto" and a >= 1_000):
-        return f"{v/1_000:.1f}K".replace(".0K", "K")
+        return f"{v/1_000:.1f}K"
     if a and a < 10:
         return f"{v:.1f}"
     return f"{v:.0f}"

@@ -205,14 +205,9 @@ def h_kpi(b):
 
 
 def _fmt(v):
-    a = abs(v)
-    if a >= 1_000_000:
-        return f"{v/1_000_000:.1f}M".replace(".0M", "M")
-    if a >= 1_000:
-        return f"{v/1_000:.1f}K".replace(".0K", "K")
-    if a and a < 10:
-        return f"{v:.1f}"
-    return f"{v:.0f}"
+    """PPTX ureticisiyle ayni bicimleyici - burada ikinci bir kopya tutulmaz
+    (bkz. tuzaklar 3.6: HTML onizleme ile PPTX arasinda sessiz ayrisma)."""
+    return _fmt_val(v, "auto")
 
 
 def h_bar(b):
