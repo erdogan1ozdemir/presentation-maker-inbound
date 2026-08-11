@@ -432,6 +432,59 @@ slayt. **100 = takipte ilk 100'de yok** anlamındadır ve bu dipnotta belirtilir
 **Zorunlu okuma kılavuzu:** "Tablo altındaki G ifadeleri Google update'lerini, yeşil
 daireler büyük çaplı içerik değişikliklerini göstermektedir."
 
+### Insight slaytları (her ana bölüme bir tane)
+
+Veri slaytları durumu gösterir; insight slaytı **aynı verinin ne anlama geldiğini ve
+nereden tutulabileceğini** gösterir. Ev pratiği: her ana bölümün sonuna bir tane.
+Hepsinde ortak kural: tablo ölçülmüş veriyi taşır, insight yorumu taşır, aksiyon
+"…değerlendirilebilir / ele alınabilir / önceliklendirilebilir" kipiyle verilir.
+
+**C38 Talep ile trafiğin ayrışması** (arama hacmi bölümü)
+İki tablo: sol tarafta marka arama hacmi + branded impression / click / CTR /
+pozisyon; sağ tarafta click payı dağılımı (Branded / Non-Brand / Anonim sorgu,
+önceki ve cari dönem payları). Soru: talep ile marka trafiği aynı yöne mi gidiyor,
+kaybedilen tıklama başka bir segmente mi kaydı?
+Gerçek örnek çıkarım: marka hacmi yatay, branded impression -%62.8 - paralel
+gitmiyor; üç segmentin payı ±2 puan bandında kalmış, yani trafik kaymamış, üçünde
+birlikte azalmış.
+
+**C39 İlk sayfada yer alan ve CTR'ı geride kalan sorgular** (Search Console bölümü)
+Tablo: `Query | Impression | Pozisyon | CTR | Click`, gösterime göre sıralı,
+non-brand. Ortalama pozisyonu ilk sayfa aralığında olduğu halde CTR'ı %1 altında
+kalan sorgular. Karşılaştırma satırı olarak anasayfanın pozisyon/CTR değeri verilir -
+okuyucu farkı kendi görür.
+Aksiyon: ilgili listeleme sayfalarında meta title/description düzenlemesi.
+
+**C40 Pozisyonuna göre CTR'ı geride kalan sayfalar** (Search Console bölümü)
+C39'un sayfa karşılığı. Son satır `Anasayfa (karşılaştırma)` ve `highlight_rows`
+ile işaretlenir.
+**Hipotez kontrolü zorunlu:** "sayfada az ürün olduğu için tıklanmıyor olabilir"
+gibi bir açıklama sunulacaksa önce ölçülür (sayfa açılır, ürün sayısı sayılır) ve
+sonuç dipnota yazılır - doğrulanmadıysa da yazılır. Gerçek örnek: iki sayfada 31-32
+ürün ölçüldü, listeleme derinliği farkı açıklamıyordu; bunun yerine bir sayfanın
+H1'inin eksik olduğu tespiti dipnota girdi.
+
+**C41 Rakiplerin önde olduğu kategori kelimeleri** (görünürlük bölümü)
+Tablo: `Keyword | Hacim | Mobil sıra | Desktop sıra`. Kaynak: SEOmonitor
+`get_top_keywords` (`metric: opportunity`) - yanıttaki `difficulty` ve `avg_cpc`
+alanları **tabloya taşınmaz** (bkz. tuzaklar 2.8b).
+Cihaz takip derinliği farklıysa dipnota yazılır (mobil 100, desktop 20 → desktop
+21 değeri "takip aralığı dışında" demek).
+Kapsam dışı ve mevsimsel jenerik kelimeler (black friday vb.) listeye alınmaz.
+
+**C42 Kategori bazında AI Overview görünürlüğü** (AI bölümü)
+Tablo: `Kategori | AIO kelime | Marka görünen | Anılma | Citation`. Kaynak:
+SEOmonitor `get_group_data` → `aio_data`. Ek çekim gerekmez.
+İmza çıkarım: anılma yüksek ama citation düşük olan kategori, "yanıtta adı geçiyor
+ama kaynak olarak seçilmiyor" alanını gösterir; aynı destede citation'ı yüksek bir
+kategori bunun mümkün olduğunu gösteren karşılaştırma olur.
+
+**C43 Öne çıkan başlıklar (kapanış)**
+Matris kurulmaz. `panels` bloğu ile üç kart: her kartta **durum** ve altında
+**ne yapılabilir**. Kapanış insight'ı üç başlığın ortak noktasını söyler.
+Önceliklendirme müşteriye bırakılır: "Başlıkların önceliklendirilmesi <marka>
+ekibinin stratejik tercihleri ve öncelikleriyle güncellenebilir."
+
 ### Süreç, özet ve plan
 
 **C26 Neler Yaptık / Devam Eden Çalışmalar**

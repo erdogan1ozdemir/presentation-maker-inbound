@@ -271,6 +271,19 @@ bu bir veri sınırı değil tercihtir ve iki tablo yan yana konduğunda okunurl
 bozar. Aynı slayttaki iki tablo aynı domain setini taşır (bkz. slayt kataloğu
 C20b). Domain sayısı azaltılacaksa **iki tabloda birlikte** azaltılır.
 
+### 2.8b. Gösterilmeyen metrikler
+
+Aşağıdaki alanlar veri kaynaklarından gelse bile **müşteri çıktısına girmez**:
+
+| Alan | Neden |
+|---|---|
+| **Keyword difficulty / KD** | Araç bazlı ve araçlar arasında tutarsız bir skor; kelime önceliklendirmesi hacim, mevcut sıralama ve görünürlük açığı üzerinden kurulur. Skill'de de KD üretilmez, tablolarda kolon açılmaz. |
+| CPC / avg. cpc / bütçe | Gerçek maliyet verisi olmadığı için maliyet dili kullanılmaz (bkz. Bölüm 10 - gerçek maliyet yoksa trafik bazlı yüzde). |
+| Araç iç skorları (`opportunity.difficulty` vb.) | Yöntemi şeffaf olmayan türetilmiş skorlar sunulmaz; skorun dayandığı ham metrikler (hacim, sıra) verilir. |
+
+`get_top_keywords`, `get_group_data` gibi uçlar bu alanları yanıt içinde
+döndürür; tabloya taşınırken **elenir**.
+
 ### 2.9b. Brand/Non-Brand ayrımında anonim sorgu kaçağı
 
 GSC'de query filtresi uygulandığında **anonim sorgular sonuç kümesinden düşer**

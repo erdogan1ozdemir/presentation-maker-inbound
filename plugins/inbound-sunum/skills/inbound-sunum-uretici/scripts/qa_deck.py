@@ -68,12 +68,16 @@ HARSH = {
     "başarısız": "hedeflenen sonuca ulaşmayan", "yanlış": "gözden geçirilebilir",
     "zayıf": "büyüme potansiyeli taşıyan", "ciddi": "dikkate değer",
     "patlama": "yüksek artış", "dramatik": "belirgin",
-    "büyüme motoru": "büyüme kanalı", "kat kat": "somut oran veya Nx çarpan",
+    "büyüme motoru": "büyüme kanalı", "kat kat": "oran veya Nx çarpan",
     "en zayıf halka": "en az işlenen başlık", "ters profil": "tersine dönen örüntü",
     "açık ara": "belirgin biçimde", "cannibalization": "fırsat kaybı",
     "para tuzağı": "ek süre maliyeti", "domine": "belirgin biçimde önde",
     "ele geçir": "nötr karşılık", "mercek": "perspektif",
     "doğrulanmış fırsat": "fırsat", "panorama": "nötr karşılık",
+    # Erdogan geri bildirimi: "somut/kanit" tipi pekistirme ifadeleri
+    # kullanilmiyor - bulgu kendi basina durur.
+    "somut": "ifadeyi kaldir, bulguyu dogrudan ver",
+    "kanıt": "ornek / ekran goruntusu / dayanak",
 }
 # teknik adlandirma olarak serbest kullanimlar
 HARSH_CONTEXT_OK = re.compile(
