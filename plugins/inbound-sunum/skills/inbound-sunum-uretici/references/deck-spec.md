@@ -186,6 +186,36 @@ Eski `delta` string alanı hâlâ çalışıyor ama etiket-değer ayrımı vermi
 Kart zemini varsayılan teal; son kart (3+ kartta) coral olur. `accent` ile
 elle seçilir. `value` karta sığmazsa puntosu otomatik küçülür.
 
+### Tablo: kolon genisligi ve isi haritasi
+
+**`first_col_max`** (varsayilan `0.34`) - etiket/metrik kolonunun tablo
+genisligine orani icin tavan. Etiket kolonu artan bosluğu tek basina yutmamali;
+"Yil" gibi kisa bir baslik tablonun yarisini kaplayabiliyordu. Kalan bosluk
+sayisal kolonlara esit dagitilir. Aylik matrislerde `0.08-0.12`, kategori
+tablolarinda `0.30` civari uygun.
+
+**`heat: true`** - satir bazli isi haritasi: satirin en yuksek degeri yesil, en
+dusugu kirmizi basar. VitrA/Ozdilekteyim destelerindeki aylik seri tablolarinin
+kullanimi. Ek secenekler:
+
+| Alan | Islev |
+|---|---|
+| `heat_cols` | Taranacak kolonlar. Varsayilan: etiket kolonu (0) ve delta kolonlari haric hepsi. |
+| `heat_rows` | Taranacak satirlar. Varsayilan: tum veri satirlari. |
+| `heat_invert_rows` | Kucuk degerin iyi oldugu satirlar (ortalama pozisyon): renk ters cevrilir, en dusuk deger yesil olur. |
+| `heat_max_ties` | Varsayilan `2`. Bu sayidan fazla hucre esitse o uc isaretlenmez. |
+
+Kurallar:
+- Satirda en az **uc sayisal deger** olmali; iki degerde "en yuksek/en dusuk"
+  bilgi tasimaz, delta kolonu isini zaten yapar.
+- Satirin **tum hucreleri ayni birimde** olmali. `Kategori | Keyword | Hacim |
+  YoY | Visibility` gibi karma birimli tabloda isi haritasi anlamsizdir.
+- **Kovalanmis veride kullanilmaz.** Google Ads tek terim hacmi gibi az sayida
+  basamakta hareket eden seride yarim satir boyanir; `heat_max_ties` bunu
+  engeller ama tablo yine bilgi tasimaz - isi haritasi kapatilir.
+- Delta kolonlari isi haritasindan haric tutulur: o kolonlar zaten isaret
+  bazli renklenir, iki kural cakismaz.
+
 ### bar
 
 ```json

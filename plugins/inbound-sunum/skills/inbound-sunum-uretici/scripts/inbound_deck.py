@@ -110,7 +110,7 @@ AGENDA_ITEM_LH = 0.95
 AGENDA_ITEM_NUM_GAP = 8    # numara ile etiket arasi
 AGENDA_ITEM_GAP = 26       # maddeler arasi
 
-SEP_NUM_PT, SEP_NUM_W = 200.0, 800          # Bricolage ExtraBold
+SEP_NUM_PT, SEP_NUM_W = 150.0, 800          # Bricolage ExtraBold (200pt'ten %25 kucultuldu)
 SEP_NUM_CX = 146                            # numeral yatay merkezi (sabit)
 SEP_TITLE_PT, SEP_TITLE_W = 37.0, 800
 SEP_ACC_W, SEP_ACC_H = 43, 11               # accent cizgi (coral, VitrA olcusu)
@@ -508,6 +508,85 @@ def _delta_kind(v: str):
     return None
 
 
+def _cell_num(v: str):
+    """Hucre metninden sayi cikarir: '226.0K' -> 226000, '-%5' -> -5,
+    '1.2M' -> 1200000, '54.1' -> 54.1. Sayi yoksa None."""
+    s = plain(str(v or "")).strip().replace("%", "").replace(" ", "")
+    if not s or s in {"-", "—", "n/a"}:
+        return None
+    mult = 1.0
+    if s[-1:] in {"K", "k"}:
+        mult, s = 1_000.0, s[:-1]
+    elif s[-1:] in {"M", "m"}:
+        mult, s = 1_000_000.0, s[:-1]
+    elif s[-1:] in {"p", "x"}:
+        s = s[:-1]
+    s = s.replace(",", ".")
+    m = re.fullmatch(r"[+-]?\d*\.?\d+", s)
+    if not m:
+        return None
+    try:
+        return float(s) * mult
+    except ValueError:
+        return None
+
+
+def heat_cells(b, rows, ncol, dcols):
+    """Satir bazli isi haritasi: her satirin en yuksek degeri yesil, en dusugu
+    kirmizi. VitrA/Ozdilekteyim destelerindeki aylik hacim tablolarinin kullanimi.
+
+    `heat: true` ile acilir. Kapsam varsayilani: etiket kolonu (0) ve delta
+    kolonlari haric tum kolonlar; `heat_cols` ile acikca verilebilir.
+    `heat_rows` verilmezse tum veri satirlari taranir.
+
+    Iki renderer da bu fonksiyonu cagirir - renk karari tek yerde uretilir.
+    En az uc sayisal deger yoksa satir atlanir (iki degerde "en yuksek/en dusuk"
+    bilgi tasimaz, delta kolonu isini zaten yapar).
+    """
+    if not b.get("heat"):
+        return {}
+    cols = b.get("heat_cols")
+    if cols is None:
+        cols = [c for c in range(1, ncol) if c not in dcols]
+    cols = [c for c in cols if 0 <= c < ncol]
+    hrows = b.get("heat_rows")
+    if hrows is None:
+        hrows = range(len(rows))
+    else:
+        hrows = [r if r >= 0 else len(rows) + r for r in hrows]
+    inv_rows = {r if r >= 0 else len(rows) + r
+                for r in (b.get("heat_invert_rows") or [])}
+    out = {}
+    for ri in hrows:
+        if not (0 <= ri < len(rows)):
+            continue
+        r = rows[ri]
+        vals = [(ci, _cell_num(r[ci])) for ci in cols if ci < len(r)]
+        vals = [(ci, v) for ci, v in vals if v is not None]
+        if len(vals) < 3:
+            continue
+        hi = max(v for _, v in vals)
+        lo = min(v for _, v in vals)
+        if hi == lo:
+            continue
+        # Esit degerlerin tamami isaretlenir: 110.0K iki ayda da goruluyorsa
+        # ikisi de en yuksek aydir, ilk gorulen secilmez. Ancak cok sayida
+        # deger esitse (kovalanmis veri) isaretleme bilgi tasimaz - yarim satir
+        # boyanmis olur. Bu durumda o uc isaretlenmez.
+        ties = int(b.get("heat_max_ties", 2))
+        n_hi = sum(1 for _, v in vals if v == hi)
+        n_lo = sum(1 for _, v in vals if v == lo)
+        # Ortalama pozisyon gibi kucuk degerin iyi oldugu satirlarda renk ters
+        # cevrilir: en dusuk deger yesil olur.
+        good_hi = ri not in inv_rows
+        for ci, v in vals:
+            if v == hi and n_hi <= ties:
+                out[(ri, ci)] = "pos" if good_hi else "neg"
+            elif v == lo and n_lo <= ties:
+                out[(ri, ci)] = "neg" if good_hi else "pos"
+    return out
+
+
 def table_layout(b, w):
     """
     Tablo geometrisini hesaplar: kolon genislikleri, satir yukseklikleri, baslik
@@ -549,10 +628,18 @@ def table_layout(b, w):
                 mx = max(mx, text_w(val, td_pt,
                                     F_DISPLAY if strong else F_BODY, bool(strong)))
             need.append(mx + pad * 2)
-        # ilk kolon esner, sayisal kolonlar olculen genisligi korur
+        # Ilk kolon (etiket/metrik) artan genisligi tek basina yutmamali: "Yil"
+        # gibi kisa bir baslik tablonun yarisini kaplayabiliyordu. Etiket kolonu
+        # kendi ihtiyacini alir, tavani tablo genisliginin first_col_max'i kadar;
+        # kalan bosluk sayisal kolonlara esit dagitilir.
         fixed = sum(need[1:])
-        first = max(need[0], w - fixed)
-        widths = [first] + need[1:]
+        cap = w * float(b.get("first_col_max", 0.34))
+        first = need[0] if need[0] <= cap else max(cap, 90.0)
+        slack = w - first - fixed
+        if slack > 0 and ncol > 1:
+            widths = [first] + [n + slack / (ncol - 1) for n in need[1:]]
+        else:
+            widths = [first] + need[1:]
         if sum(widths) > w:
             # Once ilk kolon (etiket) daraltilir; etiket sarabilir, sayisal
             # kolonlar sarmaz. Yetmezse hepsi oransal daraltilir ve uyarilir.
@@ -601,6 +688,7 @@ def block_table(slide, b, x, y, w, ctx, idx):
             vals = [r[ci] for r in rows if ci < len(r)]
             if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
                 delta_cols.add(ci)
+    heat = heat_cells(b, rows, ncol, delta_cols)
 
     y0 = y
     if b.get("title"):
@@ -626,6 +714,8 @@ def block_table(slide, b, x, y, w, ctx, idx):
         for ci in range(ncol):
             val = str(r[ci]) if ci < len(r) else ""
             kind = _delta_kind(plain(val)) if ci in delta_cols else None
+            if kind is None:
+                kind = heat.get((ri, ci))
             col, bold = "ink", (ri in bold_rows)
             if kind == "pos":
                 col, bold = "green", True
@@ -790,13 +880,18 @@ def block_bar(slide, b, x, y, w, ctx, idx):
             textbox(slide, lx + 15, y, 200, 14, nm, pt=PT["micro"], color="ink2",
                     line_pct=1.0, wrap=False)
             lx += 15 + text_w(nm, PT["micro"]) + 26
-        y += 20
+        y += CB_BAR_LEGEND_H
 
-    lab_h = 20
-    val_h = 16 if b.get("value_labels", True) else 0
+    lab_h = CB_CAT_H
+    val_h = CB_VAL_H if b.get("value_labels", True) else 0
     plot_top = y + val_h
     plot_bot = y0 + h - lab_h
     plot_h = max(40, plot_bot - plot_top)
+    # Deger etiketi bandi ayrilmis olsa bile plot alani cok kisaldiginda en
+    # yuksek barin etiketi banda sigmaz. Uyarilir; slaytta h buyutulur.
+    if val_h and plot_h < 90:
+        ctx.warn(f"GRAFIK S{idx}: 'bar' blogunda plot yuksekligi {plot_h:.0f}px - "
+                 f"deger etiketleri sikisiyor, h en az {90 + val_h + lab_h + CB_BAR_LEGEND_H:.0f} olmali")
 
     if stacked:
         tops = [sum(float(s["data"][i] or 0) for s in series) for i in range(len(cats))]
@@ -854,8 +949,41 @@ def block_bar(slide, b, x, y, w, ctx, idx):
         textbox(slide, x + slot * i, plot_bot + 5, slot, 16, str(cat),
                 pt=PT["micro"], color="ink2", align="c", line_pct=1.0, wrap=False)
 
+    # Yatay cakisma: kategori etiketleri ve deger etiketleri wrap=False ile
+    # ciziliyor, yani slot'a sigmazsa komsusunun uzerine tasar. Olcup uyaririz.
+    _label_fit_check(ctx, idx, "bar", slot, [str(c) for c in cats],
+                     [_fmt_axis(float(v or 0)) for s in series for v in s["data"]]
+                     if b.get("value_labels", True) else [],
+                     n_series=1 if stacked else len(series))
+
     ctx.boxes.append((idx, "bar", x, y0, w, h))
     return h
+
+
+def _label_fit_check(ctx, idx, kind, slot, cats, vals, n_series=1):
+    """Grafik etiketlerinin yatayda komsusuna binip binmedigini olcer.
+
+    Etiketler wrap=False cizildigi icin slot'tan genis bir etiket sessizce
+    yanindakinin uzerine tasar - PPTX'te de, onizlemede de. Taban kural:
+    kategori etiketi slot'a, deger etiketi ise seri basina dusen paya sigmali.
+    """
+    pad = 4
+    if cats:
+        wide = max(cats, key=lambda t: text_w(t, PT["micro"]))
+        need = text_w(wide, PT["micro"]) + pad
+        if need > slot:
+            ctx.warn(f"CAKISMA S{idx}: '{kind}' kategori etiketi '{wide}' "
+                     f"{need:.0f}px yer istiyor, slot {slot:.0f}px - komsu etiketle "
+                     f"cakisiyor; kategori sayisi azaltilmali veya etiket kisaltilmali")
+    if vals:
+        wide = max(vals, key=lambda t: text_w(t, PT["micro"]))
+        need = text_w(wide, PT["micro"]) + pad
+        avail = slot / max(1, n_series)
+        if need > avail:
+            ctx.warn(f"CAKISMA S{idx}: '{kind}' deger etiketi '{wide}' "
+                     f"{need:.0f}px yer istiyor, seri basina {avail:.0f}px var - "
+                     f"deger etiketleri ust uste biniyor; value_labels kapatilmali "
+                     f"veya kategori sayisi azaltilmali")
 
 
 def block_line(slide, b, x, y, w, ctx, idx):
@@ -941,6 +1069,8 @@ def block_line(slide, b, x, y, w, ctx, idx):
 CB_GUTTER = 54          # eksen etiketi icin sol/sag bosluk
 CB_LEGEND_H = 22
 CB_CAT_H = 20
+CB_VAL_H = 16           # bar ustundeki deger etiketi bandi
+CB_BAR_LEGEND_H = 20    # bar bloğundaki legend satiri
 
 
 def _fmt_val(v, fmt):
@@ -1134,6 +1264,8 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     for i, cat in enumerate(cats):
         textbox(slide, px0 + slot * i, plot_bot + 5, slot, 16, str(cat),
                 pt=PT["micro"], color="ink2", align="c", line_pct=1.0, wrap=False)
+
+    _label_fit_check(ctx, idx, "combo", slot, [str(c) for c in cats], [])
 
     ctx.boxes.append((idx, "combo", x, y0, w, h))
     return h

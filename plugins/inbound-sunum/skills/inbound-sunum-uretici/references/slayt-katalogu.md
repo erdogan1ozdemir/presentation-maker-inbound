@@ -175,8 +175,13 @@ diğeri +%6.9). **Tek metrik tek kaynak:** ikisi yan yana konmaz, biri seçilir.
 `grid: [46, 54]`. `kpi` (col 0, iki kart: dönem toplamı + YoY deltası, aylık
 ortalama) · `insights` (col 1) · `table` (col `full`, başlık "Aylık Arama Hacmi")
 = yıl × ay matrisi, 2-3 yıl satırı, oluşmamış aylar `-`.
-Insight üçlüsü: dönem toplamı + YoY → aylık ortalama ve en yüksek ay → marka
+KPI kartı **son ay odaklıdır**: verinin bulunduğu son ayın hacmi, altında
+`MoM` ve `YoY` deltaları. Dönem (YTD) karşılaştırması KPI'ya değil **dipnota**
+yazılır - kart cari durumu, dipnot kümülatif seyri taşır.
+Insight üçlüsü: son ay hacmi ve bandı → aylık ortalama ve en yüksek ay → marka
 talebinin GSC branded impression hareketiyle ilişkisi.
+Oluşmamış ay için dipnot ifadesi: "… arama hacimleri Google tarafından henüz
+yayınlanmamıştır" (iç kısıt dili kullanılmaz).
 Bu slayt **"Arama Hacmi ve Pazar Talebi" bölümünde, yönetici özetinin hemen
 ardına** konur; performans bölümlerinin bağlamını kurar.
 
@@ -224,6 +229,22 @@ slaytta; marka rakipleriyle aynı tabloda karışmaz.
 Kolonlar: `Keyword | <Önceki yıl> | <Dönem> | Change | YoY | Generic Keyword Volume YoY`.
 Son kolon imzadır: marka+kelime hacmindeki değişimi jenerik kelimedeki değişimden
 ayrıştırır. Marka hacmi düşerken jenerik sabitse bu marka özelinde bir daralmadır.
+
+**C19b Brand / Non-Brand: Impression, Click, CTR, Pozisyon (2x2)**
+`grid: [50, 50]`. Dört tablo: `Impression` (col 0), `Click` (col 1), `CTR`
+(col 0, `mt`), `Ortalama Pozisyon` (col 1, `mt`); altında `insights` (col `full`).
+Metrik adı ayrı `title` bloğu yerine **`head[0]`'a** yazılır - dört tablo
+üst üste geldiğinde başlık blokları 34px×2 yer yiyor.
+Satırlar: `Total | Branded | Non-Brand | Anonim sorgu`, `bold_rows: [0]`.
+Kolonlar: `<metrik> | <önceki dönem> | <dönem> | YoY`.
+
+Zorunlu kurallar:
+- **Anonim sorgu satırı atlanmaz** (bkz. tuzaklar 2.9b): brand = total − non-brand
+  hesabı anonim hacmi brand'e yazar ve segment paylarını bozar.
+- Pozisyonda **pozitif değer iyileşmedir** (7.1 → 5.1 = +2.1) ve bu dipnotta
+  yazılır; anonim satırında pozisyon türetilemez, `-` bırakılır.
+- Sıkışma önlemi: `row_h: 20`, `head_h: 24`, tablo `font_pt: 10.5`,
+  insights `font_pt: 10.5`, tek dipnot.
 
 ### GA4 trafik ve ticari sonuç
 

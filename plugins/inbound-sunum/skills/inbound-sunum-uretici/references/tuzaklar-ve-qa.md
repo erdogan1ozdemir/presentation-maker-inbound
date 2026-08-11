@@ -271,6 +271,30 @@ bu bir veri sınırı değil tercihtir ve iki tablo yan yana konduğunda okunurl
 bozar. Aynı slayttaki iki tablo aynı domain setini taşır (bkz. slayt kataloğu
 C20b). Domain sayısı azaltılacaksa **iki tabloda birlikte** azaltılır.
 
+### 2.9b. Brand/Non-Brand ayrımında anonim sorgu kaçağı
+
+GSC'de query filtresi uygulandığında **anonim sorgular sonuç kümesinden düşer**
+(düşük hacimli, kişi tespitine yol açabilecek sorgular). Dolayısıyla:
+
+`contains "marka"` + `notContains "marka"` **≠** property toplamı
+
+Gerçek örnek (Flormar, Tem 2026): total 63.6K click, `contains` 34.0K,
+`notContains` 8.3K - aradaki **21.3K (%33.5)** anonim sorgudur.
+
+**Yaşanmış hata:** branded = total − non-brand olarak hesaplanınca anonim
+sorguların tamamı brand'e yazıldı; branded click 34.0K yerine 55.3K göründü ve
+"click'in %87'si markalı" gibi yanlış bir çıkarım üretildi. Gerçek pay %53.5.
+
+**Kural:** her iki segment de **ayrı ayrı ölçülür** (`contains` ve
+`notContains`), fark **"Anonim sorgu" satırı** olarak tabloda gösterilir ve
+Total satırı üçün toplamıdır. Segment payları bu üç satır birlikte okunur.
+Anonim satırında pozisyon türetilemez, `-` bırakılır.
+
+Pozisyon segment bazında da verilir: `dimensions=device` ile üç satır çekilir,
+pozisyon **impression ağırlıklı** ortalanır (aritmetik ortalama yanlış sonuç
+verir). Doğrulama: total için hesaplanan ağırlıklı pozisyon, filtresiz property
+değeriyle örtüşmeli.
+
 ### 2.9. Tek terimde Google Ads bant etkisi
 
 Google Ads / Keyword Planner arama hacmini bant halinde döndürür. Bir kelime
@@ -360,6 +384,37 @@ tek fonksiyonda tutulur ve her iki renderer onu çağırır. Önizlemedeki taşm
 işaretleyicisi ile üreticinin uyarısı aynı slaytlarda çıkmıyorsa ayrışma vardır.
 Rakam biçimi ayrışması taşma uyarısı üretmez, bu yüzden teslim öncesi aynı değer
 iki çıktıda karşılaştırılır (`grep` ile PPTX XML ve HTML üzerinde).
+
+### 3.6b. Çakışma koruması (üç katman)
+
+Taşma denetimi bir bloğun gövde alt sınırını aşmasını yakalar; **bir etiketin
+başka bir etiketin üzerine binmesini yakalamaz.** Gerçek örnek: bar grafiğinde
+`h` küçültülünce en yüksek barın değer etiketi legend satırının üzerine bindi
+(17px örtüşme) ve hiçbir uyarı çıkmadı. Üç katman eklendi:
+
+1. **Bant hesabı tek kaynak.** Bar bloğunda dikey bantlar sabitlerle tanımlıdır:
+   `CB_BAR_LEGEND_H` (20) + `CB_VAL_H` (16, değer etiketi) + `CB_CAT_H` (20,
+   kategori etiketi). Plot alanı `h` eksi bu üç bant. Önizleme aynı sabitleri
+   kullanır ve `.chart` bloğuna `margin-top: CB_VAL_H` verir - bu bant
+   ayrılmazsa yüksek barın etiketi kutunun dışına, legend üzerine taşar.
+2. **Python tarafı ölçüm** (`--check`, tarayıcısız çalışır):
+   - Plot yüksekliği 90px altına düşerse `GRAFIK` uyarısı: değer etiketleri
+     sıkışıyor, gereken minimum `h` bildirilir.
+   - `_label_fit_check` kategori ve değer etiketlerinin genişliğini slot
+     genişliğiyle karşılaştırır. Etiketler `wrap=False` çizildiği için slot'a
+     sığmayan etiket sessizce komşusunun üzerine taşar; `CAKISMA` uyarısı çıkar.
+3. **Önizleme çakışma tarayıcısı** (son savunma hattı). Gömülü
+   `inboundClashCheck()` her slaytta veri taşıyan öğeleri (`.vl`, `.cat`,
+   `.lg span`, `.kpi-v`, `.ins li`, `.dt td/th`, eksen etiketleri, pill) ikili
+   karşılaştırır; ata-torun çiftleri ve 2px altı kenar temasları hariç her
+   kesişimi coral çerçeveyle işaretler ve slayta "N etiket cakismasi" rozeti
+   basar. Teslim öncesi önizlemede rozet aranır; `document.querySelectorAll('.clash').length`
+   sıfır olmalıdır.
+
+**Kural:** yeni bir grafik veya blok tipi eklenirken (a) dikey bantlar sabit
+olarak tanımlanır ve iki renderer aynı sabiti kullanır, (b) `wrap=False` çizilen
+her etiket için genişlik kontrolü eklenir, (c) önizlemede çakışma rozeti
+kontrol edilir.
 
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 

@@ -31,8 +31,10 @@ from inbound_deck import (  # noqa: E402
     AGENDA_PANEL_W, AGENDA_TITLE_PT, AGENDA_TITLE_Y, AGENDA_EYEBROW_XY,
     AGENDA_LOGO, AGENDA_LIST_X, AGENDA_LIST_W, AGENDA_ITEM_PT, AGENDA_ITEM_LH,
     AGENDA_ITEM_GAP, AGENDA_ITEM_NUM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
-    CB_GUTTER, CB_LEGEND_H, CB_CAT_H, _axis_scale, _fmt_val,
-    _delta_kind, fit_pt, parse_runs, plain, separator_layout, table_layout,
+    CB_GUTTER, CB_LEGEND_H, CB_CAT_H, CB_VAL_H, CB_BAR_LEGEND_H,
+    _axis_scale, _fmt_val,
+    _delta_kind, fit_pt, heat_cells, parse_runs, plain, separator_layout,
+    table_layout,
     text_w, wrap_lines,
 )
 
@@ -120,6 +122,7 @@ def h_table(b):
             vals = [r[ci] for r in rows if ci < len(r)]
             if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
                 dcols.add(ci)
+    heat = heat_cells(b, rows, ncol, dcols)
     fp = b.get("font_pt", PT["table"])
 
     o = []
@@ -139,6 +142,8 @@ def h_table(b):
         for ci in range(ncol):
             v = str(r[ci]) if ci < len(r) else ""
             k = _delta_kind(plain(v)) if ci in dcols else None
+            if k is None:
+                k = heat.get((ri, ci))
             style = [f"text-align:{A[align[ci]]}"]
             if k == "pos":
                 style.append(f"color:#{C['green']};font-weight:700;"
@@ -216,7 +221,11 @@ def h_bar(b):
         return ""
     stacked = b.get("stacked", False)
     h = b.get("h", 260)
-    plot_h = h - 56 - (22 if b.get("title") else 0)
+    # PPTX ile ayni bant hesabi: legend 20 + deger etiketi val_h + kategori 20.
+    # val_h bandi ayrilmazsa yuksek barlarin etiketi legend'in ustune biner
+    # (bkz. tuzaklar 3.6 - onizleme/PPTX ayrismasi).
+    val_h = CB_VAL_H if b.get("value_labels", True) else 0
+    plot_h = h - CB_BAR_LEGEND_H - val_h - CB_CAT_H - (22 if b.get("title") else 0)
     inv = b.get("invert", False)
     if stacked:
         vmax = max(sum(float(s["data"][i] or 0) for s in series)
@@ -233,7 +242,7 @@ def h_bar(b):
         o.append(f'<span><i style="background:#{C.get(s.get("color","gray_bar"), s.get("color"))}">'
                  f'</i>{esc(s.get("name",""))}</span>')
     o.append("</div>")
-    o.append(f'<div class="chart" style="height:{plot_h}px">')
+    o.append(f'<div class="chart" style="height:{plot_h}px;margin-top:{val_h}px">')
     for k in range(1, 4):
         o.append(f'<div class="grid-l" style="bottom:{plot_h*k/4:.0f}px"></div>')
     o.append(f'<div class="axis"></div><div class="bars">')
@@ -824,6 +833,9 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .ovf{outline:2px dashed #%(red)s !important;outline-offset:2px}
 .ovf-badge{position:absolute;right:14px;top:14px;z-index:9;background:#%(red)s;color:#fff;
   font:700 11px/1 '%(disp)s';padding:6px 10px;border-radius:6px}
+.clash{outline:2px solid #%(coral)s !important;outline-offset:1px}
+.clash-badge{position:absolute;right:14px;top:44px;z-index:9;background:#%(coral)s;color:#fff;
+  font:700 11px/1 '%(disp)s';padding:6px 10px;border-radius:6px}
 """
 
 SELFCHECK_JS = """
@@ -843,6 +855,45 @@ function inboundSelfCheck(){
       b.className = 'ovf-badge';
       b.textContent = hits + ' blok govde alt sinirini asiyor';
       sl.appendChild(b);
+    }
+  });
+  inboundClashCheck();
+}
+
+/* Cakisma taramasi: veri tasiyan hicbir etiket bir digerinin uzerine binmemeli.
+   Grafik deger etiketleri, kategori etiketleri, legend, KPI degerleri, insight
+   satirlari ve tablo hucreleri karsilastirilir. Ata-torun ciftleri ve komsu
+   kenar temaslari (<=2px) haric tutulur; kalan her kesisim isaretlenir.
+   Bu tarama, bar deger etiketinin legend uzerine binmesi gibi PPTX olcumune
+   yakalanmayan durumlar icin son savunma hattidir. */
+function inboundClashCheck(){
+  var SEL = '.vl, .cat, .cats span, .lg span, .kpi-v, .kpi-l, .kpi-d, .blk-title,'
+          + ' .ins li, .dt td, .dt th, .ax-l, .note-b, .pill';
+  var MIN = 2;   /* her iki eksende bu kadarin uzerinde kesisim aranir */
+  document.querySelectorAll('.slide').forEach(function(sl){
+    var els = [].slice.call(sl.querySelectorAll(SEL)).filter(function(e){
+      var r = e.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && (e.textContent || '').trim();
+    });
+    var pairs = 0;
+    for (var i = 0; i < els.length; i++){
+      for (var j = i + 1; j < els.length; j++){
+        var a = els[i], b = els[j];
+        if (a.contains(b) || b.contains(a)) continue;
+        var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        var ox = Math.min(ra.right, rb.right) - Math.max(ra.left, rb.left);
+        var oy = Math.min(ra.bottom, rb.bottom) - Math.max(ra.top, rb.top);
+        if (ox > MIN && oy > MIN){
+          a.classList.add('clash'); b.classList.add('clash'); pairs++;
+        }
+      }
+    }
+    if (pairs){
+      var d = document.createElement('div');
+      d.className = 'clash-badge';
+      d.textContent = pairs + ' etiket cakismasi';
+      sl.appendChild(d);
+      if (window.console) console.warn('[cakisma]', sl.dataset.no || '', pairs);
     }
   });
 }
