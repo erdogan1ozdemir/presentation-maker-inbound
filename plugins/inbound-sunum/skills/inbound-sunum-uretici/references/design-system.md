@@ -196,6 +196,12 @@ sistemi görünümü tam kontrol edilemiyor. Bunun yerine düzenlenebilir vektö
   markanın öne çıkması gerekiyorsa `coral`.
 - Çok serili çizgi grafikte polyline + nokta işareti; seri sayısı dörtten fazlaysa
   okunurluk için grafiği bölmek daha iyi.
+- **Aylık metrik grafiği `combo` bloğuyla kurulur:** bir metrik bar (değer barın
+  içinde, beyaz), diğeri çizgi (değer noktanın üstünde, seri renginde), iki ayrı
+  y ekseni. Ölçekleri farklı metrikleri tek grafikte okunur kılar; çarpanla
+  ölçekleme yapılmaz.
+- **Grafik alanı geniş tutulur, tablo slaytın en altına yerleşir.** Aylık metrik
+  slaytında sıralama: grafik → değişim notu → tam seri tablosu.
 
 ---
 

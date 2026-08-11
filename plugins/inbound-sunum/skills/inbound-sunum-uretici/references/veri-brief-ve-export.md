@@ -183,8 +183,28 @@ Bucket'lar olduğu gibi kullanılır, yeniden hesaplanmaz.
 
 ### 2.4. SEOmonitor
 
-MCP genelde bağlı değil; panel export'u veya ekran görüntüsüyle gelir.
-Ekran görüntüsü slayda yapıştırılmaz, **tabloya çevrilir**.
+**SEOmonitor MCP kurulu değildir**; veriye canlı erişim yok. Panel export'u veya
+ekran görüntüsüyle gelir. Ekran görüntüsü slayda yapıştırılmaz, **tabloya çevrilir**.
+
+**Alternatif:** görünürlük ve rakip karşılaştırması için Ahrefs Rank Tracker canlı
+erişilebilir ve büyük ölçüde aynı soruyu yanıtlar:
+
+| SEOmonitor metriği | Ahrefs karşılığı | Araç |
+|---|---|---|
+| Visibility | Share of Voice | `rank-tracker-competitors-domains` |
+| Rakip görünürlük tablosu | aynı tool, domain bazında | aynı |
+| Sıralama dağılımı (ilk 3/10/100) | position kovaları | `rank-tracker-overview` |
+| Kelime bazlı before→after | `position` + `position_prev` | aynı |
+| Share of Clicks | **karşılığı yok** | - |
+| AI Search SoV / AI Overview SoV | `brand-radar-*` (ayrı metrik tanımı) | Ahrefs Brand Radar |
+
+Ahrefs kullanıldığında **kaynak notu Ahrefs olarak yazılır**, SEOmonitor olarak
+değil. Share of Clicks gerekiyorsa kullanıcıdan SEOmonitor export'u istenir;
+gelmezse o metrik destede yer almaz.
+
+Ahrefs Share of Voice'ta dönemsel kıyas yapmadan önce taban kontrolü çalıştırılır
+(bkz. `tuzaklar-ve-qa.md` 1.3b) - SoV endeks metriğidir ve kelime havuzu değişince
+dönemler arası karşılaştırılamaz hale gelir.
 
 > Visibility: mobil ve desktop, marka + rakip seti, dönem başı-sonu.
 > Share of Clicks: dönem karşılaştırmalı.

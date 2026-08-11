@@ -31,6 +31,7 @@ from inbound_deck import (  # noqa: E402
     AGENDA_PANEL_W, AGENDA_TITLE_PT, AGENDA_TITLE_Y, AGENDA_EYEBROW_XY,
     AGENDA_LOGO, AGENDA_LIST_X, AGENDA_LIST_W, AGENDA_ITEM_PT, AGENDA_ITEM_LH,
     AGENDA_ITEM_GAP, AGENDA_ITEM_NUM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
+    CB_GUTTER, CB_LEGEND_H, CB_CAT_H, _axis_scale, _fmt_val,
     _delta_kind, fit_pt, parse_runs, plain, separator_layout, table_layout,
     text_w, wrap_lines,
 )
@@ -312,6 +313,125 @@ def h_line(b):
     return "".join(o)
 
 
+
+def h_combo(b):
+    """Bar + cizgi, cift eksen. Geometri inbound_deck ile ayni formullerden."""
+    cats, series = b.get("cats") or [], b.get("series") or []
+    if not cats or not series:
+        return ""
+    W = b.get("_w") or (STAGE_W - M_L - M_R)
+    h = b.get("h", 300)
+    o = []
+    if b.get("title"):
+        o.append(f'<div class="blk-title">{esc(plain(b["title"]))}</div>')
+        h -= PT["h4"] * PX_PER_PT * 1.3 + 6
+
+    if b.get("legend", True):
+        chips = []
+        for s_ in series:
+            col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
+            mark = (f'<i style="background:#{col};height:3px;width:14px;'
+                    f'border-radius:2px"></i><em style="background:#{col}"></em>'
+                    if s_.get("kind") == "line"
+                    else f'<i style="background:#{col}"></i>')
+            chips.append(f'<span>{mark}{esc(s_.get("name",""))}</span>')
+        o.append('<div class="lg cb-lg">' + "".join(chips) + "</div>")
+        h -= CB_LEGEND_H
+
+    plot_h = max(50, h - CB_CAT_H)
+    gut = CB_GUTTER if b.get("axis_labels", True) else 8
+    pw = max(40, W - 2 * gut)
+    n = len(cats)
+    slot = pw / n
+
+    ax = {}
+    for side in ("left", "right"):
+        vals, inv, fmt = [], False, "auto"
+        for s_ in series:
+            if s_.get("axis", "left") != side:
+                continue
+            vals += [float(v or 0) for v in s_.get("data", [])]
+            inv = inv or bool(s_.get("invert"))
+            fmt = s_.get("fmt", fmt)
+        if vals:
+            lo, hi = _axis_scale(vals, inv)
+            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+
+    def ypos(side, v):
+        a = ax[side]
+        frac = (float(v) - a["lo"]) / max(1e-9, a["hi"] - a["lo"])
+        return plot_h * ((1 - frac) if a["inv"] else frac)   # tabandan yukseklik
+
+    o.append(f'<div class="cb" style="height:{plot_h:.0f}px;'
+             f'padding:0 {gut}px">')
+    TICKS = 4
+    for k in range(TICKS + 1):
+        gy = plot_h * k / TICKS
+        cls = "cb-gl" + (" cb-axis" if k == 0 else "")
+        o.append(f'<div class="{cls}" style="bottom:{gy:.1f}px"></div>')
+        if not b.get("axis_labels", True):
+            continue
+        for side in ax:
+            a = ax[side]
+            frac = k / TICKS
+            v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
+            pos = "left:0;text-align:right" if side == "left" else "right:0;text-align:left"
+            o.append(f'<div class="cb-tick" style="{pos};width:{gut-8}px;'
+                     f'bottom:{gy-7:.1f}px">{esc(_fmt_val(v, a["fmt"]))}</div>')
+
+    for s_ in series:
+        if s_.get("kind") != "bar":
+            continue
+        side = s_.get("axis", "left")
+        if side not in ax:
+            continue
+        bw = min(b.get("bar_w", 40), slot * 0.62)
+        col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
+        lbls = s_.get("labels_text")
+        for i, v in enumerate(s_["data"][:n]):
+            bh = max(1.0, ypos(side, float(v or 0)))
+            bx = gut + slot * i + (slot - bw) / 2
+            lab = ""
+            if s_.get("labels") == "inside" and bh > 24:
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
+                lab = f'<span class="cb-bl">{esc(txt)}</span>'
+            o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
+                     f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
+
+    for s_ in series:
+        if s_.get("kind") != "line":
+            continue
+        side = s_.get("axis", "left")
+        if side not in ax:
+            continue
+        col = C.get(s_.get("color", "coral"), s_.get("color"))
+        pts, lbl_html = [], []
+        lbls = s_.get("labels_text")
+        for i, v in enumerate(s_["data"][:n]):
+            vx = slot * i + slot / 2
+            vy = plot_h - ypos(side, float(v or 0))
+            pts.append(f"{vx:.1f},{vy:.1f}")
+            if s_.get("labels") == "above":
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
+                lbl_html.append(
+                    f'<div class="cb-ll" style="left:{gut+vx-slot/2:.1f}px;'
+                    f'width:{slot:.1f}px;bottom:{plot_h-vy+9:.1f}px;color:#{col}">'
+                    f'{esc(txt)}</div>')
+        o.append(f'<svg class="cb-svg" viewBox="0 0 {pw:.0f} {plot_h:.0f}" '
+                 f'preserveAspectRatio="none" style="left:{gut}px;width:{pw:.0f}px;'
+                 f'height:{plot_h:.0f}px">'
+                 f'<polyline points="{" ".join(pts)}" fill="none" stroke="#{col}" '
+                 f'stroke-width="2.25" vector-effect="non-scaling-stroke"/>'
+                 + "".join(f'<circle cx="{p.split(",")[0]}" cy="{p.split(",")[1]}" '
+                           f'r="4" fill="#{col}"/>' for p in pts) + "</svg>")
+        o += lbl_html
+    o.append("</div>")
+    o.append('<div class="cats" style="padding:0 %dpx">' % gut
+             + "".join(f'<span style="width:{slot:.2f}px">{esc(c)}</span>'
+                       for c in cats) + "</div>")
+    return "".join(o)
+
+
 def h_panels(b):
     items = b.get("items") or []
     cols = b.get("cols") or min(3, max(1, len(items)))
@@ -360,7 +480,7 @@ def h_image(b, base):
 
 
 HB = {"table": h_table, "insights": h_insights, "kpi": h_kpi, "bar": h_bar,
-      "line": h_line, "panels": h_panels, "note": h_note, "text": h_text}
+      "line": h_line, "combo": h_combo, "panels": h_panels, "note": h_note, "text": h_text}
 
 
 # ----------------------------------------------------------------------------
@@ -687,6 +807,20 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
   color:#%(coraldeep)s;margin-bottom:8px}
 .n-text{line-height:1.5}
 .tx{line-height:1.55;margin:0 0 8px}
+.cb{position:relative;width:100%%;box-sizing:border-box}
+.cb-gl{position:absolute;left:%(gut)spx;right:%(gut)spx;height:1px;background:#%(linesoft)s}
+.cb-gl.cb-axis{background:#%(line)s}
+.cb-tick{position:absolute;font-size:9px;color:#%(ink3)s;line-height:1}
+.cb-bar{position:absolute;bottom:0;border-radius:2px 2px 0 0}
+.cb-bl{position:absolute;bottom:5px;left:50%%;transform:translateX(-50%%);
+  font-size:9px;color:#fff;white-space:nowrap}
+.cb-svg{position:absolute;bottom:0;overflow:visible}
+.cb-ll{position:absolute;text-align:center;font-family:'%(disp)s';font-weight:700;
+  font-size:9px;white-space:nowrap}
+.cb-lg{justify-content:center}
+.cb-lg span{position:relative}
+.cb-lg em{position:absolute;left:3px;top:50%%;transform:translateY(-50%%);
+  width:8px;height:8px;border-radius:50%%}
 .blk-img{border-radius:12px;display:block}
 .missing{background:#%(redwash)s;color:#%(red)s;padding:10px;border-radius:8px;font-size:12px}
 /* self-check isaretleyicileri: HTML esnek kutu oldugu icin tasmayi sessizce
@@ -746,7 +880,7 @@ def render(spec, base):
                      ink2=C["ink2"], ink3=C["ink3"], line=C["line"],
                      linesoft=C["line_soft"], coraltint=C["coral_tint"],
                      coraldeep=C["coral_deep"], tealsoft=C["teal_soft"],
-                     redwash=C["red_wash"], red=C["red"], ml=M_L, mr=M_R,
+                     redwash=C["red_wash"], red=C["red"], ml=M_L, mr=M_R, gut=CB_GUTTER,
                      tt=TITLE_TOP, accw=SEP_ACC_W, acch=SEP_ACC_H,
                      accgap=SEP_ACC_GAP)
     return (f'<!doctype html><meta charset="utf-8"><title>{esc(head_title)}</title>'

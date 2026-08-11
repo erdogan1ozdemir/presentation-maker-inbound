@@ -211,6 +211,39 @@ halde okuyucu grafiği tersine yorumlar. `line` bloğunda da geçerli.
 (bin) aynı eksende okunmaz; çarpanla ölçeklemek ("Click ×20") müşteri destesinde
 hoş durmuyor. İki ayrı ince grafik alt alta verilir, her biri kendi ölçeğinde.
 
+### combo (aylık metrik grafiği - ev standardı)
+
+Bir metrik bar, diğeri çizgi; iki ayrı y ekseni. Özdilekteyim destesindeki aylık
+metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
+
+```json
+{ "type": "combo", "h": 214, "bar_w": 44, "cats": ["Tem'25", "..."],
+  "series": [
+    { "kind": "bar",  "name": "Impression", "data": [...], "color": "gray_bar",
+      "axis": "right", "fmt": "M", "labels": "inside",
+      "labels_text": ["3.23M", "..."] },
+    { "kind": "line", "name": "Avg. Position (ters eksen)", "data": [...],
+      "color": "coral", "axis": "right", "fmt": "pos", "labels": "above",
+      "labels_text": ["7.1", "..."], "invert": true }
+  ] }
+```
+
+| Alan | Açıklama |
+|---|---|
+| `kind` | `bar` veya `line` |
+| `axis` | `left` / `right` - her eksen kendi ölçeğini alır |
+| `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
+| `labels` | `inside` (barın içinde, beyaz) veya `above` (noktanın üstünde, seri renginde) |
+| `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
+| `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
+| `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
+
+**Pozisyon serisinde `invert: true` zorunludur** ve dipnotta "ters eksenli"
+olduğu yazılır - aksi halde okuyucu grafiği tersine yorumlar.
+
+`labels_text` kullanmak tercih edilir: tabloda ve grafikte aynı biçimlenmiş değer
+görünür, otomatik biçimleyicinin yuvarlaması ikisini ayrıştırmaz.
+
 ### line
 
 ```json

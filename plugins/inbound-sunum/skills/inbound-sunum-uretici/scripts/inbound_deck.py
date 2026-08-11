@@ -939,6 +939,210 @@ def block_line(slide, b, x, y, w, ctx, idx):
 
 
 # ----------------------------------------------------------------------------
+# Blok: combo (bar + cizgi, cift eksen) - Ozdilekteyim aylik metrik grafigi
+# ----------------------------------------------------------------------------
+
+CB_GUTTER = 54          # eksen etiketi icin sol/sag bosluk
+CB_LEGEND_H = 22
+CB_CAT_H = 20
+
+
+def _fmt_val(v, fmt):
+    """Eksen ve etiket bicimleyici."""
+    if fmt == "pct":
+        return f"%{v:.2f}" if abs(v) < 10 else f"%{v:.1f}"
+    if fmt == "pos":
+        return f"{v:.1f}"
+    a = abs(v)
+    if fmt == "M" or (fmt == "auto" and a >= 1_000_000):
+        return f"{v/1_000_000:.1f}M".replace(".0M", "M")
+    if fmt == "K" or (fmt == "auto" and a >= 1_000):
+        return f"{v/1_000:.1f}K".replace(".0K", "K")
+    if a and a < 10:
+        return f"{v:.1f}"
+    return f"{v:.0f}"
+
+
+def _axis_scale(vals, invert, pad=1.15):
+    """(vmin, vmax) - bar/cizgi eksen araligi. invert'te kucuk deger iyi."""
+    if not vals:
+        return 0.0, 1.0
+    lo, hi = min(vals), max(vals)
+    if invert:
+        # pozisyon: en iyi (kucuk) deger ustte, 1'den baslar
+        return max(0.5, lo * 0.85), hi * 1.12
+    return 0.0, (hi * pad or 1.0)
+
+
+def block_combo(slide, b, x, y, w, ctx, idx):
+    """
+    b = {type:"combo", h:300, cats:[...],
+         series:[{kind:"bar", name, data, color, axis:"right", labels:"inside",
+                  fmt:"M"},
+                 {kind:"line", name, data, color, axis:"left", labels:"above",
+                  fmt:"K", invert:false}],
+         axis_labels: true}
+
+    Ozdilekteyim destesindeki aylik metrik grafigi: bir metrik bar (deger
+    etiketi barin icinde), diger metrik cizgi (deger etiketi noktanin ustunde),
+    iki ayri y ekseni. Olcekleri farkli metrikleri tek grafikte okunur kilar.
+    Pozisyon gibi kucuk degerin iyi oldugu seride invert:true - cizgi yukari
+    ciktiginda iyilesme okunur, eksen etiketleri gercek degerleri gosterir.
+    """
+    cats = b.get("cats") or []
+    series = b.get("series") or []
+    if not cats or not series:
+        return 0
+    h = b.get("h", 300)
+    y0 = y
+
+    if b.get("title"):
+        th = PT["h4"] * PX_PER_PT * 1.3
+        textbox(slide, x, y, w, th, b["title"], pt=PT["h4"], family=F_DISPLAY,
+                bold=True, line_pct=1.2)
+        y += th + 6
+
+    # legend - ortalanmis
+    if b.get("legend", True):
+        chips = []
+        for s_ in series:
+            nm = str(s_.get("name", ""))
+            chips.append((s_, nm, text_w(nm, PT["micro"], F_BODY)))
+        total = sum(18 + cw + 24 for _s, _n, cw in chips) - 24
+        lx = x + (w - total) / 2
+        for s_, nm, cw in chips:
+            col = s_.get("color", "gray_bar")
+            if s_.get("kind") == "line":
+                rect(slide, lx, y + 8, 14, 3, fill=col, radius=2)
+                d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(lx + 4.5),
+                                           px(y + 5.5), px(8), px(8))
+                d.fill.solid()
+                d.fill.fore_color.rgb = RGBColor.from_string(C.get(col, col))
+                _no_line(d)
+                d.shadow.inherit = False
+            else:
+                rect(slide, lx, y + 4, 12, 12, fill=col, radius=3)
+            textbox(slide, lx + 18, y + 2, cw + 6, 14, nm, pt=PT["micro"],
+                    color="ink2", line_pct=1.0, wrap=False)
+            lx += 18 + cw + 24
+        y += CB_LEGEND_H
+
+    plot_top = y
+    plot_bot = y0 + h - CB_CAT_H
+    plot_h = max(50, plot_bot - plot_top)
+    gut = CB_GUTTER if b.get("axis_labels", True) else 8
+    px0, px1 = x + gut, x + w - gut
+    pw = max(40, px1 - px0)
+    n = len(cats)
+    slot = pw / n
+
+    # eksen araliklari
+    ax = {}
+    for side in ("left", "right"):
+        vals, inv, fmt = [], False, "auto"
+        for s_ in series:
+            if s_.get("axis", "left") != side:
+                continue
+            vals += [float(v or 0) for v in s_.get("data", [])]
+            inv = inv or bool(s_.get("invert"))
+            fmt = s_.get("fmt", fmt)
+        if vals:
+            lo, hi = _axis_scale(vals, inv)
+            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+
+    def ypos(side, v):
+        a = ax[side]
+        frac = (float(v) - a["lo"]) / max(1e-9, a["hi"] - a["lo"])
+        return plot_bot - plot_h * ((1 - frac) if a["inv"] else frac)
+
+    # izgara + eksen etiketleri
+    TICKS = 4
+    for k in range(TICKS + 1):
+        gy = plot_bot - plot_h * k / TICKS
+        hline(slide, px0, gy, pw, "line_soft" if k else "line", 0.75)
+        if not b.get("axis_labels", True):
+            continue
+        for side in ax:
+            a = ax[side]
+            frac = k / TICKS
+            v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
+            lbl = _fmt_val(v, a["fmt"])
+            if side == "left":
+                textbox(slide, x, gy - 7, gut - 8, 14, lbl, pt=PT["micro"],
+                        color="ink3", align="r", line_pct=1.0, wrap=False)
+            else:
+                textbox(slide, px1 + 8, gy - 7, gut - 8, 14, lbl, pt=PT["micro"],
+                        color="ink3", align="l", line_pct=1.0, wrap=False)
+
+    # barlar
+    for s_ in series:
+        if s_.get("kind") != "bar":
+            continue
+        side = s_.get("axis", "left")
+        if side not in ax:
+            continue
+        bw = min(b.get("bar_w", 40), slot * 0.62)
+        col = s_.get("color", "gray_bar")
+        lbls = s_.get("labels_text")
+        for i, v in enumerate(s_["data"][:n]):
+            v = float(v or 0)
+            top = ypos(side, v)
+            bh = max(1.0, plot_bot - top)
+            bx = px0 + slot * i + (slot - bw) / 2
+            rect(slide, bx, top, bw, bh, fill=col)
+            if s_.get("labels") == "inside" and bh > 24:
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
+                textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
+                        pt=PT["micro"], color="white", align="c", line_pct=1.0,
+                        wrap=False)
+
+    # cizgiler
+    for s_ in series:
+        if s_.get("kind") != "line":
+            continue
+        side = s_.get("axis", "left")
+        if side not in ax:
+            continue
+        col = C.get(s_.get("color", "coral"), s_.get("color", "coral"))
+        pts = []
+        for i, v in enumerate(s_["data"][:n]):
+            vx = px0 + slot * i + slot / 2
+            pts.append((vx, ypos(side, float(v or 0))))
+        if len(pts) > 1:
+            ff = slide.shapes.build_freeform(px(pts[0][0]), px(pts[0][1]))
+            ff.add_line_segments([(px(a), px(bb)) for a, bb in pts[1:]], close=False)
+            shp = ff.convert_to_shape()
+            shp.fill.background()
+            shp.line.color.rgb = RGBColor.from_string(col)
+            shp.line.width = Pt(2.25)
+            shp.shadow.inherit = False
+        lbls = s_.get("labels_text")
+        for i, (vx, vy) in enumerate(pts):
+            d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 4), px(vy - 4),
+                                       px(8), px(8))
+            d.fill.solid()
+            d.fill.fore_color.rgb = RGBColor.from_string(col)
+            _no_line(d)
+            d.shadow.inherit = False
+            if s_.get("labels") == "above":
+                v = float(s_["data"][i] or 0)
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
+                textbox(slide, vx - slot / 2, vy - 19, slot, 14, txt,
+                        pt=PT["micro"], family=F_DISPLAY, bold=True,
+                        color=s_.get("color", "coral"), align="c", line_pct=1.0,
+                        wrap=False)
+
+    # kategori etiketleri
+    for i, cat in enumerate(cats):
+        textbox(slide, px0 + slot * i, plot_bot + 5, slot, 16, str(cat),
+                pt=PT["micro"], color="ink2", align="c", line_pct=1.0, wrap=False)
+
+    ctx.boxes.append((idx, "combo", x, y0, w, h))
+    return h
+
+
+
+# ----------------------------------------------------------------------------
 # Blok: panel kartlari / not kutusu / duz metin / gorsel
 # ----------------------------------------------------------------------------
 
@@ -1047,7 +1251,8 @@ def block_image(slide, b, x, y, w, ctx, idx):
 
 BLOCKS = {
     "table": block_table, "insights": block_insights, "kpi": block_kpi,
-    "bar": block_bar, "line": block_line, "panels": block_panels,
+    "bar": block_bar, "line": block_line, "combo": block_combo,
+    "panels": block_panels,
     "note": block_note, "text": block_text, "image": block_image,
 }
 
