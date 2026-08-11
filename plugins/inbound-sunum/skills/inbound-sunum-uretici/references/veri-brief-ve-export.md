@@ -182,6 +182,24 @@ Hacimler bucket'lı gelir (27.1K, 33.1K, 40.5K). Bu yüzden değişimler %0, %18
 gibi tekrar eden değerlerde kümelenir; normaldir, her rakip için ayrı sebep aranmaz.
 Bucket'lar olduğu gibi kullanılır, yeniden hesaplanmaz.
 
+**MCP alternatifi ve kaynak seçimi.** Keyword Planner MCP bağlı değilse DataForSEO
+`kw_data_google_ads_search_volume` (`location_name: "Turkiye"`, `language_code: "tr"`)
+aynı Google Ads verisini canlı verir - tek çağrıda birden çok kelime, son 12 ayın
+`monthly_searches` kırılımıyla.
+
+Ancak bucket'lama **aylık YoY karşılaştırmasını taşımaz**: tek terim için seri
+yalnızca 74000 / 90500 / 110000 basamaklarında hareket eder, bu da gerçek olmayan
+sıfır değişimler ve sıçramalar üretir. Bu nedenle:
+
+- **Aylık trend tablosu / grafiği (C04, C04b):** Ahrefs
+  `keywords-explorer-volume-history` (`keyword`, `country`, `date_from`, `date_to`)
+  kullanılır - sürekli seri verir, YoY karşılaştırmasına uygundur.
+- **Set bazlı toplam ve göreli büyüklük (C05-C08):** Keyword Planner / Google Ads
+  verisi kullanılır.
+- İki kaynak **aynı metrik için tek tabloda birleştirilmez**. Aynı terim iki blokta
+  farklı değerle görünecekse çekirdek terim ikinci bloktan çıkarılır ve her blok
+  kendi kaynak dipnotunu taşır.
+
 ### 2.4. SEOmonitor
 
 **Canlı çekilebilir** (`mcp__*__seomonitor_*`). Kullanıcıdan export istenmez.
@@ -224,6 +242,28 @@ değer kelime sayısına göre hesaplanır ve hacim farkını görmezden gelir.
    508 mention, total 1164798). Dönemsel kıyas yapılmadan önce iki tarihin
    değerleri karşılaştırılır; aynıysa yalnızca mevcut durum olarak sunulur.
    AI Overview SoV bu sorunu göstermiyor, günlük değişiyor.
+
+**Dönem bazlı çekim reçetesi (rakip karşılaştırma slaytı için):**
+
+1. **Share of Click - dönem ortalaması.** `get_daily_share_of_clicks` ·
+   `device` = kampanyanın `primary_device`'ı · her ay iki çağrı (1-15, 16-30;
+   uç nokta 15 günlük pencere sınırı uygular). Üç dönem çekilir: cari ay,
+   önceki ay, önceki yılın aynı ayı. Ortalama, domain başına yalnızca **değeri
+   bulunan günler** üzerinden alınır - günlük yanıt o günün top 10'unu döndürdüğü
+   için listeye girmeyen rakip sıfır değil ölçüm dışıdır; kapsam dipnota yazılır.
+2. **Visibility - dönem sonu.** `get_daily_group_visibility` · dönem sonu tek gün
+   (ay sonu) · kampanya için `group_id: 0`, her rakip için `domain: <rakip>`.
+   Bu taban bilinçli seçilir: SEOmonitor panelinin gösterimiyle örtüşür.
+   Dönem ortalaması isteniyorsa aynı uç nokta tam ay çekebilir (burada 15 gün
+   sınırı yok), ancak rakip × dönem sayısıyla maliyet hızla büyür.
+3. İki tablo **ayrı** verilir; Visibility ile Share of Click aynı tabloya
+   konmaz (bkz. tuzaklar 2.7 ve slayt kataloğu C20b).
+
+`get_campaign_widgets` bir çağrıda özet verir (visibility, avg rank, SERP feature
+kırılımı, AIO/AIS mention yüzdesi, organic/AIO/AIS SoV) ama **`visibility` alanı
+aralığın son günüdür, ortalama değildir** ve `share_of_voice` tek tarihlik
+kesittir (`as_of.sov_date`). Özet kartlar için elverişli, dönem ortalaması için
+değil (bkz. tuzaklar 2.8).
 
 Panel ekran görüntüsü kullanılacaksa slayda yapıştırılmaz, **tabloya çevrilir**.
 

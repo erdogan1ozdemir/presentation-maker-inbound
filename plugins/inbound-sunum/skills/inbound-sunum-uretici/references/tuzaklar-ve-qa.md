@@ -217,6 +217,54 @@ Tem 25: 1.801 click).
 **Kural:** sayfa tablosunda kısaltılmış URL kullanılmaz. Tam URL doğrulanamıyorsa
 o satır tablodan çıkarılır.
 
+### 2.7. Visibility Score ile Share of Click'in karıştırılması
+
+SEOmonitor'de bu iki metrik aynı kampanyadan gelir ama farklı şeyi ölçer:
+
+| Metrik | Ne ölçer | Tipik büyüklük |
+|---|---|---|
+| Visibility Score | Takip edilen kelime setinde markanın görünürlük oranı | 40-90 |
+| Share of Click | Aynı kelime setinde tahmini organik tıklamaların domainler arasındaki dağılımı | %1-25 |
+
+Panelde görülen değer **Visibility**'dir. Aynı marka için Visibility 53 iken
+Share of Click %8 olması çelişki değildir: ikinci metrik 800'ü aşan domain
+arasında paylaşılan bir paydır.
+
+Gerçek örnek: bir destede iki metrik "Rakip Görünürlük ve Share of Clicks"
+başlığı altında yan yana verildi; marka panelde %53 görürken destede %7.63
+yazdığı için ölçüm hatası şüphesi doğdu. Hata sayıda değil sunumdaydı.
+
+**Kural:** iki metrik tek tabloda veya tek başlık altında birleştirilmez. Ayrı
+tablolar, ayrı başlıklar ("Share of Click" / "Visibility Score"), her biri kendi
+dönem tabanı dipnotuyla verilir (bkz. slayt kataloğu C20b).
+
+### 2.8. SEOmonitor dönem çekiminde üç sınır
+
+1. **Widget `visibility` alanı dönem ortalaması değildir.**
+   `get_campaign_widgets` bir tarih aralığıyla çağrıldığında `visibility_source`
+   alanı `daily_visibility_requested_range` yazsa da dönen değer **aralığın son
+   günüdür**. Gerçek örnek: 1-31 Temmuz aralığı için mobil 53.3 döndü; günlük
+   serinin ortalaması 56.1, son gün değeri 53.3. Ortalama gerekiyorsa
+   `get_daily_group_visibility` ile günlük seri çekilip elde hesaplanır.
+   Aynı şey `share_of_voice` için de geçerli: yanıtın `as_of.sov_date` alanı tek
+   tarih verir, yani anlık kesittir.
+2. **`get_daily_share_of_clicks` 15 günlük pencere sınırı uygular.**
+   Aşıldığında HTTP 422 "The timeframe is restricted to 15 days" döner. Aylık
+   seri iki çağrıda toplanır (1-15, 16-30). Karşılaştırılan dönemler eşit gün
+   sayısıyla kurulur; 31. gün alınmayacaksa üç dönem de ilk 30 gün üzerinden
+   hesaplanır.
+3. **Günlük yanıt yalnızca o günün top 10'unu döndürür** (artı kampanya domaini,
+   `sum_top_10` ve `others`). Listeye girmeyen rakip o gün **sıfır değil ölçüm
+   dışıdır**; ortalama yalnızca değeri bulunan günler üzerinden alınır ve kapsam
+   (kaç gün) dipnotta belirtilir. Sıfır sayılırsa küçük rakiplerin payı sistematik
+   olarak olduğundan düşük çıkar.
+
+**Rakip visibility çekimi:** `get_daily_group_visibility` + `domain=<rakip>`
+kampanya domaini yerine o rakibin serisini verir; kampanyanın kendisi için
+`group_id=0` kullanılır. Bu uç noktada 15 gün sınırı yoktur, tam ay çekilebilir;
+ancak rakip × dönem sayısı arttıkça çekim maliyeti hızla büyür, tablo kapsamı
+(kaç rakip, kaç dönem) baştan belirlenir.
+
 ---
 
 ## 3. Teknik üretim tuzakları

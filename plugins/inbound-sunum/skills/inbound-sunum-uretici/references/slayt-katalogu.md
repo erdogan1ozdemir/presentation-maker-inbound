@@ -138,9 +138,28 @@ bitirilir.
 **C04 Marka (only brand) arama hacmi**
 Veri: Keyword Planner `brand_only`, aylık, son 2-3 yıl.
 Tablo: satırlar = yıllar, kolonlar = Oca-Ara, son satır `26 vs '25 Change`.
+Cari yılın oluşmamış ayları `-` ile bırakılır; tahmin yazılmaz.
 Çeyreklikte ek mini tablo: `QoQ | Q-YoY`.
 Insight: "Only brand arama hacmi Mart ayında geçtiğimiz yıla göre aynı kalmıştır."
 Kaynak: `Keyword Planner`
+
+**Kaynak seçimi (aylık trend için bağlayıcı):** Keyword Planner hacimleri
+kovalanmış döner (tek terim için yalnızca 74000 / 90500 / 110000 gibi basamaklar).
+Ay bazında YoY karşılaştırması bu seriyle güvenilir kurulamaz. Aylık trend tablosu
+için sürekli seri veren **Ahrefs `keywords-explorer-volume-history`** kullanılır
+(keyword + country + tarih aralığı). Keyword Planner, marka + ürün terimlerinin
+**göreli büyüklüğü** için ikinci blokta kullanılabilir; bu durumda iki kaynak tek
+tabloda birleştirilmez, her blok kendi dipnotunu taşır ve aynı terim iki blokta
+farklı değerle görünecekse çekirdek terim ikinci bloktan çıkarılır.
+
+**C04b Marka hacmi + marka/ürün kırılımı (tek slayt)**
+`grid: [52, 48]`. `table` (col `full`, başlık "Aylık Arama Hacmi") = yıl × ay
+matrisi + YoY satırı; `table` (col 0, başlık "Marka + Ürün Terimleri") = keyword |
+aylık ortalama hacim; `insights` (col 1).
+Insight üçlüsü: dönem toplamı + YoY bandı → cari ay YoY → hacmin yoğunlaştığı
+marka + ürün başlıkları.
+Bu slayt branded impression daralmasının talep kaynaklı olup olmadığını
+sınamak için GSC brand/non-brand slaytının hemen ardına konur.
 
 **C05 Marka + kategori arama hacmi** - C04 yapısı, `brand_category` seti.
 Insight YoY + MoM birlikte.
@@ -293,6 +312,26 @@ Kendi domain `highlight_rows` ile.
 kelimelerin görünürlük oranını yüzdesel olarak gösterir. <N> hedef anahtar kelime
 takip edilmektedir."
 Insight sırası: kendi hareketimiz → pozitif ayrışan rakip → en yüksek düşüş yaşayanlar.
+
+**C20b Share of Click + Visibility birlikte (iki tablo, tek slayt)**
+`grid: [52, 48]`. `table` (col 0, başlık **"Share of Click"**) ve `table`
+(col 1, başlık **"Visibility Score"**), altında `insights` (col `full`).
+Kolonlar her iki tabloda aynı: `Domain | <önceki yıl> | <önceki dönem> | <dönem> | MoM | YoY`.
+Kendi domain iki tabloda da `highlight_rows` ile işaretlenir.
+
+**Bağlayıcı kural - iki metrik ayrı tutulur.** Visibility Score, takip edilen
+kelime setinde markanın görünürlük oranıdır ve SEOmonitor panelinde görülen
+değerdir. Share of Click ise aynı kelime setinde tahmini organik tıklamaların
+**tüm domainler arasındaki dağılımıdır**. Aynı markanın Visibility'si 53 iken
+Share of Click'i %8 olabilir; bunlar çelişki değil farklı metriklerdir. Tek
+tabloda ya da tek başlık altında birleştirilmez, her tablo kendi dönem tabanını
+dipnotta beyan eder.
+
+**Dönem tabanı.** Share of Click günlük seriden **dönem ortalaması** olarak alınır
+(tek gün anlık değer aylık ortalamadan 1 puana kadar sapabilir). Visibility
+**dönem sonu** değeriyle verilir; böylece marka panele baktığında aynı sayıyı
+görür. İki farklı taban kullanıldığında her tablonun dipnotunda hangi tabanın
+kullanıldığı açıkça yazılır.
 
 **C21 Share of Clicks + AI Search SoV**
 İki grafik yan yana (`grid: [50,50]`).
