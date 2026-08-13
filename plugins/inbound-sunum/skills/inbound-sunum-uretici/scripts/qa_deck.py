@@ -169,10 +169,28 @@ def collect(spec):
 # Katman 2: dil
 # ----------------------------------------------------------------------------
 
+def alinti_mi(t):
+    """Alan bastan sona bir alintidan mi ibaret?
+
+    Sosyal dinleme ve AI gorunurluk slaytlarinda kullanici/model yanitlari
+    BIREBIR aktarilir (icerik-dili-rehberi 14.6). Bu metinlerde emir kipi,
+    marka yaziminin farkli hali ve keskin kelime bulunabilir; bunlar destenin
+    kendi sesi degildir ve duzeltilmez. Yalnizca tirnakla acilip kapanan tam
+    alintilar muaf tutulur - alintinin icine yerlestirilmis yorum cumlesi
+    denetimden kacamaz.
+    """
+    t = t.strip()
+    ac = "\"“‘'"
+    kapa = "\"”’'"
+    return len(t) > 20 and t[0] in ac and t[-1] in kapa
+
+
 def check_language(spec, rep):
     for where, raw in collect(spec):
         t = plain(raw)
         low = t.lower()
+        if alinti_mi(t):
+            continue
 
         if "—" in t or "–" in t:
             rep.err(where, "em dash", f"'{t[:70]}'",
@@ -354,6 +372,9 @@ def check_structure(spec, rep):
                                               # YONTEM). Marka adi bir etikette
                                               # gectiginde varyant sayilmamali.
             t = plain(raw)
+            if alinti_mi(t):
+                continue                      # birebir alinti: model/kullanici
+                                              # metni destenin kendi sesi degil
             quoted = [(q.start(), q.end()) for q in
                       re.finditer(r"[\"'\u201c\u201d\u2018\u2019][^\"'\u201c\u201d\u2018\u2019]{1,60}"
                                   r"[\"'\u201c\u201d\u2018\u2019]", t)]

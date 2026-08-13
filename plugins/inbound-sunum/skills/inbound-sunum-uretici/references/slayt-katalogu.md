@@ -625,15 +625,40 @@ tek cümleyle açıklanır (hangi kanaldan geldiği). Kapsam dışı bırakılan
 varsa (tarama aracı artığı gibi) dipnotta sayısıyla beyan edilir.
 
 **C51 Yapay zeka yanıtlarında marka görünürlüğü**
-İki tablo: (a) `Sağlayıcı | Yanıt | Brand Mention | Mention oranı | Brand
-Position`, (b) `En çok Citation alan kaynak | Citation | Farklı prompt | Tür`.
-Metrik adları **orijinal haliyle** yazılır: Mention ve Citation çevrilmez,
-"atıf" kullanılmaz. Dipnotta ikisinin farkı tanımlanır (Mention = yanıt
-metninde anılma, Citation = kaynak olarak link verilmesi).
+İki tablo: (a) `Sağlayıcı | Brand Mention / Yanıt | Mention oranı | Brand
+Position | Citation / Toplam | Source Visibility`, (b) `En çok Citation alan
+kaynak | Citation / Toplam | Pay | Farklı prompt`.
 
-**C52 İzlenen promptlardan örnekler**
-`Prompt | Sağlayıcı | Marka anılıyor mu | Anılma sırası`. Kaç prompt izlendiği
-ve kaçının markalı olduğu dipnotta yazılır; boş hücre `-` ile geçilir.
+**Pay taşıyan her metrik kesir olarak yazılır.** "1.492 citation" tek başına
+büyüklük bilgisi vermez; `1.492 / 9.621` ve yanında `%15.5` birlikte verilir.
+Aynı kural mention için de geçerlidir (`966 / 1.622`), bu yüzden yanıt sayısı
+için ayrı kolon açılmaz.
+
+Metrik adları **orijinal haliyle** yazılır: Mention, Citation, Brand Position
+ve Source Visibility çevrilmez, "atıf" kullanılmaz. Dipnotta tanımlar verilir
+(Mention = yanıt metninde anılma, Citation = kaynak olarak link verilmesi,
+Source Visibility = marka sitesinin citation'ının toplam citation içindeki
+payı). Bir oran aracın kendi arayüzündeki adla anılacaksa formülü önce
+doğrulanır; doğrulanamıyorsa tanım dipnotta açık yazılır ve chat'ten teyit
+istenir.
+
+**C52 Prompt ve yanıt örnekleri** (2-3 slayt)
+Tablo değil, kart düzeni: `panels` iki kolon, her kartta **prompt** başlıkta
+tırnak içinde, **sağlayıcı · anılma sırası · tepki tonu** alt başlıkta, yanıt
+metninden birebir alıntı gövdede ve altında `Citation: <domain> · <domain>`
+satırı. Bir slaytta iki farklı prompt, mümkünse iki farklı sağlayıcıdan.
+
+Kurallar:
+- Örnekler **marka adı geçmeyen** prompt kümesinden seçilir; markanın kendi
+  adıyla sorulduğu yanıtta görünmesi bilgi taşımaz.
+- Alıntı birebir aktarılır, uzunluk nedeniyle kısaltma `(...)` ile gösterilir.
+- Olumlu örneklerin yanına **en az bir olumsuz/eleştirel çerçeve** konur; tek
+  yönlü seçki yapılmaz. Olumsuz örnek nötr dille çerçevelenir ve bir çalışma
+  alanına bağlanır.
+- Prompt kümesinin büyüklüğü ve markalı/markasız dağılımı dipnotta yazılır.
+
+Referans düzen: Flormar GEO destesindeki "LLM yanıtlarında marka görünümü"
+slaytı (tek prompt, iki sağlayıcı kartı yan yana).
 
 **C53 Markadan nasıl bahsediliyor**
 `panels` üç kolon: konumlandırma cümlesi, öne çıkan özellikler, tepki tonu

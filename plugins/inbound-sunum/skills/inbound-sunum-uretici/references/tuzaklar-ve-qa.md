@@ -527,6 +527,23 @@ denetimi *nerede*, içerik denetimi *ne* sorusuna bakar. Yeni blok tipi eklenirk
 
 Font küçültme son çaredir; 10 pt'nin altına inilmez.
 
+### 3.6f. Birebir alıntıda yanlış dil uyarısı
+
+Sosyal dinleme raporlarında kullanıcı yorumları, AI görünürlük slaytlarında
+model yanıtları **birebir** aktarılır (içerik-dili-rehberi 14.6). Bu metinler
+destenin kendi sesi değildir; içlerinde emir kipi ("oynayabilirsiniz"),
+markanın farklı yazımı ("GAME+") ve keskin kelime bulunabilir - hiçbiri
+düzeltilmez.
+
+QA dil taraması bunları hata olarak işaretliyordu. `qa_deck.py` içindeki
+`alinti_mi()` ile baştan sona tırnak içinde olan alanlar dil ve marka yazımı
+denetiminden muaf tutulur. Muafiyet **yalnızca tam alıntılara** verilir; alıntı
+içine yerleştirilen yorum cümlesi denetimden kaçamaz.
+
+Karşılık gelen yazım kuralı: alıntı ile raporun kendi cümlesi aynı alana
+karıştırılmaz. Alıntı kendi satırında tırnakla verilir, yorum ayrı satıra
+yazılır.
+
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 
 Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font
