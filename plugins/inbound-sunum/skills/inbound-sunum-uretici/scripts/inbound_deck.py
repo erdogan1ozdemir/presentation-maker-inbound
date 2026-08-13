@@ -1164,6 +1164,19 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     n = len(cats)
     slot = pw / n
 
+    # Seri-eksen baglantisi. Gecersiz bir axis degeri (ornegin "l"/"r") sessizce
+    # elenir ve grafik izgarayla birlikte bos cizilir - tasma denetimine de
+    # takilmaz. Bu yuzden once dogrulanir.
+    for s_ in series:
+        a = s_.get("axis", "left")
+        if a not in ("left", "right"):
+            ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
+                     f"gecersiz axis degeri tasiyor: '{a}' - 'left' veya 'right' "
+                     f"olmali. Seri cizilmeyecek.")
+        if not [v for v in (s_.get("data") or []) if v not in (None, "")]:
+            ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
+                     f"veri tasimiyor - grafik bos cizilecek.")
+
     # eksen araliklari
     ax = {}
     for side in ("left", "right"):
@@ -1177,6 +1190,10 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         if vals:
             lo, hi = _axis_scale(vals, inv)
             ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+
+    if not ax:
+        ctx.warn(f"GRAFIK S{idx}: 'combo' blogunda hicbir seri eksene baglanmadi - "
+                 f"grafik yalnizca izgara olarak cizilecek. axis degerleri kontrol edilmeli.")
 
     def ypos(side, v):
         a = ax[side]

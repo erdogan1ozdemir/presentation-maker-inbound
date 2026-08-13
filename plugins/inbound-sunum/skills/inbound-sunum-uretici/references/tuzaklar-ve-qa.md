@@ -429,6 +429,34 @@ olarak tanımlanır ve iki renderer aynı sabiti kullanır, (b) `wrap=False` çi
 her etiket için genişlik kontrolü eklenir, (c) önizlemede çakışma rozeti
 kontrol edilir.
 
+### 3.6c. Sessizce boş çizilen grafik
+
+`combo` bloğunda seri-eksen bağlantısı **`axis: "left"` / `axis: "right"`** ile
+kurulur. Kod eşleşmeyen değeri sessizce eler (`if s_.get("axis","left") != side:
+continue`), dolayısıyla `"l"` / `"r"` gibi kısaltma yazıldığında:
+
+- hiçbir seri hiçbir eksene bağlanmaz,
+- grafik yalnızca ızgara ve kategori etiketleriyle çizilir,
+- **hiçbir denetimden uyarı çıkmaz** - blok yüksekliği doğrudur, taşma yoktur,
+  çakışma yoktur, QA dil denetimi de bir şey görmez.
+
+Gerçek olay: Enerjisa Üretim destesinde iki combo grafiği bu şekilde boş
+üretildi; hata ancak önizleme gözle açıldığında fark edildi.
+
+**Eklenen koruma** (`block_combo`, `--check` ile çalışır):
+1. Her seri için `axis` değeri `left`/`right` dışındaysa uyarı, seri adıyla.
+2. Serinin `data` dizisi boşsa ya da tamamı `None` ise uyarı.
+3. Hiçbir seri eksene bağlanmadıysa "grafik yalnızca ızgara olarak çizilecek"
+   uyarısı.
+
+**Kural:** görsel çıktı üreten her blok için "hiç mark çizilmedi" durumu bir
+uyarıya bağlanır. Geometri doğrulaması bir bloğun *yerini* denetler, *içeriğinin
+oluştuğunu* denetlemez; ikisi ayrı kontrollerdir. Yeni bir grafik tipi eklerken
+seri sayısı, veri uzunluğu ve eksen bağlantısı doğrulanır.
+
+Teslim öncesi refleks: önizleme açılıp **her grafik gözle görülür**. Tablo ve
+metin bloklarında ölçüm denetimi yeterli, grafiklerde değildir.
+
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 
 Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font
