@@ -354,7 +354,7 @@ def h_combo(b):
         for s_ in series:
             if s_.get("axis", "left") != side:
                 continue
-            vals += [float(v or 0) for v in s_.get("data", [])]
+            vals += [float(v) for v in s_.get("data", []) if v is not None]
             inv = inv or bool(s_.get("invert"))
             fmt = s_.get("fmt", fmt)
         if vals:
@@ -401,6 +401,11 @@ def h_combo(b):
                 lab = f'<span class="cb-bl">{esc(txt)}</span>'
             o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
                      f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
+            if s_.get("labels") == "above":
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
+                o.append(f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
+                         f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{col}">'
+                         f'{esc(txt)}</div>')
 
     for s_ in series:
         if s_.get("kind") != "line":
@@ -409,25 +414,41 @@ def h_combo(b):
         if side not in ax:
             continue
         col = C.get(s_.get("color", "coral"), s_.get("color"))
+        # None = bosluk (bkz. inbound_deck.block_combo): cizgi kesilir, nokta yok
         pts, lbl_html = [], []
         lbls = s_.get("labels_text")
         for i, v in enumerate(s_["data"][:n]):
+            if v is None:
+                pts.append(None)
+                continue
             vx = slot * i + slot / 2
-            vy = plot_h - ypos(side, float(v or 0))
+            vy = plot_h - ypos(side, float(v))
             pts.append(f"{vx:.1f},{vy:.1f}")
             if s_.get("labels") == "above":
-                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
                 lbl_html.append(
                     f'<div class="cb-ll" style="left:{gut+vx-slot/2:.1f}px;'
                     f'width:{slot:.1f}px;bottom:{plot_h-vy+9:.1f}px;color:#{col}">'
                     f'{esc(txt)}</div>')
+        parca, cari = [], []
+        for p in pts:
+            if p is None:
+                if len(cari) > 1:
+                    parca.append(cari)
+                cari = []
+            else:
+                cari.append(p)
+        if len(cari) > 1:
+            parca.append(cari)
+        dolu = [p for p in pts if p]
         o.append(f'<svg class="cb-svg" viewBox="0 0 {pw:.0f} {plot_h:.0f}" '
                  f'preserveAspectRatio="none" style="left:{gut}px;width:{pw:.0f}px;'
                  f'height:{plot_h:.0f}px">'
-                 f'<polyline points="{" ".join(pts)}" fill="none" stroke="#{col}" '
-                 f'stroke-width="2.25" vector-effect="non-scaling-stroke"/>'
+                 + "".join(f'<polyline points="{" ".join(seg)}" fill="none" '
+                           f'stroke="#{col}" stroke-width="2.25" '
+                           f'vector-effect="non-scaling-stroke"/>' for seg in parca)
                  + "".join(f'<circle cx="{p.split(",")[0]}" cy="{p.split(",")[1]}" '
-                           f'r="4" fill="#{col}"/>' for p in pts) + "</svg>")
+                           f'r="4" fill="#{col}"/>' for p in dolu) + "</svg>")
         o += lbl_html
     o.append("</div>")
     o.append('<div class="cats" style="padding:0 %dpx">' % gut

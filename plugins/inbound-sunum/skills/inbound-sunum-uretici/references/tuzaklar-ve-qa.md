@@ -308,6 +308,17 @@ pozisyon **impression ağırlıklı** ortalanır (aritmetik ortalama yanlış so
 verir). Doğrulama: total için hesaplanan ağırlıklı pozisyon, filtresiz property
 değeriyle örtüşmeli.
 
+**Non-brand pozisyonu ayrı ölçülür.** "Toplam − brand" ile bulunan bir segment
+için pozisyon türetilemez; ağırlıklı ortalama iki ölçümün farkından çıkmaz.
+Non-brand pozisyonu `excludingRegex` ile ayrıca çekilir ve **yalnızca pozisyon
+için** kullanılır - aynı çağrının click/impression değerleri anonim sorgular
+düştüğü için eksiktir. İki kaynağın kapsam farkı dipnotta yazılır.
+
+Gerçek örnek (Game+, Tem 2026): toplam − brand yöntemiyle non-brand click
+22.151 iken `excludingRegex` çağrısı 14.190 click döndürmüştür; aradaki fark
+anonim sorgulardır. Pozisyon değeri (7.39) ise yalnızca ikinci çağrıdan
+alınabilir.
+
 **İstisna - müşteride yerleşik bir hesap varsa.** Marka tarafında çalışan bir
 dashboard/ETL zaten "non-brand = toplam − brand" kabulüyle raporluyorsa, sunum
 o hesabı takip eder; iki kaynak arasında yüzde farkı çıkması müşteri için daha

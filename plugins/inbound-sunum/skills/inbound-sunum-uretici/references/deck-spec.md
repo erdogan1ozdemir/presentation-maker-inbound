@@ -280,6 +280,27 @@ olduğu yazılır - aksi halde okuyucu grafiği tersine yorumlar.
 `labels_text` kullanmak tercih edilir: tabloda ve grafikte aynı biçimlenmiş değer
 görünür, otomatik biçimleyicinin yuvarlaması ikisini ayrıştırmaz.
 
+**Bar üstü değer etiketi.** Bar serisine `"labels": "above"` verildiğinde değer
+barın üstüne basılır (`"inside"` barın içine basar, yalnızca bar yeterince
+yüksekse). `labels_text` ile hazır metin listesi geçilebilir - ham sayıyı
+deste formatında (`n(v)` / `k(v)`) yazdırmak için kullanılır. Etiket bandı
+`CB_VAL_H` kadar yer kaplar; blok yüksekliği buna göre seçilir.
+
+**Çizgide boşluk ve renk kırılımı.** `data` içindeki `None` bir boşluktur:
+çizgi orada kesilir, o noktada işaret basılmaz ve değer eksen ölçeğine
+girmez. Bir seriyi geçiş tarihinde renk kırılımıyla ikiye bölmek için iki
+seri tanımlanır - biri geçişten önce dolu / sonra `None`, diğeri tersi:
+
+```python
+once  = [v if h < GECIS else None for h, v in seri]
+sonra = [v if h >= GECIS else None for h, v in seri]
+sonra[g - 1] = once[g - 1]     # sinir noktasi iki seride de yer alir, cizgi kopmaz
+```
+
+Sınır noktasının iki seride de bulunması gerekir; aksi halde iki parça
+arasında görünür bir kopukluk oluşur. Aynı teknik bar serisinde `0` ile
+yapılır (sıfır yükseklikli bar görünmez).
+
 ### line
 
 ```json

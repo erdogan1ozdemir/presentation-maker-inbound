@@ -1184,7 +1184,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         for s_ in series:
             if s_.get("axis", "left") != side:
                 continue
-            vals += [float(v or 0) for v in s_.get("data", [])]
+            vals += [float(v) for v in s_.get("data", []) if v is not None]
             inv = inv or bool(s_.get("invert"))
             fmt = s_.get("fmt", fmt)
         if vals:
@@ -1240,6 +1240,12 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
                         pt=PT["micro"], color="white", align="c", line_pct=1.0,
                         wrap=False)
+            elif s_.get("labels") == "above":
+                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
+                textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
+                        pt=PT["micro"], family=F_DISPLAY, bold=True,
+                        color=s_.get("color", "ink2"), align="c", line_pct=1.0,
+                        wrap=False)
 
     # cizgiler
     for s_ in series:
@@ -1249,20 +1255,32 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         if side not in ax:
             continue
         col = C.get(s_.get("color", "coral"), s_.get("color", "coral"))
+        # None degeri bosluktur: cizgi orada kesilir, nokta basilmaz. Bir seriyi
+        # renk kirilimiyla ikiye bolerken (gecis oncesi / sonrasi) kullanilir.
         pts = []
         for i, v in enumerate(s_["data"][:n]):
             vx = px0 + slot * i + slot / 2
-            pts.append((vx, ypos(side, float(v or 0))))
-        if len(pts) > 1:
-            ff = slide.shapes.build_freeform(px(pts[0][0]), px(pts[0][1]))
-            ff.add_line_segments([(px(a), px(bb)) for a, bb in pts[1:]], close=False)
+            pts.append(None if v is None else (i, vx, ypos(side, float(v))))
+        parca, cari = [], []
+        for p in pts:
+            if p is None:
+                if len(cari) > 1:
+                    parca.append(cari)
+                cari = []
+            else:
+                cari.append(p)
+        if len(cari) > 1:
+            parca.append(cari)
+        for seg in parca:
+            ff = slide.shapes.build_freeform(px(seg[0][1]), px(seg[0][2]))
+            ff.add_line_segments([(px(a), px(bb)) for _, a, bb in seg[1:]], close=False)
             shp = ff.convert_to_shape()
             shp.fill.background()
             shp.line.color.rgb = RGBColor.from_string(col)
             shp.line.width = Pt(2.25)
             shp.shadow.inherit = False
         lbls = s_.get("labels_text")
-        for i, (vx, vy) in enumerate(pts):
+        for i, vx, vy in [p for p in pts if p]:
             d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 4), px(vy - 4),
                                        px(8), px(8))
             d.fill.solid()
