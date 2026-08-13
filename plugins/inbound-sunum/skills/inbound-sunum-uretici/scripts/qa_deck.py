@@ -348,6 +348,11 @@ def check_structure(spec, rep):
         for where, raw in collect(spec):
             if ".rows" in where or ".head" in where:
                 continue                      # veri hucreleri: query/URL/domain
+            if where.endswith(".label"):
+                continue                      # not/rozet etiketi: tasarim geregi
+                                              # buyuk harf (KRITIK TESPIT, NOT,
+                                              # YONTEM). Marka adi bir etikette
+                                              # gectiginde varyant sayilmamali.
             t = plain(raw)
             quoted = [(q.start(), q.end()) for q in
                       re.finditer(r"[\"'\u201c\u201d\u2018\u2019][^\"'\u201c\u201d\u2018\u2019]{1,60}"
