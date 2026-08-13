@@ -11,6 +11,11 @@ Yapı, veri gösterim biçimi ve not/dipnot yerleşimi için referanstır.
 | `turkcell-seo-degerlendirme-2025.pptx` | M2, çok property | Property başına blok yapısı, başta yönetici özeti, GSC impression aggregation metodoloji slaytları, "Neler Yaptık" + sonraki dönem iş maddeleri |
 | `loft-seo-degerlendirme-2025.pptx` | M1 | Slayt bazlı veri kaynağı eşlemesi (bkz. `../notlar/04-loft-slayt-mapping.md`) |
 | `loft-seo-degerlendirme-subat-2026.pptx` | M1 | Yukarıdaki destenin otomatik üretilmiş hali (bkz. `../onceki-uygulamalar/`) |
+| `gameplus-seo-degerlendirme-temmuz-2026.pptx` | M1 segment kırılımlı | **Game+ için onaylanmış format.** Segment kırılımlı Search Console bölümü, arama hacmi ile trafiğin yan yana okunması, SSR geçişi haftalık grafiği, AI görünürlük + prompt-yanıt örnekleri. Üretici script ve veri modülleri `../game-plus/` altındadır |
+
+Game+ destesi diğerlerinden farklı olarak **doğrudan yeniden üretilebilir**:
+yapı referansı değil, çalışan kaynağıyla birlikte saklanır. Yeni bir Game+
+dönemi için `../game-plus/README.md` izlenir.
 
 ## Nasıl okunmalı
 

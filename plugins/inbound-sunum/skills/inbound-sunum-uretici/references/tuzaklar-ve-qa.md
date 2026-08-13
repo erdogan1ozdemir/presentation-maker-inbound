@@ -555,6 +555,50 @@ Karşılık gelen yazım kuralı: alıntı ile raporun kendi cümlesi aynı alan
 karıştırılmaz. Alıntı kendi satırında tırnakla verilir, yorum ayrı satıra
 yazılır.
 
+### 3.6g. Kabın dışına taşan beyaz metin (Google Slides'ta kaybolur)
+
+Kart, panel ve ayraç içindeki metinler beyazdır. Metin kutusu kabın dışına
+taştığında **PowerPoint'te fark edilmez** - beyaz zeminde beyaz metin sessizce
+kaybolur - ve deste Google Slides'a aktarıldığında satır tamamen yok görünür.
+
+Gerçek olay: Game+ destesinde KPI kartının `h` değeri 104px'e çekilince delta
+satırı (`MoM +%8.6   YoY -%38.7`) kartın 2px altından başlıyordu. HTML önizleme
+kartı `min-height` ile çizdiği için kart içeriğe göre büyüyor ve tasarım doğru
+görünüyordu; PPTX'te satır kartın dışında kaldı. Kullanıcı bunu ancak Google
+Slides'a import ettiğinde gördü.
+
+**Üç katmanlı düzeltme:**
+
+1. `block_kpi` içerik yüksekliğini hesaplar, sığmıyorsa değer puntosunu
+   küçültür, yine sığmıyorsa **uyarı üretir**; içerik kart içinde dikeyde
+   ortalanır.
+2. HTML önizleme kartı `min-height` yerine sabit `height` ile çizer - önizleme
+   ile PPTX aynı kutuyu gösterir (bkz. 3.6: sessiz ayrışma).
+3. `qa_deck.py --pptx` üretilmiş dosyada tarar: beyaz metin taşıyan her kutu
+   dolgulu bir şeklin (veya koyu slayt zemininin, veya tam sayfa görselin)
+   içinde olmalı. Değilse HATA.
+
+**Kural:** kap içine çizilen her metin, kabın geometrisinden türetilir; kap
+yüksekliği elle küçültüldüğünde içerik sessizce dışarı taşmaz.
+
+### 3.6h. Google Slides uyumu: otomatik boyutlandırma kapatılır
+
+Desteler Google Slides'a aktarılarak kullanılıyor. `python-pptx`'in
+`add_textbox` çağrısı varsayılan olarak `<a:spAutoFit/>` yazar (kutu metne göre
+büyür). Google Slides bu ayarı **kendi font metrikleriyle yeniden uygular**;
+kutular kayar, boyut değiştirir ve hizalama bozulur. Geometri bu üreticide
+piksel piksel hesaplandığı için otomatik boyutlandırmaya ihtiyaç yoktur:
+`textbox()` her kutuda `auto_size = MSO_AUTO_SIZE.NONE` yazar.
+
+Google Slides'a aktarım öncesi kontrol listesi:
+
+- [ ] Üretilmiş dosyada `auto_size` değerleri `NONE` (veya `None`)
+- [ ] Beyaz metin denetimi temiz (`qa_deck.py --pptx`)
+- [ ] Slayt sınırları dışına taşan metin kutusu yok
+- [ ] Font ailesi yalnızca Bricolage Grotesque ve Outfit - Slides'ta kurulu
+      değilse ikame font metrikleri değişir, `wrap=False` kutularda taşma
+      görünür hale gelir
+
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 
 Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font
@@ -678,6 +722,11 @@ python3 scripts/qa_deck.py deck.json --pptx cikti.pptx
 - [ ] Tablo hücreleri kesilmemiş, grafik etiketleri okunur
 - [ ] Ekran görüntüsü kullanılan yerde bulgunun özü metinde de var
 - [ ] Yalnızca Bricolage Grotesque ve Outfit kullanıldı
+
+**Google Slides uyumu** (desteler Slides'a aktarılarak kullanılıyor)
+- [ ] `qa_deck.py --pptx` çalıştırıldı, beyaz metin denetimi temiz
+- [ ] Üretilmiş dosyada otomatik boyutlandırma kapalı
+- [ ] Slayt sınırı dışına taşan metin kutusu yok
 
 **Teslim**
 - [ ] Font klasörü deste ile birlikte iletildi

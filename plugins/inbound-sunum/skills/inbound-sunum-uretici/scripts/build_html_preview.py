@@ -186,8 +186,11 @@ def h_kpi(b):
         accent = c.get("accent") or ("coral" if (i == len(cards) - 1
                                                 and len(cards) > 2) else "teal")
         vpt = c.get("pt") or 40
+        # Yukseklik PPTX'teki kart kutusuyla ayni: min-height kullanilirsa kart
+        # icerige gore buyuyup tasmayi gizler, PPTX'te ise icerik kartin disina
+        # cikar ve beyaz metin gorunmez olur (bkz. tuzaklar 3.6g).
         o.append(f'<div class="kpi-card" style="background:#{C[accent]};'
-                 f'min-height:{b.get("h",132)}px">')
+                 f'height:{b.get("h",132)}px">')
         o.append(f'<div class="kpi-v" style="font-size:{pt(vpt)}">'
                  f'{esc(c.get("value",""))}'
                  + (f'<span style="font-size:{pt(vpt*0.5)}">'

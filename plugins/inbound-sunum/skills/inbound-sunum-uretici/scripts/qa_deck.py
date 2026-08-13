@@ -421,6 +421,75 @@ def check_layout(spec, base, rep):
             rep.warn("YERLEŞİM", "ölçüm", w, "")
 
 
+def beyaz_metin_denetimi(slide, no, prs, rep):
+    """Beyaz metin, koyu dolgulu bir seklin uzerinde mi duruyor?
+
+    Kart / panel / ayrac icindeki metinler beyazdir. Bir metin kutusu kabinin
+    disina tastiginda PowerPoint'te fark edilmeyebilir ama beyaz zeminde
+    gorunmez olur; Google Slides'a aktarildiginda satir tamamen kaybolur.
+    Gercek olay: KPI kartinda 'h' kucultuldugunde delta satiri kartin altina
+    tasti, PPTX'te beyaz uzerine beyaz kaldi (bkz. tuzaklar 3.6g).
+    """
+    from pptx.util import Emu
+    PX = 9525.0
+
+    def rect(sh):
+        if None in (sh.left, sh.top, sh.width, sh.height):
+            return None
+        return (sh.left / PX, sh.top / PX,
+                (sh.left + sh.width) / PX, (sh.top + sh.height) / PX)
+
+    # Slayt zemini koyu renkliyse (ayrac, kapak, kapanis) tum yuzey kaptir.
+    try:
+        bg = slide.background.fill
+        if bg.type is not None and int(bg.type) == 1 and str(bg.fore_color.rgb) != "FFFFFF":
+            return
+    except Exception:
+        pass
+
+    dolgu = []
+    for sh in slide.shapes:
+        r = rect(sh)
+        if r is None:
+            continue
+        if sh.shape_type is not None and "PICTURE" in str(sh.shape_type):
+            dolgu.append(r)               # tam sayfa kapak/ayrac gorseli
+            continue
+        try:
+            if sh.fill.type is not None and int(sh.fill.type) == 1:      # solid
+                c = sh.fill.fore_color
+                if c.type is not None and str(c.rgb) != "FFFFFF":
+                    dolgu.append(r)
+        except Exception:
+            continue
+
+    for sh in slide.shapes:
+        if not sh.has_text_frame or not sh.text_frame.text.strip():
+            continue
+        beyaz = False
+        for p in sh.text_frame.paragraphs:
+            for run in p.runs:
+                try:
+                    if run.font.color.type is not None and str(run.font.color.rgb) == "FFFFFF":
+                        beyaz = True
+                except Exception:
+                    pass
+        if not beyaz:
+            continue
+        r = rect(sh)
+        if r is None:
+            continue
+        # metin kutusu kendi yuksekligini asabildigi icin dikeyde tolerans
+        icinde = any(d[0] - 2 <= r[0] and d[1] - 2 <= r[1]
+                     and r[2] <= d[2] + 2 and r[3] <= d[3] + 6 for d in dolgu)
+        if not icinde:
+            rep.err(f"S{no:02d}", "beyaz metin dolgusuz alanda",
+                    f"'{sh.text_frame.text.strip()[:44]}' kutusu hiçbir dolgulu "
+                    f"şeklin içinde değil",
+                    "kutuyu kabın içine al veya kabı büyüt; beyaz zeminde "
+                    "görünmez olur ve Google Slides'ta tamamen kaybolur")
+
+
 def check_pptx(path, rep):
     """Uretilmis dosyada bayat deger / yazim taramasi ve font denetimi."""
     try:
@@ -446,6 +515,7 @@ def check_pptx(path, rep):
                     n = r.font.name
                     if n and n not in ("Bricolage Grotesque", "Outfit"):
                         bad_fonts.add(n)
+        beyaz_metin_denetimi(s, i, prs, rep)
         if s.has_notes_slide:
             nt = s.notes_slide.notes_text_frame.text.lower()
             for ic in INTERNAL + TOOL_LEAK:

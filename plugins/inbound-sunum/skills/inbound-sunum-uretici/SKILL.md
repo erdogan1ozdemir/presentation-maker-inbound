@@ -50,6 +50,16 @@ FAZ 6  Teslim         -> dosya + chat'te FLAG listesi
 
 ## FAZ 0 - Brief
 
+**Önce markanın hazır bir formatı var mı diye bak.** `reference/` altında
+markaya özel bir klasör varsa (`reference/game-plus/` gibi) yapı yeniden
+tasarlanmaz: o klasörün README'si okunur, üretici script dönem değerleriyle
+çalıştırılır, bölüm sırası ve segment tanımları korunur. Brief yalnızca eksik
+kalan kalemler için yapılır.
+
+| Marka | Klasör | Not |
+|---|---|---|
+| Game+ / gameplus.com.tr | `reference/game-plus/` | 34 slayt, segment kırılımlı M1 varyantı. Brand/non-brand/GFN tanımı ve AI görünürlük bölümü markaya özgüdür |
+
 Kullanıcı "aylık SEO sunumu hazırla" dediğinde hemen üretime girme. Aşağıdaki dört
 bloğu sor. Cevapları biliyorsan tekrar sorma; bir kısmı zaten söylenmişse eksik
 kalanı sor.
@@ -297,6 +307,11 @@ notu eksikliği, yorumsuz tablo, ajanda-bölüm uyumu, marka yazım tutarlılı�
 HATA sınıfı bulgular düzeltilmeden teslim edilmez. UYARI sınıfı insan kararı
 gerektirir; bilinçli istisna olabilir, ama gerekçesi olmalı.
 
+**`--pptx` parametresi atlanmaz.** Yalnızca `deck.json` taranırsa üretilmiş
+dosyadaki görünmez metin, font sızıntısı ve konuşmacı notu artığı yakalanmaz.
+Desteler Google Slides'a aktarılarak kullanıldığı için bu katman zorunludur;
+Google Slides'ta bozulan üretimlerin listesi tuzaklar 3.6g-3.6h'de.
+
 Sonra **her slaytı önizlemede gözle kontrol et.** Script metin taşmasını ölçer ama
 "grafik yanlış seriyi gösteriyor", "tablo başlığında ay etiketi mükerrer",
 "kopyalanan slaytta eski başlık kalmış" sınıfı hataları görmez. Bunlar gerçek
@@ -342,3 +357,4 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `references/design-system.md` | Faz 4. Token'lar, slayt izgarası, tipografi, hangi rengin nerede kullanıldığı |
 | `references/tuzaklar-ve-qa.md` | Faz 2 ve 5. Gerçek destelerde yaşanmış hatalar, teslim öncesi self-check |
 | `assets/ornek/deck-ornek.json` | Çalışan 13 slaytlık örnek. Yeni deste kurarken buradan başla |
+| `reference/game-plus/` | Game+ için onaylanmış format: üretici script, veri modülleri, 34 slaytlık `deck.json` ve markaya özgü kurallar |

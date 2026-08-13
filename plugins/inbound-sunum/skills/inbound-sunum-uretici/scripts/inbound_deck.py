@@ -30,7 +30,7 @@ import sys
 from pptx import Presentation
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
-from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
+from pptx.enum.text import MSO_ANCHOR, MSO_AUTO_SIZE, PP_ALIGN
 from pptx.oxml.ns import qn
 from pptx.util import Emu, Pt
 
@@ -326,6 +326,11 @@ def textbox(slide, x, y, w, h, runs, pt=PT["body"], family=F_BODY,
     """runs: str | [(metin, stil)] | [ [(metin,stil)], ... ] (paragraf listesi)"""
     tb = slide.shapes.add_textbox(px(x), px(y), px(w), px(h))
     tf = tb.text_frame
+    # python-pptx varsayilan olarak <a:spAutoFit/> yazar; kutu metne gore
+    # buyur. Google Slides bu ayari kendi metrikleriyle yeniden uygular ve
+    # kutular kayar/boyut degistirir. Geometri burada birebir hesaplandigi
+    # icin otomatik boyutlama kapatilir (bkz. tuzaklar 3.6h).
+    tf.auto_size = MSO_AUTO_SIZE.NONE
     tf.word_wrap = wrap
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
     tf.vertical_anchor = {"t": MSO_ANCHOR.TOP, "m": MSO_ANCHOR.MIDDLE,
@@ -784,6 +789,7 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
     cw = (w - gap * (cols - 1)) / cols
     ch = b.get("h", 132)
     rows = (len(cards) + cols - 1) // cols
+    _tasma_uyarildi = False
 
     for i, c in enumerate(cards):
         cx = x + (i % cols) * (cw + gap)
@@ -793,11 +799,34 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
         rect(slide, cx, cy, cw, ch, fill=accent, radius=16)
 
         val, unit = str(c.get("value", "")), str(c.get("unit", "") or "")
+        deltas = c.get("deltas")
+        if not deltas and c.get("delta"):
+            deltas = [{"label": "", "value": c["delta"]}]
+
+        # Kart icerigi kart kutusunun DISINA tasmamali. Beyaz metin kartin
+        # altina tastiginda beyaz zeminde gorunmez olur; PowerPoint'te fark
+        # edilmeyip Google Slides'a aktarildiginda satir tamamen kaybolur
+        # (bkz. tuzaklar 3.6g). Once genislige, sonra yuksekliğe gore kucultulur.
         vpt = c.get("pt") or 40
         while vpt > 20 and text_w(val + unit, vpt, F_DISPLAY, True) > cw - 32:
             vpt -= 1
+        LBL_H, DLT_H, UST, ARA, ALT = 18, 18, 22, 8, 12
+
+        def _icerik_h(p):
+            return UST + p * PX_PER_PT * 1.05 + ARA + LBL_H + (2 + DLT_H if deltas else 0) + ALT
+
+        while vpt > 20 and _icerik_h(vpt) > ch:
+            vpt -= 1
+        if _icerik_h(vpt) > ch and not _tasma_uyarildi:
+            _tasma_uyarildi = True
+            ctx.warn(f"KPI S{idx}: kart yuksekligi {ch:.0f}px, icerik "
+                     f"{_icerik_h(vpt):.0f}px istiyor - 'h' degeri buyutulmeli; "
+                     f"aksi halde delta satiri kartin disina taser ve beyaz "
+                     f"zeminde gorunmez olur")
+        # icerik blogu kart icinde dikeyde ortalanir
+        vy = cy + max(UST * 0.5, (ch - (_icerik_h(vpt) - UST - ALT)) / 2)
+
         runs = [(val, dict(bold=True, color="white", family=F_DISPLAY))]
-        vy = cy + 22
         textbox(slide, cx, vy, cw, vpt * PX_PER_PT * 1.05, runs, pt=vpt,
                 family=F_DISPLAY, bold=True, color="white", align="c",
                 line_pct=1.0, wrap=False)
@@ -806,16 +835,14 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
                     vpt * PX_PER_PT * 0.6, unit, pt=vpt * 0.5, family=F_DISPLAY,
                     bold=True, color="white", align="c", line_pct=1.0, wrap=False)
 
-        ly = vy + vpt * PX_PER_PT * 1.05 + 8
-        textbox(slide, cx + 12, ly, cw - 24, 18, plain(str(c.get("label", ""))).upper(),
+        ly = vy + vpt * PX_PER_PT * 1.05 + ARA
+        textbox(slide, cx + 12, ly, cw - 24, LBL_H,
+                plain(str(c.get("label", ""))).upper(),
                 pt=PT["micro"], color="white", align="c", line_pct=1.1)
 
         # Delta satiri: etiket once, deger sonra ("MoM  +%8.3    YoY  -%18.9").
         # Etiket normal agirlikta ve hafif soluk, deger kalin - okuma sirasi
         # "hangi karsilastirma" -> "ne kadar" seklinde olur.
-        deltas = c.get("deltas")
-        if not deltas and c.get("delta"):
-            deltas = [{"label": "", "value": c["delta"]}]
         if deltas:
             runs = []
             for di, dd in enumerate(deltas):

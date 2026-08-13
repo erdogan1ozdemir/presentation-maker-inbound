@@ -1,0 +1,3198 @@
+{
+ "meta": {
+  "brand": "Game+",
+  "period": "Temmuz 2026"
+ },
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Game+ SEO Değerlendirme",
+   "subtitle": "Temmuz 2026"
+  },
+  {
+   "type": "agenda",
+   "kicker": "Temmuz 2026",
+   "title_lines": [
+    "SUNUM",
+    "AKIŞI"
+   ],
+   "items": [
+    {
+     "no": "01",
+     "label": "Genel Görünüm"
+    },
+    {
+     "no": "02",
+     "label": "Google Search Console Metrikleri"
+    },
+    {
+     "no": "03",
+     "label": "SSR Geçişi Etkisi"
+    },
+    {
+     "no": "04",
+     "label": "GA4 Trafik"
+    },
+    {
+     "no": "05",
+     "label": "İçerik Performansı"
+    },
+    {
+     "no": "06",
+     "label": "Yapay Zeka Görünürlüğü"
+    },
+    {
+     "no": "07",
+     "label": "Yapılan ve Planlanan İşler"
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "01",
+   "title": "Genel Görünüm"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GENEL GÖRÜNÜM",
+    "Yönetici Özeti"
+   ],
+   "title": "Non-Brand Büyürken Brand ve GFN Talebi Daralıyor",
+   "subtitle": "Temmuz 2026 | Search Console tüm cihazlar, GA4 tüm kanallar",
+   "source": "Google Search Console & GA4",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "kpi",
+     "col": "full",
+     "cols": 4,
+     "h": 112,
+     "cards": [
+      {
+       "value": "23.7K",
+       "label": "Organik click",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%5.3"
+        },
+        {
+         "label": "YoY",
+         "value": "+%44.6"
+        }
+       ]
+      },
+      {
+       "value": "752.3K",
+       "label": "Impression",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%15.1"
+        },
+        {
+         "label": "YoY",
+         "value": "+%106.7"
+        }
+       ]
+      },
+      {
+       "value": "436.2K",
+       "label": "Toplam session",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%8.6"
+        },
+        {
+         "label": "YoY",
+         "value": "-%38.7"
+        }
+       ],
+       "accent": "coral"
+      },
+      {
+       "value": "37.7K",
+       "label": "Organik session",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%8.9"
+        },
+        {
+         "label": "YoY",
+         "value": "+%5.0"
+        }
+       ],
+       "accent": "coral"
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 14,
+     "font_pt": 10.5,
+     "items": [
+      "Organik click yıllık bazda {g:+%44.6}, impression {g:+%106.7} artmıştır. Büyümenin tamamı {c:non-brand} tarafından gelmektedir: click {g:+%56.1}, impression {g:+%110.3}.",
+      "{c:Brand} sorgularında click {r:-%30.6} gerilemiş, impression {b:yatay} kalmıştır. {c:GFN} tarafında hem click {r:-%64.1} hem impression {r:-%30.8} daralmıştır.",
+      "Click'in {b:%93.6}'sı non-brand sorgulardan gelmektedir; GFN grubu toplam click'in {b:%15.0}'ini kapsamaktadır."
+     ]
+    },
+    {
+     "type": "note",
+     "col": "full",
+     "mt": 14,
+     "label": "KRİTİK TESPİT",
+     "text": "Brand ve GFN daralırken toplam trafiğin artması, büyümenin marka talebinden değil kategori içeriğinden geldiğini göstermektedir. SSR geçişi ve blog çalışmasının etkisi bu eksende okunmaktadır; marka tarafındaki daralma ise ayrı bir izleme başlığıdır."
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GENEL GÖRÜNÜM",
+    "Yöntem"
+   ],
+   "title": "Segment Tanımları",
+   "subtitle": "Sorgu segmentleri, GSC dashboard projesindeki hesapla aynı yöntemle kurulmuştur",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "items": [
+      {
+       "title": "Brand",
+       "sub": "doğrudan ölçülür",
+       "lines": [
+        "Query içinde şu ifadeler geçen sorgular:",
+        "\"gameplus\" · \"game plus\" · \"game+\"",
+        "GSC regex filtresiyle ölçülür."
+       ]
+      },
+      {
+       "title": "Non-Brand",
+       "sub": "toplamdan çıkarılır",
+       "lines": [
+        "Toplam eksi brand olarak hesaplanır.",
+        "Query filtresi uygulandığında anonim sorgular sonuç kümesinden düştüğü için bu hacim non-brand satırında yer alır.",
+        "Pozisyon değeri ayrıca ölçülür."
+       ]
+      },
+      {
+       "title": "GFN",
+       "sub": "kesişen grup",
+       "lines": [
+        "Query içinde şu ifadeler geçen sorgular:",
+        "\"gfn\" · \"geforce now\" · \"geforcenow\"",
+        "Brand ve non-brand'in üzerine biner; üç grubun toplamı toplam click'e eşit değildir."
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 16,
+     "font_pt": 11,
+     "items": [
+      "Brand ve Non-Brand birbirini tamamlar, toplamları toplam click'i verir. GFN ise kesişen bir gruptur: bir sorgu hem brand hem GFN olabilir ({b:\"gameplus geforce now\"} gibi).",
+      "Ayrım, marka talebi ile kategori talebini birbirinden ayırmak ve GeForce NOW kaynaklı hareketi ayrıca izleyebilmek için kurulmuştur."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "02",
+   "title": "Google Search Console Metrikleri"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Aylık Seri"
+   ],
+   "title": "Brand, Non-Brand ve GFN Aylık Click",
+   "subtitle": "Tem 2025 - Tem 2026 | 13 aylık seri | Search Console",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Toplam satırı Brand ile Non-Brand'in toplamıdır; GFN kesişen grup olduğu için toplama dahil değildir.",
+    "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 158,
+     "bar_w": 24,
+     "cats": [
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Toplam",
+       "data": [
+        16363,
+        25122,
+        12476,
+        14868,
+        20686,
+        25417,
+        23834,
+        18421,
+        25724,
+        26426,
+        28476,
+        22464,
+        23658
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Non-Brand",
+       "data": [
+        14192,
+        22632,
+        10630,
+        12946,
+        18478,
+        23311,
+        22239,
+        17016,
+        24135,
+        25028,
+        26847,
+        21180,
+        22151
+       ],
+       "color": "teal",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "GFN",
+       "data": [
+        9905,
+        16865,
+        6670,
+        6868,
+        8140,
+        9388,
+        6640,
+        3851,
+        4709,
+        3570,
+        3814,
+        3642,
+        3557
+       ],
+       "color": "coral",
+       "axis": "right"
+      },
+      {
+       "kind": "line",
+       "name": "Brand",
+       "data": [
+        2171,
+        2490,
+        1846,
+        1922,
+        2208,
+        2106,
+        1595,
+        1405,
+        1589,
+        1398,
+        1629,
+        1284,
+        1507
+       ],
+       "color": "gold",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.1,
+     "heat": true,
+     "head": [
+      "Segment",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "9.9K",
+       "16.9K",
+       "6.7K",
+       "6.9K",
+       "8.1K",
+       "9.4K",
+       "6.6K",
+       "3.9K",
+       "4.7K",
+       "3.6K",
+       "3.8K",
+       "3.6K",
+       "3.6K"
+      ],
+      [
+       "Brand",
+       "2.2K",
+       "2.5K",
+       "1.8K",
+       "1.9K",
+       "2.2K",
+       "2.1K",
+       "1.6K",
+       "1.4K",
+       "1.6K",
+       "1.4K",
+       "1.6K",
+       "1.3K",
+       "1.5K"
+      ],
+      [
+       "Non-Brand",
+       "14.2K",
+       "22.6K",
+       "10.6K",
+       "12.9K",
+       "18.5K",
+       "23.3K",
+       "22.2K",
+       "17.0K",
+       "24.1K",
+       "25.0K",
+       "26.8K",
+       "21.2K",
+       "22.2K"
+      ],
+      [
+       "Toplam",
+       "16.4K",
+       "25.1K",
+       "12.5K",
+       "14.9K",
+       "20.7K",
+       "25.4K",
+       "23.8K",
+       "18.4K",
+       "25.7K",
+       "26.4K",
+       "28.5K",
+       "22.5K",
+       "23.7K"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam click Mart-Mayıs döneminde {b:25-28K} bandına çıkmış, Temmuz'da {b:23.7K} seviyesindedir. Seriyi non-brand taşımaktadır; {c:GFN} {r:16.9K → 3.6K} ve {c:Brand} {r:2.2K → 1.5K} ile daralmaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Aylık Seri"
+   ],
+   "title": "Brand, Non-Brand ve GFN Aylık Impression",
+   "subtitle": "Tem 2025 - Tem 2026 | 13 aylık seri | Search Console",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Brand ve GFN ölçekleri Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir.",
+    "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 158,
+     "bar_w": 24,
+     "cats": [
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Toplam",
+       "data": [
+        363910,
+        434009,
+        313103,
+        323556,
+        451225,
+        532521,
+        584577,
+        499407,
+        725126,
+        727796,
+        885010,
+        653347,
+        752257
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Non-Brand",
+       "data": [
+        352104,
+        422199,
+        302029,
+        311388,
+        436056,
+        517477,
+        569125,
+        473354,
+        711968,
+        716301,
+        871978,
+        642251,
+        740642
+       ],
+       "color": "teal",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "GFN",
+       "data": [
+        141532,
+        144739,
+        116647,
+        130852,
+        149181,
+        169267,
+        151997,
+        107359,
+        122619,
+        102760,
+        113754,
+        98774,
+        97890
+       ],
+       "color": "coral",
+       "axis": "right"
+      },
+      {
+       "kind": "line",
+       "name": "Brand",
+       "data": [
+        11806,
+        11810,
+        11074,
+        12168,
+        15169,
+        15044,
+        15452,
+        26053,
+        13158,
+        11495,
+        13032,
+        11096,
+        11615
+       ],
+       "color": "gold",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.1,
+     "heat": true,
+     "head": [
+      "Segment",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "141.5K",
+       "144.7K",
+       "116.6K",
+       "130.9K",
+       "149.2K",
+       "169.3K",
+       "152.0K",
+       "107.4K",
+       "122.6K",
+       "102.8K",
+       "113.8K",
+       "98.8K",
+       "97.9K"
+      ],
+      [
+       "Brand",
+       "11.8K",
+       "11.8K",
+       "11.1K",
+       "12.2K",
+       "15.2K",
+       "15.0K",
+       "15.5K",
+       "26.1K",
+       "13.2K",
+       "11.5K",
+       "13.0K",
+       "11.1K",
+       "11.6K"
+      ],
+      [
+       "Non-Brand",
+       "352.1K",
+       "422.2K",
+       "302.0K",
+       "311.4K",
+       "436.1K",
+       "517.5K",
+       "569.1K",
+       "473.4K",
+       "712.0K",
+       "716.3K",
+       "872.0K",
+       "642.3K",
+       "740.6K"
+      ],
+      [
+       "Toplam",
+       "363.9K",
+       "434.0K",
+       "313.1K",
+       "323.6K",
+       "451.2K",
+       "532.5K",
+       "584.6K",
+       "499.4K",
+       "725.1K",
+       "727.8K",
+       "885.0K",
+       "653.3K",
+       "752.3K"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam impression {g:363.9K → 752.3K} ile iki katından fazla artmıştır; artışın tamamı non-brand tarafındadır. {c:Brand} {b:11.8K → 11.6K} ile yatay kalmış, {c:GFN} {r:141.5K → 97.9K} ile daralmıştır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Arama Hacmi"
+   ],
+   "title": "Brand ve GFN Aylık Arama Hacmi",
+   "subtitle": "Tem 2025 - Tem 2026 | Türkiye | arama hacmi ile organik click yan yana",
+   "source": "Ahrefs Keywords Explorer & Google Search Console",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Brand hacmi \"gameplus\" · \"game plus\" · \"game+\", GFN hacmi \"geforce now\" · \"gfn\" · \"geforcenow\" terimlerinin toplamıdır; Search Console segmentleriyle aynı terim kümesi kullanılmıştır.",
+    "Arama hacmi platform tahminidir ve yazım varyantları arasında kesişme bulunabilir; seriler mutlak talep değil yön göstergesi olarak okunur. Grafiklerde hacim sol eksende, click sağ eksendedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": 0,
+     "h": 150,
+     "bar_w": 14,
+     "cats": [
+      "Tem",
+      "Ağu",
+      "Eyl",
+      "Eki",
+      "Kas",
+      "Ara",
+      "Oca",
+      "Şub",
+      "Mar",
+      "Nis",
+      "May",
+      "Haz",
+      "Tem"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Game+ arama hacmi",
+       "data": [
+        7259,
+        7244,
+        7338,
+        7314,
+        8716,
+        9891,
+        9834,
+        11177,
+        9593,
+        7965,
+        7133,
+        7533,
+        7264
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Brand click",
+       "data": [
+        2171,
+        2490,
+        1846,
+        1922,
+        2208,
+        2106,
+        1595,
+        1405,
+        1589,
+        1398,
+        1629,
+        1284,
+        1507
+       ],
+       "color": "gold",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "combo",
+     "col": 1,
+     "h": 150,
+     "bar_w": 14,
+     "cats": [
+      "Tem",
+      "Ağu",
+      "Eyl",
+      "Eki",
+      "Kas",
+      "Ara",
+      "Oca",
+      "Şub",
+      "Mar",
+      "Nis",
+      "May",
+      "Haz",
+      "Tem"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "GFN arama hacmi",
+       "data": [
+        106187,
+        123423,
+        96468,
+        100448,
+        108192,
+        105382,
+        100884,
+        148689,
+        126505,
+        95175,
+        93667,
+        95041,
+        83992
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "GFN click",
+       "data": [
+        9905,
+        16865,
+        6670,
+        6868,
+        8140,
+        9388,
+        6640,
+        3851,
+        4709,
+        3570,
+        3814,
+        3642,
+        3557
+       ],
+       "color": "coral",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 12,
+     "first_col_max": 0.13,
+     "heat": true,
+     "head": [
+      "Arama hacmi",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "106.2K",
+       "123.4K",
+       "96.5K",
+       "100.4K",
+       "108.2K",
+       "105.4K",
+       "100.9K",
+       "148.7K",
+       "126.5K",
+       "95.2K",
+       "93.7K",
+       "95.0K",
+       "84.0K"
+      ],
+      [
+       "Brand",
+       "7.3K",
+       "7.2K",
+       "7.3K",
+       "7.3K",
+       "8.7K",
+       "9.9K",
+       "9.8K",
+       "11.2K",
+       "9.6K",
+       "8.0K",
+       "7.1K",
+       "7.5K",
+       "7.3K"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10,
+     "items": [
+      "GFN arama hacmi {r:106.2K → 84.0K} ile yıllık bazda {r:-%20.9} daralmıştır; aynı dönemde GFN click {r:-%64.1} gerilemiştir. Talep daralması düşüşün bir bölümünü açıklamaktadır.",
+      "Brand arama hacmi {b:7.3K → 7.3K} ile yatay seyrederken brand click {r:-%30.6} gerilemiştir; marka tarafındaki daralma talep dışı etkenlerle birlikte değerlendirilebilir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Dönem Karşılaştırması"
+   ],
+   "title": "Brand, Non-Brand ve GFN Temmuz Karşılaştırması",
+   "subtitle": "Temmuz 2026 & Haziran 2026 (MoM) & Temmuz 2025 (YoY)",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Non-Brand pozisyonu, marka ifadelerinin regex ile dışlandığı ayrı bir ölçümden alınmıştır; click ve impression ise toplamdan çıkarma ile hesaplanır. İki yöntemin kapsamı farklıdır: query filtresi uygulandığında anonim sorgular sonuç kümesinden düşer. Pozisyonda pozitif değer iyileşmedir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.28,
+     "head": [
+      "Click",
+      "Tem 25",
+      "Haz 26",
+      "Tem 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "9.9K",
+       "3.6K",
+       "3.6K",
+       "-%2.3",
+       "-%64.1"
+      ],
+      [
+       "Brand",
+       "2.2K",
+       "1.3K",
+       "1.5K",
+       "+%17.4",
+       "-%30.6"
+      ],
+      [
+       "Non-Brand",
+       "14.2K",
+       "21.2K",
+       "22.2K",
+       "+%4.6",
+       "+%56.1"
+      ],
+      [
+       "Toplam",
+       "16.4K",
+       "22.5K",
+       "23.7K",
+       "+%5.3",
+       "+%44.6"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.28,
+     "head": [
+      "Impression",
+      "Tem 25",
+      "Haz 26",
+      "Tem 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "141.5K",
+       "98.8K",
+       "97.9K",
+       "-%0.9",
+       "-%30.8"
+      ],
+      [
+       "Brand",
+       "11.8K",
+       "11.1K",
+       "11.6K",
+       "+%4.7",
+       "-%1.6"
+      ],
+      [
+       "Non-Brand",
+       "352.1K",
+       "642.3K",
+       "740.6K",
+       "+%15.3",
+       "+%110.3"
+      ],
+      [
+       "Toplam",
+       "363.9K",
+       "653.3K",
+       "752.3K",
+       "+%15.1",
+       "+%106.7"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 0,
+     "mt": 8,
+     "first_col_max": 0.28,
+     "head": [
+      "Ort. pozisyon",
+      "Tem 25",
+      "Haz 26",
+      "Tem 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "GFN",
+       "8.6",
+       "5.5",
+       "6.1",
+       "-0.6",
+       "+2.5"
+      ],
+      [
+       "Brand",
+       "2.3",
+       "7.6",
+       "8.1",
+       "-0.5",
+       "-5.7"
+      ],
+      [
+       "Non-Brand",
+       "21.3",
+       "7.1",
+       "7.4",
+       "-0.3",
+       "+13.9"
+      ],
+      [
+       "Toplam",
+       "18.8",
+       "6.7",
+       "6.9",
+       "-0.2",
+       "+11.9"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": 1,
+     "mt": 8,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam click MoM {g:+%5.3}, YoY {g:+%44.6} artmıştır. Brand click MoM {g:+%17.4} toparlanmış olsa da yıllık bazda {r:-%30.6} geridedir.",
+      "Ortalama pozisyon toplamda {g:18.8 → 6.9}, non-brand tarafında {g:21.3 → 7.4} ile belirgin iyileşme göstermektedir. Brand tarafında ise gerileme bulunmaktadır; GFN sıralaması yatay seyretmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sorgu Hareketleri"
+   ],
+   "title": "Click Değişimi En Yüksek Sorgular",
+   "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | segment ayrımlı",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr · Query kırılımı",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Segment sütunu, sorgunun brand, GFN ya da non-brand ifadelerinden hangisini içerdiğini gösterir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.44,
+     "head": [
+      "Click artan",
+      "Segment",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "call of duty serisi",
+       "Non-Brand",
+       "637",
+       "1.063",
+       "+426"
+      ],
+      [
+       "gameplus",
+       "Brand",
+       "610",
+       "744",
+       "+134"
+      ],
+      [
+       "oyunlar",
+       "Non-Brand",
+       "38",
+       "127",
+       "+89"
+      ],
+      [
+       "ubisoft plus",
+       "Non-Brand",
+       "21",
+       "93",
+       "+72"
+      ],
+      [
+       "cod serisi",
+       "Non-Brand",
+       "119",
+       "187",
+       "+68"
+      ],
+      [
+       "ubisoft+",
+       "Non-Brand",
+       "14",
+       "63",
+       "+49"
+      ],
+      [
+       "açık dünya oyunları",
+       "Non-Brand",
+       "49",
+       "85",
+       "+36"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.44,
+     "head": [
+      "Click azalan",
+      "Segment",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "pc oyunları",
+       "Non-Brand",
+       "333",
+       "237",
+       "-96"
+      ],
+      [
+       "bilgisayar oyunları",
+       "Non-Brand",
+       "180",
+       "116",
+       "-64"
+      ],
+      [
+       "resident evil oynama sırası",
+       "Non-Brand",
+       "75",
+       "25",
+       "-50"
+      ],
+      [
+       "mmorpg",
+       "Non-Brand",
+       "467",
+       "417",
+       "-50"
+      ],
+      [
+       "demo oyna",
+       "Non-Brand",
+       "82",
+       "44",
+       "-38"
+      ],
+      [
+       "gameplus geforce now",
+       "Brand",
+       "51",
+       "19",
+       "-32"
+      ],
+      [
+       "geforce now üyelik",
+       "GFN",
+       "52",
+       "28",
+       "-24"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Artışın merkezinde {c:call of duty serisi} ({g:+426}) ve marka sorgusu {c:gameplus} ({g:+134}) bulunmaktadır. {c:ubisoft plus} ve {c:ubisoft+} birlikte {g:+121} click getirmiş; Temmuz'da tamamlanan Ubisoft+ çalışmasıyla örtüşmektedir.",
+      "Düşüşler jenerik oyun sorgularında yoğunlaşmaktadır ({c:pc oyunları} {r:-96}, {c:bilgisayar oyunları} {r:-64}); bu sorgularda pozisyon da gerilemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sıralama Hareketleri"
+   ],
+   "title": "Sıralaması En Çok Değişen Sorgular",
+   "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | ortalama pozisyon",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr · Query kırılımı",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Pozisyonda pozitif değer iyileşmedir (24.1 → 10.1 = +14.1). Tablo, click hareketi en yüksek sorgu kümesi içinden sıralama değişimine göre seçilmiştir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.44,
+     "head": [
+      "Sıralaması iyileşen",
+      "Segment",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "oyunlar",
+       "Non-Brand",
+       "24.1",
+       "10.1",
+       "+14.0"
+      ],
+      [
+       "indie oyunlar",
+       "Non-Brand",
+       "9.7",
+       "4.5",
+       "+5.2"
+      ],
+      [
+       "assassin's creed serisi",
+       "Non-Brand",
+       "6.8",
+       "4.4",
+       "+2.4"
+      ],
+      [
+       "god of war serileri",
+       "Non-Brand",
+       "4.1",
+       "1.8",
+       "+2.3"
+      ],
+      [
+       "açık dünya oyunları",
+       "Non-Brand",
+       "4.9",
+       "2.9",
+       "+2.0"
+      ],
+      [
+       "cod serisi",
+       "Non-Brand",
+       "2.7",
+       "2.1",
+       "+0.6"
+      ],
+      [
+       "call of duty serisi",
+       "Non-Brand",
+       "2.4",
+       "1.9",
+       "+0.5"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.44,
+     "head": [
+      "Sıralaması gerileyen",
+      "Segment",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "resident evil kronolojik sıra",
+       "Non-Brand",
+       "2.1",
+       "5.7",
+       "-3.6"
+      ],
+      [
+       "call of duty black ops serisi",
+       "Non-Brand",
+       "1.9",
+       "5.0",
+       "-3.1"
+      ],
+      [
+       "geforce now üyelik",
+       "GFN",
+       "5.2",
+       "6.9",
+       "-1.7"
+      ],
+      [
+       "pc oyunları",
+       "Non-Brand",
+       "5.4",
+       "6.5",
+       "-1.1"
+      ],
+      [
+       "demo oyna",
+       "Non-Brand",
+       "1.3",
+       "2.0",
+       "-0.7"
+      ],
+      [
+       "resident evil oynama sırası",
+       "Non-Brand",
+       "2.1",
+       "2.6",
+       "-0.5"
+      ],
+      [
+       "bilgisayar oyunları",
+       "Non-Brand",
+       "7.0",
+       "7.3",
+       "-0.3"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "En belirgin sıralama kazanımı {c:oyunlar} sorgusundadır ({g:24.1 → 10.1}); aynı sorguda click {g:+89} artmıştır. {c:indie oyunlar} ve {c:açık dünya oyunları} da ilk sayfaya taşınmıştır.",
+      "Gerilemeler kalıcı içerik sorgularında dikkat çekmektedir: {c:resident evil kronolojik sıra} {r:2.1 → 5.7} ve {c:call of duty black ops serisi} {r:1.9 → 5.0}. Bu iki başlığın güncellenmesi ele alınabilir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sayfa Hareketleri"
+   ],
+   "title": "Click Değişimi En Yüksek Sayfalar",
+   "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | click değişimine göre sıralı",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr · Page kırılımı",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı gameplus.com.tr altındadır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.5,
+     "head": [
+      "Click artan sayfa",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "/blog/call-of-duty-oyunlarinin-kronolojik-",
+       "3.341",
+       "3.987",
+       "+646"
+      ],
+      [
+       "/ (anasayfa)",
+       "3.421",
+       "3.753",
+       "+332"
+      ],
+      [
+       "/ubisoft",
+       "97",
+       "372",
+       "+275"
+      ],
+      [
+       "/blog/en-iyi-zombie-oyunlari-pc",
+       "170",
+       "318",
+       "+148"
+      ],
+      [
+       "/blog/2026-turkce-dublajli-ve-altyazili-oy",
+       "269",
+       "408",
+       "+139"
+      ],
+      [
+       "/destek",
+       "377",
+       "514",
+       "+137"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.5,
+     "head": [
+      "Click azalan sayfa",
+      "Haz",
+      "Tem",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "/gfn/oyunlar/oynamasi-ucretsiz",
+       "2.684",
+       "1.941",
+       "-743"
+      ],
+      [
+       "/blog/resident-evil-serisi-kronolojik-sira",
+       "810",
+       "436",
+       "-374"
+      ],
+      [
+       "/blog/2026-oyun-takvimi",
+       "787",
+       "539",
+       "-248"
+      ],
+      [
+       "/blog/tomb-raider-oyun-sirasi",
+       "344",
+       "254",
+       "-90"
+      ],
+      [
+       "/blog/007-first-light-fiyati",
+       "90",
+       "10",
+       "-80"
+      ],
+      [
+       "/firsatlar",
+       "457",
+       "384",
+       "-73"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "{c:/ubisoft} sayfası {g:+275} click ile en yüksek oransal artışı göstermiştir ({g:+%283.5}); paketler sayfası da {g:+88} click eklemiştir.",
+      "En büyük düşüş {c:/gfn/oyunlar/oynamasi-ucretsiz} sayfasındadır ({r:-743}); aynı sayfada pozisyon {r:9.9 → 11.1} gerilemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "03",
+   "title": "SSR Geçişi Etkisi"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SSR GEÇİŞİ",
+    "Öncesi ve Sonrası"
+   ],
+   "title": "SSR Geçişi Öncesi ve Sonrası Organik Performans",
+   "subtitle": "Geçiş: 8-14 Şubat 2026 | simetrik 180'er günlük pencere, geçiş haftası hariç",
+   "source": "Google Search Console - sc-domain:gameplus.com.tr",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Öncesi: 12 Ağu 2025 - 7 Şub 2026 (180 gün). Sonrası: 15 Şub - 13 Ağu 2026 (180 gün). Geçiş haftası iki pencereye de dahil edilmemiştir.",
+    "Grafik, geçişin 16 hafta öncesi ve 16 hafta sonrasını haftalık toplamlarla gösterir; hem bar hem pozisyon çizgisi rengindeki değişim geçiş haftasını işaretler. Pozisyon çizgisi ters eksenlidir, yükselen çizgi iyileşmedir. Kategori etiketleri ay başlarında verilmiştir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.4,
+     "head": [
+      "Metrik",
+      "Öncesi",
+      "Sonrası",
+      "Değişim"
+     ],
+     "rows": [
+      [
+       "Click",
+       "114.2K",
+       "144.1K",
+       "+%26.2"
+      ],
+      [
+       "Impression",
+       "2.59M",
+       "4.26M",
+       "+%64.7"
+      ],
+      [
+       "CTR",
+       "%4.42",
+       "%3.38",
+       "-1.03p"
+      ],
+      [
+       "Ort. pozisyon",
+       "12.09",
+       "7.60",
+       "+4.49"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": 1,
+     "font_pt": 10.5,
+     "items": [
+      "Geçiş sonrası impression {g:+%64.7}, click {g:+%26.2} artmış; ortalama pozisyon {g:12.09 → 7.60} ile {g:4.49 puan} iyileşmiştir.",
+      "CTR {r:-1.03p} gerilemiştir. Gösterim tıklamadan hızlı büyüdüğü için oran düşmüştür; ayrıca aynı dönemde {c:AI Overview} sonuç sayfalarında yaygınlaşmış ve klasik sonuç listesinin üstünde yer almaya başlamıştır. İki etki birlikte okunmalıdır."
+     ]
+    },
+    {
+     "type": "combo",
+     "col": "full",
+     "mt": 12,
+     "h": 178,
+     "bar_w": 11,
+     "cats": [
+      "",
+      "",
+      "Kas",
+      "",
+      "",
+      "",
+      "Ara",
+      "",
+      "",
+      "",
+      "",
+      "Oca",
+      "",
+      "",
+      "",
+      "Şub",
+      "",
+      "",
+      "",
+      "Mar",
+      "",
+      "",
+      "",
+      "",
+      "Nis",
+      "",
+      "",
+      "",
+      "May",
+      "",
+      "",
+      "",
+      "Haz"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Click · SSR öncesi",
+       "data": [
+        3440,
+        4087,
+        4268,
+        4969,
+        4657,
+        5453,
+        5225,
+        6601,
+        5757,
+        5596,
+        6101,
+        5179,
+        5444,
+        5316,
+        4741,
+        4172,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "bar",
+       "name": "Click · SSR sonrası",
+       "data": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        4689,
+        4605,
+        5187,
+        5308,
+        4743,
+        6758,
+        6459,
+        6275,
+        6055,
+        6129,
+        6140,
+        6809,
+        5991,
+        5987,
+        6414,
+        6617,
+        5163
+       ],
+       "color": "coral",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon · SSR öncesi",
+       "data": [
+        7.4,
+        8.1,
+        7.4,
+        8.3,
+        8.2,
+        8.5,
+        10.0,
+        12.3,
+        12.5,
+        10.3,
+        9.8,
+        12.1,
+        11.4,
+        11.4,
+        11.6,
+        10.7,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+       ],
+       "color": "ink3",
+       "axis": "right",
+       "invert": true,
+       "fmt": "pos"
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon · SSR sonrası",
+       "data": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        10.7,
+        9.1,
+        9.0,
+        10.0,
+        9.2,
+        7.3,
+        7.3,
+        7.9,
+        7.9,
+        8.3,
+        8.7,
+        8.5,
+        8.7,
+        9.1,
+        7.7,
+        6.8,
+        6.8,
+        6.9
+       ],
+       "color": "teal",
+       "axis": "right",
+       "invert": true,
+       "fmt": "pos"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "04",
+   "title": "GA4 Trafik"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GA4",
+    "Aylık Trafik"
+   ],
+   "title": "Toplam ve Organik Session Aylık Seyri",
+   "subtitle": "Tem 2025 - Tem 2026 | GA4 tüm kanallar ve Organic Search",
+   "source": "GA4 - Cloud Gaming",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Tarama aracı kaynaklı bozuk landing page kayıtları ayıklanmıştır; ayrıntı blog slaytının dipnotundadır.",
+    "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 190,
+     "bar_w": 30,
+     "cats": [
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Toplam session",
+       "data": [
+        711920,
+        765083,
+        685942,
+        680696,
+        882844,
+        911221,
+        899906,
+        732919,
+        622442,
+        548596,
+        484235,
+        401677,
+        436196
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Organik session",
+       "data": [
+        35945,
+        48358,
+        34670,
+        38804,
+        46522,
+        51478,
+        53934,
+        36702,
+        43634,
+        39213,
+        41815,
+        34657,
+        37749
+       ],
+       "color": "coral",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.12,
+     "heat": true,
+     "head": [
+      "Metrik",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "Toplam",
+       "711.9K",
+       "765.1K",
+       "685.9K",
+       "680.7K",
+       "882.8K",
+       "911.2K",
+       "899.9K",
+       "732.9K",
+       "622.4K",
+       "548.6K",
+       "484.2K",
+       "401.7K",
+       "436.2K"
+      ],
+      [
+       "Organik",
+       "35.9K",
+       "48.4K",
+       "34.7K",
+       "38.8K",
+       "46.5K",
+       "51.5K",
+       "53.9K",
+       "36.7K",
+       "43.6K",
+       "39.2K",
+       "41.8K",
+       "34.7K",
+       "37.7K"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam session Temmuz'da {b:436.2K} ile MoM {g:+%8.6}, YoY {r:-%38.7} seviyesindedir; organik session {b:37.7K} ile YoY {g:+%5.0} artmıştır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GA4",
+    "Kanal Dağılımı"
+   ],
+   "title": "Kanal Bazında Session ve Dönem Karşılaştırması",
+   "subtitle": "Temmuz 2026 | GA4 varsayılan kanal grubu | tüm oturumlar",
+   "source": "GA4 - Cloud Gaming",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "AI Assistant satırı yapay zeka kaynaklı trafik segmentinden alınmıştır. Toplam satırı GA4'te ölçülen tüm kanalları kapsar; hacmi 320 session'ın altında kalan dört kanal listelenmemiştir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.26,
+     "head": [
+      "Kanal",
+      "Tem'26",
+      "Haz'26",
+      "Tem'25",
+      "MoM",
+      "YoY",
+      "Pay"
+     ],
+     "rows": [
+      [
+       "Paid Social",
+       "135.799",
+       "136.052",
+       "291.113",
+       "-%0.2",
+       "-%53.4",
+       "%31.1"
+      ],
+      [
+       "Direct",
+       "104.955",
+       "97.394",
+       "126.543",
+       "+%7.8",
+       "-%17.1",
+       "%24.1"
+      ],
+      [
+       "Cross-network",
+       "63.286",
+       "49.935",
+       "71.132",
+       "+%26.7",
+       "-%11.0",
+       "%14.5"
+      ],
+      [
+       "Paid Search",
+       "47.248",
+       "37.822",
+       "45.392",
+       "+%24.9",
+       "+%4.1",
+       "%10.8"
+      ],
+      [
+       "Organic Search",
+       "37.749",
+       "34.657",
+       "35.945",
+       "+%8.9",
+       "+%5.0",
+       "%8.7"
+      ],
+      [
+       "Referral",
+       "26.761",
+       "27.547",
+       "34.683",
+       "-%2.9",
+       "-%22.8",
+       "%6.1"
+      ],
+      [
+       "Display",
+       "9.874",
+       "9.612",
+       "74.816",
+       "+%2.7",
+       "-%86.8",
+       "%2.3"
+      ],
+      [
+       "Unassigned",
+       "6.877",
+       "5.302",
+       "23.977",
+       "+%29.7",
+       "-%71.3",
+       "%1.6"
+      ],
+      [
+       "Paid Video",
+       "1.080",
+       "1.977",
+       "-",
+       "-%45.4",
+       "yeni",
+       "%0.2"
+      ],
+      [
+       "Organic Video",
+       "1.047",
+       "128",
+       "792",
+       "+%718.0",
+       "+%32.2",
+       "%0.2"
+      ],
+      [
+       "Organic Social",
+       "1.023",
+       "889",
+       "7.209",
+       "+%15.1",
+       "-%85.8",
+       "%0.2"
+      ],
+      [
+       "AI Assistant",
+       "536",
+       "505",
+       "222",
+       "+%6.1",
+       "+%141.4",
+       "%0.1"
+      ],
+      [
+       "Toplam",
+       "436.196",
+       "401.677",
+       "711.920",
+       "+%8.6",
+       "-%38.7",
+       "%100.0"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 9,
+     "row_h": 15,
+     "head_h": 19
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 9.5,
+     "items": [
+      "Toplam session MoM {g:+%8.6}, YoY {r:-%38.7}; yıllık daralma {c:Display} ve {c:Paid Social} kaynaklıdır. {c:Organic Search} yıllık {g:+%5.0}, {c:AI Assistant} aylık {g:+%6.1} büyümektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "05",
+   "title": "İçerik Performansı"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "İÇERİK",
+    "Blog"
+   ],
+   "title": "/blog Aylık Session Performansı",
+   "subtitle": "Tem 2025 - Tem 2026 | GA4 | toplam ve organik",
+   "source": "GA4 - Cloud Gaming · Landing page kırılımı",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Ayıklama: landing page listesindeki 803 satır ve 33.799 session, yol içinde tırnak, açılı parantez ve rastgele token taşıyan varyantlardan oluşmaktadır. Bunlar güvenlik taraması yapan araçların ürettiği isteklerdir; gerçek sayfa olmadıkları ve tek bir yazıyı onlarca satıra böldükleri için kapsam dışı bırakılmıştır."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 186,
+     "bar_w": 30,
+     "cats": [
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "/blog toplam",
+       "data": [
+        8078,
+        30146,
+        20540,
+        24612,
+        31479,
+        72171,
+        75811,
+        70618,
+        28030,
+        48458,
+        65939,
+        38662,
+        38776
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "/blog organik",
+       "data": [
+        1137,
+        1206,
+        1100,
+        3300,
+        7305,
+        10893,
+        17551,
+        11794,
+        16620,
+        13358,
+        13784,
+        11955,
+        12843
+       ],
+       "color": "coral",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.12,
+     "heat": true,
+     "head": [
+      "Metrik",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "Toplam",
+       "8.1K",
+       "30.1K",
+       "20.5K",
+       "24.6K",
+       "31.5K",
+       "72.2K",
+       "75.8K",
+       "70.6K",
+       "28.0K",
+       "48.5K",
+       "65.9K",
+       "38.7K",
+       "38.8K"
+      ],
+      [
+       "Organik",
+       "1.1K",
+       "1.2K",
+       "1.1K",
+       "3.3K",
+       "7.3K",
+       "10.9K",
+       "17.6K",
+       "11.8K",
+       "16.6K",
+       "13.4K",
+       "13.8K",
+       "12.0K",
+       "12.8K"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Blog Temmuz'da {b:38.8K} session almış, yıllık bazda {g:+%380.0} artmıştır. Organik pay {b:%33.1} seviyesindedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "İÇERİK",
+    "Yükselen Yazılar"
+   ],
+   "title": "Temmuz'da Yükselen Blog Yazıları",
+   "subtitle": "Temmuz 2026 & Haziran 2026 | GA4 session | aylık artışa göre sıralı",
+   "source": "GA4 - Cloud Gaming · Landing page kırılımı",
+   "grid": [
+    58,
+    42
+   ],
+   "footnotes": [
+    "Tabloya Temmuz'da en az 300 session alan yazılar dahil edilmiştir. GFN Thursday yazıları haftalık yayınlandığı için önceki ayda karşılığı bulunmaz."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.5,
+     "head": [
+      "Yazı",
+      "Haz 26",
+      "Tem 26",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "gfn-thursday-geforce-now-da-bu-hafta--23-temmuz-20",
+       "0",
+       "14.367",
+       "+14.367"
+      ],
+      [
+       "call-of-duty-oyunlarinin-kronolojik-sirasi-serinin",
+       "4.275",
+       "5.226",
+       "+951"
+      ],
+      [
+       "gfn-thursday-geforce-now-da-bu-hafta-30-temmuz-202",
+       "0",
+       "451",
+       "+451"
+      ],
+      [
+       "2026-da-oynanabilecek-en-iyi-mmorpg-oyunlar",
+       "2.210",
+       "2.547",
+       "+337"
+      ],
+      [
+       "grand-theft-auto-gta-serisi-gecmisten-gunumuze-tum",
+       "20",
+       "332",
+       "+312"
+      ],
+      [
+       "2026-da-oynanabilecek-en-iyi-türkce-dublajli-ve-al",
+       "264",
+       "571",
+       "+307"
+      ],
+      [
+       "need-for-speed-serisi-underground-dan-heat-e-sokak",
+       "66",
+       "329",
+       "+263"
+      ]
+     ],
+     "highlight_rows": [
+      0
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Temmuz'un en yüksek katkısı {c:GFN Thursday 23 Temmuz} yazısındandır ({b:14.4K} session); haftalık seri blog trafiğinin ana taşıyıcısıdır.",
+      "Kalıcı içerikte {c:Call of Duty kronolojik sıralama} {b:5.2K} ve {c:2026 MMORPG} {b:2.5K} session ile artışını sürdürmüştür."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "İÇERİK",
+    "Oyun Kategorileri"
+   ],
+   "title": "/gfn/oyunlar Alt Kategorileri",
+   "subtitle": "Temmuz 2026 | GA4 session ve GSC click | session'a göre sıralı",
+   "source": "GA4 - Cloud Gaming & Google Search Console",
+   "grid": [
+    58,
+    42
+   ],
+   "footnotes": [
+    "Alt kategoriler bu dönemde açıldığı için önceki yıl karşılığı bulunmamaktadır. GA4 session tüm kanalları, GSC click yalnızca organik aramayı kapsar; iki sütun arasındaki fark diğer kanallardan gelen trafiği gösterir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.32,
+     "head": [
+      "Kategori",
+      "Tem 26 GA4 session",
+      "MoM",
+      "Tem 26 GSC click",
+      "MoM"
+     ],
+     "rows": [
+      [
+       "oynamasi-ucretsiz",
+       "2.543",
+       "+%2.0",
+       "1.941",
+       "-%27.7"
+      ],
+      [
+       "steam",
+       "328",
+       "+%20.1",
+       "1",
+       "yeni"
+      ],
+      [
+       "populer-oyunlar",
+       "226",
+       "+%1.8",
+       "8",
+       "+3"
+      ],
+      [
+       "yaris",
+       "207",
+       "+%613.8",
+       "8",
+       "+4"
+      ],
+      [
+       "epic-games",
+       "160",
+       "+%26.0",
+       "7",
+       "+3"
+      ],
+      [
+       "aksiyon",
+       "141",
+       "+%110.4",
+       "9",
+       "+6"
+      ],
+      [
+       "ea-app",
+       "132",
+       "+%85.9",
+       "10",
+       "+3"
+      ],
+      [
+       "xbox",
+       "114",
+       "+%25.3",
+       "2",
+       "-%81.8"
+      ],
+      [
+       "gog",
+       "110",
+       "+%134.0",
+       "8",
+       "-%63.6"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Alt kategoriler Temmuz'da GA4 tarafında {b:4.7K} session, GSC tarafında {b:2.3K} click almıştır. {c:Oynaması ücretsiz} her iki ölçüde de kategorinin ana taşıyıcısıdır.",
+      "{c:Yarış} ve {c:MMO} kategorilerinde session artışı yüksek olsa da GSC click'i düşük kalmaktadır; bu başlıklara gelen trafiğin büyük bölümü organik aramadan gelmemektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "06",
+   "title": "Yapay Zeka Görünürlüğü"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Görünürlük Metrikleri"
+   ],
+   "title": "Yapay Zeka Yanıtlarında Marka Görünürlüğü",
+   "subtitle": "Temmuz 2026 | 72 prompt | ChatGPT, Gemini ve Google AI Overview",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Brand Mention: markanın anıldığı yanıt sayısı, izlenen toplam yanıt içinde verilmiştir. Brand Position: markanın yanıt içinde kaçıncı sırada anıldığı; küçük değer daha öndedir. Source Visibility yanıt bazlı ölçülür: marka sitesinin kaynak gösterildiği yanıtların toplam yanıt içindeki payı. Alttaki tablodaki Pay kolonu ise citation bazlıdır; iki oran farklı paydaya sahiptir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.22,
+     "head": [
+      "Sağlayıcı",
+      "Brand Mention / Yanıt",
+      "Mention oranı",
+      "Brand Position",
+      "Citation alan yanıt / Yanıt",
+      "Source Visibility"
+     ],
+     "rows": [
+      [
+       "Gemini",
+       "436 / 591",
+       "%73.8",
+       "2.83",
+       "465 / 591",
+       "%78.7"
+      ],
+      [
+       "Google AI Overview",
+       "276 / 500",
+       "%55.2",
+       "1.83",
+       "249 / 500",
+       "%49.8"
+      ],
+      [
+       "ChatGPT",
+       "254 / 531",
+       "%47.8",
+       "2.47",
+       "143 / 531",
+       "%26.9"
+      ],
+      [
+       "Toplam",
+       "966 / 1.622",
+       "%59.6",
+       "2.45",
+       "857 / 1.622",
+       "%52.8"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 17,
+     "head_h": 21
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 6,
+     "first_col_max": 0.3,
+     "head": [
+      "En çok Citation alan kaynak",
+      "Citation / Toplam",
+      "Pay",
+      "Farklı prompt"
+     ],
+     "rows": [
+      [
+       "gameplus.com.tr",
+       "1.492 / 9.621",
+       "%15.5",
+       "70"
+      ],
+      [
+       "nvidia.com",
+       "1.017 / 9.621",
+       "%10.6",
+       "58"
+      ],
+      [
+       "youtube.com",
+       "687 / 9.621",
+       "%7.1",
+       "69"
+      ],
+      [
+       "reddit.com",
+       "482 / 9.621",
+       "%5.0",
+       "58"
+      ]
+     ],
+     "highlight_rows": [
+      0
+     ],
+     "font_pt": 10.5,
+     "row_h": 17,
+     "head_h": 21
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "Marka {b:1.622 yanıtın 966'sında} anılmaktadır; {c:Gemini} {g:%73.8} ile en yüksek, {c:ChatGPT} {r:%47.8} ile en düşük orandadır.",
+      "{c:gameplus.com.tr} {b:1.492 citation} ile ilk sıradadır ve toplam citation'ın {b:%15.5}'ini almaktadır. Yanıt bazında bakıldığında marka sitesi yanıtların {b:%52.8}'inde kaynak gösterilmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Örnek Promptlar"
+   ],
+   "title": "Marka Adı Geçmeyen Promptlarda Yanıt Örnekleri",
+   "subtitle": "Temmuz 2026 | Gemini ve ChatGPT | markanın ilk sıralarda anıldığı yanıtlar",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "İzlenen 72 prompt'un 53'ü marka adı geçmeyen kategori sorusudur; bu bölümdeki örnekler o kümeden seçilmiştir. Yanıt metinleri birebir alınmış, uzunluk nedeniyle markanın geçtiği bölüm kısaltılarak verilmiştir."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 2,
+     "font_pt": 10,
+     "items": [
+      {
+       "title": "Prompt: \"oyunlar indirmeden nasıl açılır\"",
+       "sub": "Gemini · Sıra #1 · olumlu",
+       "lines": [
+        "\"1. NVIDIA GeForce NOW (Türkiye'de Game+) - Bu bulut oyun platformu, güçlü bir oyun bilgisayarına sahip olmadan yüksek grafikli oyunları oynamanıza olanak tanır. Oyunlar NVIDIA sunucularında çalıştırılır ve görüntü cihazınıza aktarılır. Türkiye'de Game+ adıyla hizmet vermektedir. Kullanıcılar kendi Steam, Epic Games gibi platformlardaki oyun kütüphanelerini bu servis üzerinden oynayabilirler.\"",
+        "Citation: poki.com · webtekno.com · gameplus.com.tr · crazygames.com"
+       ]
+      },
+      {
+       "title": "Prompt: \"geforce now nasıl çalışıyo\"",
+       "sub": "ChatGPT · yanıt gövdesinde · olumlu",
+       "lines": [
+        "\"GeForce NOW, NVIDIA tarafından sunulan bulut tabanlı bir oyun hizmetidir. Bu hizmet sayesinde, güçlü bir oyun bilgisayarına sahip olmasanız bile yüksek kaliteli oyunları oynayabilirsiniz. (...) Türkiye'de GeForce NOW hizmeti, GAME+ tarafından sunulmaktadır. Bu sayede Türk oyuncular da yüksek kaliteli oyun deneyiminden faydalanabilirler.\"",
+        "Citation: corsair.com · en.wikipedia.org · gameplus.com.tr · nvidia.com"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "İki yanıtta da marka, bulut oyun kategorisinin ilk seçeneği olarak aktarılmakta ve gameplus.com.tr kaynak gösterilmektedir. Kategori sorularının marka görünürlüğünü taşıdığı görülmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Örnek Promptlar"
+   ],
+   "title": "Marka Adı Geçmeyen Promptlarda Yanıt Örnekleri",
+   "subtitle": "Temmuz 2026 | Gemini ve Google AI Overview | cihaz ve oyun listesi soruları",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "İzlenen 72 prompt'un 53'ü marka adı geçmeyen kategori sorusudur; bu bölümdeki örnekler o kümeden seçilmiştir. Yanıt metinleri birebir alınmış, uzunluk nedeniyle markanın geçtiği bölüm kısaltılarak verilmiştir."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 2,
+     "font_pt": 10,
+     "items": [
+      {
+       "title": "Prompt: \"tabletten bulut oyun oynanır mı\"",
+       "sub": "Gemini · Sıra #1",
+       "lines": [
+        "\"Türkiye'de veya Türkiye'den erişilebilen popüler bulut oyun servisleri şunlardır: 1. NVIDIA GeForce Now (GAME+) - Türkiye sunucuları üzerinden hizmet veren bu platform, güçlü bir internet bağlantısıyla herhangi bir cihazdan yüksek performanslı PC oyunlarını oynamanıza olanak tanır. Windows, macOS, iOS, Android ve Nvidia Shield cihazlarını destekler.\"",
+        "Citation: bluestacks.com · etail.com.tr · gameplus.com.tr · adil.net.tr"
+       ]
+      },
+      {
+       "title": "Prompt: \"geforce now oyunları neler\"",
+       "sub": "Google AI Overview · kaynak panelinde",
+       "lines": [
+        "\"Nasıl Kontrol Edilir? Tüm güncel ve tam listeyi görmek için resmi GeForce NOW Oyunları sayfasını aratabilirsiniz. Türkiye'deki servis detayları için GAME+ GeForce NOW Oyunlar kütüphanesine göz atabilirsiniz.\"",
+        "Citation: gameplus.com.tr · reddit.com · nvidia.com · technopat.net"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "AI Overview yanıtı, oyun listesi sorusunu doğrudan {b:gameplus.com.tr/gfn/oyunlar} sayfasına bağlamaktadır; oyun alt kategorilerinin yayına alınmasının karşılığı bu yanıtta görülmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Örnek Promptlar"
+   ],
+   "title": "Marka Adı Geçmeyen Promptlarda Yanıt Örnekleri",
+   "subtitle": "Temmuz 2026 | ChatGPT ve Gemini | olumlu ve olumsuz çerçeve örneği",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "İzlenen 72 prompt'un 53'ü marka adı geçmeyen kategori sorusudur; bu bölümdeki örnekler o kümeden seçilmiştir. Yanıt metinleri birebir alınmış, uzunluk nedeniyle markanın geçtiği bölüm kısaltılarak verilmiştir.",
+    "Olumsuz çerçeveli yanıt, Temmuz'da olumsuz etiketlenen 3 yanıttan biridir."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 2,
+     "font_pt": 10,
+     "items": [
+      {
+       "title": "Prompt: \"ubisoft+ ta hangi oyunlar var\"",
+       "sub": "ChatGPT · Sıra #1 · olumlu",
+       "lines": [
+        "\"1. Ubisoft+ Classics: PC platformunda mevcut olan bu paket, 30-40 oyun içerir ve standart sürümleriyle sunulur. 2. Ubisoft+ Premium: PC ve Xbox platformlarında erişilebilen bu paket, 120'den fazla oyunu kapsar. (...) Türkiye'de Ubisoft+ Premium aboneliği aylık 399 TL, Ubisoft+ Classics ise aylık 199 TL olarak sunulmaktadır.\"",
+        "Citation: en.wikipedia.org · gameplus.com.tr"
+       ]
+      },
+      {
+       "title": "Prompt: \"geforce now mı xbox cloud mu daha iyi\"",
+       "sub": "Gemini · karşılaştırma yanıtı · olumsuz",
+       "lines": [
+        "\"Türkiye Deneyimi: Türkiye'deki Game+ (yerel dağıtıcı) ile ilgili bazı kullanıcı şikayetleri bulunmaktadır. Reklamı yapılan 'RTX On' üyeliklerinde bile sıklıkla GTX 1060 gibi daha eski ekran kartlarına düşülebildiği belirtilmektedir.\"",
+        "Citation: reddit.com · youtube.com · en.wikipedia.org · gameseal.com"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Ubisoft+ yanıtında paket ve fiyat bilgisi doğrudan marka sayfasından alınmaktadır. Karşılaştırma sorusunda ise anlatım kullanıcı içeriği kaynaklarına dayanmakta ve donanım beklentisi üzerinden olumsuz bir çerçeve kurulmaktadır; bu başlıkta marka sayfalarında açıklayıcı içerik değerlendirilebilir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Marka Anlatımı"
+   ],
+   "title": "Yapay Zeka Yanıtlarında Markadan Nasıl Bahsediliyor",
+   "subtitle": "Son koşu | markanın anıldığı yanıtlardaki bağlam",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Alıntılar yanıt metinlerinden birebir alınmıştır.",
+    "Tepki tonu etiketi yanıtların %20.5'inde üretilmiştir. Ölçüm Temmuz 2026 başında başladığı için önceki dönemle karşılaştırma yapılmamıştır."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "font_pt": 10,
+     "items": [
+      {
+       "title": "Konumlandırma",
+       "sub": "en sık kurulan cümle",
+       "lines": [
+        "\"Türkiye'de Turkcell'in GAME+ servisi aracılığıyla hizmet vermektedir.\"",
+        "Marka, NVIDIA ile birlikte anılıyor."
+       ]
+      },
+      {
+       "title": "Öne çıkan özellikler",
+       "sub": "yanıtlarda vurgulananlar",
+       "lines": [
+        "Ücretsiz paket ve 1 saatlik oturum",
+        "Android telefon ve tablet uyumluluğu · İstanbul sunucusu"
+       ]
+      },
+      {
+       "title": "Tepki tonu",
+       "sub": "332 etiketli yanıt",
+       "lines": [
+        "263 nötr · 66 olumlu · 3 olumsuz"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 2,
+     "mt": 8,
+     "font_pt": 10,
+     "items": [
+      {
+       "title": "Olumlu örnek",
+       "sub": "Gemini · \"oyunlar indirmeden nasıl açılır\"",
+       "lines": [
+        "\"NVIDIA GeForce NOW (Türkiye'de Game+) - Bu bulut oyun platformu, güçlü bir oyun bilgisayarına sahip olmadan yüksek grafikli oyunları oynamanıza olanak tanır.\""
+       ]
+      },
+      {
+       "title": "Olumsuz örnek",
+       "sub": "Gemini · \"geforce now mı xbox cloud mu daha iyi\"",
+       "lines": [
+        "\"Türkiye'deki Game+ (yerel dağıtıcı) ile ilgili bazı kullanıcı şikayetleri bulunmaktadır. Reklamı yapılan 'RTX On' üyeliklerinde bile sıklıkla daha eski ekran kartlarına düşülebildiği belirtilmektedir.\""
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Yanıtlar markayı {b:GeForce NOW'ın Türkiye sağlayıcısı} olarak konumlandırmaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Yapay Zeka Kaynaklı Trafik"
+   ],
+   "title": "Yapay Zeka Kaynaklı Trafiğin Aylık Seyri",
+   "subtitle": "Tem 2025 - Tem 2026 | GA4 segment | session",
+   "source": "GA4 - Cloud Gaming",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Seri, GA4'te tanımlı yapay zeka kaynaklı trafik segmentinden alınmıştır. Varsayılan kanal grubundaki \"AI Assistant\" etiketi yalnızca Haziran 2026'dan itibaren kayıt taşıdığı için aylık seride bu segment kullanılmıştır."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 172,
+     "bar_w": 30,
+     "cats": [
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "AI kaynaklı session",
+       "data": [
+        222,
+        225,
+        162,
+        230,
+        259,
+        251,
+        374,
+        362,
+        609,
+        501,
+        852,
+        505,
+        536
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "labels": "above",
+       "labels_text": [
+        "222",
+        "225",
+        "162",
+        "230",
+        "259",
+        "251",
+        "374",
+        "362",
+        "609",
+        "501",
+        "852",
+        "505",
+        "536"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.12,
+     "heat": true,
+     "head": [
+      "Metrik",
+      "Tem'25",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26"
+     ],
+     "rows": [
+      [
+       "Session",
+       "222",
+       "225",
+       "162",
+       "230",
+       "259",
+       "251",
+       "374",
+       "362",
+       "609",
+       "501",
+       "852",
+       "505",
+       "536"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Yapay zeka kaynaklı trafik Tem 2025'te {b:222} session iken Tem 2026'da {g:536} session'a ulaşmıştır; yıllık artış {g:+%141.4} seviyesindedir.",
+      "Serinin zirvesi Mayıs 2026'da {b:852} session olarak ölçülmüştür. Hacim toplam trafiğin yanında küçük kalmakla birlikte istikrarlı yükseliş göstermekte ve yeni bir giriş kaynağı olarak izlenmeye değer görünmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "07",
+   "title": "Yapılan ve Planlanan İşler"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SÜREÇ",
+    "Tamamlanan"
+   ],
+   "title": "Tamamlanan İşler",
+   "subtitle": "Dönem içinde tamamlanan çalışmalar",
+   "source": "Inbound",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "items": [
+      {
+       "title": "Ubisoft+ içerikleri",
+       "sub": "tamamlandı",
+       "lines": [
+        "Ubisoft+ Temmuz ve Ağustos yazıları tamamlandı.",
+        "/ubisoft sayfası Temmuz'da +275 click ile en yüksek oransal artışı gösterdi (+%283.5).",
+        "AI Overview yanıtlarında ubisoft/oyunlar sayfası kaynak gösterilmeye başlandı."
+       ]
+      },
+      {
+       "title": "Blog detay tasarımı",
+       "sub": "onaylandı",
+       "lines": [
+        "Blog detay tasarımı son haline getirildi.",
+        "Tasarım ekibinden onay alındı.",
+        "Eski yazıların bu tasarıma taşınması Ağustos planındadır."
+       ]
+      },
+      {
+       "title": "Oyun alt kategorileri",
+       "sub": "içerikler yayında",
+       "lines": [
+        "Oyunlar kategorisi altındaki alt kategori içerikleri yayına alındı.",
+        "Temmuz, kategorilerin ilk tam ayı oldu: 4.7K GA4 session, 2.3K GSC click."
+       ]
+      }
+     ]
+    },
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 1,
+     "mt": 14,
+     "font_pt": 10.5,
+     "items": [
+      {
+       "title": "Game+ Ekibinde Bekleyen Maddeler",
+       "sub": "ilerlemek için gereken girdiler",
+       "lines": [
+        "Mixpanel ve Microsoft Clarity yetki tanımlamaları · Clarity tarafında AI insight raporlarına da erişilebilmektedir, bu raporlar GEO çalışmaları için kullanılabilir.",
+        "Bloglara eklenen UTM'lerin takip edilip edilmediğinin netleştirilmesi; ilgili bir rapor bulunuyorsa paylaşılması.",
+        "Oyun detay sayfaları için içerik teklifi hazırlanabilmesi adına güncel oyun listesinin (en çok oynanan oyunlar) iletilmesi."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SÜREÇ",
+    "Ağustos"
+   ],
+   "title": "Planlanan İşler",
+   "subtitle": "Önümüzdeki dönemde ele alınacak çalışmalar",
+   "source": "Inbound",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 4,
+     "items": [
+      {
+       "title": "İçerik güncelleme",
+       "sub": "haftalık takvim",
+       "lines": [
+        "Eski blog yazılarının yeni blog detay tasarımına göre haftalık takvimle güncellenmesi.",
+        "Oyunlar alt kategori içeriklerinin yeni formata göre güncellenmesi."
+       ]
+      },
+      {
+       "title": "Oyun detay sayfaları",
+       "sub": "içerik teklifi",
+       "lines": [
+        "Test sitesindeki örnek sayfada içerik alanları incelendi.",
+        "Oyun detaya özgü bir içerik teklifi alınacak.",
+        "Arama hacmi en yüksek oyunlar ile en çok oynanan oyunlar kesiştirilerek öncelik listesi belirlenecek."
+       ]
+      },
+      {
+       "title": "Oyun detay yayın öncesi ruleset",
+       "sub": "teknik hazırlık",
+       "lines": [
+        "Yeni oyun detay sayfaları yayına çıkmadan önce meta title, meta description, URL yapısı ve schema alanları için ruleset tanımlanması gerekiyor.",
+        "Ruleset, sayfa sayısı arttıkça tekil düzenleme ihtiyacını ortadan kaldırır."
+       ]
+      },
+      {
+       "title": "Ölçümleme",
+       "sub": "takip",
+       "lines": [
+        "Bloglardaki UTM takibinin durumu netleştirilecek.",
+        "GA4 landing page listesindeki tarama aracı kaynaklı kayıtlar için filtre tanımlanması değerlendirilebilir."
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "DEĞERLENDİRME",
+    "Öne Çıkan Başlıklar"
+   ],
+   "title": "Önümüzdeki Dönemde Öne Çıkan Üç Başlık",
+   "subtitle": "Bu dönemin bulgularından türetilen çalışma alanları",
+   "source": "Google Search Console, GA4 ve Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Başlıkların önceliklendirilmesi Game+ ekibinin stratejik tercihleri ve öncelikleriyle güncellenebilir."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "items": [
+      {
+       "title": "GFN ve brand talebindeki daralma",
+       "sub": "izleme başlığı",
+       "lines": [
+        "GFN tarafında click yıllık bazda %64.1, brand tarafında %30.6 geriledi.",
+        "Brand ortalama pozisyonu da gerilemiş durumda.",
+        "Marka ve GFN sorgularında sıralama ve içerik durumunun ayrı bir başlıkta ele alınması değerlendirilebilir."
+       ]
+      },
+      {
+       "title": "Blog trafiğinin haftalık seriye bağlılığı",
+       "sub": "içerik dengesi",
+       "lines": [
+        "Temmuz blog trafiğinin belirgin bölümü tek bir GFN Thursday yazısından geliyor (14.4K session).",
+        "Sıralaması gerileyen kalıcı yazılar var: resident evil ve call of duty black ops başlıkları.",
+        "Kalıcı içeriğin güncellenmesi öncelikli tutulabilir."
+       ]
+      },
+      {
+       "title": "Yapay zeka yanıtlarındaki konum",
+       "sub": "fırsat alanı",
+       "lines": [
+        "gameplus.com.tr, yanıtlarda en çok Citation alan kaynak (1.490 citation).",
+        "ChatGPT tarafında anılma oranı %47.7 ile en düşük seviyede.",
+        "Ücretsiz paket, cihaz uyumluluğu ve yerel sunucu başlıklarının içerikte güçlendirilmesi değerlendirilebilir."
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 14,
+     "font_pt": 11,
+     "items": [
+      "Dönemin genel tablosu, SSR geçişi ve içerik çalışmasının non-brand tarafında belirgin bir kazanım ürettiğini; marka ve GFN sorgularındaki daralmanın ise talebe bağlı olabileceğini göstermektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "closing",
+   "title": "Teşekkürler"
+  }
+ ]
+}
