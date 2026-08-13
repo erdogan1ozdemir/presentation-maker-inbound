@@ -1403,6 +1403,55 @@ BLOCKS = {
     "note": block_note, "text": block_text, "image": block_image,
 }
 
+# Her blok tipinin icerigi hangi alandan okudugu. Yanlis alan adi verildiginde
+# (ornegin note'a "text" yerine "body") blok sessizce bos ciziliyor, yuksekligi
+# dogru oldugu icin tasma denetimine de takilmiyordu. Gercek olay: uc destede
+# panels gövdeleri ve note metinleri bos yayinlandi (bkz. tuzaklar 3.6d).
+# Ic listeler alternatif alanlari gosterir: en az biri dolu olmali.
+BLOK_ICERIK = {
+    "table": [["rows"]],
+    "insights": [["items"]],
+    "kpi": [["cards"]],
+    "bar": [["cats"], ["series"]],
+    "line": [["cats"], ["series"]],
+    "combo": [["cats"], ["series"]],
+    "panels": [["items"]],
+    "note": [["text"]],
+    "text": [["paras", "text"]],
+    "image": [["src"]],
+}
+# panels/kpi gibi liste tasiyan bloklarda her ogenin icerik alani
+OGE_ICERIK = {"panels": "lines", "kpi": "value"}
+# icerik alani sanilip yanlislikla yazilan yaygin adlar
+TAKMA_AD = {"body", "content", "desc", "description", "metin", "govde", "icerik"}
+
+
+def blok_icerik_denetimi(b, ctx, idx):
+    """Blogun icerik alanlari dolu mu? Bos ya da yanlis adlandirilmissa uyarir."""
+    tip = b.get("type")
+    for secenek in BLOK_ICERIK.get(tip, []):
+        if not any(b.get(a) for a in secenek):
+            ad = " ya da ".join(f"'{a}'" for a in secenek)
+            ctx.warn(f"BOS BLOK S{idx}: '{tip}' blogunda {ad} alani bos ya da yok - "
+                     f"blok gorunur icerik uretmeyecek")
+    oge_alan = OGE_ICERIK.get(tip)
+    if oge_alan:
+        for i, oge in enumerate(b.get("items") or b.get("cards") or []):
+            if isinstance(oge, dict) and not oge.get(oge_alan):
+                ctx.warn(f"BOS BLOK S{idx}: '{tip}' blogunun {i+1}. ogesinde "
+                         f"'{oge_alan}' alani bos ya da yok")
+    # yanlis alan adi: icerik gibi duran ama taninmayan anahtar
+    bilinmeyen = TAKMA_AD & set(b)
+    if bilinmeyen:
+        beklenen = " / ".join(" ya da ".join(x) for x in BLOK_ICERIK.get(tip, [])) or "?"
+        ctx.warn(f"BILINMEYEN ALAN S{idx}: '{tip}' blogunda {sorted(bilinmeyen)} "
+                 f"anahtari kullanilmis - bu tip '{beklenen}' bekliyor, deger yok sayilacak")
+    for oge in (b.get("items") or []):
+        if isinstance(oge, dict) and (TAKMA_AD & set(oge)):
+            ctx.warn(f"BILINMEYEN ALAN S{idx}: '{tip}' oge icinde "
+                     f"{sorted(TAKMA_AD & set(oge))} kullanilmis - "
+                     f"beklenen alan '{oge_alan or '?'}'")
+
 
 # ----------------------------------------------------------------------------
 # Slayt tipleri
@@ -1636,6 +1685,7 @@ def s_content(slide, spec, ctx, idx):
         if not fn:
             ctx.warn(f"S{idx}: bilinmeyen blok tipi '{b.get('type')}'")
             continue
+        blok_icerik_denetimi(b, ctx, idx)
         if b.get("at"):
             x, y, w, _h = b["at"]
             fn(slide, b, x, y, w, ctx, idx)

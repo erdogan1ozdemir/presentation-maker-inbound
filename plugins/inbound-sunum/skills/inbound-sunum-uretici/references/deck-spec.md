@@ -216,6 +216,12 @@ Kurallar:
 - Delta kolonlari isi haritasindan haric tutulur: o kolonlar zaten isaret
   bazli renklenir, iki kural cakismaz.
 
+**`row_h` / `head_h`** - satir ve baslik satiri yuksekligi (varsayilan `20` /
+`24`). Ayni slaytta iki tablo ust uste geldiginde ve blok yigini alt siniri
+asarken `17` / `21` degerleri kullanilir. Deste genelinde tek bir `T =
+dict(font_pt=10.5, row_h=20, head_h=24)` sozlugu tutulup slayt bazinda
+`**{**T, "row_h": 17, "head_h": 21}` ile ezilir.
+
 ### bar
 
 ```json
@@ -294,6 +300,9 @@ Freeform polyline + nokta işaretleri; düzenlenebilir kalır.
 
 Aksiyon/öneri setleri, üç panelli analiz slaytları, kazanım-kayıp blokları için.
 
+Madde metinleri **`lines`** alanına yazılır (`body` değil). `font_pt` ile panel
+gövdesi 10 pt'ye çekilebilir.
+
 ### note
 
 ```json
@@ -302,7 +311,11 @@ Aksiyon/öneri setleri, üç panelli analiz slaytları, kazanım-kayıp bloklar�
 ```
 
 Metodoloji ve tanım kutuları. Metin içinde kaybolmaması gereken notlar için;
-etiketli blok olarak durur.
+etiketli blok olarak durur. Gövde **`text`** alanındadır (`body` değil).
+
+**İçerik alanı adları bağlayıcıdır.** `body` / `content` / `desc` / `metin`
+yazıldığında blok çerçevesi çizilir, içi boş kalır ve geometri denetimi bunu
+görmez. `--check` bu durumu yakalar; alan adları için bkz. tuzaklar 3.6d.
 
 ### text
 

@@ -308,6 +308,27 @@ pozisyon **impression ağırlıklı** ortalanır (aritmetik ortalama yanlış so
 verir). Doğrulama: total için hesaplanan ağırlıklı pozisyon, filtresiz property
 değeriyle örtüşmeli.
 
+**İstisna - müşteride yerleşik bir hesap varsa.** Marka tarafında çalışan bir
+dashboard/ETL zaten "non-brand = toplam − brand" kabulüyle raporluyorsa, sunum
+o hesabı takip eder; iki kaynak arasında yüzde farkı çıkması müşteri için daha
+maliyetlidir. Bu durumda:
+
+- yöntem kaynak koddan (repo, ETL, sorgu tanımı) **doğrulanır**, sözlü
+  aktarımla yetinilmez; regex ifadeleri birebir alınır,
+- anonim hacmin non-brand'e yazıldığı **segment tanımları slaytında beyan
+  edilir** (bkz. slayt kataloğu C44),
+- brand ayrıca ölçülür ve iki yöntemin farkı en az bir kez kontrol edilir.
+
+Kesişen üçüncü bir grup varsa (ör. GFN gibi bir 3. parti marka kümesi) bu grup
+brand ve non-brand'in üzerine biner; **Toplam satırına dahil edilmez** ve
+"üç grubun toplamı toplam click'e eşit değildir" cümlesi slayta yazılır.
+
+**GSC regex desteği:** `get_advanced_search_analytics` araç açıklamasında yalnızca
+contains/equals/notContains/notEquals listelense de `includingRegex` /
+`excludingRegex` operatörleri çalışır. Çok yazımlı segmentler (`gameplus|game
+plus|game\+`) tek çağrıda ölçülebilir; yazım varyantı başına ayrı çağrı
+gerekmez.
+
 ### 2.9. Tek terimde Google Ads bant etkisi
 
 Google Ads / Keyword Planner arama hacmini bant halinde döndürür. Bir kelime
@@ -457,6 +478,55 @@ seri sayısı, veri uzunluğu ve eksen bağlantısı doğrulanır.
 Teslim öncesi refleks: önizleme açılıp **her grafik gözle görülür**. Tablo ve
 metin bloklarında ölçüm denetimi yeterli, grafiklerde değildir.
 
+### 3.6d. Boş çizilen not, panel ve metin bloğu (alan adı sapması)
+
+Her blok tipinin içerik alanı sabittir ve **takma ad kabul etmez**:
+
+| Blok | İçeriğin yazıldığı alan |
+|---|---|
+| `note` | `text` |
+| `panels` | `items[].lines` |
+| `text` | `paras` (veya `text`) |
+| `insights` | `items` |
+| `kpi` | `cards[].value` |
+| `table` | `rows` |
+| `bar` / `line` / `combo` | `cats` + `series` |
+| `image` | `src` |
+
+`body` / `content` / `desc` / `metin` / `govde` / `icerik` yazıldığında blok
+çerçevesi, etiketi ve dolgusu çizilir, **içi boş kalır**. Geometri denetimi
+temiz görünür: blok yerindedir, taşma yoktur.
+
+Gerçek olay: üç destede birden "KRİTİK TESPİT" kutusu ve panel maddeleri boş
+teslim edildi (`note` bloğuna `body`, `panels` maddelerine `body` yazılmıştı).
+
+**Eklenen koruma** (`blok_icerik_denetimi`, her blok için `--check`'te çalışır):
+1. Zorunlu içerik alanı yoksa ya da boşsa uyarı - blok tipi ve beklenen alan adı
+   yazılır.
+2. Blokta takma ad (`body`, `content`, `desc`, …) varsa "alan adı sapması"
+   uyarısı; doğru ad önerilir.
+3. `panels` ve `kpi` için öğe düzeyinde de denetlenir (`lines`, `value`).
+
+**Kural:** çerçevesi çizilen her blok içerik denetiminden geçer. Geometri
+denetimi *nerede*, içerik denetimi *ne* sorusuna bakar. Yeni blok tipi eklenirken
+`BLOKICERIK` sözlüğüne satır eklenmesi zorunludur.
+
+### 3.6e. Tam genişlik blok yığını alt sınırı aşarsa
+
+İçerik alanının alt sınırı 589px'dir. Üst üste binen tam genişlik blokları
+(tablo + tablo + insights gibi) bu sınırı birkaç piksel aşabilir. Sıra:
+
+1. Dipnot slayta ait mi kontrol edilir - başka slaytın dipnotu buraya
+   düşmüşse taşınır (bir dipnot satırı ~14px).
+2. Tablo satır yüksekliği düşürülür: `dict({...}, **{**T, "row_h": 17,
+   "head_h": 21})` - 9 satırlık bir yığında ~25px kazandırır.
+3. Blok arası `mt` 10 → 6 çekilir.
+4. Grafik yüksekliği (`h`) 182 → 158 düşürülür.
+5. Insight metni kısaltılır - **yorum katmanı kaldırılmaz**, sayısal açılış
+   cümlesi korunarak ikinci cümle sadeleştirilir.
+
+Font küçültme son çaredir; 10 pt'nin altına inilmez.
+
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 
 Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font
@@ -574,6 +644,9 @@ python3 scripts/qa_deck.py deck.json --pptx cikti.pptx
 - [ ] `--check` uyarısı sıfır (taşma, sağ kenar aşımı)
 - [ ] HTML önizlemede her slayt gözle kontrol edildi
 - [ ] Önizlemede kırmızı kesikli taşma işareti yok
+- [ ] Hiçbir grafikte "yalnızca ızgara" durumu yok - her seri çizildi
+- [ ] Not, panel ve metin bloklarının içi dolu (alan adı `text` / `lines`)
+- [ ] Çakışma denetimi çalıştırıldı, `.clash` işareti sıfır
 - [ ] Tablo hücreleri kesilmemiş, grafik etiketleri okunur
 - [ ] Ekran görüntüsü kullanılan yerde bulgunun özü metinde de var
 - [ ] Yalnızca Bricolage Grotesque ve Outfit kullanıldı

@@ -64,6 +64,29 @@ Ayraç 05 Kelime Sıralamaları & Rekabet (C20/C21 · C24)
 Ayraç 06 Yönetici Özeti (C27) · Teşekkürler
 ```
 
+### M1 varyant - segment kırılımlı aylık (Game+ tipi, 31 slayt)
+
+Marka talebi ile kategori talebinin ayrı okunması gereken, dönem içinde teknik
+bir geçiş yaşanmış destelerde kullanılır. Search Console bölümü segment
+tanımıyla açılır; GA4 ve içerik bölümleri aynı segment diliyle devam eder.
+
+```
+Kapak · Akış
+Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · Segment
+  tanımları (C44)
+Ayraç 02 Google Search Console Metrikleri: aylık click serisi (C45) · aylık
+  impression serisi (C45) · dönem karşılaştırması pozisyonlu (C46)
+  · sorgu hareketleri (C47) · sayfa hareketleri (C47)
+Ayraç 03 <Etki> Geçişi: simetrik pencere tablosu (C31) · haftalık grafik (C48)
+Ayraç 04 GA4 Trafik: toplam ve organik aylık seri (C09) · kanal kırılımı (C11)
+Ayraç 05 İçerik Performansı: blog toplam+organik (C50) · yükselen yazılar (C19)
+  · alt kategori performansı GA4+GSC (C49)
+Ayraç 06 Yapay Zeka Görünürlüğü: mention & citation (C51) · örnek promptlar
+  (C52) · markadan nasıl bahsediliyor (C53) · AI kaynaklı trafik (C11)
+Ayraç 07 Yapılan ve Planlanan İşler (C26 · C26c)
+Ayraç 08 Değerlendirme (C43) · Teşekkürler
+```
+
 ### M2 - Çeyreklik, çok property (Turkcell tipi)
 
 ```
@@ -545,6 +568,78 @@ altında sayıldığı.
 **C34 Sorgu grubu özeti**
 İki küme × 4 metrik (Click, Impression, Arama Hacmi, Pozisyon) × aylık kolonlar +
 Δ kolonları. Sonuç cümlesi: hangi kümede talep-trafik ayrışması var.
+
+### Segment kırılımlı Search Console bölümü (Game+ tipi)
+
+Marka talebi ile kategori talebini ayırmak gereken destelerde kullanılır. Bölüm
+adı **"Google Search Console Metrikleri"** olur; "GSC" kısaltması başlıkta
+kullanılmaz.
+
+**C44 Segment tanımları** (bölümün ilk slaytı, veri gelmeden önce)
+`panels` üç kolon: her segment için (a) nasıl ölçüldüğü, (b) regex ifadeleri
+tırnak içinde birebir (`"gameplus" · "game plus" · "game+"`), (c) diğer
+segmentlerle ilişkisi. Altında iki maddelik yorum: hangi ikisi birbirini
+tamamlıyor, hangisi kesişiyor ve ayrımın neden kurulduğu.
+**Zorunlu:** kesişen segment varsa "üç grubun toplamı toplam click'e eşit
+değildir" cümlesi yazılır; tabloda Toplam satırı yalnızca tamamlayıcı
+segmentlerin toplamıdır.
+Anonim sorgu hacminin hangi segmente yazıldığı burada beyan edilir - query
+filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzden
+"toplam eksi brand" yöntemi anonim hacmi non-brand'e taşır.
+
+**C45 Segment aylık serisi** (click ve impression için birer slayt)
+`combo`: Toplam bar (gri) + Non-Brand çizgi (sol eksen), GFN ve Brand çizgi (sağ
+eksen - ölçek farkı nedeniyle). Altında `heat: true` segment × ay matrisi
+(`first_col_max: 0.10`), son satır Toplam ve `bold_rows: [-1]`.
+Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
+Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
+
+**C46 Dönem karşılaştırması, pozisyonlu**
+`Segment | Click | Impression | CTR | Pozisyon` × (cari ay, önceki ay, geçen yıl
+aynı ay) veya Δ kolonlu düz biçim. Pozisyon impression ağırlıklı ortalamadır;
+aritmetik ortalama kullanılmaz. Pozisyon satırlarında ısı haritası
+`heat_invert_rows` ile ters çevrilir.
+
+**C47 Öne çıkan hareketler** (sorgu ve sayfa için ayrı slaytlar)
+Dört blok: `▲ Pozisyonu iyileşen` / `▼ Pozisyonu gerileyen` / `▲ Click artan` /
+`▼ Click azalan`. Her tabloda segment etiketi (Brand / Non-Brand / GFN) kolon
+olarak yer alır. Kapsam şerhi zorunlu: kaç sorgu/sayfa üzerinden bakıldığı ve
+eşik (ör. "≥ 50 impression alan sorgular").
+
+**C48 Haftalık geçiş grafiği** (SSR / migrasyon slaytının yanına)
+`combo`, ISO hafta bazında click bar + pozisyon çizgi; geçiş haftası renk
+kırılımıyla işaretlenir ve dipnotta tarihiyle yazılır. Simetrik pencere
+(geçiş haftası hariç, önce/sonra eşit hafta sayısı) alt başlıkta beyan edilir.
+AI Overview notu bu slaytta durur: CTR değişiminin bir bölümünün SERP
+kompozisyonundan kaynaklanabileceği belirtilir.
+
+**C49 İçerik kümesi performansı: GA4 + Search Console birlikte**
+`Kategori | Session (cari ay) | Session MoM | Click (cari ay) | Click MoM`.
+İki kaynak tek tabloda birleştirildiğinde kaynak notu ikisini de yazar ve
+kolon başlıklarında metrik adı İngilizce kalır. Session ile click arasındaki
+fark yorumlanır (organik dışı kanallar, filtre kapsamı).
+
+**C50 Blog performansı: toplam ve organik**
+`combo` ya da iki seri çizgi: toplam session + organik session. Aradaki fark
+tek cümleyle açıklanır (hangi kanaldan geldiği). Kapsam dışı bırakılan hacim
+varsa (tarama aracı artığı gibi) dipnotta sayısıyla beyan edilir.
+
+**C51 Yapay zeka yanıtlarında marka görünürlüğü**
+İki tablo: (a) `Sağlayıcı | Yanıt | Brand Mention | Mention oranı | Brand
+Position`, (b) `En çok Citation alan kaynak | Citation | Farklı prompt | Tür`.
+Metrik adları **orijinal haliyle** yazılır: Mention ve Citation çevrilmez,
+"atıf" kullanılmaz. Dipnotta ikisinin farkı tanımlanır (Mention = yanıt
+metninde anılma, Citation = kaynak olarak link verilmesi).
+
+**C52 İzlenen promptlardan örnekler**
+`Prompt | Sağlayıcı | Marka anılıyor mu | Anılma sırası`. Kaç prompt izlendiği
+ve kaçının markalı olduğu dipnotta yazılır; boş hücre `-` ile geçilir.
+
+**C53 Markadan nasıl bahsediliyor**
+`panels` üç kolon: konumlandırma cümlesi, öne çıkan özellikler, tepki tonu
+dağılımı. Alıntılar yanıt metinlerinden birebir alınır ve tırnak içinde
+verilir; raporun kendi sesi nötr kalır. Etiket üretim oranı düşükse
+(ör. yanıtların %20'si) bu oran dipnotta beyan edilir.
 
 ### Ek bölümler
 
