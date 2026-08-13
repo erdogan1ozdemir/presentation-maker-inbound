@@ -599,6 +599,57 @@ Google Slides'a aktarım öncesi kontrol listesi:
       değilse ikame font metrikleri değişir, `wrap=False` kutularda taşma
       görünür hale gelir
 
+### 3.6i. Run düzeyi font ailesi kutu ayarını eziyordu
+
+`parse_runs()` işaretsiz metne varsayılan olarak `family=F_BODY` yazıyordu.
+`textbox()` ise run düzeyindeki değeri kendi `family` parametresinden üstün
+tutuyor. Sonuç: ayraç başlığı ve ajanda maddeleri `family=F_DISPLAY` ile
+çağrıldığı halde **Outfit** basılıyordu.
+
+HTML önizleme bu hatayı göstermedi: orada işaretsiz metin `<span>` içinde
+duruyor ve kapsayıcının CSS `font-family` değerini devralıyordu - yani önizleme
+Bricolage, PPTX Outfit gösteriyordu. Yine bir önizleme/PPTX sessiz ayrışması
+(bkz. 3.6). Hata ancak deste Google Slides'ta açılıp font kutusuna bakıldığında
+görüldü.
+
+**Düzeltme:** `parse_runs(..., base_family=None)` - işaretsiz metin artık aile
+taşımıyor, çizildiği kutunun ailesini devralıyor (`fnt.name = st.get("family")
+or family`). Etiketli parçalar (`{b:}`, `{g:}`, `{r:}`, `{c:}`, `{n:}`) kendi
+ailelerini taşımaya devam ediyor. HTML tarafı da aynı kurala çevrildi.
+
+**Denetim:** `qa_deck.py --pptx` artık 20 pt üstünde Outfit ile basılmış her
+metni HATA olarak bildiriyor. Gövde metni hiçbir yerde 20 pt'ye çıkmadığı için
+bu eşik display kuralını güvenle temsil eder.
+
+**Genel kural:** bir stil parametresi hem kutu hem run düzeyinde tanımlıysa,
+varsayılan değer run düzeyine **yazılmaz** - yazılırsa kutu ayarı sessizce
+etkisiz kalır.
+
+### 3.6j. Önizleme CSS'inde sabit punto
+
+HTML önizlemenin CSS'i bazı boyutları sabit px olarak taşıyordu; PPTX ise aynı
+yerlerde `PT` sözlüğünden okuyordu. İki taraf sessizce ayrıştı:
+
+| Öğe | Önizleme | PPTX |
+|---|---|---|
+| Tablo başlığı | 12 px | 10 pt = 13.33 px |
+| Grafik legend / kategori | 10 px | 9 pt = 12 px |
+| Eksen etiketi ve bar değeri | 9 px | 9 pt = 12 px |
+| Ayraç numarası | 210 px | 150 pt = 200 px |
+| Ajanda başlığı | 58 px | 48 pt = 64 px |
+| Alt başlık | 15 px | 12 pt = 16 px |
+
+Sonuç: önizlemede ferah görünen grafik PPTX'te kalabalık çıkıyordu ve etiket
+çakışması önizlemede yakalanamıyordu.
+
+**Kural:** önizleme CSS'inde punto sabit yazılmaz; `PT`, `SEP_NUM_PT`,
+`AGENDA_TITLE_PT` gibi PPTX sabitlerinden `PX_PER_PT` ile türetilir. Yeni bir
+CSS kuralı eklenirken `font-size:` değeri bir sabitten gelmiyorsa gerekçesi
+yorumda yazılır.
+
+Aynı ilke geometri için zaten uygulanıyordu (tablo kolon genişlikleri ve satır
+yükseklikleri `table_layout`'tan okunur); tipografi de aynı kaynağa bağlandı.
+
 ### 3.7. Önizleme self-check'i font yerleşmeden ölçüm alırsa
 
 Gömülü self-check `document.fonts.ready` beklemeden çalışırsa fallback font

@@ -83,14 +83,18 @@ def esc(s):
 
 
 def runs_html(s, base_color="ink"):
+    """Isaretsiz metin font ailesini tasimaz - kapsayici elemandan devralir.
+    PPTX tarafinda da ayni kural gecerli (bkz. inbound_deck.parse_runs)."""
     out = []
     for txt, st in parse_runs(s, base_color):
         col = C.get(st.get("color", base_color), st.get("color", base_color))
+        fam = st.get("family")
         if st.get("bold"):
-            out.append(f'<b style="font-family:\'{F_DISPLAY}\';color:#{col}">'
+            out.append(f'<b style="font-family:\'{fam or F_DISPLAY}\';color:#{col}">'
                        f'{esc(txt)}</b>')
         else:
-            out.append(f'<span style="color:#{col}">{esc(txt)}</span>')
+            stil = f"color:#{col}" + (f";font-family:'{fam}'" if fam else "")
+            out.append(f'<span style="{stil}">{esc(txt)}</span>')
     return "".join(out)
 
 
@@ -732,21 +736,21 @@ html,body{margin:0;padding:0;background:#0b1f1c;font-family:'%(body)s'}
   letter-spacing:.1em;padding:0 0 6px 2px}
 h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0}
 .body{position:absolute;left:%(ml)spx;right:%(mr)spx;top:%(tt)spx;bottom:84px}
-.sub{font-size:15px;color:#%(ink2)s;margin:10px 0 0;line-height:1.45}
+.sub{font-size:%(fs_lead)spx;color:#%(ink2)s;margin:10px 0 0;line-height:1.45}
 .slide.dark .sub{color:#cfe0dc}
 .cols{display:grid;margin-top:20px;align-items:start}
 .col>*{margin-bottom:20px}
 .full-row{margin-top:20px}
 .col>*:last-child{margin-bottom:0}
-.breadcrumb-top{position:absolute;top:28px;left:48px;right:48px;font-size:12px;
+.breadcrumb-top{position:absolute;top:28px;left:48px;right:48px;font-size:%(fs_micro)spx;
   white-space:nowrap;overflow:hidden}
 .breadcrumb-top .section{font-family:'%(disp)s';font-weight:700;color:#%(coral)s}
 .breadcrumb-top .sep{color:#%(coral)s;margin:0 6px;opacity:.6}
 .breadcrumb-top .title{color:#%(coral)s;opacity:.9}
 .logo-bl{position:absolute;left:44px;bottom:32px;width:36px;height:36px}
 .source-pill{position:absolute;left:100px;bottom:36px;background:#%(coral)s;color:#fff;
-  font-family:'%(disp)s';font-weight:700;font-size:11px;padding:6px 12px;border-radius:8px}
-.fns{position:absolute;left:%(ml)spx;right:%(mr)spx;bottom:88px;font-size:12px;
+  font-family:'%(disp)s';font-weight:700;font-size:%(fs_pill)spx;padding:6px 12px;border-radius:8px}
+.fns{position:absolute;left:%(ml)spx;right:%(mr)spx;bottom:88px;font-size:%(fs_micro)spx;
   color:#%(ink3)s;line-height:1.4}
 .fns div{margin-bottom:2px}
 /* cover / closing */
@@ -762,15 +766,15 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .ag-l{background:#%(coral)s;color:#fff;padding:60px 50px;display:flex;
   flex-direction:column;justify-content:center;position:relative}
 .ag-k{font-family:'%(disp)s';font-weight:300;font-size:13px;letter-spacing:.1em;opacity:.85}
-.ag-t{font-family:'%(disp)s';font-weight:300;font-size:58px;letter-spacing:-.02em;
+.ag-t{font-family:'%(disp)s';font-weight:300;font-size:%(fs_agt)spx;letter-spacing:-.02em;
   line-height:1.05;margin-top:12px}
 .ag-logo{position:absolute;left:44px;bottom:40px;width:36px;height:36px}
 .ag-r{padding:64px 60px;display:flex;flex-direction:column;justify-content:space-between}
 .ag-no{font-size:18px;color:#%(ink3)s}
-.ag-lb{font-family:'%(disp)s';font-weight:700;font-size:24px;color:#%(teal)s;margin-top:2px}
+.ag-lb{font-family:'%(disp)s';font-weight:700;font-size:%(fs_agi)spx;color:#%(teal)s;margin-top:2px}
 /* separator */
 .sepslide{display:grid;grid-template-columns:1fr auto 1fr;align-items:center}
-.sepslide .sep-no{justify-self:center;font-family:'%(disp)s';font-weight:700;font-size:210px;
+.sepslide .sep-no{justify-self:center;font-family:'%(disp)s';font-weight:700;font-size:%(fs_sepno)spx;
   color:#%(tealsoft)s;line-height:.9}
 .sepslide .sep-c{text-align:center}
 .sepslide .sep-c h1{color:#fff;line-height:1.1}
@@ -780,7 +784,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .dt{width:100%%;border-collapse:collapse;font-family:'%(body)s';
   box-shadow:0 2px 8px rgba(16,51,47,.06)}
 .dt th{background:#%(teal)s;color:#fff;font-family:'%(disp)s';font-weight:700;
-  font-size:12px;letter-spacing:.04em;padding:0 12px;vertical-align:middle;
+  font-size:%(fs_xs)spx;letter-spacing:.04em;padding:0 12px;vertical-align:middle;
   box-sizing:border-box;overflow:hidden}
 .dt td{padding:0 12px;border-top:1px solid #%(line)s;vertical-align:middle;
   box-sizing:border-box;overflow:hidden}
@@ -804,7 +808,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .kpi-d .kpi-dl{font-family:'%(body)s';font-weight:400;opacity:.85;margin-right:6px}
 .kpi-d b+.kpi-dl{margin-left:22px}
 /* chart */
-.lg{display:flex;gap:24px;font-size:10px;color:#%(ink2)s;margin-bottom:6px}
+.lg{display:flex;gap:24px;font-size:%(fs_micro)spx;color:#%(ink2)s;margin-bottom:6px}
 .lg span{display:inline-flex;align-items:center;gap:6px}
 .lg i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .chart{position:relative;width:100%%}
@@ -817,10 +821,10 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .grp.stk{flex-direction:column-reverse;gap:0}
 .bar{position:relative;border-radius:2px 2px 0 0}
 .vl{position:absolute;top:-15px;left:50%%;transform:translateX(-50%%);
-  font-family:'%(disp)s';font-weight:700;font-size:10px;color:#%(teal)s;white-space:nowrap}
-.cat{font-size:10px;color:#%(ink2)s;margin-top:5px;white-space:nowrap}
+  font-family:'%(disp)s';font-weight:700;font-size:%(fs_micro)spx;color:#%(teal)s;white-space:nowrap}
+.cat{font-size:%(fs_micro)spx;color:#%(ink2)s;margin-top:5px;white-space:nowrap}
 .cats{display:flex;margin-top:4px}
-.cats span{font-size:10px;color:#%(ink2)s;text-align:center}
+.cats span{font-size:%(fs_micro)spx;color:#%(ink2)s;text-align:center}
 /* panels */
 .panels{display:grid}
 .panel{border:1px solid #%(line)s;border-radius:16px;padding:18px}
@@ -838,13 +842,13 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .cb{position:relative;width:100%%;box-sizing:border-box}
 .cb-gl{position:absolute;left:%(gut)spx;right:%(gut)spx;height:1px;background:#%(linesoft)s}
 .cb-gl.cb-axis{background:#%(line)s}
-.cb-tick{position:absolute;font-size:9px;color:#%(ink3)s;line-height:1}
+.cb-tick{position:absolute;font-size:%(fs_micro)spx;color:#%(ink3)s;line-height:1}
 .cb-bar{position:absolute;bottom:0;border-radius:2px 2px 0 0}
 .cb-bl{position:absolute;bottom:5px;left:50%%;transform:translateX(-50%%);
-  font-size:9px;color:#fff;white-space:nowrap}
+  font-size:%(fs_micro)spx;color:#fff;white-space:nowrap}
 .cb-svg{position:absolute;bottom:0;overflow:visible}
 .cb-ll{position:absolute;text-align:center;font-family:'%(disp)s';font-weight:700;
-  font-size:9px;white-space:nowrap}
+  font-size:%(fs_micro)spx;white-space:nowrap}
 .cb-lg{justify-content:center}
 .cb-lg span{position:relative}
 .cb-lg em{position:absolute;left:3px;top:50%%;transform:translateY(-50%%);
@@ -952,7 +956,17 @@ def render(spec, base):
                      coraldeep=C["coral_deep"], tealsoft=C["teal_soft"],
                      redwash=C["red_wash"], red=C["red"], ml=M_L, mr=M_R, gut=CB_GUTTER,
                      tt=TITLE_TOP, accw=SEP_ACC_W, acch=SEP_ACC_H,
-                     accgap=SEP_ACC_GAP)
+                     accgap=SEP_ACC_GAP,
+                     # Punto degerleri PPTX sabitlerinden turetilir; CSS'e sabit
+                     # px yazilirsa onizleme ile PPTX gorsel olarak ayrisir
+                     # (bkz. tuzaklar 3.6j).
+                     fs_lead=round(PT["lead"] * PX_PER_PT, 2),
+                     fs_micro=round(PT["micro"] * PX_PER_PT, 2),
+                     fs_xs=round(PT["xs"] * PX_PER_PT, 2),
+                     fs_pill=round(PT["pill"] * PX_PER_PT, 2),
+                     fs_sepno=round(SEP_NUM_PT * PX_PER_PT, 2),
+                     fs_agt=round(AGENDA_TITLE_PT * PX_PER_PT, 2),
+                     fs_agi=round(AGENDA_ITEM_PT * PX_PER_PT, 2))
     return (f'<!doctype html><meta charset="utf-8"><title>{esc(head_title)}</title>'
             f"<style>{_fonts_css()}\n{css}</style>"
             f'<div class="wrap">{"".join(parts)}</div>'

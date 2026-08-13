@@ -99,6 +99,11 @@ delta, Calibri gövde) - Excel bir çalışma aracıdır ve bilinçle daha saded
 Inter, system-ui veya başka bir yüz birincil olarak kullanılmaz. Fallback yalnızca
 `'Calibri', system-ui`.
 
+**Display kuralı:** kapak başlığı, ajanda başlığı ve maddeleri, **ayraç numarası
+ve ayraç başlığı**, slayt başlığı ve KPI değeri Bricolage Grotesque'tir. Pratik
+eşik: 20 pt üstündeki her metin display fontundadır; gövde metni hiçbir yerde bu
+boya çıkmaz. `qa_deck.py --pptx` bu eşiği üretilmiş dosyada denetler.
+
 **Teslimde font klasörü de verilir.** Sunum başka makinede açılacaksa fontlar
 kurulu olmadan Bricolage/Outfit yerine fallback görünür. `assets/design-system/fonts/`
 klasörünü deste ile birlikte ilet.

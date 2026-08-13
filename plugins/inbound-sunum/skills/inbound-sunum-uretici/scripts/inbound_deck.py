@@ -256,21 +256,29 @@ _STYLE = {
 }
 
 
-def parse_runs(s: str, base_color: str = "ink", base_family: str = F_BODY) -> list:
-    """'Organik {g:+%8 artmistir}.' -> [(metin, stil), ...]"""
+def parse_runs(s: str, base_color: str = "ink", base_family: str = None) -> list:
+    """'Organik {g:+%8 artmistir}.' -> [(metin, stil), ...]
+
+    Isaretsiz metin ne font ailesi ne de kalinlik tasir; ikisini de cizildigi
+    kutudan devralir. Onceden F_BODY yaziliyordu ve
+    run duzeyi deger kutunun 'family' parametresini eziyordu - ayrac basliklari
+    ile ajanda maddeleri F_DISPLAY istendigi halde Outfit basiliyordu
+    (bkz. tuzaklar 3.6i). Etiketli parcalar (b/g/r/c/n) kendi ailelerini
+    tasimaya devam eder.
+    """
     out, pos = [], 0
     for m in _TAG.finditer(s or ""):
         if m.start() > pos:
             out.append((s[pos:m.start()],
-                        dict(bold=False, color=base_color, family=base_family)))
+                        dict(bold=None, color=base_color, family=base_family)))
         st = dict(_STYLE[m.group(1)])
         if st["color"] == "ink" and base_color != "ink":
             st["color"] = base_color
         out.append((m.group(2), st))
         pos = m.end()
     if pos < len(s or ""):
-        out.append((s[pos:], dict(bold=False, color=base_color, family=base_family)))
-    return out or [("", dict(bold=False, color=base_color, family=base_family))]
+        out.append((s[pos:], dict(bold=None, color=base_color, family=base_family)))
+    return out or [("", dict(bold=None, color=base_color, family=base_family))]
 
 
 def plain(s: str) -> str:
@@ -355,8 +363,9 @@ def textbox(slide, x, y, w, h, runs, pt=PT["body"], family=F_BODY,
             r.text = txt
             fnt = r.font
             fnt.size = Pt(pt)
-            fnt.name = st.get("family", family)
-            fnt.bold = bool(st.get("bold", bold))
+            fnt.name = st.get("family") or family
+            _b = st.get("bold")
+            fnt.bold = bool(bold if _b is None else _b)
             fnt.color.rgb = RGBColor.from_string(
                 C.get(st.get("color", color), st.get("color", color)))
     return tb

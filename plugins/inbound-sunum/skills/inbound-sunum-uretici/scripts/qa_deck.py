@@ -506,6 +506,7 @@ def check_pptx(path, rep):
         rep.err("DOSYA", "canvas", f"{w:.3f}x{h:.3f} inch",
                 "13.333x7.5 inch olmalı (1280x720 px @96dpi)")
     bad_fonts = set()
+    yanlis_display = []
     for i, s in enumerate(prs.slides, 1):
         for shp in s.shapes:
             if not shp.has_text_frame:
@@ -515,6 +516,22 @@ def check_pptx(path, rep):
                     n = r.font.name
                     if n and n not in ("Bricolage Grotesque", "Outfit"):
                         bad_fonts.add(n)
+                    # Display kurali: 20pt ustu her metin Bricolage Grotesque.
+                    # Kapak, ajanda, ayrac ve KPI degeri bu boydadir; govde
+                    # metni hicbir yerde 20pt'ye cikmaz. Run duzeyinde yanlis
+                    # aile yazildiginda kutu ayari eziliyordu (tuzaklar 3.6i).
+                    try:
+                        boy = r.font.size.pt if r.font.size else 0
+                    except Exception:
+                        boy = 0
+                    if boy >= 20 and n == "Outfit" and r.text.strip():
+                        yanlis_display.append(
+                            f"S{i:02d} · {boy:.0f}pt · '{r.text.strip()[:32]}'")
+    if yanlis_display:
+        rep.err("DOSYA", "display fontu",
+                f"{len(yanlis_display)} metin 20pt üstünde Outfit ile basılmış: "
+                f"{yanlis_display[:4]}",
+                "büyük puntolu metin Bricolage Grotesque olmalı")
         beyaz_metin_denetimi(s, i, prs, rep)
         if s.has_notes_slide:
             nt = s.notes_slide.notes_text_frame.text.lower()
