@@ -683,20 +683,20 @@
    ],
    "title": "Brand ve GFN Aylık Arama Hacmi",
    "subtitle": "Tem 2025 - Tem 2026 | Türkiye | arama hacmi ile organik click yan yana",
-   "source": "Ahrefs Keywords Explorer & Google Search Console",
+   "source": "Google Ads Keyword Planner & Google Search Console",
    "grid": [
     50,
     50
    ],
    "footnotes": [
-    "Brand hacmi \"gameplus\" · \"game plus\" · \"game+\", GFN hacmi \"geforce now\" · \"gfn\" · \"geforcenow\" terimlerinin toplamıdır; Search Console segmentleriyle aynı terim kümesi kullanılmıştır.",
-    "Arama hacmi platform tahminidir ve yazım varyantları arasında kesişme bulunabilir; seriler mutlak talep değil yön göstergesi olarak okunur. Grafiklerde hacim sol eksende, click sağ eksendedir."
+    "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", GFN \"geforce now\" · \"gfn\". Google Ads yakın varyantları tek keyword saydığı için \"game plus\" ve \"geforcenow\" aynı seriyi taşımaktadır; çift sayım oluşmaması adına her çiftten biri toplama dahil edilmiştir.",
+    "Arama hacmi bant halinde döndüğü için değerler belirli basamaklarda kümelenmektedir; ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Grafiklerde hacim sol eksende, click sağ eksendedir."
    ],
    "blocks": [
     {
      "type": "combo",
      "col": 0,
-     "h": 150,
+     "h": 142,
      "bar_w": 14,
      "cats": [
       "Tem",
@@ -718,19 +718,19 @@
        "kind": "bar",
        "name": "Game+ arama hacmi",
        "data": [
-        7259,
-        7244,
-        7338,
-        7314,
-        8716,
-        9891,
-        9834,
-        11177,
-        9593,
-        7965,
-        7133,
-        7533,
-        7264
+        5400,
+        5400,
+        5400,
+        5400,
+        6700,
+        6400,
+        5700,
+        4600,
+        4600,
+        3780,
+        4600,
+        3900,
+        3780
        ],
        "color": "gray_bar",
        "axis": "left"
@@ -761,7 +761,7 @@
     {
      "type": "combo",
      "col": 1,
-     "h": 150,
+     "h": 142,
      "bar_w": 14,
      "cats": [
       "Tem",
@@ -783,19 +783,19 @@
        "kind": "bar",
        "name": "GFN arama hacmi",
        "data": [
-        106187,
-        123423,
-        96468,
-        100448,
-        108192,
-        105382,
-        100884,
-        148689,
-        126505,
-        95175,
-        93667,
-        95041,
-        83992
+        92400,
+        92400,
+        75900,
+        75900,
+        92400,
+        112400,
+        92400,
+        62100,
+        75900,
+        62100,
+        62100,
+        61800,
+        61500
        ],
        "color": "gray_bar",
        "axis": "left"
@@ -828,7 +828,6 @@
      "col": "full",
      "mt": 12,
      "first_col_max": 0.13,
-     "heat": true,
      "head": [
       "Arama hacmi",
       "Tem'25",
@@ -848,35 +847,35 @@
      "rows": [
       [
        "GFN",
-       "106.2K",
-       "123.4K",
-       "96.5K",
-       "100.4K",
-       "108.2K",
-       "105.4K",
-       "100.9K",
-       "148.7K",
-       "126.5K",
-       "95.2K",
-       "93.7K",
-       "95.0K",
-       "84.0K"
+       "92.4K",
+       "92.4K",
+       "75.9K",
+       "75.9K",
+       "92.4K",
+       "112.4K",
+       "92.4K",
+       "62.1K",
+       "75.9K",
+       "62.1K",
+       "62.1K",
+       "61.8K",
+       "61.5K"
       ],
       [
        "Brand",
-       "7.3K",
-       "7.2K",
-       "7.3K",
-       "7.3K",
-       "8.7K",
-       "9.9K",
-       "9.8K",
-       "11.2K",
-       "9.6K",
-       "8.0K",
-       "7.1K",
-       "7.5K",
-       "7.3K"
+       "5.4K",
+       "5.4K",
+       "5.4K",
+       "5.4K",
+       "6.7K",
+       "6.4K",
+       "5.7K",
+       "4.6K",
+       "4.6K",
+       "3.8K",
+       "4.6K",
+       "3.9K",
+       "3.8K"
       ]
      ],
      "font_pt": 10.5,
@@ -889,8 +888,8 @@
      "mt": 10,
      "font_pt": 10,
      "items": [
-      "GFN arama hacmi {r:106.2K → 84.0K} ile yıllık bazda {r:-%20.9} daralmıştır; aynı dönemde GFN click {r:-%64.1} gerilemiştir. Talep daralması düşüşün bir bölümünü açıklamaktadır.",
-      "Brand arama hacmi {b:7.3K → 7.3K} ile yatay seyrederken brand click {r:-%30.6} gerilemiştir; marka tarafındaki daralma talep dışı etkenlerle birlikte değerlendirilebilir."
+      "GFN arama hacmi {r:92.4K → 61.5K} ile {r:-%33.4} daralmıştır; aynı dönemde GFN click {r:-%64.1} gerilemiştir. Talep daralması düşüşün bir bölümünü açıklamaktadır.",
+      "Brand tarafında hacim {r:5.4K → 3.8K} ({r:-%30.0}) ile daralırken brand click {r:-%30.6} gerilemiştir. İki oranın örtüşmesi, marka sorgularındaki düşüşün ağırlıkla talep kaynaklı olduğuna işaret etmektedir."
      ]
     }
    ]

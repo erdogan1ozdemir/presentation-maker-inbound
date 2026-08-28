@@ -183,39 +183,44 @@ S.append({
     "breadcrumb": ["SEARCH CONSOLE", "Arama Hacmi"],
     "title": "Brand ve GFN Aylık Arama Hacmi",
     "subtitle": "Tem 2025 - Tem 2026 | Türkiye | arama hacmi ile organik click yan yana",
-    "source": "Ahrefs Keywords Explorer & Google Search Console",
+    "source": "Google Ads Keyword Planner & Google Search Console",
     "grid": [50, 50],
     "footnotes": [
-        "Brand hacmi \"gameplus\" · \"game plus\" · \"game+\", GFN hacmi \"geforce now\" · \"gfn\" · "
-        "\"geforcenow\" terimlerinin toplamıdır; Search Console segmentleriyle aynı terim kümesi kullanılmıştır.",
-        "Arama hacmi platform tahminidir ve yazım varyantları arasında kesişme bulunabilir; seriler mutlak "
-        "talep değil yön göstergesi olarak okunur. Grafiklerde hacim sol eksende, click sağ eksendedir.",
+        "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", "
+        "GFN \"geforce now\" · \"gfn\". Google Ads yakın varyantları tek keyword saydığı için "
+        "\"game plus\" ve \"geforcenow\" aynı seriyi taşımaktadır; çift sayım oluşmaması adına "
+        "her çiftten biri toplama dahil edilmiştir.",
+        "Arama hacmi bant halinde döndüğü için değerler belirli basamaklarda kümelenmektedir; "
+        "ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Grafiklerde hacim sol eksende, "
+        "click sağ eksendedir.",
     ],
     "blocks": [
-        {"type": "combo", "col": 0, "h": 150, "bar_w": 14, "cats": ET_KISA, "series": [
+        {"type": "combo", "col": 0, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
             {"kind": "bar", "name": "Game+ arama hacmi", "data": [HACIM_B[y] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "Brand click", "data": [SEG["brand"][y]["click"] for y in AYLAR],
              "color": "gold", "axis": "right"},
         ]},
-        {"type": "combo", "col": 1, "h": 150, "bar_w": 14, "cats": ET_KISA, "series": [
+        {"type": "combo", "col": 1, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
             {"kind": "bar", "name": "GFN arama hacmi", "data": [HACIM_G[y] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "GFN click", "data": [SEG["gfn"][y]["click"] for y in AYLAR],
              "color": "coral", "axis": "right"},
         ]},
-        dict({"type": "table", "col": "full", "mt": 12, "first_col_max": 0.13, "heat": True,
+        dict({"type": "table", "col": "full", "mt": 12, "first_col_max": 0.13,
               "head": ["Arama hacmi"] + ET,
               "rows": [["GFN"] + [k(HACIM_G[y]) for y in AYLAR],
                        ["Brand"] + [k(HACIM_B[y]) for y in AYLAR]]}, **T),
         {"type": "insights", "col": "full", "mt": 10, "font_pt": 10, "items": [
-            f"GFN arama hacmi {{r:{k(HACIM_G[202507])} → {k(HACIM_G[202607])}}} ile yıllık bazda "
+            f"GFN arama hacmi {{r:{k(HACIM_G[202507])} → {k(HACIM_G[202607])}}} ile "
             f"{{r:{pct(HACIM_G[202607], HACIM_G[202507])}}} daralmıştır; aynı dönemde GFN click "
             f"{{r:{pct(SEG['gfn'][202607]['click'], SEG['gfn'][202507]['click'])}}} gerilemiştir. "
             f"Talep daralması düşüşün bir bölümünü açıklamaktadır.",
-            f"Brand arama hacmi {{b:{k(HACIM_B[202507])} → {k(HACIM_B[202607])}}} ile yatay seyrederken "
-            f"brand click {{r:{pct(SEG['brand'][202607]['click'], SEG['brand'][202507]['click'])}}} "
-            f"gerilemiştir; marka tarafındaki daralma talep dışı etkenlerle birlikte değerlendirilebilir.",
+            f"Brand tarafında hacim {{r:{k(HACIM_B[202507])} → {k(HACIM_B[202607])}}} "
+            f"({{r:{pct(HACIM_B[202607], HACIM_B[202507])}}}) ile daralırken brand click "
+            f"{{r:{pct(SEG['brand'][202607]['click'], SEG['brand'][202507]['click'])}}} gerilemiştir. "
+            f"İki oranın örtüşmesi, marka sorgularındaki düşüşün ağırlıkla talep kaynaklı olduğuna "
+            f"işaret etmektedir.",
         ]},
     ],
 })
