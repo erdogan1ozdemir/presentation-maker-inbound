@@ -20,6 +20,22 @@ git pull --ff-only origin main
 SURUM=$(python3 -c "import json;print(json.load(open('plugins/inbound-sunum/.claude-plugin/plugin.json'))['version'])")
 echo "→ Sürüm: $SURUM"
 
+# Frontmatter denetimi: claude.ai yüklemesi description içinde açı parantez
+# kabul etmiyor ("SKILL.md description cannot contain XML tags"). Yer tutucu
+# <marka> yazıldığında yükleme reddediliyordu; paket üretilmeden durdurulur.
+python3 - "$SKILL/SKILL.md" <<'PYCHK'
+import re, sys
+s = open(sys.argv[1], encoding="utf-8").read()
+m = re.search(r"^---\n(.*?)\n---", s, re.S)
+fm = m.group(1) if m else ""
+kotu = re.findall(r"<[^>]+>", fm)
+if kotu:
+    sys.exit(f"HATA: SKILL.md frontmatter'inda aci parantez var: {kotu}. "
+             "claude.ai yuklemesi bunu XML etiketi sayip reddediyor - "
+             "yer tutucuyu duz metne cevir.")
+print("→ frontmatter temiz")
+PYCHK
+
 mkdir -p "$DIST"
 ZIP="$DIST/inbound-sunum-uretici-v$SURUM.zip"
 rm -f "$ZIP"
@@ -30,6 +46,11 @@ TMP=$(mktemp -d)
 cp -R "$SKILL" "$TMP/inbound-sunum-uretici"
 find "$TMP" \( -name "__pycache__" -o -name ".DS_Store" -o -name "fonts-eot-bozuk" \) -exec rm -rf {} + 2>/dev/null || true
 ( cd "$TMP" && zip -qr "$ZIP" inbound-sunum-uretici )
+
+# Açılmış kopya da tazelenir: elle açılıp bırakıldığında eskiyip yanlış sürümün
+# yüklenmesine yol açıyordu.
+rm -rf "$DIST/inbound-sunum-uretici"
+mv "$TMP/inbound-sunum-uretici" "$DIST/inbound-sunum-uretici"
 rm -rf "$TMP"
 
 echo "→ Paket hazır: $ZIP  ($(du -h "$ZIP" | cut -f1))"
