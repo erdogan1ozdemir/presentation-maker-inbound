@@ -33,9 +33,60 @@ ihtimali yoktur:
 
 İkisi birlikte: token yazma yetkisi taşımaz, kullanıcı da yazma izni almaz.
 
-## Kurulum
+## Sunucu skill'in içinde - harici repo gerekmez
 
-Aşağıdaki adımlar kişinin kendi makinesinde bir kez yapılır.
+Search Console MCP sunucusu bu skill'le birlikte gelir:
+`scripts/gsc_mcp.py`. Tek dosya, harici bir depo klonlanmaz. Sunucu yalnızca
+okuma araçları tanımlar (`list_properties`, `search_analytics`,
+`list_sitemaps`, `inspect_url`); site ekleme veya sitemap gönderme aracı
+**hiç yoktur**.
+
+```bash
+cd /skill/yolu/scripts
+python3 -m venv .venv
+.venv/bin/pip install "mcp>=1.6.0" google-api-python-client google-auth google-auth-oauthlib
+```
+
+## Hangi kimlik yolu - ekip için servis hesabı
+
+İki yol da desteklenir; **ekipte servis hesabı tercih edilir.**
+
+| | Servis hesabı | OAuth |
+|---|---|---|
+| Kullanıcı adımı | Yok - tek JSON dosyası | Her kişi tarayıcıdan onay verir |
+| Google Cloud işi | Bir kez, tek kişi yapar | Her kişi kendi client'ını alır ya da aynı client paylaşılır |
+| Erişim yönetimi | Search Console'da tek e-posta, merkezden | Kişi bazında |
+| Kişi ayrıldığında | Tek yerden kapatılır | Kişinin token'ı kendisinde |
+| Yeni marka eklemek | Servis hesabı e-postası property'ye eklenir | Her kişi ayrı eklenir |
+
+### Yol A - Servis hesabı (önerilen)
+
+1. Google Cloud → **IAM & Admin → Service Accounts → Create** (ör. `gsc-okuma`).
+   Rol vermeye gerek yok; Search Console izni Google Cloud'dan değil Search
+   Console'dan geliyor.
+2. Hesabın içine gir → **Keys → Add key → Create new key → JSON** → indir.
+   Bu dosya ekip içinde paylaşılabilir; **repoya konmaz**.
+3. Google Cloud → **APIs & Services → Library** → "Google Search Console API"
+   → **Enable**.
+4. Search Console → ilgili property → **Ayarlar → Kullanıcılar ve izinler →
+   Kullanıcı ekle** → servis hesabının e-posta adresi
+   (`...@...iam.gserviceaccount.com`) → izin **Kısıtlı**.
+5. Claude Code'a tanıt:
+
+```bash
+claude mcp add gsc -s user \
+  -e GSC_CREDENTIALS_PATH=/yol/gsc-okuma.json \
+  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
+```
+
+Tarayıcı onayı yoktur; sunucu ilk çağrıda doğrudan çalışır. Yeni bir markanın
+verisi gerektiğinde yalnızca 4. adım tekrarlanır - kimse yeniden kurulum
+yapmaz.
+
+### Yol B - OAuth (kişisel kullanım)
+
+Servis hesabı oluşturma yetkisi yoksa ya da kişi yalnızca kendi eriştiği
+property'lerle çalışacaksa. Adımlar aşağıda.
 
 ### 1. Google Cloud tarafı
 
@@ -51,21 +102,17 @@ Aşağıdaki adımlar kişinin kendi makinesinde bir kez yapılır.
    Application type **Desktop app** → oluştur → **JSON'u indir**.
 6. İndirilen dosyayı `client_secrets.json` adıyla sunucu klasörüne koy.
 
-### 2. Sunucu kurulumu
+### 2. Ortam değişkeni
 
-```bash
-git clone https://github.com/AminForou/mcp-gsc.git
-cd mcp-gsc
-python3 -m venv .venv
-.venv/bin/pip install -r requirements.txt
-```
-
-`client_secrets.json` bu klasörün içinde durmalı.
+`client_secrets.json` indirildikten sonra bir yere konur; yolu ortam
+değişkeniyle verilecek.
 
 ### 3. Claude Code'a tanıtma
 
 ```bash
-claude mcp add gsc -s user -- /TAM/YOL/mcp-gsc/.venv/bin/python /TAM/YOL/mcp-gsc/gsc_server.py
+claude mcp add gsc -s user \
+  -e GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json \
+  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
 ```
 
 `-s user` önemli: sunucu tüm projelerde açık olur, her klasörde yeniden
@@ -75,7 +122,7 @@ tanıtmak gerekmez.
 
 Claude Code yeniden başlatılır ve bir GSC aracı çağrılır (ör. "Search Console
 property listesini getir"). Tarayıcıda Google onay ekranı açılır, hesap seçilir
-ve izin verilir. Onay sonrası klasöre `token.json` yazılır; **bir daha
+ve izin verilir. Onay sonrası `gsc_token.json` yazılır; **bir daha
 sorulmaz**, token kendini yeniler.
 
 Onay ekranında "Google bu uygulamayı doğrulamadı" uyarısı çıkarsa: kendi
@@ -106,7 +153,8 @@ elle yapılacağı ve anonim sorgu kaçağının oluşacağı kullanıcıya söy
 - Bir kişinin token'ı yalnızca **o kişinin Search Console'da erişebildiği**
   property'leri görür. Yeni bir markaya erişim, property sahibinin o kişiyi
   Search Console'dan kullanıcı olarak eklemesiyle açılır.
-- Servis hesabı (service account) alternatifi de desteklenir: tek bir hesap
-  oluşturulup e-posta adresi property'lere "Kısıtlı" izinle eklenir, JSON anahtar
-  `GSC_CREDENTIALS_PATH` ile verilir. Ekipte tek merkezden yönetmek isteniyorsa
-  bu yol tercih edilir; kapsam yine `webmasters.readonly` kalır.
+- Servis hesabı JSON anahtarı ekip içinde paylaşılabilir ama **repoya konmaz**;
+  parola gibi davranılır. Kaybolduğunda Google Cloud'dan iptal edilip yenisi
+  üretilir.
+- Servis hesabı yalnızca **Search Console'da kendisine açılmış** property'leri
+  görür. `list_properties` boş dönerse eksik olan şey 4. adımdır.

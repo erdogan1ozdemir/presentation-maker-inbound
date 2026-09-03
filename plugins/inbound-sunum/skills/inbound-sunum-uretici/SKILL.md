@@ -186,7 +186,10 @@ otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
 > Hangisiyle ilerleyelim?
 
 Kurulum seçilirse adımları **`references/gsc-erisim-kurulum.md`** dosyasından
-sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Kurulum
+sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Sunucu
+skill'in içindedir (`scripts/gsc_mcp.py`) - harici bir depo klonlanmaz. Ekip
+kullanımında **servis hesabı** yolu önerilir: tek JSON anahtarı, tarayıcı onayı
+yok, erişim Search Console'dan tek e-postayla merkezden yönetilir. Kurulum
 bittiğinde `claude mcp list` ile doğrulat ve property listesini çekerek markanın
 property'sinin göründüğünü teyit et.
 
@@ -397,7 +400,10 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `references/tablo-semalari.md` | Faz 2. T1-T14 kanonik tablo şemaları, kolon yapıları, format kuralları |
 | `references/deck-spec.md` | Faz 4. deck.json tam şeması, blok tipleri, izgara sistemi |
 | `references/design-system.md` | Faz 4. Token'lar, slayt izgarası, tipografi, hangi rengin nerede kullanıldığı |
-| `references/gsc-erisim-kurulum.md` | Faz 1. Search Console canlı erişimi: OAuth kurulumu, salt-okunur kapsam, ekip içi paylaşım |
+| `references/gsc-erisim-kurulum.md` | Faz 1. Search Console canlı erişimi: servis hesabı ve OAuth kurulumu, salt-okunur kapsam, ekip içi paylaşım |
+| `references/hacim-kaynagi-ve-fallback.md` | Faz 2. Arama hacmi kaynak sırası (SEOmonitor → Ahrefs → DataForSEO), etiketleme ve kaynak notu kuralları |
 | `references/tuzaklar-ve-qa.md` | Faz 2 ve 5. Gerçek destelerde yaşanmış hatalar, teslim öncesi self-check |
 | `assets/ornek/deck-ornek.json` | Çalışan 13 slaytlık örnek. Yeni deste kurarken buradan başla |
+| `scripts/gsc_mcp.py` | Skill'in kendi Search Console MCP sunucusu - salt okunur, servis hesabı veya OAuth |
+| `scripts/hacim_dfs.py` | Arama hacmi zincirinin DataForSEO halkası; yakın varyant birleşmesini de tespit eder |
 | `reference/game-plus/` | Game+ için onaylanmış format: üretici script, veri modülleri, 34 slaytlık `deck.json` ve markaya özgü kurallar |

@@ -817,3 +817,22 @@ dönemler arası aynı kalmalı.
 
 **Gidişat kaydı:** çalışma klasörünün kökündeki `<proje-adi>-claude.md` dosyasına
 tarihli madde eklenir - ne istendi, ne yapıldı.
+
+### 2.9c. Yakın varyant birleşmesi - toplamada çift sayım
+
+Google Ads yakın varyantları tek keyword sayar. DataForSEO'dan çekildiğinde
+`"gameplus"` ile `"game plus"`, `"geforce now"` ile `"geforcenow"` **birebir
+aynı aylık seriyi** döndürebilir. İki seriyi toplamak hacmi iki kat gösterir.
+
+Gerçek olay (Game+, Ağustos 2026): brand hacmi üç terimin toplamı olarak
+kurulunca 9.800 çıkıyordu; iki terimin aynı seri olduğu görülüp biri elenince
+gerçek değer 5.400 oldu.
+
+**Kural:** toplama girecek terimlerin serileri önce karşılaştırılır. Birebir
+aynıysa yalnızca biri sayılır ve bu, hacim slaytının dipnotunda yazılır.
+`scripts/hacim_dfs.py` bu kontrolü otomatik yapıp "yakın varyant uyarısı"
+olarak bildirir.
+
+İkinci sonuç: aynı kaynakta iki farklı yazımın aynı değeri taşıması, yazım
+varyantı bazında kırılım yapılamayacağı anlamına gelir. Kırılım gerekiyorsa
+Search Console tarafındaki gerçek sorgu dağılımına bakılır.
