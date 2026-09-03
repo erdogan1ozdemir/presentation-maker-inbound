@@ -48,10 +48,20 @@ okuma araçları tanımlar (`list_properties`, `search_analytics`,
 **hiç yoktur**.
 
 ```bash
-cd /skill/yolu/scripts
-python3 -m venv .venv
-.venv/bin/pip install "mcp>=1.6.0" google-api-python-client google-auth google-auth-oauthlib
+bash /skill/yolu/scripts/kur_gsc.sh
 ```
+
+Betik sanal ortamı kurar, bağımlılıkları yükler, sunucunun ayağa kalktığını
+araçları sayarak doğrular ve `claude mcp add` komutunu tam yollarla yazdırır.
+Token dosyası elinizdeyse tek adımda kaydı da yapar:
+
+```bash
+bash /skill/yolu/scripts/kur_gsc.sh /yol/gsc_token.json
+```
+
+Sunucunun altı aracı var, hepsi okuma: `list_properties`, `search_analytics`
+(regex filtreli), `list_sitemaps`, `inspect_url`, `batch_inspect_urls`,
+`indexing_issues`.
 
 ## Hangi kimlik yolu
 
@@ -80,11 +90,9 @@ Adımlar - bir kez, tek kişi yapar:
 
 1. Google Cloud'da bir proje ve **Desktop app** OAuth client oluştur, Search
    Console API'yi aç (aşağıdaki "Google Cloud tarafı" adımları).
-2. **OAuth consent screen → User type: Internal** seç. Bu adım kritik:
-   uygulama **"Testing"** durumunda kalırsa Google refresh token'ı **7 günde**
-   düşürür ve ekip her hafta yeniden onay vermek zorunda kalır. Workspace
-   hesabıyla Internal seçilebiliyorsa sorun ortadan kalkar; seçilemiyorsa
-   uygulama **"In production"** durumuna alınır.
+2. **Consent screen'i kalıcı hale getir.** Bu adım atlanırsa uygulama
+   "Testing" durumunda kalır, Google refresh token'ı **7 günde** düşürür ve
+   ekibin erişimi her hafta kesilir. Nereye bakılacağı aşağıda.
 3. Token'ı `seo.op@inbound.com.tr` hesabıyla bir kez üret:
 
 ```bash
@@ -102,6 +110,16 @@ olmalı - başka bir kapsam görünüyorsa devam edilmez.
    `client_secret`'i de taşır, bu yüzden **tek başına yeterlidir**; ekibin
    ayrıca `client_secrets.json`'a ihtiyacı yoktur.
 
+   **Nasıl dağıtılır:** dosya bir anahtardır; kasadan (1Password gibi) alınıp
+   **her kişinin kendi bilgisayarına kopyalanır**. Örnek: `~/gsc_token.json`.
+
+   Dosyayı ağ sürücüsünden ya da paylaşılan bir klasörden **ortak** kullanmayın.
+   Nedeni: token'ın ömrü kısadır, sunucu süresi dolduğunda Google'dan yenisini
+   alıp **aynı dosyanın üzerine yazar**. Yedi kişi aynı dosyaya yazarsa dosya
+   yarım kalabilir ve herkesin erişimi birden kesilir. Kişi başına yerel kopya
+   olduğunda böyle bir çakışma olmaz - aynı anahtarın farklı bilgisayarlardan
+   kullanılması Google tarafında sorun değildir.
+
 5. Ekipteki her kişi yalnızca şunu çalıştırır:
 
 ```bash
@@ -117,6 +135,38 @@ Slack'e/e-postaya açık atılmaz, 1Password gibi bir kasadan dağıtılır. Sı
 Google Cloud'dan client secret iptal edilir ve token yeniden üretilir. Tek
 token paylaşıldığı için kişi bazında iptal yoktur - biri ayrıldığında token
 yenilenir ve yeni dosya dağıtılır.
+
+#### Consent screen durumu - adım adım
+
+`seo.op@inbound.com.tr` hesabıyla giriş yapılmış olmalı.
+
+1. [console.cloud.google.com](https://console.cloud.google.com) açılır.
+2. Sol üstte **proje seçici**den ilgili proje seçilir (yeni açtıysanız o proje).
+3. Sol menü **☰ → APIs & Services → OAuth consent screen** (yeni arayüzde
+   **APIs & Services → Google Auth Platform → Audience**).
+4. Sayfada **User type** ya da **Audience** başlığı görünür. İki durum var:
+
+   **a) "Internal" seçilebiliyorsa** - Workspace hesabında normal olan budur.
+   Seçin ve kaydedin. Bu durumda:
+   - Refresh token 7 günde düşmez, kalıcıdır.
+   - Yalnızca `@inbound.com.tr` hesapları giriş yapabilir - dışarıya kapalıdır.
+   - Doğrulama (verification) süreci gerekmez.
+
+   **b) "Internal" gri/seçilemez durumdaysa** - proje bir Workspace
+   organizasyonuna bağlı değil demektir. O zaman **External** kalır ve
+   **Publishing status** başlığına bakılır:
+   - **Testing** yazıyorsa **PUBLISH APP** düğmesine basılır, çıkan uyarı
+     onaylanır. Durum **In production** olur ve refresh token kalıcı hale gelir.
+   - Yalnızca `webmasters.readonly` kapsamı istendiği için Google'ın
+     "sensitive/restricted scope" doğrulaması **gerekmez**; uygulama doğrulama
+     beklemeden çalışır. Giriş ekranında "doğrulanmamış uygulama" uyarısı
+     çıkabilir, **Gelişmiş → devam et** ile geçilir.
+
+5. Kontrol: sayfada durum **Internal** ya da **In production** görünüyorsa
+   tamamdır. **Testing** görünüyorsa 4. adım tamamlanmamıştır.
+
+**Belirti:** erişim yaklaşık haftada bir kesiliyor ve sunucu "Token geçersiz
+ve yenilenemiyor" diyorsa bakılacak yer tam olarak burasıdır.
 
 ### Yol B - Servis hesabı
 

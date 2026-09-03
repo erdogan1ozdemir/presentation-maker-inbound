@@ -44,12 +44,19 @@ except ImportError:
              "  pip install \"mcp>=1.6.0\" google-api-python-client google-auth "
              "google-auth-oauthlib")
 
+# mcp 2.x'te FastMCP, MCPServer olarak yeniden adlandirildi. Kullandigimiz
+# yuzey (tool dekoratoru, run(transport=...), list_tools) iki surumde de ayni,
+# bu yuzden ikisi de destekleniyor - ekipte farkli surumler kurulu olabilir.
 try:
-    from mcp.server.fastmcp import FastMCP
+    from mcp.server.mcpserver import MCPServer as _Sunucu      # mcp >= 2
 except ImportError:
-    sys.exit("HATA: mcp paketi eksik. pip install \"mcp>=1.6.0\"")
+    try:
+        from mcp.server.fastmcp import FastMCP as _Sunucu      # mcp 1.x
+    except ImportError:
+        sys.exit("HATA: mcp paketi eksik. Kurulum:\n"
+                 "  bash kur_gsc.sh")
 
-mcp = FastMCP("gsc")
+mcp = _Sunucu("gsc")
 
 _SERVIS = None
 
@@ -209,6 +216,77 @@ async def inspect_url(site_url: str, page_url: str) -> str:
         "canonical_kullanici": i.get("userCanonical"),
         "son_tarama": i.get("lastCrawlTime"),
     }, ensure_ascii=False, indent=1)
+
+
+@mcp.tool()
+async def batch_inspect_urls(site_url: str, page_urls: str, limit: int = 20) -> str:
+    """
+    Birden fazla URL'yi tek cagrida denetler (yalnizca okur).
+
+    page_urls: satir satir ya da virgulle ayrilmis URL listesi.
+    limit: en fazla kac URL denetlenecek (URL Inspection API gunluk kotasi
+           2000/gun, dakikada 600 - buyuk listeler parca parca calistirilir).
+    """
+    urls = [u.strip() for u in page_urls.replace(",", "\n").splitlines() if u.strip()]
+    if not urls:
+        return "URL verilmedi."
+    kesildi = len(urls) > limit
+    urls = urls[:limit]
+    try:
+        sv = servis()
+    except Exception as e:
+        return f"Hata: {e}"
+    out = ["URL | indeks | kapsam | robots | son tarama"]
+    out.append("-" * len(out[0]))
+    for u in urls:
+        try:
+            r = sv.urlInspection().index().inspect(body={
+                "inspectionUrl": u, "siteUrl": site_url}).execute()
+            i = (r.get("inspectionResult") or {}).get("indexStatusResult") or {}
+            out.append(f"{u} | {i.get('verdict','-')} | {i.get('coverageState','-')} | "
+                       f"{i.get('robotsTxtState','-')} | {(i.get('lastCrawlTime') or '-')[:10]}")
+        except Exception as e:
+            out.append(f"{u} | HATA: {str(e)[:60]}")
+    if kesildi:
+        out.append(f"\n{limit} URL denetlendi, liste daha uzun - kalanini ayri cagriyla calistirin.")
+    return "\n".join(out)
+
+
+@mcp.tool()
+async def indexing_issues(site_url: str, page_urls: str, limit: int = 20) -> str:
+    """
+    Verilen URL'ler icinde indeks sorunu olanlari ayiklar ve ozetler.
+
+    batch_inspect_urls'in filtreli hali: PASS olanlari atlar, yalnizca
+    indekslenmemis ya da robots/canonical tarafinda ele alinacak nokta
+    tasiyan adresleri dondurur.
+    """
+    urls = [u.strip() for u in page_urls.replace(",", "\n").splitlines() if u.strip()][:limit]
+    if not urls:
+        return "URL verilmedi."
+    try:
+        sv = servis()
+    except Exception as e:
+        return f"Hata: {e}"
+    sorunlu, temiz = [], 0
+    for u in urls:
+        try:
+            r = sv.urlInspection().index().inspect(body={
+                "inspectionUrl": u, "siteUrl": site_url}).execute()
+            i = (r.get("inspectionResult") or {}).get("indexStatusResult") or {}
+            v = i.get("verdict")
+            gc, uc = i.get("googleCanonical"), i.get("userCanonical")
+            farkli_canonical = gc and uc and gc != uc
+            if v == "PASS" and not farkli_canonical:
+                temiz += 1
+                continue
+            sorunlu.append(f"{u}\n  indeks: {v} | kapsam: {i.get('coverageState','-')}"
+                           + (f"\n  canonical farki: kullanici {uc} -> google {gc}"
+                              if farkli_canonical else ""))
+        except Exception as e:
+            sorunlu.append(f"{u}\n  HATA: {str(e)[:80]}")
+    bas = f"{len(urls)} URL denetlendi: {temiz} sorunsuz, {len(sorunlu)} ele alinacak nokta"
+    return bas + ("\n\n" + "\n".join(sorunlu) if sorunlu else "")
 
 
 if __name__ == "__main__":

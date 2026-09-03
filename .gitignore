@@ -6,3 +6,4 @@ __pycache__/
 
 dist/*.zip
 dist/inbound-sunum-uretici/
+plugins/inbound-sunum/skills/inbound-sunum-uretici/scripts/.venv/
