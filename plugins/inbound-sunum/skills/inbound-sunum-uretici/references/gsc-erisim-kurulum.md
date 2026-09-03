@@ -63,6 +63,34 @@ Sunucunun altı aracı var, hepsi okuma: `list_properties`, `search_analytics`
 (regex filtreli), `list_sitemaps`, `inspect_url`, `batch_inspect_urls`,
 `indexing_issues`.
 
+### Hangi yol kaydedilmeli - dikkat
+
+Eklenti marketplace'ten kurulduğunda dosyalar **sürüm numaralı** bir önbelleğe
+açılır:
+
+```
+~/.claude/plugins/cache/presentation-maker-inbound/inbound-sunum/1.6.0/...
+                                                              ^^^^^ her sürümde değişir
+```
+
+Buraya kaydedilen MCP sunucusu **ilk eklenti güncellemesinde kırılır**. İki
+kalıcı yol var:
+
+| Yol | Nasıl güncellenir |
+|---|---|
+| `~/.claude/plugins/marketplaces/presentation-maker-inbound/plugins/inbound-sunum/skills/inbound-sunum-uretici/scripts` | `claude plugin marketplace update` ile yerinde (git clone) |
+| Kendi klonunuz, ör. `~/inbound-sunum/plugins/.../scripts` | `git pull` |
+
+`kur_gsc.sh` sürümlü önbellekten çalıştırıldığını fark ederse uyarır ve
+kalıcı yolları yazdırır.
+
+### MCP sunucusu skill'den bağımsız çalışır
+
+`claude mcp add` ile bir kez kaydedildikten sonra sunucu **her oturumda**
+açıktır; sunum skill'ini çağırmak gerekmez. Ekipteki biri "son üç ayın en çok
+click alan sorgularını getir" dediğinde veri doğrudan gelir. Skill yalnızca
+sunum üretimi için gerekli; Search Console verisine erişim ondan bağımsızdır.
+
 ## Hangi kimlik yolu
 
 Üç yol desteklenir. **Ajans içinde tercih edilen yol, tek kurumsal hesabın

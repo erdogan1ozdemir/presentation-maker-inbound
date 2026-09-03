@@ -11,6 +11,27 @@ BURA="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV="$BURA/.venv"
 PY="$VENV/bin/python"
 
+# Surumlu eklenti onbellegi uyarisi: ~/.claude/plugins/cache/.../1.6.0/... yolu
+# her surum yukseltmesinde degisir; oraya kaydedilen MCP sunucusu ilk
+# guncellemede kirilir. Kalici olan iki yol var, asagida yazili.
+case "$BURA" in
+  */.claude/plugins/cache/*)
+    KALICI="$HOME/.claude/plugins/marketplaces/presentation-maker-inbound/plugins/inbound-sunum/skills/inbound-sunum-uretici/scripts"
+    echo "UYARI: bu betik sürümlü eklenti önbelleğinden çalışıyor:"
+    echo "  $BURA"
+    echo "Buraya kaydedilen MCP sunucusu, eklenti güncellenince kırılır."
+    echo "Kalıcı yollardan biriyle çalıştırın:"
+    echo "  1) marketplace klonu (yerinde güncellenir):"
+    echo "     bash $KALICI/kur_gsc.sh"
+    echo "  2) kendi klonunuz:"
+    echo "     git clone https://github.com/erdogan1ozdemir/presentation-maker-inbound.git ~/inbound-sunum"
+    echo "     bash ~/inbound-sunum/plugins/inbound-sunum/skills/inbound-sunum-uretici/scripts/kur_gsc.sh"
+    echo
+    read -r -p "Yine de devam edilsin mi? [e/H] " yanit
+    case "$yanit" in [eE]*) ;; *) echo "İptal edildi."; exit 1 ;; esac
+    ;;
+esac
+
 echo "→ Sanal ortam: $VENV"
 if [ ! -x "$PY" ]; then
   python3 -m venv "$VENV"
