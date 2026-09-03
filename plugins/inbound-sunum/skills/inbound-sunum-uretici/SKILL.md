@@ -94,7 +94,7 @@ söyle - kullanıcı neyi kapattığını bilerek kapatsın:
 
 | Kaynak | Açtığı bölüm | Erişim |
 |---|---|---|
-| Google Search Console | Click/impression/CTR/pozisyon, brand-non-brand, sayfa & query | `mcp__gsc__*` ile **canlı çekilebilir** (16 ay sınırı) |
+| Google Search Console | Click/impression/CTR/pozisyon, brand-non-brand, sayfa & query | `mcp__gsc__*` ile **canlı çekilebilir** (16 ay sınırı). Kurulu değilse Faz 1.0'daki kurulum önerilir - salt-okunur, tek seferlik |
 | GA4 | Session, revenue, kanal, ürün funnel, AI referral | Genelde **kullanıcı export'u** |
 | Keyword Planner | Arama hacmi: marka, marka+kategori, non-brand, rakip | Kullanıcı export'u |
 | SEOmonitor | Visibility, Share of Clicks, AI Overview SoV, kategori visibility, kelime bazlı sıra | `mcp__*__seomonitor_*` ile **canlı çekilebilir** |
@@ -156,6 +156,48 @@ açık bölümler, senin çekeceğin veriler, onun göndereceği export'lar.
 ---
 
 ## FAZ 1 - Veri kapısı
+
+### 1.0. Önce Search Console erişimini kontrol et
+
+Brief biter bitmez, veri istemeden önce **GSC MCP sunucusu bağlı mı** diye bak:
+
+```bash
+claude mcp list
+```
+
+`gsc: ... ✔ Connected` görünüyorsa veriyi kendin çekersin; kullanıcıdan Search
+Console export'u isteme - gereksiz iş yükü ve dönem karışması riski.
+
+**Bağlı değilse ilk öneri canlı erişim kurulumudur, elle export değil.** Sırayı
+tersine çevirme: kurulum tek seferliktir, sonrasında bütün destelerde veri
+otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
+
+> Search Console'a canlı erişim kurulu değil. İki yol var:
+>
+> **1. Tek seferlik erişim kurulumu (önerilen)** - yaklaşık 15 dakika sürüyor,
+> bir kez yapılınca bütün sunumlarda veri doğrudan çekiliyor, bir daha export
+> göndermenize gerek kalmıyor. Erişim **yalnızca okuma** iznidir: token site
+> ekleyemez, sitemap gönderemez, ayar değiştiremez.
+>
+> **2. Elle export** - bu dönem için CSV'leri siz indirirsiniz. Bu yolda
+> brand/non-brand ayrımı regex yerine elle yapılır ve anonim sorgular kümeden
+> düştüğü için segment hacimleri eksik kalır.
+>
+> Hangisiyle ilerleyelim?
+
+Kurulum seçilirse adımları **`references/gsc-erisim-kurulum.md`** dosyasından
+sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Kurulum
+bittiğinde `claude mcp list` ile doğrulat ve property listesini çekerek markanın
+property'sinin göründüğünü teyit et.
+
+Elle export seçilirse `references/veri-brief-ve-export.md` talimatlarına geç ve
+segment ölçümündeki kısıtı destenin ilgili dipnotuna yazacağını söyle.
+
+Aynı kontrol diğer canlı kaynaklar için de geçerlidir (SEOmonitor, Ahrefs,
+inbound-db): bağlıysa çek, değilse kapsamı kullanıcıyla konuş - bölümü sessizce
+boş bırakma.
+
+### 1.1. Gelen dosyaları tara
 
 Veri geldiğinde klasörü tara:
 
@@ -355,6 +397,7 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `references/tablo-semalari.md` | Faz 2. T1-T14 kanonik tablo şemaları, kolon yapıları, format kuralları |
 | `references/deck-spec.md` | Faz 4. deck.json tam şeması, blok tipleri, izgara sistemi |
 | `references/design-system.md` | Faz 4. Token'lar, slayt izgarası, tipografi, hangi rengin nerede kullanıldığı |
+| `references/gsc-erisim-kurulum.md` | Faz 1. Search Console canlı erişimi: OAuth kurulumu, salt-okunur kapsam, ekip içi paylaşım |
 | `references/tuzaklar-ve-qa.md` | Faz 2 ve 5. Gerçek destelerde yaşanmış hatalar, teslim öncesi self-check |
 | `assets/ornek/deck-ornek.json` | Çalışan 13 slaytlık örnek. Yeni deste kurarken buradan başla |
 | `reference/game-plus/` | Game+ için onaylanmış format: üretici script, veri modülleri, 34 slaytlık `deck.json` ve markaya özgü kurallar |
