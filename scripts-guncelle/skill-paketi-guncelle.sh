@@ -44,7 +44,11 @@ rm -f "$ZIP"
 # claude.ai yüklemesi SKILL.md'yi orada arıyor.
 TMP=$(mktemp -d)
 cp -R "$SKILL" "$TMP/inbound-sunum-uretici"
-find "$TMP" \( -name "__pycache__" -o -name ".DS_Store" -o -name "fonts-eot-bozuk" \) -exec rm -rf {} + 2>/dev/null || true
+find "$TMP" \( -name "__pycache__" -o -name ".DS_Store" -o -name "fonts-eot-bozuk" \
+                -o -name ".venv" -o -name "*.egg-info" \) -exec rm -rf {} + 2>/dev/null || true
+# Paylasilan token veya OAuth gizli dosyasi kazara pakete girmesin
+find "$TMP" \( -name "gsc_token.json" -o -name "client_secrets.json" \
+                -o -name "*service_account*.json" \) -delete 2>/dev/null || true
 ( cd "$TMP" && zip -qr "$ZIP" inbound-sunum-uretici )
 
 # Açılmış kopya da tazelenir: elle açılıp bırakıldığında eskiyip yanlış sürümün
