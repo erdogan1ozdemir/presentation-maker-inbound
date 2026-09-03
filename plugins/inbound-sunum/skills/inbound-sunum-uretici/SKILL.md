@@ -406,6 +406,6 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `references/hacim-kaynagi-ve-fallback.md` | Faz 2. Arama hacmi: destede tek kaynak, tek seferde tek talep, kolon adında dönem etiketi |
 | `references/tuzaklar-ve-qa.md` | Faz 2 ve 5. Gerçek destelerde yaşanmış hatalar, teslim öncesi self-check |
 | `assets/ornek/deck-ornek.json` | Çalışan 13 slaytlık örnek. Yeni deste kurarken buradan başla |
-| `scripts/gsc_mcp.py` · `scripts/kur_gsc.sh` | Skill'in kendi Search Console MCP sunucusu (salt okunur, 6 araç) ve tek komutluk kurulumu - harici depo gerekmez |
+| `scripts/gsc_mcp.py` · `scripts/kur_gsc.sh` · `scripts/client_secrets_cikar.py` | Skill'in kendi Search Console MCP sunucusu (salt okunur, 6 araç), tek komutluk kurulumu ve mevcut token'dan client_secrets üretici - harici depo gerekmez |
 | `scripts/hacim_dfs.py` | Arama hacmi zincirinin DataForSEO halkası; yakın varyant birleşmesini de tespit eder |
 | `reference/game-plus/` | Game+ için onaylanmış format: üretici script, veri modülleri, 34 slaytlık `deck.json` ve markaya özgü kurallar |
