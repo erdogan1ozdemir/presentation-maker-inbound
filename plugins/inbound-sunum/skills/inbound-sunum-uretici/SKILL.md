@@ -188,9 +188,10 @@ otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
 Kurulum seçilirse adımları **`references/gsc-erisim-kurulum.md`** dosyasından
 sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Sunucu
 skill'in içindedir (`scripts/gsc_mcp.py`) - harici bir depo klonlanmaz. Ajans
-içinde **paylaşılan kurumsal hesap token'ı** kullanılır: token bir kez üretilir,
-ekip aynı dosyayı `GSC_TOKEN_PATH` ile gösterir, kimse onay ekranı görmez.
-Token salt-okunur kapsamla üretilir ve sunucu kapsamı ayrıca denetler. Kurulum
+standardı: tek OAuth uygulamasının `client_secrets.json`'ı ekiple paylaşılır,
+herkes `seo.op@inbound.com.tr` hesabıyla kendi onayını verir ve kendi token'ını
+üretir - `bash scripts/kur_gsc.sh --oauth /yol/client_secrets.json`. Kapsam
+salt-okunurdur ve sunucu bunu ayrıca denetler. Kurulum
 bittiğinde `claude mcp list` ile doğrulat ve property listesini çekerek markanın
 property'sinin göründüğünü teyit et.
 

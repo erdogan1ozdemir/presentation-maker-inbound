@@ -93,76 +93,73 @@ sunum üretimi için gerekli; Search Console verisine erişim ondan bağımsızd
 
 ## Hangi kimlik yolu
 
-Üç yol desteklenir. **Ajans içinde tercih edilen yol, tek kurumsal hesabın
-token'ının ekiple paylaşılmasıdır** (`seo.op@inbound.com.tr`): bir kez
-üretilir, herkes aynı dosyayı kullanır, kimse onay ekranı görmez ve o hesabın
-eriştiği bütün property'ler tek seferde açılır.
+Üç yol desteklenir. **Ajans standardı: tek OAuth uygulamasının
+`client_secrets.json`'ı ekiple paylaşılır, herkes `seo.op@inbound.com.tr`
+hesabıyla kendi onayını verir.** Ekip Claude Code'u zaten bu hesapla
+kullandığı ve hesabın şifresi ekipte olduğu için `client_id` / `client_secret`
+paylaşmak yeni bir açıklık getirmez - bunlar bir kişiyi değil uygulamayı
+tanımlar ve hesap şifresinden daha dar bir bilgidir.
 
-| | Paylaşılan kurumsal token | Servis hesabı | Kişisel OAuth |
+| | client_secrets paylaşımı (standart) | Paylaşılan token | Servis hesabı |
 |---|---|---|---|
-| Kurulum | Bir kez merkezden, ekip dosyayı alır | Bir kez merkezden | Her kişi kendi onayını verir |
-| Property erişimi | Hesabın eriştiği her şey | Yalnızca hesaba açılan property'ler | Kişinin eriştiği property'ler |
-| Yeni marka | Hesap zaten erişiyorsa ek iş yok | Property'ye hesap eklenir | Her kişi ayrı eklenir |
-| İz | Tüm ekip tek kullanıcı olarak görünür | Tek servis kullanıcısı | Kişi bazında |
+| Herkes tüm domainleri görür | Evet - hepsi aynı hesapla giriş yapıyor | Evet | Yalnızca hesaba açılan property'ler |
+| Token dosyası | Her kişi kendi token'ını üretir | Tek dosya kopyalanır | Yok |
+| Dosya çakışması riski | **Yok** | Kişi başına kopyayla önlenir | Yok |
+| Kişi bazında iptal | Var (Google hesap izinlerinden) | Yok | Yok |
+| Kurulum adımı | Kişi bir kez tarayıcıdan onay verir | Dosyayı yerine koyar | Dosyayı yerine koyar |
 
-### Yol A - Paylaşılan kurumsal hesap token'ı (ajans standardı)
+### Yol A - Paylaşılan client_secrets, herkes kendi onayını verir (standart)
 
-**Salt okunur mu? Evet - ama koşullu.** Kapsam token'ın içine gömülür, onu
-paylaşan kişiye göre değişmez. Token bu skill'in sunucusuyla üretildiğinde
-kapsam `webmasters.readonly` olur ve token yazma çağrısı yapamaz. Başka bir
-yerde (OAuth Playground, başka bir uygulama) tam `webmasters` kapsamıyla
-üretilmiş bir token yazma yetkisi taşır - bu yüzden sunucu token dosyasının
-kapsamını **okuyup denetler**, geniş kapsamlı token'la çalışmayı reddeder.
+**Bir kez, tek kişi:**
 
-Adımlar - bir kez, tek kişi yapar:
+1. Google Cloud'da proje + **Desktop app** OAuth client oluşturulur, Search
+   Console API açılır (aşağıdaki "Google Cloud tarafı" adımları).
+2. **Consent screen → User type: Internal** seçilir (aşağıda adım adım).
+3. İndirilen `client_secrets.json` ekiple paylaşılır - kasadan ya da ekip
+   klasöründen. Bu dosya bir kişiyi temsil etmez; kimin verisi olduğu 5.
+   adımdaki girişle belirlenir.
 
-1. Google Cloud'da bir proje ve **Desktop app** OAuth client oluştur, Search
-   Console API'yi aç (aşağıdaki "Google Cloud tarafı" adımları).
-2. **Consent screen'i kalıcı hale getir.** Bu adım atlanırsa uygulama
-   "Testing" durumunda kalır, Google refresh token'ı **7 günde** düşürür ve
-   ekibin erişimi her hafta kesilir. Nereye bakılacağı aşağıda.
-3. Token'ı `seo.op@inbound.com.tr` hesabıyla bir kez üret:
+**Her kişi, kendi makinesinde bir kez:**
+
+4. Sunucu kurulur ve kaydedilir - tek komut:
 
 ```bash
-claude mcp add gsc -s user \
-  -e GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json \
-  -e GSC_TOKEN_PATH=/yol/gsc_token.json \
-  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
+bash /skill/yolu/scripts/kur_gsc.sh --oauth /yol/client_secrets.json
 ```
 
-İlk çağrıda tarayıcı açılır, `seo.op@` hesabıyla giriş yapılır, izin verilir.
-Onay ekranında istenen tek kapsam "Search Console verilerinizi görüntüleme"
-olmalı - başka bir kapsam görünüyorsa devam edilmez.
+5. İlk çağrıda tarayıcı açılır. **`seo.op@inbound.com.tr` hesabıyla giriş
+   yapılır** ve izin verilir. Onay ekranında istenen tek kapsam "Search Console
+   verilerinizi görüntüleme" olmalı; başka bir kapsam görünüyorsa devam
+   edilmez.
 
-4. Oluşan `gsc_token.json` ekiple paylaşılır. Dosya `client_id` ve
-   `client_secret`'i de taşır, bu yüzden **tek başına yeterlidir**; ekibin
-   ayrıca `client_secrets.json`'a ihtiyacı yoktur.
+6. Kişinin kendi token'ı yerel olarak oluşur (`gsc_token.json`), bir daha
+   sorulmaz. Kimse başkasının dosyasına yazmadığı için çakışma olmaz.
 
-   **Nasıl dağıtılır:** dosya bir anahtardır; kasadan (1Password gibi) alınıp
-   **her kişinin kendi bilgisayarına kopyalanır**. Örnek: `~/gsc_token.json`.
+Herkes aynı hesapla giriş yaptığı için **o hesabın eriştiği bütün
+property'ler** tek seferde açılır; yeni bir marka eklendiğinde kimsenin bir
+şey yapması gerekmez.
 
-   Dosyayı ağ sürücüsünden ya da paylaşılan bir klasörden **ortak** kullanmayın.
-   Nedeni: token'ın ömrü kısadır, sunucu süresi dolduğunda Google'dan yenisini
-   alıp **aynı dosyanın üzerine yazar**. Yedi kişi aynı dosyaya yazarsa dosya
-   yarım kalabilir ve herkesin erişimi birden kesilir. Kişi başına yerel kopya
-   olduğunda böyle bir çakışma olmaz - aynı anahtarın farklı bilgisayarlardan
-   kullanılması Google tarafında sorun değildir.
+Aynı hesap + aynı uygulama için Google birden fazla token'a izin verir; 6-7
+kişilik bir ekipte sınıra yaklaşılmaz. Yıllar içinde çok sayıda yeniden onay
+birikirse en eski token'lar düşer - bu durumda ilgili kişi tekrar onay verir.
 
-5. Ekipteki her kişi yalnızca şunu çalıştırır:
+### Yol B - Paylaşılan token
 
-```bash
-claude mcp add gsc -s user \
-  -e GSC_TOKEN_PATH=/yol/gsc_token.json \
-  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
-```
+Tarayıcı onayı hiç istenmesin deniyorsa: token bir kez üretilir, dosya ekiple
+paylaşılır, herkes `GSC_TOKEN_PATH` ile aynı içeriği gösterir. Dosya
+`client_id` ve `client_secret`'i de taşıdığı için tek başına yeterlidir.
 
-Tarayıcı açılmaz, onay istenmez. Token süresi dolduğunda kendini yeniler.
+**Dosya kişi başına kopyalanır**, ağ sürücüsünden ortak kullanılmaz: token'ın
+ömrü kısadır, sunucu yenileyip aynı dosyanın üzerine yazar; birden fazla makine
+aynı dosyaya yazarsa dosya bozulup herkesin erişimi birden kesilebilir.
 
-**Paylaşılan token bir sırdır.** Parola gibi davranılır: repoya konmaz,
-Slack'e/e-postaya açık atılmaz, 1Password gibi bir kasadan dağıtılır. Sızarsa
-Google Cloud'dan client secret iptal edilir ve token yeniden üretilir. Tek
-token paylaşıldığı için kişi bazında iptal yoktur - biri ayrıldığında token
-yenilenir ve yeni dosya dağıtılır.
+### Yol C - Servis hesabı
+
+Erişimin property bazında ve merkezden yönetilmesi isteniyorsa. Servis hesabı
+oluşturulur, e-postası Search Console'da property'lere "Kısıtlı" izinle
+eklenir, JSON anahtar `GSC_CREDENTIALS_PATH` ile verilir. Tarayıcı onayı
+yoktur; ancak yalnızca kendisine açılan property'leri görür, her yeni marka
+için ekleme gerekir.
 
 #### Consent screen durumu - adım adım
 
@@ -196,60 +193,41 @@ yenilenir ve yeni dosya dağıtılır.
 **Belirti:** erişim yaklaşık haftada bir kesiliyor ve sunucu "Token geçersiz
 ve yenilenemiyor" diyorsa bakılacak yer tam olarak burasıdır.
 
-### Yol B - Servis hesabı
+### Kişisel OAuth - kendi hesabıyla
 
-Erişimin merkezden ve property bazında yönetilmesi isteniyorsa. Servis hesabı
-oluşturulur, e-posta adresi Search Console'da property'lere "Kısıtlı" izinle
-eklenir, JSON anahtar `GSC_CREDENTIALS_PATH` ile verilir. Tarayıcı onayı
-yoktur. Kurumsal hesap token'ından farkı: yalnızca kendisine açılan
-property'leri görür, bu yüzden her yeni marka için Search Console'dan ekleme
-gerekir.
+Bir kişi `seo.op@` yerine kendi `@inbound.com.tr` hesabıyla çalışacaksa aynı
+adımlar izlenir; o durumda yalnızca kendi eriştiği property'ler görünür.
 
-### Yol C - OAuth (kişisel kullanım)
-
-Kişi yalnızca kendi eriştiği property'lerle çalışacaksa. Adımlar aşağıda.
-
-### 1. Google Cloud tarafı
+## Google Cloud tarafı - bir kez, tek kişi
 
 1. [console.cloud.google.com](https://console.cloud.google.com) → yeni proje
    oluştur (ör. `gsc-mcp`).
 2. **APIs & Services → Library** → "Google Search Console API" → **Enable**.
-3. **APIs & Services → OAuth consent screen** → User type **External** →
-   uygulama adı ve destek e-postası doldurulur. Yayınlamaya gerek yok; **Test
-   users** bölümüne kendi Google hesabını ekle.
+3. **APIs & Services → OAuth consent screen** → User type **Internal**.
+   Uygulama adı ve destek e-postası doldurulur. Internal seçilemiyorsa
+   yukarıdaki "Consent screen durumu" bölümüne bakılır - orada External
+   durumunda ne yapılacağı yazılı.
 4. **Scopes** adımında elle kapsam eklemeye gerek yoktur; kapsamı uygulama
    isteyecek (`webmasters.readonly`).
 5. **APIs & Services → Credentials → Create credentials → OAuth client ID** →
    Application type **Desktop app** → oluştur → **JSON'u indir**.
-6. İndirilen dosyayı `client_secrets.json` adıyla sunucu klasörüne koy.
+6. Dosya `client_secrets.json` adıyla saklanır ve ekiple paylaşılır.
 
-### 2. Ortam değişkeni
+### Kurulum ve kayıt
 
-`client_secrets.json` indirildikten sonra bir yere konur; yolu ortam
-değişkeniyle verilecek.
-
-### 3. Claude Code'a tanıtma
+Her kişi kendi makinesinde tek komut çalıştırır:
 
 ```bash
-claude mcp add gsc -s user \
-  -e GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json \
-  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
+bash /skill/yolu/scripts/kur_gsc.sh --oauth /yol/client_secrets.json
 ```
 
-`-s user` önemli: sunucu tüm projelerde açık olur, her klasörde yeniden
-tanıtmak gerekmez.
-
-### 4. İlk çalıştırma - tek seferlik onay
-
-Claude Code yeniden başlatılır ve bir GSC aracı çağrılır (ör. "Search Console
-property listesini getir"). Tarayıcıda Google onay ekranı açılır, hesap seçilir
-ve izin verilir. Onay sonrası `gsc_token.json` yazılır; **bir daha
-sorulmaz**, token kendini yeniler.
+İlk çağrıda tarayıcı açılır, `seo.op@inbound.com.tr` hesabıyla giriş yapılır,
+izin verilir. Onay sonrası token yerel olarak yazılır ve bir daha sorulmaz.
 
 Onay ekranında "Google bu uygulamayı doğrulamadı" uyarısı çıkarsa: kendi
-oluşturduğunuz test uygulaması olduğu için normaldir - **Gelişmiş → devam et**.
+oluşturduğunuz uygulama olduğu için normaldir - **Gelişmiş → devam et**.
 
-### 5. Doğrulama
+### Doğrulama
 
 ```bash
 claude mcp list
@@ -269,9 +247,12 @@ elle yapılacağı ve anonim sorgu kaçağının oluşacağı kullanıcıya söy
 
 ## Ekip içi paylaşımda dikkat
 
-- Paylaşılan kurumsal token bir **sırdır**: repoya konmaz, açık kanaldan
-  gönderilmez, kasadan dağıtılır. Kişisel OAuth kullanılıyorsa
-  `client_secrets.json` ve token dosyası kişiye özeldir, paylaşılmaz.
+- `client_secrets.json` ekip içinde paylaşılır ama **repoya konmaz**. Bir
+  kişiyi değil uygulamayı tanımladığı için hesap şifresinden daha dar bir
+  bilgidir; yine de dışarıya çıkmaması gerekir - sızarsa Google Cloud'dan
+  client secret iptal edilip yenisi üretilir ve ekip yeniden onay verir.
+- Üretilen token dosyaları **kişiye özeldir**, paylaşılmaz. Yol B seçildiyse
+  paylaşılan token bir sırdır ve kasadan dağıtılır.
 - **Refresh token ömrü:** OAuth consent screen "Testing" durumundaysa Google
   refresh token'ı 7 günde düşürür ve erişim kesilir. Workspace hesabında
   **Internal** user type seçilerek ya da uygulama **In production** durumuna
