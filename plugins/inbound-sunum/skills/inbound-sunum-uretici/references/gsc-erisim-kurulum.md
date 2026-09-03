@@ -4,7 +4,7 @@
 > Console'a canlı erişimi yoksa, **önce bu kurulum önerilir** - tek seferlik bir
 > işlem ve sonrasında tüm destelerde veri elle export edilmeden çekilir.
 
-## İki yol, tek tercih
+## Canlı erişim mi, elle export mu
 
 | | Canlı erişim (OAuth) | Elle export |
 |---|---|---|
@@ -27,6 +27,12 @@ ihtimali yoktur:
    onay ekranında da "Search Console verilerinizi görüntüleme" olarak görünür.
    Bu kapsamla site ekleme/silme, sitemap gönderme/silme API tarafından
    reddedilir - token bu işlemleri yapamaz.
+
+   **Kapsam token'ın içindedir, paylaşan kişiye göre değişmez.** Bir token
+   nerede üretildiyse oradaki kapsamı taşır; başka bir araçla tam
+   `webmasters` kapsamıyla üretilmiş bir token yazma yetkisi taşır. Bu yüzden
+   sunucu, verilen token dosyasının kapsamını okuyup denetler ve geniş
+   kapsamlı token'la **çalışmayı reddeder**.
 2. **Property izni:** Search Console'da kişiye verilen izin ayrıca
    sınırlanabilir. Property sahibi **Ayarlar → Kullanıcılar ve izinler**'den
    "Kısıtlı" (Restricted) izni verirse kişi raporları görür, ayar değiştiremez.
@@ -47,46 +53,83 @@ python3 -m venv .venv
 .venv/bin/pip install "mcp>=1.6.0" google-api-python-client google-auth google-auth-oauthlib
 ```
 
-## Hangi kimlik yolu - ekip için servis hesabı
+## Hangi kimlik yolu
 
-İki yol da desteklenir; **ekipte servis hesabı tercih edilir.**
+Üç yol desteklenir. **Ajans içinde tercih edilen yol, tek kurumsal hesabın
+token'ının ekiple paylaşılmasıdır** (`seo.op@inbound.com.tr`): bir kez
+üretilir, herkes aynı dosyayı kullanır, kimse onay ekranı görmez ve o hesabın
+eriştiği bütün property'ler tek seferde açılır.
 
-| | Servis hesabı | OAuth |
-|---|---|---|
-| Kullanıcı adımı | Yok - tek JSON dosyası | Her kişi tarayıcıdan onay verir |
-| Google Cloud işi | Bir kez, tek kişi yapar | Her kişi kendi client'ını alır ya da aynı client paylaşılır |
-| Erişim yönetimi | Search Console'da tek e-posta, merkezden | Kişi bazında |
-| Kişi ayrıldığında | Tek yerden kapatılır | Kişinin token'ı kendisinde |
-| Yeni marka eklemek | Servis hesabı e-postası property'ye eklenir | Her kişi ayrı eklenir |
+| | Paylaşılan kurumsal token | Servis hesabı | Kişisel OAuth |
+|---|---|---|---|
+| Kurulum | Bir kez merkezden, ekip dosyayı alır | Bir kez merkezden | Her kişi kendi onayını verir |
+| Property erişimi | Hesabın eriştiği her şey | Yalnızca hesaba açılan property'ler | Kişinin eriştiği property'ler |
+| Yeni marka | Hesap zaten erişiyorsa ek iş yok | Property'ye hesap eklenir | Her kişi ayrı eklenir |
+| İz | Tüm ekip tek kullanıcı olarak görünür | Tek servis kullanıcısı | Kişi bazında |
 
-### Yol A - Servis hesabı (önerilen)
+### Yol A - Paylaşılan kurumsal hesap token'ı (ajans standardı)
 
-1. Google Cloud → **IAM & Admin → Service Accounts → Create** (ör. `gsc-okuma`).
-   Rol vermeye gerek yok; Search Console izni Google Cloud'dan değil Search
-   Console'dan geliyor.
-2. Hesabın içine gir → **Keys → Add key → Create new key → JSON** → indir.
-   Bu dosya ekip içinde paylaşılabilir; **repoya konmaz**.
-3. Google Cloud → **APIs & Services → Library** → "Google Search Console API"
-   → **Enable**.
-4. Search Console → ilgili property → **Ayarlar → Kullanıcılar ve izinler →
-   Kullanıcı ekle** → servis hesabının e-posta adresi
-   (`...@...iam.gserviceaccount.com`) → izin **Kısıtlı**.
-5. Claude Code'a tanıt:
+**Salt okunur mu? Evet - ama koşullu.** Kapsam token'ın içine gömülür, onu
+paylaşan kişiye göre değişmez. Token bu skill'in sunucusuyla üretildiğinde
+kapsam `webmasters.readonly` olur ve token yazma çağrısı yapamaz. Başka bir
+yerde (OAuth Playground, başka bir uygulama) tam `webmasters` kapsamıyla
+üretilmiş bir token yazma yetkisi taşır - bu yüzden sunucu token dosyasının
+kapsamını **okuyup denetler**, geniş kapsamlı token'la çalışmayı reddeder.
+
+Adımlar - bir kez, tek kişi yapar:
+
+1. Google Cloud'da bir proje ve **Desktop app** OAuth client oluştur, Search
+   Console API'yi aç (aşağıdaki "Google Cloud tarafı" adımları).
+2. **OAuth consent screen → User type: Internal** seç. Bu adım kritik:
+   uygulama **"Testing"** durumunda kalırsa Google refresh token'ı **7 günde**
+   düşürür ve ekip her hafta yeniden onay vermek zorunda kalır. Workspace
+   hesabıyla Internal seçilebiliyorsa sorun ortadan kalkar; seçilemiyorsa
+   uygulama **"In production"** durumuna alınır.
+3. Token'ı `seo.op@inbound.com.tr` hesabıyla bir kez üret:
 
 ```bash
 claude mcp add gsc -s user \
-  -e GSC_CREDENTIALS_PATH=/yol/gsc-okuma.json \
+  -e GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json \
+  -e GSC_TOKEN_PATH=/yol/gsc_token.json \
   -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
 ```
 
-Tarayıcı onayı yoktur; sunucu ilk çağrıda doğrudan çalışır. Yeni bir markanın
-verisi gerektiğinde yalnızca 4. adım tekrarlanır - kimse yeniden kurulum
-yapmaz.
+İlk çağrıda tarayıcı açılır, `seo.op@` hesabıyla giriş yapılır, izin verilir.
+Onay ekranında istenen tek kapsam "Search Console verilerinizi görüntüleme"
+olmalı - başka bir kapsam görünüyorsa devam edilmez.
 
-### Yol B - OAuth (kişisel kullanım)
+4. Oluşan `gsc_token.json` ekiple paylaşılır. Dosya `client_id` ve
+   `client_secret`'i de taşır, bu yüzden **tek başına yeterlidir**; ekibin
+   ayrıca `client_secrets.json`'a ihtiyacı yoktur.
 
-Servis hesabı oluşturma yetkisi yoksa ya da kişi yalnızca kendi eriştiği
-property'lerle çalışacaksa. Adımlar aşağıda.
+5. Ekipteki her kişi yalnızca şunu çalıştırır:
+
+```bash
+claude mcp add gsc -s user \
+  -e GSC_TOKEN_PATH=/yol/gsc_token.json \
+  -- /skill/yolu/scripts/.venv/bin/python /skill/yolu/scripts/gsc_mcp.py
+```
+
+Tarayıcı açılmaz, onay istenmez. Token süresi dolduğunda kendini yeniler.
+
+**Paylaşılan token bir sırdır.** Parola gibi davranılır: repoya konmaz,
+Slack'e/e-postaya açık atılmaz, 1Password gibi bir kasadan dağıtılır. Sızarsa
+Google Cloud'dan client secret iptal edilir ve token yeniden üretilir. Tek
+token paylaşıldığı için kişi bazında iptal yoktur - biri ayrıldığında token
+yenilenir ve yeni dosya dağıtılır.
+
+### Yol B - Servis hesabı
+
+Erişimin merkezden ve property bazında yönetilmesi isteniyorsa. Servis hesabı
+oluşturulur, e-posta adresi Search Console'da property'lere "Kısıtlı" izinle
+eklenir, JSON anahtar `GSC_CREDENTIALS_PATH` ile verilir. Tarayıcı onayı
+yoktur. Kurumsal hesap token'ından farkı: yalnızca kendisine açılan
+property'leri görür, bu yüzden her yeni marka için Search Console'dan ekleme
+gerekir.
+
+### Yol C - OAuth (kişisel kullanım)
+
+Kişi yalnızca kendi eriştiği property'lerle çalışacaksa. Adımlar aşağıda.
 
 ### 1. Google Cloud tarafı
 
@@ -148,8 +191,14 @@ elle yapılacağı ve anonim sorgu kaçağının oluşacağı kullanıcıya söy
 
 ## Ekip içi paylaşımda dikkat
 
-- `client_secrets.json` ve `token.json` **kişiye özeldir**, repoya konmaz,
-  paylaşılmaz. Her kullanıcı kendi onayını verir.
+- Paylaşılan kurumsal token bir **sırdır**: repoya konmaz, açık kanaldan
+  gönderilmez, kasadan dağıtılır. Kişisel OAuth kullanılıyorsa
+  `client_secrets.json` ve token dosyası kişiye özeldir, paylaşılmaz.
+- **Refresh token ömrü:** OAuth consent screen "Testing" durumundaysa Google
+  refresh token'ı 7 günde düşürür ve erişim kesilir. Workspace hesabında
+  **Internal** user type seçilerek ya da uygulama **In production** durumuna
+  alınarak kalıcı hale gelir. Erişim haftada bir kesiliyorsa bakılacak yer
+  burasıdır.
 - Bir kişinin token'ı yalnızca **o kişinin Search Console'da erişebildiği**
   property'leri görür. Yeni bir markaya erişim, property sahibinin o kişiyi
   Search Console'dan kullanıcı olarak eklemesiyle açılır.

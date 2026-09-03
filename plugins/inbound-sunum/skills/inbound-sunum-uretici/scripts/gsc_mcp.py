@@ -9,13 +9,17 @@ KAPSAM SABITTIR: https://www.googleapis.com/auth/webmasters.readonly
 Bu kapsamla site ekleme/silme ve sitemap gonderme Google tarafindan reddedilir;
 sunucu bu araclari hic tanimlamaz. Yazma yetkisi teknik olarak yoktur.
 
-Kimlik dogrulama - iki yol, sirayla denenir:
-  1. SERVIS HESABI (ekip icin onerilen): GSC_CREDENTIALS_PATH ile JSON anahtar
-     verilir. Tarayici onayi yoktur; hesabin e-postasi Search Console'da
-     property'lere "Kisitli" izinle eklenir.
-  2. OAUTH: GSC_OAUTH_CLIENT_SECRETS ile client_secrets.json verilir. Ilk
-     calistirmada tarayici acilir, onay sonrasi token GSC_TOKEN_PATH'e yazilir
-     ve bir daha sorulmaz.
+Kimlik dogrulama - uc yol, sirayla denenir:
+  1. SERVIS HESABI: GSC_CREDENTIALS_PATH ile JSON anahtar verilir. Tarayici
+     onayi yoktur; hesabin e-postasi Search Console'da property'lere eklenir.
+  2. PAYLASILAN KURUMSAL TOKEN: GSC_TOKEN_PATH ile bir kez uretilmis token
+     dosyasi verilir. Token client_id ve client_secret'i de tasidigi icin tek
+     basina yeterlidir; ekip ayni dosyayi kullanir, kimse onay vermez.
+  3. KISISEL OAUTH: GSC_OAUTH_CLIENT_SECRETS ile client_secrets.json verilir,
+     ilk calistirmada tarayici acilir.
+
+Kapsam denetimi: paylasilan token beklenenden genis kapsam tasiyorsa sunucu
+calismayi reddeder - salt okunur garantisi token duzeyinde de dogrulanir.
 
 Kurulum:
     python3 -m venv .venv
@@ -65,28 +69,54 @@ def servis():
     gizli = os.environ.get("GSC_OAUTH_CLIENT_SECRETS")
     token = os.environ.get("GSC_TOKEN_PATH") or os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "gsc_token.json")
-    if gizli and os.path.exists(gizli):
+
+    # Paylasilan token dosyasi tek basina yeterlidir: creds.to_json() client_id
+    # ve client_secret'i de tasidigi icin yenileme icin client_secrets.json
+    # gerekmez. Kurumsal hesabin token'i ekibe boyle dagitilabilir.
+    if os.path.exists(token) or (gizli and os.path.exists(gizli)):
         from google.auth.transport.requests import Request
         from google.oauth2.credentials import Credentials
         from google_auth_oauthlib.flow import InstalledAppFlow
         creds = None
         if os.path.exists(token):
+            # Kapsam denetimi dosyadan okunur: from_authorized_user_file
+            # creds.scopes'u kendisine verilen listeyle dolduruyor, dosyadaki
+            # gercek kapsami gostermiyor.
+            with open(token, encoding="utf-8") as f:
+                _tj = json.load(f)
+            fazla = [x for x in (_tj.get("scopes") or []) if x not in SCOPES]
             creds = Credentials.from_authorized_user_file(token, SCOPES)
+            if fazla:
+                raise RuntimeError(
+                    f"Token beklenenden geniş kapsam taşıyor: {fazla}. "
+                    f"Bu sunucu yalnızca {SCOPES[0]} kabul eder; token'ı "
+                    f"salt-okunur kapsamla yeniden üretin.")
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
-            else:
+            elif gizli and os.path.exists(gizli):
                 creds = InstalledAppFlow.from_client_secrets_file(
                     gizli, SCOPES).run_local_server(port=0)
-            with open(token, "w") as f:
-                f.write(creds.to_json())
+            else:
+                raise RuntimeError(
+                    "Token geçersiz ve yenilenemiyor. Paylaşılan token "
+                    "süresi dolmuş olabilir - OAuth ekranı 'Testing' "
+                    "durumundaysa refresh token 7 günde düşer. Çözüm: "
+                    "consent screen'i Internal/In production yapıp token'ı "
+                    "yeniden üretmek. Ayrıntı: references/gsc-erisim-kurulum.md")
+            try:
+                with open(token, "w") as f:
+                    f.write(creds.to_json())
+            except OSError:
+                pass          # salt okunur konumdaki paylasilan token: sorun degil
         _SERVIS = build("searchconsole", "v1", credentials=creds)
         return _SERVIS
 
     raise RuntimeError(
-        "Search Console kimlik bilgisi bulunamadi. Iki yoldan biri gerekli:\n"
-        "  GSC_CREDENTIALS_PATH=/yol/servis-hesabi.json   (onerilen)\n"
-        "  GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json\n"
+        "Search Console kimlik bilgisi bulunamadi. Uc yoldan biri gerekli:\n"
+        "  GSC_TOKEN_PATH=/yol/gsc_token.json            (paylasilan kurumsal token)\n"
+        "  GSC_OAUTH_CLIENT_SECRETS=/yol/client_secrets.json  (kisisel OAuth)\n"
+        "  GSC_CREDENTIALS_PATH=/yol/servis-hesabi.json  (servis hesabi)\n"
         "Ayrintilar: references/gsc-erisim-kurulum.md")
 
 

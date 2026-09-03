@@ -187,9 +187,10 @@ otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
 
 Kurulum seçilirse adımları **`references/gsc-erisim-kurulum.md`** dosyasından
 sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Sunucu
-skill'in içindedir (`scripts/gsc_mcp.py`) - harici bir depo klonlanmaz. Ekip
-kullanımında **servis hesabı** yolu önerilir: tek JSON anahtarı, tarayıcı onayı
-yok, erişim Search Console'dan tek e-postayla merkezden yönetilir. Kurulum
+skill'in içindedir (`scripts/gsc_mcp.py`) - harici bir depo klonlanmaz. Ajans
+içinde **paylaşılan kurumsal hesap token'ı** kullanılır: token bir kez üretilir,
+ekip aynı dosyayı `GSC_TOKEN_PATH` ile gösterir, kimse onay ekranı görmez.
+Token salt-okunur kapsamla üretilir ve sunucu kapsamı ayrıca denetler. Kurulum
 bittiğinde `claude mcp list` ile doğrulat ve property listesini çekerek markanın
 property'sinin göründüğünü teyit et.
 
@@ -401,7 +402,7 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `references/deck-spec.md` | Faz 4. deck.json tam şeması, blok tipleri, izgara sistemi |
 | `references/design-system.md` | Faz 4. Token'lar, slayt izgarası, tipografi, hangi rengin nerede kullanıldığı |
 | `references/gsc-erisim-kurulum.md` | Faz 1. Search Console canlı erişimi: servis hesabı ve OAuth kurulumu, salt-okunur kapsam, ekip içi paylaşım |
-| `references/hacim-kaynagi-ve-fallback.md` | Faz 2. Arama hacmi kaynak sırası (SEOmonitor → Ahrefs → DataForSEO), etiketleme ve kaynak notu kuralları |
+| `references/hacim-kaynagi-ve-fallback.md` | Faz 2. Arama hacmi: destede tek kaynak, tek seferde tek talep, kolon adında dönem etiketi |
 | `references/tuzaklar-ve-qa.md` | Faz 2 ve 5. Gerçek destelerde yaşanmış hatalar, teslim öncesi self-check |
 | `assets/ornek/deck-ornek.json` | Çalışan 13 slaytlık örnek. Yeni deste kurarken buradan başla |
 | `scripts/gsc_mcp.py` | Skill'in kendi Search Console MCP sunucusu - salt okunur, servis hesabı veya OAuth |

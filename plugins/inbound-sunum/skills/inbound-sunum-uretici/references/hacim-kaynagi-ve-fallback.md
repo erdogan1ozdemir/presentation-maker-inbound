@@ -1,103 +1,138 @@
-# Arama hacmi: kaynak sırası ve etiketleme
+# Arama hacmi: tek kaynak, tek talep, tarih etiketi
 
-> Faz 2'de okunur. Sorgu ve sayfa tablolarında click/pozisyon değişimi verilirken
-> **o değişimin ne kadar hacme tekabül ettiği** de gösterilir. Hacim olmadan
-> "pozisyon 3 basamak iyileşti" cümlesi büyüklük taşımaz: 200 hacimli bir
-> kelimede de 40.000 hacimli bir kelimede de aynı görünür.
+> Faz 2'de okunur. Sorgu tablolarında click/pozisyon değişimi verilirken **o
+> değişimin ne kadar hacme tekabül ettiği** de gösterilir. Hacim olmadan
+> "pozisyon 3 basamak iyileşti" cümlesi büyüklük taşımaz: 200 hacimli kelimede
+> de 40.000 hacimli kelimede de aynı görünür.
 
-## Kaynak sırası
+## Üç kural
 
-Sırayla denenir, ilk veri dönen kullanılır. Her sorgu için hangi kaynaktan
-geldiği kaydedilir - sütun adına ve kaynak notuna yazılacak.
+### 1. Bir destede tek kaynak
 
-### 1. SEOmonitor (birinci tercih)
+Hacim **tek bir kaynaktan** alınır. Satır satır farklı kaynak karıştırılmaz:
+iki aracın hacim modeli farklıdır, aynı kolonda yan yana durunca tablo
+kıyaslanamaz hale gelir ve okuyucu hangi sayının neyle karşılaştırılabilir
+olduğunu bilemez.
 
-Marka için zaten takip edilen kelimelerin hacmi buradadır; ayrıca müşteriye
-gösterilen panelle aynı sayıyı verdiği için tutarlılık sağlar.
+Kaynak deste başında **bir kez** seçilir, sırayla denenir:
 
+| Sıra | Kaynak | Ne zaman seçilir |
+|---|---|---|
+| 1 | SEOmonitor | Marka için kampanya var ve gereken kelimelerin **tamamı** takip ediliyorsa. Müşteriye gösterilen panelle aynı sayıyı verir |
+| 2 | Ahrefs | SEOmonitor kapsamı yetmiyorsa (takip dışı kelimeler var) |
+| 3 | DataForSEO | İkisi de erişilemiyorsa |
+
+**Kapsam kontrolü seçimden önce yapılır:** gereken kelime listesi çıkarılır,
+SEOmonitor'de kaçının bulunduğuna bakılır. Bir kısmı eksikse SEOmonitor
+**tamamen** bırakılır ve bir sonraki kaynağa geçilir - yarısı bir yerden
+yarısı başka yerden alınmaz.
+
+Bir destede iki farklı hacim kaynağı yalnızca **iki ayrı bölüm** birbirinden
+tamamen bağımsızsa kullanılabilir (ör. marka hacmi slaytı ile rakip hacmi
+slaytı); o durumda her bölümün kaynak notu kendi kaynağını yazar ve iki bölüm
+arasında karşılaştırma yapılmaz.
+
+### 2. Tek seferde tek talep
+
+Hacim gereken kelimeler **toplanır, tek çağrıda istenir.** Sorgu başına ayrı
+çağrı yapılmaz.
+
+Toplama sırası:
+1. Hangi slaytlarda hacim kolonu olacak, belirlenir (C30, C47, C33, C04-C08).
+2. Bütün bu slaytların kelimeleri **tek listeye** yazılır, tekilleştirilir.
+3. Liste tek çağrıyla gönderilir; sonuç bir sözlüğe alınır ve tüm slaytlar
+   aynı sözlükten okur.
+
+```bash
+# DataForSEO seçildiyse: tek dosya, tek çağrı
+python3 scripts/hacim_dfs.py --kelime-dosyasi kelimeler.txt --json hacim.json
+```
+
+SEOmonitor'de `get_keyword_data` tek çağrıda 1.000 satıra kadar döner; Ahrefs
+`keywords-explorer-overview` çok satırlı `keywords` parametresi alır;
+DataForSEO tek istekte 700-1.000 kelime kabul eder. Üçünde de tek çağrı
+yeterlidir.
+
+Aynı kelime iki slaytta geçiyorsa **bir kez** istenir ve iki slaytta aynı
+değer görünür - aynı kelimenin iki slaytta farklı hacimle görünmesi geçmişte
+yaşanmış bir teslim hatasıdır.
+
+### 3. Hacmin dönemi yazılır
+
+Arama hacmi bir dönem değeridir; hangi döneme ait olduğu yazılmazsa okuyucu
+onu cari ayın değeri sanar. **Kolon adı dönemi taşır:**
+
+| Biçim | Ne zaman | Örnek kolon adı |
+|---|---|---|
+| Tek ay | Belirli bir ayın hacmi alındıysa | `Arama hacmi (2026 Temmuz)` |
+| Yıl ortalaması | Yılın aylık ortalaması alındıysa | `Arama hacmi (2026 ort. aylık)` |
+| Dönem ortalaması | Rapor dönemi ortalaması | `Arama hacmi (2026 Q2 ort. aylık)` |
+| 12 ay ortalaması | Araç varsayılanı 12 aylık ortalama döndürüyorsa | `Arama hacmi (son 12 ay ort.)` |
+
+Kaynak notu hem kaynağı hem dönemi tekrarlar:
+
+> Kaynak: Google Search Console (click, pozisyon) & SEOmonitor (arama hacmi,
+> 2026 Temmuz)
+
+**Hangi aracın ne döndürdüğü:**
+- **SEOmonitor** `search_volume`: son 12 ayın aylık ortalaması.
+  `include_monthly_searches` ile aylık seri de alınabilir - tek ay gerekiyorsa
+  bu açılır ve kolon adına o ay yazılır.
+- **Ahrefs** `volume`: son ayın değeri; `volume-history` ile aylık seri.
+- **DataForSEO** `search_volume`: son 12 ayın ortalaması;
+  `monthly_searches` dizisi aylık seriyi taşır. `date_from`/`date_to` verilerek
+  dönem daraltılabilir.
+
+Varsayılanı bilmeden "arama hacmi" yazmak, farklı dönemleri aynı kolonda
+göstermek demektir. Araç varsayılanı kullanılacaksa kolon adına ortalama
+olduğu yazılır.
+
+## Kaynak bazlı çağrı kalıpları
+
+### SEOmonitor
 ```
 mcp__*__seomonitor_get_keyword_data
-  campaign_id, start_date, end_date, order_by="search_volume"
-  → satırlarda search_volume
-mcp__*__seomonitor_find_keywords   # belirli sorguları aramak için
+  campaign_id, start_date, end_date, limit=1000, order_by="search_volume"
+  include_monthly_searches=true   # yalnizca tek ay veya seri gerekiyorsa
 ```
+Kapsam: yalnızca takip edilen kelimeler.
 
-**Kapsam sınırı:** yalnızca **takip edilen** kelimeler. Search Console'dan gelen
-hareket listesinde takip edilmeyen sorgular çıkar; onlar bir sonraki kaynağa
-düşer. Kaç sorgunun SEOmonitor'de bulunduğu dipnotta yazılır.
-
-`include_monthly_searches` yalnızca 13 aylık seri gerektiğinde açılır; tek
-dönem hacmi için gereksiz yük.
-
-### 2. Ahrefs (SEOmonitor'de bulunmayanlar)
-
+### Ahrefs
 ```
 mcp__*__keywords-explorer-overview
-  select="keyword,volume", keywords="<satır satır sorgular>", country="tr"
+  select="keyword,volume", keywords="<satır satır>", country="tr"
 ```
 
-Takip listesi dışındaki sorguları da kapsar. Değerler SEOmonitor'den farklı
-seviyede olabilir - bu yüzden **aynı tabloda iki kaynağın sayısı karıştırılmaz**;
-hangi satırın nereden geldiği sütun adında ayrışır (aşağıya bak).
-
-### 3. DataForSEO (ikisi de yoksa)
-
+### DataForSEO
 ```
-POST /v3/keywords_data/google_ads/search_volume/live
-  keywords[], location_code, language_code, search_partners=false
+scripts/hacim_dfs.py --kelime-dosyasi <dosya> [--ilk-tarih 2026-07-01 --son-tarih 2026-07-31]
 ```
-
-Yerel betik: `scripts/hacim_dfs.py` - MCP bağlı olmasa da REST üzerinden çalışır.
-
-**İki tuzağı var, ikisi de tabloya yansır:**
-- **Bant etkisi:** Google Ads hacmi basamaklı döndürür (2.900 / 3.600 / 4.400 …).
-  Ay bazında değişim yazılmaz, ısı haritası kullanılmaz.
-- **Yakın varyant birleşmesi:** Google Ads yazım varyantlarını tek keyword
-  sayar; "gameplus" ile "game plus" aynı seriyi döndürebilir. Toplama girecek
-  terimler önce karşılaştırılır, aynıysa biri elenir (bkz. tuzaklar 2.9c).
-
-## Etiketleme - zorunlu
-
-Hacim hangi kaynaktan geldiyse **görünür olmalı**. Üç kural:
-
-1. **Tek kaynak kullanıldıysa** sütun adı sade kalır, kaynak notuna eklenir:
-
-   | Sorgu | Click Tem'26 | Δ Click | Pozisyon | **Arama hacmi** |
-
-   `Kaynak: Google Search Console & SEOmonitor`
-
-2. **Birden fazla kaynak karıştıysa** sütun adı kaynağı taşır ve satır bazında
-   ayrışır:
-
-   | Sorgu | Δ Click | **Hacim (SEOmonitor)** | **Hacim (DfS)** |
-
-   Ya da tek sütun + kaynak kolonu:
-
-   | Sorgu | Δ Click | Hacim | **Hacim kaynağı** |
-
-   İkinci biçim uzun listelerde daha okunur; kısa tabloda birinci tercih edilir.
-
-3. **Kaynak notu her zaman hangi hacmin nereden geldiğini söyler:**
-
-   > Kaynak: Google Search Console (click, pozisyon) & SEOmonitor (takip edilen
-   > 41 sorgunun hacmi) & arama motoru veri kaynağı (kalan 12 sorgu)
-
-DataForSEO müşteri çıktısında araç adıyla anılmaz; "arama motoru veri kaynağı"
-ya da verinin geldiği yer olan "Google Ads Keyword Planner" yazılır
-(bkz. icerik-dili-rehberi Bölüm 12).
+İki tuzağı tabloya yansır:
+- **Bant etkisi:** değerler basamaklı döner (2.900 / 3.600 / 4.400 …). Ay
+  bazında değişim yazılmaz, ısı haritası kullanılmaz.
+- **Yakın varyant birleşmesi:** yazım varyantları tek keyword sayılabilir;
+  betik bunu tespit edip uyarır (bkz. tuzaklar 2.9c).
 
 ## Hacim bulunamayan satır
 
-`-` yazılır, sıfır yazılmaz. Dipnotta kaç satırda hacim bulunamadığı belirtilir.
-Tahmini bir değer üretilmez.
+`-` yazılır, sıfır yazılmaz, tahmin üretilmez. Dipnotta kaç satırda hacim
+bulunamadığı belirtilir. Kelime listesinin önemli bir bölümü boş dönüyorsa
+kaynak seçimi gözden geçirilir.
+
+## Nerede kullanılır, nerede kullanılmaz
+
+**Kullanılır:** sorgu bazlı tablolar (C30, C47, C33), marka ve kategori hacmi
+slaytları (C04-C08).
+
+**Kullanılmaz:** sayfa bazlı tablolar. Bir sayfa tek bir kelimeye karşılık
+gelmez; sayfa için hacim toplamak yanıltıcı olur.
 
 ## Insight'a nasıl bağlanır
 
-Hacim, değişimin büyüklüğünü çerçevelemek için kullanılır - kendi başına bir
-bulgu değildir:
+Hacim, değişimin büyüklüğünü çerçeveler - kendi başına bulgu değildir:
 
-> ➔ Pozisyonu en çok iyileşen sorgular {b:8.2K toplam aylık hacim} taşıyan
->   kümededir; iyileşmenin click karşılığı bu nedenle {g:+1.4K} seviyesindedir.
+> ➔ Pozisyonu en çok iyileşen sorgular {b:8.2K aylık hacim} taşıyan kümededir;
+>   iyileşmenin click karşılığı bu nedenle {g:+1.4K} seviyesindedir.
 
 > ➔ Click kaybının yoğunlaştığı sorgular {b:1.1K hacim} bandındadır; kaybın
 >   mutlak etkisi sınırlı kalmaktadır.

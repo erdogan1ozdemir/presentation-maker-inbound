@@ -535,10 +535,10 @@ yok, isim-fiil yapısı ("Cannibalization yaşayan sayfaların optimize edilmesi
 
 **C30 Top 10 artış / Top 10 düşüş query tablosu**
 Tek slaytta iki tablo yan yana (`grid: [50,50]`). Kolonlar:
-`Query | <Önceki> | <Dönem> | Δ Click | Δ % | Hacim`.
-Hacim kolonu SEOmonitor → Ahrefs → DataForSEO sırasıyla doldurulur ve kaynağı
-etiketlenir (bkz. `hacim-kaynagi-ve-fallback.md`); değişimin kaç hacme
-tekabül ettiği görünmezse tablo büyüklük bilgisi taşımaz.
+`Query | <Önceki> | <Dönem> | Δ Click | Δ % | Arama hacmi (<dönem>)`.
+Hacim tek kaynaktan alınır ve kolon adı dönemi taşır
+(bkz. `hacim-kaynagi-ve-fallback.md`); değişimin kaç hacme tekabül ettiği
+görünmezse tablo büyüklük bilgisi taşımaz.
 Üst satırda toplam: "Toplam click: 1.646 → 1.443 (Δ -203 | -%12.3)".
 **Kapsam şerhi zorunlu:** "Top 1364 query üzerinden, long-tail kapsam dışı".
 Altta kalın başlıklı tek paragraf yorum + `Sayfa Bazında MoM Top 5 Düşüş:` satırı
@@ -611,11 +611,14 @@ eşik (ör. "≥ 50 impression alan sorgular").
 
 **Sorgu tablolarında arama hacmi kolonu zorunludur.** "Pozisyon 3 basamak
 iyileşti" cümlesi hacim olmadan büyüklük taşımaz; 200 hacimli kelimede de
-40.000 hacimli kelimede de aynı görünür. Kolon şu sırayla doldurulur:
-SEOmonitor → Ahrefs → DataForSEO. Hangi satırın nereden geldiği sütun adında
-ya da ayrı bir kaynak kolonunda ayrışır, kaynak notu ikisini de yazar.
-Hacim bulunamayan satıra `-` yazılır, sıfır yazılmaz. Tam kural ve örnek
-tablolar: **`hacim-kaynagi-ve-fallback.md`**.
+40.000 hacimli kelimede de aynı görünür.
+
+Üç kural: **bir destede tek kaynak** (SEOmonitor → Ahrefs → DataForSEO
+sırasıyla seçilir, satır satır karıştırılmaz), **tek seferde tek talep**
+(bütün slaytların kelimeleri tek listede toplanıp tek çağrıyla istenir) ve
+**kolon adında dönem** (`Arama hacmi (2026 Temmuz)` ya da `Arama hacmi
+(2026 ort. aylık)`). Hacim bulunamayan satıra `-` yazılır, sıfır yazılmaz.
+Tam kural: **`hacim-kaynagi-ve-fallback.md`**.
 
 Sayfa tablolarında hacim kolonu **yer almaz** - bir sayfa tek bir kelimeye
 karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
