@@ -305,7 +305,7 @@ azalan = sorted([s for s in SORGU if s[2] < s[1]], key=lambda s: (s[2] - s[1]))[
 
 S.append({
     "type": "content",
-    "breadcrumb": ["SEARCH CONSOLE", "Sorgu Hareketleri"],
+    "breadcrumb": ["SEARCH CONSOLE", "Query Değişimleri"],
     "title": "Click Değişimi En Yüksek Sorgular",
     "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | segment ayrımlı",
     "source": "Google Search Console - sc-domain:gameplus.com.tr · Query kırılımı",
@@ -331,7 +331,7 @@ poz_iyi = sorted(SORGU, key=lambda s: -(s[3] - s[4]))[:7]
 poz_kotu = sorted(SORGU, key=lambda s: (s[3] - s[4]))[:7]
 S.append({
     "type": "content",
-    "breadcrumb": ["SEARCH CONSOLE", "Sıralama Hareketleri"],
+    "breadcrumb": ["SEARCH CONSOLE", "Sıralama Değişimleri"],
     "title": "Sıralaması En Çok Değişen Sorgular",
     "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | ortalama pozisyon",
     "source": "Google Search Console - sc-domain:gameplus.com.tr · Query kırılımı",
@@ -371,7 +371,7 @@ s_artan = sorted([s for s in SAYFA_H if s[2] > s[1]], key=lambda s: -(s[2] - s[1
 s_azalan = sorted([s for s in SAYFA_H if s[2] < s[1]], key=lambda s: (s[2] - s[1]))[:6]
 S.append({
     "type": "content",
-    "breadcrumb": ["SEARCH CONSOLE", "Sayfa Hareketleri"],
+    "breadcrumb": ["SEARCH CONSOLE", "Sayfa Değişimleri"],
     "title": "Click Değişimi En Yüksek Sayfalar",
     "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | click değişimine göre sıralı",
     "source": "Google Search Console - sc-domain:gameplus.com.tr · Page kırılımı",

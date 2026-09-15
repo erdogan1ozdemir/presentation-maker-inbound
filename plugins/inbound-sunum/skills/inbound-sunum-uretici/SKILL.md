@@ -59,6 +59,7 @@ kalan kalemler için yapılır.
 | Marka | Klasör | Not |
 |---|---|---|
 | Game+ / gameplus.com.tr | `reference/game-plus/` | 34 slayt, segment kırılımlı M1 varyantı. Brand/non-brand/GFN tanımı ve AI görünürlük bölümü markaya özgüdür |
+| Özdilekteyim / ozdilekteyim.com | `reference/ozdilekteyim/` | E-ticaret M1 varyantı. Marka hacmi "özdilek" ve "özdilekteyim" ayrı satır, sayfa grubu başına ayrı slayt, rakip visibility Google + AI Overview |
 
 Kullanıcı "aylık SEO sunumu hazırla" dediğinde hemen üretime girme. Aşağıdaki dört
 bloğu sor. Cevapları biliyorsan tekrar sorma; bir kısmı zaten söylenmişse eksik
@@ -437,3 +438,4 @@ etiketler ve dosya adı konvansiyonları müşteri destesine sızmaz.
 | `scripts/gsc_mcp.py` · `scripts/kur_gsc.sh` · `scripts/client_secrets_cikar.py` | Skill'in kendi Search Console MCP sunucusu (salt okunur, 6 araç), tek komutluk kurulumu ve mevcut token'dan client_secrets üretici - harici depo gerekmez |
 | `scripts/hacim_dfs.py` | Arama hacmi zincirinin DataForSEO halkası; yakın varyant birleşmesini de tespit eder |
 | `reference/game-plus/` | Game+ için onaylanmış format: üretici script, veri modülleri, 34 slaytlık `deck.json` ve markaya özgü kurallar |
+| `reference/ozdilekteyim/` | Özdilekteyim aylık deste kuralları: marka hacmi satırları, sayfa grubu slaytları, SEOmonitor rakip visibility, GA4 bayrağı |

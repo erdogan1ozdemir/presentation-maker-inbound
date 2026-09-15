@@ -1152,6 +1152,12 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     iki ayri y ekseni. Olcekleri farkli metrikleri tek grafikte okunur kilar.
     Pozisyon gibi kucuk degerin iyi oldugu seride invert:true - cizgi yukari
     ciktiginda iyilesme okunur, eksen etiketleri gercek degerleri gosterir.
+
+    Ucuncu metrik: axis:"own" seriye kendi olcegini verir, eksen etiketi
+    basilmaz. Iki eksene sigmayan ucuncu metrik (click bar + impression +
+    pozisyon gibi) bu yolla ayni grafige girer; okunabilmesi icin
+    labels:"above" ile deger etiketi basilmasi beklenir, basilmazsa uyari
+    uretilir.
     """
     cats = b.get("cats") or []
     series = b.get("series") or []
@@ -1205,10 +1211,14 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     # takilmaz. Bu yuzden once dogrulanir.
     for s_ in series:
         a = s_.get("axis", "left")
-        if a not in ("left", "right"):
+        if a not in ("left", "right", "own"):
             ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
-                     f"gecersiz axis degeri tasiyor: '{a}' - 'left' veya 'right' "
-                     f"olmali. Seri cizilmeyecek.")
+                     f"gecersiz axis degeri tasiyor: '{a}' - 'left', 'right' veya "
+                     f"'own' olmali. Seri cizilmeyecek.")
+        if a == "own" and s_.get("labels") != "above":
+            ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' kendi "
+                     f"olcegiyle (axis:'own') ciziliyor ama deger etiketi yok - "
+                     f"eksen etiketi basilmadigi icin labels:'above' verilmeli.")
         if not [v for v in (s_.get("data") or []) if v not in (None, "")]:
             ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
                      f"veri tasimiyor - grafik bos cizilecek.")
@@ -1226,6 +1236,17 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         if vals:
             lo, hi = _axis_scale(vals, inv)
             ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+    for j, s_ in enumerate(series):
+        if s_.get("axis") == "own":
+            vals = [float(v) for v in s_.get("data", []) if v is not None]
+            if vals:
+                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
+                                     fmt=s_.get("fmt", "auto"))
+
+    def eksen(j, s_):
+        a = s_.get("axis", "left")
+        return f"own{j}" if a == "own" else a
 
     if not ax:
         ctx.warn(f"GRAFIK S{idx}: 'combo' blogunda hicbir seri eksene baglanmadi - "
@@ -1243,7 +1264,9 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         hline(slide, px0, gy, pw, "line_soft" if k else "line", 0.75)
         if not b.get("axis_labels", True):
             continue
-        for side in ax:
+        for side in ("left", "right"):
+            if side not in ax:
+                continue
             a = ax[side]
             frac = k / TICKS
             v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
@@ -1256,10 +1279,10 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                         color="ink3", align="l", line_pct=1.0, wrap=False)
 
     # barlar
-    for s_ in series:
+    for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
             continue
-        side = s_.get("axis", "left")
+        side = eksen(j, s_)
         if side not in ax:
             continue
         bw = min(b.get("bar_w", 40), slot * 0.62)
@@ -1284,10 +1307,10 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                         wrap=False)
 
     # cizgiler
-    for s_ in series:
+    for j, s_ in enumerate(series):
         if s_.get("kind") != "line":
             continue
-        side = s_.get("axis", "left")
+        side = eksen(j, s_)
         if side not in ax:
             continue
         col = C.get(s_.get("color", "coral"), s_.get("color", "coral"))

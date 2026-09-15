@@ -25,8 +25,8 @@ Kapak · Akış
                       aylık click serisi · aylık impression serisi
                       brand ve GFN aylık arama hacmi
                       Temmuz karşılaştırması (click / impression / pozisyon)
-                      sorgu click hareketleri · sorgu pozisyon hareketleri
-                      sayfa click hareketleri
+                      Query değişimleri (click) · Sıralama değişimleri
+                      Sayfa değişimleri (click)
 03 SSR Geçişi Etkisi  simetrik pencere tablosu + haftalık grafik
 04 GA4 Trafik         toplam ve organik aylık seri · kanal tablosu
 05 İçerik Performansı /blog toplam+organik · yükselen yazılar

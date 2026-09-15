@@ -1087,7 +1087,7 @@
    "type": "content",
    "breadcrumb": [
     "SEARCH CONSOLE",
-    "Sorgu Hareketleri"
+    "Query Değişimleri"
    ],
    "title": "Click Değişimi En Yüksek Sorgular",
    "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | segment ayrımlı",
@@ -1248,7 +1248,7 @@
    "type": "content",
    "breadcrumb": [
     "SEARCH CONSOLE",
-    "Sıralama Hareketleri"
+    "Sıralama Değişimleri"
    ],
    "title": "Sıralaması En Çok Değişen Sorgular",
    "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | ortalama pozisyon",
@@ -1409,7 +1409,7 @@
    "type": "content",
    "breadcrumb": [
     "SEARCH CONSOLE",
-    "Sayfa Hareketleri"
+    "Sayfa Değişimleri"
    ],
    "title": "Click Değişimi En Yüksek Sayfalar",
    "subtitle": "Temmuz 2026 & Haziran 2026 | MoM | click değişimine göre sıralı",

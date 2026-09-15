@@ -104,7 +104,11 @@ INTERNAL = ["veri çekilemedi", "ölçülemiyor", "ölçülemedi", "erişemedim"
 BANNED_TERMS = {"ss.": "session", "pik": "peak", "atıf": "mention",
                 "makine okunur": "machine-readable", "üst fold": "above the fold",
                 "3th party": "3rd party", "GA360": "GA4",
-                "çapa metni": "anchor text", "market kümesi": "Market Cluster"}
+                "çapa metni": "anchor text", "market kümesi": "Market Cluster",
+                # bolum/breadcrumb adlari (slayt-katalogu C47)
+                "sorgu hareketleri": "Query Değişimleri",
+                "sayfa hareketleri": "Sayfa Değişimleri",
+                "sıralama hareketleri": "Sıralama Değişimleri"}
 
 PCT_OK = re.compile(r"[+\-]?%\d")               # dogru: %18, +%6.9, -%37
 PCT_BAD = re.compile(r"\d[\d.,]*\s*%")          # yanlis: 34.8%, 2,75%

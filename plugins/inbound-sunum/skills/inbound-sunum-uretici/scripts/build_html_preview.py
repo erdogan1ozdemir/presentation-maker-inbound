@@ -367,6 +367,18 @@ def h_combo(b):
         if vals:
             lo, hi = _axis_scale(vals, inv)
             ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+    # axis:"own" = kendi olcegi, eksen etiketi yok (bkz. inbound_deck.block_combo)
+    for j, s_ in enumerate(series):
+        if s_.get("axis") == "own":
+            vals = [float(v) for v in s_.get("data", []) if v is not None]
+            if vals:
+                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
+                                     fmt=s_.get("fmt", "auto"))
+
+    def eksen(j, s_):
+        a = s_.get("axis", "left")
+        return f"own{j}" if a == "own" else a
 
     def ypos(side, v):
         a = ax[side]
@@ -382,7 +394,9 @@ def h_combo(b):
         o.append(f'<div class="{cls}" style="bottom:{gy:.1f}px"></div>')
         if not b.get("axis_labels", True):
             continue
-        for side in ax:
+        for side in ("left", "right"):
+            if side not in ax:
+                continue
             a = ax[side]
             frac = k / TICKS
             v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
@@ -390,10 +404,10 @@ def h_combo(b):
             o.append(f'<div class="cb-tick" style="{pos};width:{gut-8}px;'
                      f'bottom:{gy-7:.1f}px">{esc(_fmt_val(v, a["fmt"]))}</div>')
 
-    for s_ in series:
+    for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
             continue
-        side = s_.get("axis", "left")
+        side = eksen(j, s_)
         if side not in ax:
             continue
         bw = min(b.get("bar_w", 40), slot * 0.62)
@@ -414,10 +428,10 @@ def h_combo(b):
                          f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{col}">'
                          f'{esc(txt)}</div>')
 
-    for s_ in series:
+    for j, s_ in enumerate(series):
         if s_.get("kind") != "line":
             continue
-        side = s_.get("axis", "left")
+        side = eksen(j, s_)
         if side not in ax:
             continue
         col = C.get(s_.get("color", "coral"), s_.get("color"))

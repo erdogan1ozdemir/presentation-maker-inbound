@@ -27,6 +27,15 @@ SEOmonitor'de kaçının bulunduğuna bakılır. Bir kısmı eksikse SEOmonitor
 **tamamen** bırakılır ve bir sonraki kaynağa geçilir - yarısı bir yerden
 yarısı başka yerden alınmaz.
 
+**Kategori (grup) toplam hacmi.** Rank tracker bölümündeki kategori visibility
+tablosu (C22) SEOmonitor grup toplamını kullanır; bu, aracın kendi kelime
+setine ait bir özelliktir ve kelime bazlı hacim kolonlarından bağımsız bir
+bölümdür. Kolon adı dönemi taşır (`Arama hacmi (2026 Ağustos)`), kaynak notu
+SEOmonitor yazar. Kelime bazlı hacim başka kaynaktan alındıysa iki kaynağın
+aynı Google Ads modeline dayandığı 2-3 ortak kelimede kontrol edilir
+(Özdilekteyim Ağustos 2026: "özdilek" 165.000 ve "özdilekteyim" 74.000 iki
+kaynakta da aynı) ve tutarsızlık varsa chat'te bildirilir.
+
 Bir destede iki farklı hacim kaynağı yalnızca **iki ayrı bölüm** birbirinden
 tamamen bağımsızsa kullanılabilir (ör. marka hacmi slaytı ile rakip hacmi
 slaytı); o durumda her bölümün kaynak notu kendi kaynağını yazar ve iki bölüm

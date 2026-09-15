@@ -267,12 +267,20 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | Alan | Açıklama |
 |---|---|
 | `kind` | `bar` veya `line` |
-| `axis` | `left` / `right` - her eksen kendi ölçeğini alır |
+| `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için) |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
 | `labels` | `inside` (barın içinde, beyaz) veya `above` (noktanın üstünde, seri renginde) |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
+
+**Üç metrik tek grafikte (`axis: "own"`).** İki eksene sığmayan üçüncü metrik
+(click bar + impression çizgisi + pozisyon çizgisi gibi) `axis: "own"` ile
+eklenir: seri kendi min-max ölçeğini alır, eksen etiketi basılmaz. Bu yüzden
+`own` seride `labels: "above"` zorunludur - değer okunamazsa üretici uyarı
+verir. Tipik kurulum: click bar `left`, impression çizgi `right`, pozisyon
+çizgi `own` + `invert: true` + `labels_text`. Grafiğin altında aynı üç
+metriğin tablosu verilir.
 
 **Pozisyon serisinde `invert: true` zorunludur** ve dipnotta "ters eksenli"
 olduğu yazılır - aksi halde okuyucu grafiği tersine yorumlar.

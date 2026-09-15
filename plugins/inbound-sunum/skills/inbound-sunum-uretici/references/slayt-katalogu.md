@@ -76,7 +76,7 @@ Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · Segment
   tanımları (C44)
 Ayraç 02 Google Search Console Metrikleri: aylık click serisi (C45) · aylık
   impression serisi (C45) · dönem karşılaştırması pozisyonlu (C46)
-  · sorgu hareketleri (C47) · sayfa hareketleri (C47)
+  · Query değişimleri (C47) · Sayfa değişimleri (C47)
 Ayraç 03 <Etki> Geçişi: simetrik pencere tablosu (C31) · haftalık grafik (C48)
 Ayraç 04 GA4 Trafik: toplam ve organik aylık seri (C09) · kanal kırılımı (C11)
 Ayraç 05 İçerik Performansı: blog toplam+organik (C50) · yükselen yazılar (C19)
@@ -85,6 +85,27 @@ Ayraç 06 Yapay Zeka Görünürlüğü: mention & citation (C51) · örnek promp
   (C52) · markadan nasıl bahsediliyor (C53) · AI kaynaklı trafik (C11)
 Ayraç 07 Yapılan ve Planlanan İşler (C26 · C26c)
 Ayraç 08 Değerlendirme (C43) · Teşekkürler
+```
+
+### M1 varyant - e-ticaret sayfa gruplu aylık (Özdilekteyim tipi)
+
+Marka ve kategori sorgularıyla birlikte URL yapısına göre sayfa gruplarının
+(mağaza, market, marka + kategori) ayrı izlendiği e-ticaret desteleri.
+Markaya özgü kurallar: `reference/ozdilekteyim/README.md`.
+
+```
+Kapak · Akış
+Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · segment ve sayfa
+  grubu tanımları (C44)
+Ayraç 02 Google Search Console Metrikleri: aylık click (C45) · aylık impression
+  (C45) · dönem karşılaştırması (C46) · marka arama hacmi ve brand click (C04d)
+  · brand query değişimleri (C47) · sayfa grubu başına bir slayt (C54 × N)
+  · Query değişimleri (C47) · Sayfa değişimleri (C47)
+Ayraç 03 GA4 Trafik (export gelince)
+Ayraç 04 Görünürlük ve Rakipler: rakip visibility Google + AI Overview (C20c)
+  · organik Share of Voice (C21) · kategori visibility + hacim (C22)
+Ayraç 05 Yapay Zeka Görünürlüğü (C51)
+Ayraç 06 Değerlendirme (C43) · Teşekkürler
 ```
 
 ### M2 - Çeyreklik, çok property (Turkcell tipi)
@@ -224,6 +245,18 @@ Notlar:
   eşleşmiyorsa fark dipnotta belirtilir (ungrouped ve çalışma grupları).
 - Insight üçlüsü: toplam hacim + YoY → hacmin yoğunlaştığı kategori → hacme
   karşılık visibility'nin düşük kaldığı kategori (açık alan) → brand payı.
+
+**C04d Marka arama hacmi ve brand click** (Search Console bölümünde)
+Talep-performans ayrıştırmasının marka tarafı. `combo`: her marka terimi
+**ayrı bar serisi** (toplam tek bar değil) sol eksende, brand click çizgisi
+sağ eksende; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
+ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
+terimin artıp diğerinin düştüğü durum toplamda kaybolur.
+Terim seti: yakın varyantlar (aynı seriyi dönen yazımlar) tek satırda; hangi
+yazımın satıra alınmadığı dipnotta yazılır. Markaya özgü yazım kararı
+`reference/<marka>/README.md`'de tutulur.
+Insight: her terimin dönem ucu değişimi + brand click yönü + CTR; hacim artarken
+click düşüyorsa talep kaynaklı olmadığı ihtiyatlı kiple yazılır.
 
 **C05 Marka + kategori arama hacmi** - C04 yapısı, `brand_category` seti.
 Insight YoY + MoM birlikte.
@@ -420,6 +453,41 @@ dipnotta beyan eder.
 görür. İki farklı taban kullanıldığında her tablonun dipnotunda hangi tabanın
 kullanıldığı açıkça yazılır.
 
+**C20c Rakip visibility: Google ve AI Overview birlikte** (SEOmonitor bölümü)
+SEOmonitor bölümü varsa **zorunludur**; Share of Voice tek başına rakip
+karşılaştırmasının yerini tutmaz (SoV tüm SERP domainleri arasındaki trafik
+payıdır, visibility ise takip edilen kelime setinde her domainin görünürlüğü).
+SEOmonitor panelindeki Rank Tracker → Competition görünümünün karşılığıdır.
+
+Tablo (col `full`): `Domain | Google Desktop | Δ | Google Mobile | Δ |
+AIO Mention | Δ | AIO Citation | Δ`. Kendi domain ilk satır ve
+`highlight_rows`; rakipler Google mobile değerine göre sıralı. Δ puan (`p`)
+olarak yazılır. Altında `insights`: kendi hareketimiz → Google tarafında
+ayrışan rakip → AI Overview tarafında öne çıkan rakip.
+
+Veri - hepsi `group_id: 0` (All keywords), `domain` parametresiyle domain başına:
+- Google: `get_daily_group_visibility` → `visibility.desktop/mobile` (yüzde).
+- AI Overview: `get_daily_group_visibility_ai_overview_mentions` ve
+  `..._citations` → `aio_mentions_visibility` / `aio_citations_visibility`
+  (0-1 oran, ×100). Panelin varsayılan cihazı mobil olduğu için AIO kolonları
+  **mobil** değerle verilir ve başlık/dipnotta cihaz yazılır.
+- Dönem: **ay başı ve ay sonu günü** (panelde `Aug 01 - Aug 31` seçimi). Değer
+  ay sonu, Δ = ay sonu − ay başı. Tek gün çağrıları (`start_date = end_date`)
+  yanıtı küçük tutar.
+- Domain seti: kampanyada tanımlı rakipler (`get_share_of_voice` →
+  `ai_overview_share_of_voice.domains` listesi ya da panel Competition listesi).
+
+Doğrulama (Özdilekteyim, Ağustos 2026): Google değerleri ve Δ'lar panelle
+birebir, AIO seviyeleri birebir örtüşmüştür. AIO mention Δ'ı bazı domainlerde
+panelden birkaç puan ayrışabilir (panel mention Δ'ında farklı bir karşılaştırma
+tabanı kullanıyor); AIO mention serisi günlük dalgalı olduğu için dipnotta
+"ay başı ve ay sonu ölçümleri" yazılır.
+
+Zorunlu dipnot: "Visibility, takip edilen <N> keyword'de domainin arama hacmine
+göre ağırlıklandırılmış sıralama görünürlüğüdür. AIO Mention: AI Overview
+yanıt metninde anılma; AIO Citation: AI Overview'da kaynak olarak link
+verilme. AI Overview kolonları mobil ölçümdür."
+
 **C21 Share of Clicks + AI Search SoV**
 İki grafik yan yana (`grid: [50,50]`).
 **Zorunlu dipnot:** "*AI Share of Voice takip edilen kelimelerin arama hacimlerine ve
@@ -432,8 +500,17 @@ ne zaman yayına alındığı. `AI Overview SoV` ve `AI Search SoV` **farklı me
 ikisi birden kullanılıyorsa ikisinin de tanımı dipnotta verilir.
 
 **C22 Kategori bazında visibility değişimi**
-Kategori × visibility Δ. Insight: artan kategoriler, sonra düşenler; ikisi de isimle
-ve yüzdeyle.
+Tablo: `Kategori | Keyword | Arama hacmi (<dönem>) | Visibility <önceki> |
+Visibility <cari> | Δ | Ort. poz. <önceki> | Ort. poz. <cari> | Δ`.
+**Keyword sayısının yanında kategorinin toplam arama hacmi zorunludur** -
+300 kelimelik bir kategori 2M hacim de taşıyabilir 200K de; görünürlük
+değişiminin büyüklüğü hacimle okunur. Satırlar hacme göre sıralanır.
+Veri: SEOmonitor `get_group_data` (klasör `group_ids`) →
+`search_data.monthly_searches` içinden rapor ayı (kolon adına ay yazılır,
+ör. `Arama hacmi (2026 Ağustos)`), `visibility.mobile.latest`,
+`average_rank.mobile.latest`. Insight: artan kategoriler, sonra düşenler; ikisi
+de isimle ve yüzdeyle; yüksek hacimli ama düşük görünürlüklü kategori açık
+alan olarak.
 
 **C23 Visibility'yi en çok etkileyen kelimeler**
 `Top Search Vol. Keywords` tablosu. Panel export'u görsel olarak konabilir ama
@@ -603,7 +680,11 @@ aynı ay) veya Δ kolonlu düz biçim. Pozisyon impression ağırlıklı ortalam
 aritmetik ortalama kullanılmaz. Pozisyon satırlarında ısı haritası
 `heat_invert_rows` ile ters çevrilir.
 
-**C47 Öne çıkan hareketler** (sorgu ve sayfa için ayrı slaytlar)
+**C47 Query ve sayfa değişimleri** (query ve sayfa için ayrı slaytlar)
+**Başlık üstü etiket (breadcrumb) adları sabittir:** `Query Değişimleri`,
+`Sayfa Değişimleri`, sıralama tablosu için `Sıralama Değişimleri`. "Sorgu
+hareketleri" / "Sayfa hareketleri" kullanılmaz; `qa_deck.py` bunları terim
+hatası olarak yakalar.
 Dört blok: `▲ Pozisyonu iyileşen` / `▼ Pozisyonu gerileyen` / `▲ Click artan` /
 `▼ Click azalan`. Her tabloda segment etiketi (Brand / Non-Brand / GFN) kolon
 olarak yer alır. Kapsam şerhi zorunlu: kaç sorgu/sayfa üzerinden bakıldığı ve
@@ -622,6 +703,21 @@ Tam kural: **`hacim-kaynagi-ve-fallback.md`**.
 
 Sayfa tablolarında hacim kolonu **yer almaz** - bir sayfa tek bir kelimeye
 karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
+
+**C54 Sayfa grubu performansı** (her grup için ayrı slayt)
+URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
+gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
+üç metriği birlikte taşır:
+- `combo` (col `full`): click bar (`left`), impression çizgi (`right`),
+  ortalama pozisyon çizgi (`axis: "own"`, `invert: true`, `labels: "above"`,
+  `labels_text` tek ondalıklı). 13 aylık seri.
+- Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
+  `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
+- `insights`: cari ay MoM ve YoY + serinin tepe/dip ayı + pozisyon yönü.
+Dipnot: grubun URL tanımı (regex birebir), gruplar arası kapsama ilişkisi
+(ör. "Mağaza grubu Marka + Kategori sayfalarını da kapsar"), yeni açılan
+grupta YoY yerine `yeni`, pozisyon çizgisinin ters eksenli ve kendi
+ölçeğinde olduğu.
 
 **C48 Haftalık geçiş grafiği** (SSR / migrasyon slaytının yanına)
 `combo`, ISO hafta bazında click bar + pozisyon çizgi; geçiş haftası renk
