@@ -93,65 +93,68 @@ sunum üretimi için gerekli; Search Console verisine erişim ondan bağımsızd
 
 ## Hangi kimlik yolu
 
-Üç yol desteklenir. **Ajans standardı: tek OAuth uygulamasının
-`client_secrets.json`'ı ekiple paylaşılır, herkes `seo.op@inbound.com.tr`
-hesabıyla kendi onayını verir.** Ekip Claude Code'u zaten bu hesapla
-kullandığı ve hesabın şifresi ekipte olduğu için `client_id` / `client_secret`
-paylaşmak yeni bir açıklık getirmez - bunlar bir kişiyi değil uygulamayı
-tanımlar ve hesap şifresinden daha dar bir bilgidir.
+**Ajans standardı: ekibin ortak Drive'ındaki `token.json` kullanılır.** Bu dosya
+`seo.op@inbound.com.tr` hesabının Search Console erişimidir; `client_id`,
+`client_secret` ve `refresh_token`'ı kendi içinde taşıdığı için tek başına
+yeterlidir. Google Cloud'a girilmez, tarayıcıdan onay verilmez.
 
-| | client_secrets paylaşımı (standart) | Paylaşılan token | Servis hesabı |
+| | Drive'daki token (standart) | client_secrets + kendi onayı | Servis hesabı |
 |---|---|---|---|
-| Herkes tüm domainleri görür | Evet - hepsi aynı hesapla giriş yapıyor | Evet | Yalnızca hesaba açılan property'ler |
-| Token dosyası | Her kişi kendi token'ını üretir | Tek dosya kopyalanır | Yok |
-| Dosya çakışması riski | **Yok** | Kişi başına kopyayla önlenir | Yok |
-| Kişi bazında iptal | Var (Google hesap izinlerinden) | Yok | Yok |
-| Kurulum adımı | Kişi bir kez tarayıcıdan onay verir | Dosyayı yerine koyar | Dosyayı yerine koyar |
+| Kişinin adımı | Dosyayı kopyala, tek komut | Tarayıcıdan bir kez onay | Dosyayı yerine koy |
+| Tüm domainlere erişim | Var | Var (seo.op@ ile girilirse) | Yalnızca hesaba açılanlar |
+| Kişi bazında iptal | Yok | Var | Yok |
+| Ne zaman | Varsayılan | Drive'a erişim yoksa | Merkezi, property bazlı yönetim gerekirse |
 
-### Yol A - Paylaşılan client_secrets, herkes kendi onayını verir (standart)
+### Yol A - Drive'daki token (standart)
 
-**Bir kez, tek kişi:**
+**Adım 1 - Dosyayı bul.** Ekibin ortak Drive'ında `token.json`.
 
-1. Google Cloud'da proje + **Desktop app** OAuth client oluşturulur, Search
-   Console API açılır (aşağıdaki "Google Cloud tarafı" adımları).
-2. **Consent screen → User type: Internal** seçilir (aşağıda adım adım).
-3. İndirilen `client_secrets.json` ekiple paylaşılır - kasadan ya da ekip
-   klasöründen. Bu dosya bir kişiyi temsil etmez; kimin verisi olduğu 5.
-   adımdaki girişle belirlenir.
-
-**Her kişi, kendi makinesinde bir kez:**
-
-4. Sunucu kurulur ve kaydedilir - tek komut:
+**Adım 2 - Kendi bilgisayarına kopyala.** Ana klasöre `gsc_token.json` adıyla:
 
 ```bash
-bash /skill/yolu/scripts/kur_gsc.sh --oauth /yol/client_secrets.json
+cp "/Drive/klasörünün/yolu/token.json" ~/gsc_token.json
 ```
 
-5. İlk çağrıda tarayıcı açılır. **`seo.op@inbound.com.tr` hesabıyla giriş
-   yapılır** ve izin verilir. Onay ekranında istenen tek kapsam "Search Console
-   verilerinizi görüntüleme" olmalı; başka bir kapsam görünüyorsa devam
-   edilmez.
+**Drive'daki dosyayı doğrudan gösterme.** Sunucu token'ı yaklaşık saatte bir
+yeniliyor ve dosyanın üzerine yazıyor. Drive yolu gösterilirse bu yazma işlemi
+herkese senkronlanmaya çalışır, "çakışan kopya" dosyaları oluşur ve hangisinin
+geçerli olduğu karışır. Yerel kopyada böyle bir sorun yok - aynı token'ın
+farklı bilgisayarlardan kullanılması Google tarafında sorun değil.
 
-6. Kişinin kendi token'ı yerel olarak oluşur (`gsc_token.json`), bir daha
-   sorulmaz. Kimse başkasının dosyasına yazmadığı için çakışma olmaz.
+**Adım 3 - Kur.**
 
-Herkes aynı hesapla giriş yaptığı için **o hesabın eriştiği bütün
-property'ler** tek seferde açılır; yeni bir marka eklendiğinde kimsenin bir
-şey yapması gerekmez.
+```bash
+bash ~/.claude/plugins/marketplaces/presentation-maker-inbound/plugins/inbound-sunum/skills/inbound-sunum-uretici/scripts/kur_gsc.sh ~/gsc_token.json
+```
 
-Aynı hesap + aynı uygulama için Google birden fazla token'a izin verir; 6-7
-kişilik bir ekipte sınıra yaklaşılmaz. Yıllar içinde çok sayıda yeniden onay
-birikirse en eski token'lar düşer - bu durumda ilgili kişi tekrar onay verir.
+Claude Code yeniden başlatılır, `claude mcp list` ile `gsc: ✔ Connected`
+görülür.
 
-### Yol B - Paylaşılan token
+**Güvenlik ağı:** yanlışlıkla Drive, iCloud, Dropbox ya da OneDrive yolu
+verilirse `kur_gsc.sh` bunu fark eder, dosyayı `~/gsc_token.json`'a kopyalar ve
+kaydı yerel kopyaya yapar. Drive'daki dosyaya dokunulmaz.
 
-Tarayıcı onayı hiç istenmesin deniyorsa: token bir kez üretilir, dosya ekiple
-paylaşılır, herkes `GSC_TOKEN_PATH` ile aynı içeriği gösterir. Dosya
-`client_id` ve `client_secret`'i de taşıdığı için tek başına yeterlidir.
+**Drive klasörünün erişimi:** token 100'ü aşkın müşteri property'sinin Search
+Console verisini okuyabiliyor. Klasör yalnızca iç ekiple paylaşılır; "bağlantıya
+sahip olan herkes" ayarında ya da bir müşteriyle paylaşılan klasörde durmaz.
 
-**Dosya kişi başına kopyalanır**, ağ sürücüsünden ortak kullanılmaz: token'ın
-ömrü kısadır, sunucu yenileyip aynı dosyanın üzerine yazar; birden fazla makine
-aynı dosyaya yazarsa dosya bozulup herkesin erişimi birden kesilebilir.
+### Yol B - client_secrets + kendi onayı
+
+Drive'a erişimi olmayan biri için. `client_secrets.json` Google Cloud'dan
+indirilir ya da mevcut bir token'dan üretilir:
+
+```bash
+python3 <skill-klasoru>/scripts/client_secrets_cikar.py /yol/token.json -o client_secrets.json
+```
+
+Ardından:
+
+```bash
+bash <skill-klasoru>/scripts/kur_gsc.sh --oauth /yol/client_secrets.json
+```
+
+İlk çağrıda tarayıcı açılır, `seo.op@inbound.com.tr` ile giriş yapılır, izin
+verilir. Kişinin kendi token'ı yerel olarak oluşur.
 
 ### Yol C - Servis hesabı
 

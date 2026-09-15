@@ -61,8 +61,25 @@ if [ "${1:-}" = "--oauth" ]; then
   echo
   echo "→ Kaydedildi. İlk çağrıda tarayıcı açılıp onay isteyecek."
 elif [ -n "${1:-}" ]; then
-  [ -f "$1" ] || { echo "HATA: token dosyasi bulunamadi: $1"; exit 1; }
-  eval "$KOMUT_TABAN -e GSC_TOKEN_PATH=$1$SON"
+  TOKEN="$1"
+  [ -f "$TOKEN" ] || { echo "HATA: token dosyasi bulunamadi: $TOKEN"; exit 1; }
+  # Senkronlanan klasor korumasi: token Drive/iCloud/Dropbox/OneDrive'daysa
+  # sunucu yenileme sirasinda dosyanin uzerine yazar, senkron bunu herkese
+  # yaymaya calisir ve "cakisan kopya" dosyalari olusur. Dosya once yerel
+  # diske alinir, kayit yerel kopyaya yapilir.
+  case "$TOKEN" in
+    *"/Library/CloudStorage/"*|*"/Google Drive/"*|*"GoogleDrive"*|\
+    *"/Mobile Documents/"*|*"/Dropbox/"*|*"/OneDrive"*)
+      YEREL="$HOME/gsc_token.json"
+      cp "$TOKEN" "$YEREL"
+      chmod 600 "$YEREL"
+      echo "→ Token senkronlanan bir klasörde duruyordu; yerel kopyaya alındı:"
+      echo "    $YEREL"
+      echo "  Sunucu bu kopyayı kullanacak, Drive'daki dosyaya dokunulmayacak."
+      TOKEN="$YEREL"
+      ;;
+  esac
+  eval "$KOMUT_TABAN -e GSC_TOKEN_PATH=$TOKEN$SON"
   echo
   echo "→ Kaydedildi. Tarayıcı onayı istenmeyecek."
 else

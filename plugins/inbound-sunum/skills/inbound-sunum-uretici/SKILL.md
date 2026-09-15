@@ -174,7 +174,7 @@ otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
 
 > Search Console'a canlı erişim kurulu değil. İki yol var:
 >
-> **1. Tek seferlik erişim kurulumu (önerilen)** - yaklaşık 15 dakika sürüyor,
+> **1. Tek seferlik erişim kurulumu (önerilen)** - yaklaşık 5 dakika sürüyor,
 > bir kez yapılınca bütün sunumlarda veri doğrudan çekiliyor, bir daha export
 > göndermenize gerek kalmıyor. Erişim **yalnızca okuma** iznidir: token site
 > ekleyemez, sitemap gönderemez, ayar değiştiremez.
@@ -185,15 +185,43 @@ otomatik gelir. Kullanıcıya iki seçeneği şöyle sun:
 >
 > Hangisiyle ilerleyelim?
 
-Kurulum seçilirse adımları **`references/gsc-erisim-kurulum.md`** dosyasından
-sırayla anlat; kullanıcıyı adım adım yürüt, hepsini bir kerede yığma. Sunucu
-skill'in içindedir (`scripts/gsc_mcp.py`) - harici bir depo klonlanmaz. Ajans
-standardı: tek OAuth uygulamasının `client_secrets.json`'ı ekiple paylaşılır,
-herkes `seo.op@inbound.com.tr` hesabıyla kendi onayını verir ve kendi token'ını
-üretir - `bash scripts/kur_gsc.sh --oauth /yol/client_secrets.json`. Kapsam
-salt-okunurdur ve sunucu bunu ayrıca denetler. Kurulum
-bittiğinde `claude mcp list` ile doğrulat ve property listesini çekerek markanın
-property'sinin göründüğünü teyit et.
+**Kurulum seçilirse kullanıcıyı şu üç adımla yürüt - hepsini bir kerede yığma,
+adım adım ilerle:**
+
+> **Adım 1 - Token dosyasını bul.** Ekibin ortak Drive'ında `token.json` adlı
+> bir dosya var. Bu dosya `seo.op@inbound.com.tr` hesabının Search Console
+> erişimidir; Google Cloud'a girmeye ya da onay vermeye gerek yok.
+>
+> **Adım 2 - Kendi bilgisayarına kopyala.** Dosyayı Drive'dan indirip ana
+> klasörüne `gsc_token.json` adıyla kaydet. **Drive'daki dosyayı doğrudan
+> gösterme:** sunucu token'ı yenilerken dosyanın üzerine yazıyor, Drive bunu
+> herkese senkronlamaya çalışınca dosya bozulabiliyor.
+>
+> **Adım 3 - Kur.** Terminalde:
+> ```bash
+> bash <skill-klasoru>/scripts/kur_gsc.sh ~/gsc_token.json
+> ```
+> Betik bağımlılıkları kurar, sunucuyu kaydeder. Sonra Claude Code'u yeniden
+> başlat.
+
+`<skill-klasoru>` yerine gerçek yolu yaz - marketplace'ten kurulduysa
+`~/.claude/plugins/marketplaces/presentation-maker-inbound/plugins/inbound-sunum/skills/inbound-sunum-uretici`.
+Sürüm numaralı önbellek yolunu (`.../plugins/cache/.../1.x.x/...`) verme; ilk
+güncellemede kırılır.
+
+Kullanıcı yanlışlıkla Drive yolunu verirse `kur_gsc.sh` bunu fark eder, dosyayı
+`~/gsc_token.json`'a kopyalar ve kaydı yerel kopyaya yapar - yine de 2. adımı
+söylemeyi atlama.
+
+Kurulum bittiğinde yeniden başlatma sonrası `claude mcp list` ile doğrulat
+(`gsc: ✔ Connected`) ve property listesini çekerek markanın property'sinin
+göründüğünü teyit et. Sunucu skill'in içindedir (`scripts/gsc_mcp.py`), harici
+depo klonlanmaz; kapsam salt okunurdur ve sunucu bunu token dosyasından ayrıca
+denetler.
+
+Token Drive'da bulunamıyorsa ya da kişinin Drive erişimi yoksa alternatif
+yollar (kişisel OAuth, `client_secrets.json`) `references/gsc-erisim-kurulum.md`
+dosyasındadır.
 
 Elle export seçilirse `references/veri-brief-ve-export.md` talimatlarına geç ve
 segment ölçümündeki kısıtı destenin ilgili dipnotuna yazacağını söyle.
