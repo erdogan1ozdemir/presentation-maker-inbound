@@ -247,9 +247,10 @@ Notlar:
   karşılık visibility'nin düşük kaldığı kategori (açık alan) → brand payı.
 
 **C04d Marka arama hacmi ve brand click** (Search Console bölümünde)
-Talep-performans ayrıştırmasının marka tarafı. `combo`: her marka terimi
-**ayrı bar serisi** (toplam tek bar değil) sol eksende, brand click çizgisi
-sağ eksende; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
+Talep-performans ayrıştırmasının marka tarafı. `combo`: brand click bar
+sol eksende, her marka terimi **ayrı çizgi serisi** (toplam tek seri değil)
+sağ eksende - birden fazla bar serisi aynı noktada üst üste çizildiği için
+terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
 terimin artıp diğerinin düştüğü durum toplamda kaybolur.
 Terim seti: yakın varyantlar (aynı seriyi dönen yazımlar) tek satırda; hangi
@@ -708,9 +709,12 @@ karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
 URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
 gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 üç metriği birlikte taşır:
-- `combo` (col `full`): click bar (`left`), impression çizgi (`right`),
-  ortalama pozisyon çizgi (`axis: "own"`, `invert: true`, `labels: "above"`,
-  `labels_text` tek ondalıklı). 13 aylık seri.
+- `combo` (col `full`): click bar (`left`, `pad: 1.8`), impression çizgi
+  (`right`, `pad: 1.8`), ortalama pozisyon çizgi (`axis: "own"`,
+  `band: [0.56, 0.80]`, `invert: true`, `labels: "above"`, `labels_text` tek
+  ondalıklı). `pad` bar ve impression'ı grafiğin alt yarısında tutar, `band`
+  pozisyon çizgisini üstte ayrı bir şeride alır; böylece değer etiketleri
+  barlarla ve legend'la çakışmaz. 13 aylık seri.
 - Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
 - `insights`: cari ay MoM ve YoY + serinin tepe/dip ayı + pozisyon yönü.

@@ -1,0 +1,2830 @@
+{
+ "meta": {
+  "brand": "Özdilekteyim",
+  "period": "Ağustos 2026"
+ },
+ "slides": [
+  {
+   "type": "cover",
+   "title": "Özdilekteyim SEO Değerlendirme",
+   "subtitle": "Ağustos 2026"
+  },
+  {
+   "type": "agenda",
+   "kicker": "Ağustos 2026",
+   "title_lines": [
+    "SUNUM",
+    "AKIŞI"
+   ],
+   "items": [
+    {
+     "no": "01",
+     "label": "Genel Görünüm"
+    },
+    {
+     "no": "02",
+     "label": "Google Search Console Metrikleri"
+    },
+    {
+     "no": "03",
+     "label": "Görünürlük ve Rakipler"
+    },
+    {
+     "no": "04",
+     "label": "Yapay Zeka Görünürlüğü"
+    },
+    {
+     "no": "05",
+     "label": "Değerlendirme"
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "01",
+   "title": "Genel Görünüm"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GENEL GÖRÜNÜM",
+    "Yönetici Özeti"
+   ],
+   "title": "Aylık Toparlanma, Yıllık Bazda Marka Sorgularında Daralma",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 (MoM) & Ağustos 2025 (YoY) | Search Console tüm cihazlar",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "kpi",
+     "col": "full",
+     "cols": 4,
+     "h": 112,
+     "cards": [
+      {
+       "value": "167.9K",
+       "label": "Organik click",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%2.6"
+        },
+        {
+         "label": "YoY",
+         "value": "-%30.9"
+        }
+       ]
+      },
+      {
+       "value": "4.58M",
+       "label": "Impression",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%1.0"
+        },
+        {
+         "label": "YoY",
+         "value": "-%45.9"
+        }
+       ]
+      },
+      {
+       "value": "63.1K",
+       "label": "Brand click",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%7.2"
+        },
+        {
+         "label": "YoY",
+         "value": "-%45.0"
+        }
+       ],
+       "accent": "coral"
+      },
+      {
+       "value": "104.8K",
+       "label": "Non-Brand click",
+       "deltas": [
+        {
+         "label": "MoM",
+         "value": "+%0.0"
+        },
+        {
+         "label": "YoY",
+         "value": "-%18.3"
+        }
+       ],
+       "accent": "coral"
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 14,
+     "font_pt": 10.5,
+     "items": [
+      "Organik click Ağustos'ta {b:167.9K} ile aylık bazda {g:+%2.6} artmıştır; artışın kaynağı {c:brand} sorgularıdır ({g:+%7.2}), non-brand click yatay seyretmiştir.",
+      "Yıllık bazda toplam click {r:-%30.9} geridedir. Kaybın {b:%69}'i brand sorgularından gelmektedir: brand click {r:-%45.0}, non-brand click {r:-%18.3}.",
+      "Aynı dönemde \"özdilek\" arama hacmi {b:165.0K → 165.0K} ile yatay kalmış, \"özdilekteyim\" {g:49.5K → 74.0K} artmıştır; brand sorgularında ortalama pozisyon {b:3.0 → 2.8} ile korunmuştur."
+     ]
+    },
+    {
+     "type": "note",
+     "col": "full",
+     "mt": 14,
+     "label": "KRİTİK TESPİT",
+     "text": "Brand sorgularında talep ve sıralama korunurken CTR %25.8 seviyesinden %16.1 seviyesine gerilemiştir. Yıllık click kaybı sıralamadan değil, marka aramalarında organik sonuca düşen tıklama payından kaynaklanmaktadır; ücretli arama ve sonuç sayfası yerleşimiyle birlikte değerlendirilmesi önerilir."
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GENEL GÖRÜNÜM",
+    "Yöntem"
+   ],
+   "title": "Segment ve Sayfa Grubu Tanımları",
+   "subtitle": "Sorgu segmentleri ve sayfa grupları tüm destede aynı tanımla kullanılmaktadır",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    100
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "items": [
+      {
+       "title": "Brand",
+       "sub": "doğrudan ölçülür",
+       "lines": [
+        "Query içinde şu ifadeler geçen sorgular:",
+        "\"özdilek\" · \"ozdilek\"",
+        "\"özdilekteyim\" ve marka + ürün sorguları bu kümeye dahildir."
+       ]
+      },
+      {
+       "title": "Non-Brand",
+       "sub": "toplamdan çıkarılır",
+       "lines": [
+        "Toplam eksi brand olarak hesaplanır.",
+        "Query filtresi uygulandığında anonim sorgular sonuç kümesinden düştüğü için bu hacim non-brand satırında yer alır.",
+        "Pozisyon değeri marka ifadeleri dışlanarak ayrıca ölçülür."
+       ]
+      },
+      {
+       "title": "Sayfa grupları",
+       "sub": "URL yapısına göre",
+       "lines": [
+        "Mağaza: /magaza/ altındaki kategori ve ürün sayfaları.",
+        "Market: /market altındaki sayfalar.",
+        "Marka + Kategori: -cp2 ile biten, marka ve kategoriyi birlikte hedefleyen sayfalar."
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 16,
+     "font_pt": 11,
+     "items": [
+      "Brand ve Non-Brand birbirini tamamlar, toplamları toplam click'i verir. Sayfa grupları sorgu segmentlerinden bağımsızdır; bir sayfa grubu hem brand hem non-brand trafik alabilir.",
+      "Marka + Kategori sayfaları Eylül 2025'ten itibaren yayına alındığı için bu grupta yıllık karşılaştırma yapılmamaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "02",
+   "title": "Google Search Console Metrikleri"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Aylık Seri"
+   ],
+   "title": "Brand ve Non-Brand Aylık Click",
+   "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Toplam satırı Brand ile Non-Brand'in toplamıdır.",
+    "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 158,
+     "bar_w": 24,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Toplam",
+       "data": [
+        242967,
+        214986,
+        259092,
+        276027,
+        265926,
+        214352,
+        168970,
+        196058,
+        211737,
+        179675,
+        172420,
+        163702,
+        167926
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Non-Brand",
+       "data": [
+        128211,
+        137907,
+        168069,
+        173840,
+        165300,
+        130735,
+        104930,
+        119136,
+        113389,
+        110949,
+        111347,
+        104797,
+        104801
+       ],
+       "color": "teal",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Brand",
+       "data": [
+        114756,
+        77079,
+        91023,
+        102187,
+        100626,
+        83617,
+        64040,
+        76922,
+        98348,
+        68726,
+        61073,
+        58905,
+        63125
+       ],
+       "color": "coral",
+       "axis": "left"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.1,
+     "heat": true,
+     "head": [
+      "Segment",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "114.8K",
+       "77.1K",
+       "91.0K",
+       "102.2K",
+       "100.6K",
+       "83.6K",
+       "64.0K",
+       "76.9K",
+       "98.3K",
+       "68.7K",
+       "61.1K",
+       "58.9K",
+       "63.1K"
+      ],
+      [
+       "Non-Brand",
+       "128.2K",
+       "137.9K",
+       "168.1K",
+       "173.8K",
+       "165.3K",
+       "130.7K",
+       "104.9K",
+       "119.1K",
+       "113.4K",
+       "110.9K",
+       "111.3K",
+       "104.8K",
+       "104.8K"
+      ],
+      [
+       "Toplam",
+       "243.0K",
+       "215.0K",
+       "259.1K",
+       "276.0K",
+       "265.9K",
+       "214.4K",
+       "169.0K",
+       "196.1K",
+       "211.7K",
+       "179.7K",
+       "172.4K",
+       "163.7K",
+       "167.9K"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam click {b:Kas'25} döneminde {b:276.0K} ile serinin en yüksek seviyesine ulaşmış, Şubat 2026'dan itibaren {b:163-212K} bandında seyretmiştir. Ağustos'ta {b:167.9K} ile Temmuz'a göre {g:+%2.6} toparlanmıştır; Nisan'daki brand artışı dışında iki segment benzer eğilim göstermektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Aylık Seri"
+   ],
+   "title": "Brand ve Non-Brand Aylık Impression",
+   "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Brand ölçeği Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra derin sıralardaki impression'lar Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.",
+    "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 158,
+     "bar_w": 24,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Toplam",
+       "data": [
+        8466199,
+        8057644,
+        7867864,
+        8705430,
+        7783493,
+        6422329,
+        5490787,
+        5809315,
+        4589152,
+        4726203,
+        5128193,
+        4533234,
+        4578774
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Non-Brand",
+       "data": [
+        8021587,
+        7610897,
+        7383364,
+        8143503,
+        7203815,
+        5877230,
+        5068166,
+        5335993,
+        4168317,
+        4283228,
+        4732032,
+        4141733,
+        4187070
+       ],
+       "color": "teal",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "Brand",
+       "data": [
+        444612,
+        446747,
+        484500,
+        561927,
+        579678,
+        545099,
+        422621,
+        473322,
+        420835,
+        442975,
+        396161,
+        391501,
+        391704
+       ],
+       "color": "coral",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.1,
+     "heat": true,
+     "head": [
+      "Segment",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "444.6K",
+       "446.7K",
+       "484.5K",
+       "561.9K",
+       "579.7K",
+       "545.1K",
+       "422.6K",
+       "473.3K",
+       "420.8K",
+       "443.0K",
+       "396.2K",
+       "391.5K",
+       "391.7K"
+      ],
+      [
+       "Non-Brand",
+       "8.02M",
+       "7.61M",
+       "7.38M",
+       "8.14M",
+       "7.20M",
+       "5.88M",
+       "5.07M",
+       "5.34M",
+       "4.17M",
+       "4.28M",
+       "4.73M",
+       "4.14M",
+       "4.19M"
+      ],
+      [
+       "Toplam",
+       "8.47M",
+       "8.06M",
+       "7.87M",
+       "8.71M",
+       "7.78M",
+       "6.42M",
+       "5.49M",
+       "5.81M",
+       "4.59M",
+       "4.73M",
+       "5.13M",
+       "4.53M",
+       "4.58M"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Toplam impression {r:8.47M → 4.58M} ile yıllık {r:-%45.9} gerilemiştir; düşüşün tamamına yakını non-brand tarafındadır. Brand impression {b:444.6K → 391.7K} ile görece dar bir aralıkta kalmıştır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Dönem Karşılaştırması"
+   ],
+   "title": "Brand ve Non-Brand Ağustos Karşılaştırması",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 (MoM) & Ağustos 2025 (YoY)",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Pozisyonda pozitif değer iyileşmedir; CTR değişimi puan (p) olarak verilmiştir. Non-Brand pozisyonu, marka ifadelerinin regex ile dışlandığı ayrı bir ölçümden alınmıştır. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra derin sıralardaki impression'lar Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.26,
+     "head": [
+      "Click",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "114.8K",
+       "58.9K",
+       "63.1K",
+       "+%7.2",
+       "-%45.0"
+      ],
+      [
+       "Non-Brand",
+       "128.2K",
+       "104.8K",
+       "104.8K",
+       "+%0.0",
+       "-%18.3"
+      ],
+      [
+       "Toplam",
+       "243.0K",
+       "163.7K",
+       "167.9K",
+       "+%2.6",
+       "-%30.9"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.26,
+     "head": [
+      "Impression",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "444.6K",
+       "391.5K",
+       "391.7K",
+       "+%0.1",
+       "-%11.9"
+      ],
+      [
+       "Non-Brand",
+       "8.02M",
+       "4.14M",
+       "4.19M",
+       "+%1.1",
+       "-%47.8"
+      ],
+      [
+       "Toplam",
+       "8.47M",
+       "4.53M",
+       "4.58M",
+       "+%1.0",
+       "-%45.9"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 0,
+     "mt": 8,
+     "first_col_max": 0.26,
+     "head": [
+      "CTR",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "%25.8",
+       "%15.0",
+       "%16.1",
+       "+1.1p",
+       "-9.7p"
+      ],
+      [
+       "Non-Brand",
+       "%1.6",
+       "%2.5",
+       "%2.5",
+       "0.0p",
+       "+0.9p"
+      ],
+      [
+       "Toplam",
+       "%2.9",
+       "%3.6",
+       "%3.7",
+       "+0.1p",
+       "+0.8p"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "mt": 8,
+     "first_col_max": 0.26,
+     "head": [
+      "Ort. pozisyon",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM",
+      "YoY"
+     ],
+     "rows": [
+      [
+       "Brand",
+       "3.0",
+       "2.9",
+       "2.8",
+       "+0.1",
+       "+0.2"
+      ],
+      [
+       "Non-Brand",
+       "14.9",
+       "10.4",
+       "11.0",
+       "-0.5",
+       "+3.9"
+      ],
+      [
+       "Toplam",
+       "16.5",
+       "8.9",
+       "9.3",
+       "-0.4",
+       "+7.1"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 8,
+     "font_pt": 10.5,
+     "items": [
+      "Brand CTR yıllık bazda {r:%25.8 → %16.1} gerilerken pozisyon {g:3.0 → 2.8} ile korunmuştur. Non-Brand tarafında CTR {g:%1.6 → %2.5} yükselmiş, click kaybı brand'e göre sınırlı kalmıştır ({r:-%18.3})."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Marka Talebi"
+   ],
+   "title": "Marka Arama Hacmi ve Brand Click",
+   "subtitle": "Ağu 2025 - Ağu 2026 | Türkiye | marka terimleri ayrı satırlarda, organik click ile yan yana",
+   "source": "Google Ads arama hacmi & Google Search Console",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 116,
+     "bar_w": 26,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Brand click",
+       "data": [
+        114756,
+        77079,
+        91023,
+        102187,
+        100626,
+        83617,
+        64040,
+        76922,
+        98348,
+        68726,
+        61073,
+        58905,
+        63125
+       ],
+       "color": "gray_bar",
+       "axis": "left"
+      },
+      {
+       "kind": "line",
+       "name": "\"özdilek\" arama hacmi",
+       "data": [
+        165000,
+        165000,
+        165000,
+        201000,
+        201000,
+        201000,
+        165000,
+        165000,
+        165000,
+        165000,
+        135000,
+        165000,
+        165000
+       ],
+       "color": "teal",
+       "axis": "right"
+      },
+      {
+       "kind": "line",
+       "name": "\"özdilekteyim\" arama hacmi",
+       "data": [
+        49500,
+        60500,
+        74000,
+        90500,
+        90500,
+        74000,
+        60500,
+        74000,
+        60500,
+        74000,
+        74000,
+        60500,
+        74000
+       ],
+       "color": "coral",
+       "axis": "right"
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 10,
+     "first_col_max": 0.15,
+     "head": [
+      "Metrik",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "özdilek hacmi",
+       "165.0K",
+       "165.0K",
+       "165.0K",
+       "201.0K",
+       "201.0K",
+       "201.0K",
+       "165.0K",
+       "165.0K",
+       "165.0K",
+       "165.0K",
+       "135.0K",
+       "165.0K",
+       "165.0K"
+      ],
+      [
+       "özdilekteyim hacmi",
+       "49.5K",
+       "60.5K",
+       "74.0K",
+       "90.5K",
+       "90.5K",
+       "74.0K",
+       "60.5K",
+       "74.0K",
+       "60.5K",
+       "74.0K",
+       "74.0K",
+       "60.5K",
+       "74.0K"
+      ],
+      [
+       "Brand click",
+       "114.8K",
+       "77.1K",
+       "91.0K",
+       "102.2K",
+       "100.6K",
+       "83.6K",
+       "64.0K",
+       "76.9K",
+       "98.3K",
+       "68.7K",
+       "61.1K",
+       "58.9K",
+       "63.1K"
+      ],
+      [
+       "Brand CTR",
+       "%25.8",
+       "%17.3",
+       "%18.8",
+       "%18.2",
+       "%17.4",
+       "%15.3",
+       "%15.2",
+       "%16.3",
+       "%23.4",
+       "%15.5",
+       "%15.4",
+       "%15.0",
+       "%16.1"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "\"özdilek\" hacmi {b:165.0K → 165.0K} ile yatay, \"özdilekteyim\" hacmi {g:49.5K → 74.0K} ({g:+%49.5}) ile artmışken brand click {r:114.8K → 63.1K} ({r:-%45.0}) gerilemiştir. İki marka teriminde de talebin korunması, brand click düşüşünün talep kaynaklı olmadığına işaret etmektedir.",
+      "Brand CTR Eylül 2025'ten itibaren {b:%15-19} bandına yerleşmiştir; Ağustos 2025'teki {b:%25.8} seviyesine Nisan 2026 dışında dönülmemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Query Değişimleri"
+   ],
+   "title": "Brand Sorgularında Yıllık Click Değişimi",
+   "subtitle": "Ağustos 2026 & Ağustos 2025 | YoY | click değişimine göre sıralı",
+   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı & Google Ads arama hacmi",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Arama hacmi Ağustos 2026 aylık değeridir. ASCII yazımlarda (\"ozdilek\", \"ozdilekteyim\") hacim Türkçe karakterli yazımla birlikte değerlendirildiği için ayrıca verilmemiştir. Query tablosu Search Console'un ilk 5.000 sorgusundan oluşturulmuştur."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.4,
+     "head": [
+      "Click azalan",
+      "Hacim (Ağu 2026)",
+      "Ağu 25",
+      "Ağu 26",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "özdilek",
+       "165.0K",
+       "43.826",
+       "16.990",
+       "-26.836"
+      ],
+      [
+       "özdilekteyim",
+       "74.0K",
+       "22.956",
+       "12.565",
+       "-10.391"
+      ],
+      [
+       "ozdilek",
+       "-",
+       "3.618",
+       "1.290",
+       "-2.328"
+      ],
+      [
+       "ozdilekteyim",
+       "-",
+       "1.116",
+       "387",
+       "-729"
+      ],
+      [
+       "özdilek market",
+       "5.4K",
+       "1.354",
+       "858",
+       "-496"
+      ],
+      [
+       "özdilek bayan pijama takımları",
+       "390",
+       "502",
+       "113",
+       "-389"
+      ],
+      [
+       "özdilek yatak örtüsü",
+       "2.4K",
+       "626",
+       "317",
+       "-309"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.4,
+     "head": [
+      "Click artan",
+      "Hacim (Ağu 2026)",
+      "Ağu 25",
+      "Ağu 26",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "özdilek bornoz",
+       "6.6K",
+       "1.232",
+       "1.646",
+       "+414"
+      ],
+      [
+       "özdilek avm",
+       "90.5K",
+       "1.194",
+       "1.504",
+       "+310"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "5.4K",
+       "1.239",
+       "1.501",
+       "+262"
+      ],
+      [
+       "özdilek bornoz takımı",
+       "6.6K",
+       "1.118",
+       "1.380",
+       "+262"
+      ],
+      [
+       "özdilekteyim sipariş takip",
+       "480",
+       "89",
+       "202",
+       "+113"
+      ],
+      [
+       "özdilek pike takımı çift kişilik",
+       "1.6K",
+       "119",
+       "225",
+       "+106"
+      ],
+      [
+       "özdilek izmir",
+       "3.6K",
+       "165",
+       "239",
+       "+74"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Düşüş kısa marka sorgularında toplanmaktadır: {c:\"özdilek\"} {r:-26.836}, {c:\"özdilekteyim\"} {r:-10.391} click. Bu sorguların ağırlıkla anasayfaya indiği görülmektedir; anasayfa click'i aynı dönemde {r:74.216 → 34.409} gerilemiştir.",
+      "Marka + ürün sorguları ise artış göstermektedir ({c:özdilek bornoz}, {c:özdilek avm}, {c:özdilek nevresim takımı}); ürün niyetli marka aramalarında organik görünürlüğün korunduğu görülmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sayfa Grupları"
+   ],
+   "title": "Mağaza Sayfaları: Click, Impression ve Sıralama",
+   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%3.8 · YoY -%8.9",
+   "source": "Google Search Console - ozdilekteyim.com · Page filtresi",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Mağaza: /magaza/ altındaki kategori ve ürün sayfaları. Grup Marka + Kategori sayfalarını da kapsamaktadır.",
+    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 150,
+     "bar_w": 24,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Click",
+       "data": [
+        69920,
+        68900,
+        82642,
+        94395,
+        90753,
+        76841,
+        60479,
+        67743,
+        72649,
+        66879,
+        63374,
+        61416,
+        63728
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Impression",
+       "data": [
+        4223987,
+        4266636,
+        4492796,
+        5427481,
+        5467045,
+        4369630,
+        3711390,
+        3913684,
+        3270146,
+        3380931,
+        3442785,
+        3073067,
+        3104903
+       ],
+       "color": "teal",
+       "axis": "right",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon",
+       "data": [
+        10.2,
+        7.9,
+        6.0,
+        5.9,
+        6.4,
+        7.6,
+        8.2,
+        7.6,
+        7.8,
+        7.9,
+        7.7,
+        7.7,
+        8.1
+       ],
+       "color": "coral",
+       "axis": "own",
+       "band": [
+        0.56,
+        0.8
+       ],
+       "invert": true,
+       "fmt": "pos",
+       "labels": "above",
+       "labels_text": [
+        "10.2",
+        "7.9",
+        "6.0",
+        "5.9",
+        "6.4",
+        "7.6",
+        "8.2",
+        "7.6",
+        "7.8",
+        "7.9",
+        "7.7",
+        "7.7",
+        "8.1"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 8,
+     "first_col_max": 0.11,
+     "heat": true,
+     "heat_invert_rows": [
+      2
+     ],
+     "head": [
+      "Metrik",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Click",
+       "69.9K",
+       "68.9K",
+       "82.6K",
+       "94.4K",
+       "90.8K",
+       "76.8K",
+       "60.5K",
+       "67.7K",
+       "72.6K",
+       "66.9K",
+       "63.4K",
+       "61.4K",
+       "63.7K"
+      ],
+      [
+       "Impression",
+       "4.22M",
+       "4.27M",
+       "4.49M",
+       "5.43M",
+       "5.47M",
+       "4.37M",
+       "3.71M",
+       "3.91M",
+       "3.27M",
+       "3.38M",
+       "3.44M",
+       "3.07M",
+       "3.10M"
+      ],
+      [
+       "Ort. poz.",
+       "10.2",
+       "7.9",
+       "6.0",
+       "5.9",
+       "6.4",
+       "7.6",
+       "8.2",
+       "7.6",
+       "7.8",
+       "7.9",
+       "7.7",
+       "7.7",
+       "8.1"
+      ],
+      [
+       "CTR",
+       "%1.66",
+       "%1.61",
+       "%1.84",
+       "%1.74",
+       "%1.66",
+       "%1.76",
+       "%1.63",
+       "%1.73",
+       "%2.22",
+       "%1.98",
+       "%1.84",
+       "%2.00",
+       "%2.05"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "Mağaza sayfaları Ağustos'ta {b:63.7K} click almış; MoM {g:+%3.8}, YoY {r:-%8.9}. Impression yıllık {r:-%26.5} daralırken click kaybı daha sınırlı kalmış, CTR {g:%1.66 → %2.05} yükselmiştir.",
+      "Click Kasım 2025'te {b:94.4K} ile zirve yapmıştır; ortalama pozisyon o ay {b:5.9}, Şubat 2026'dan bu yana {b:7.6-8.2} bandındadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sayfa Grupları"
+   ],
+   "title": "Market Sayfaları: Click, Impression ve Sıralama",
+   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%4.0 · YoY -%41.0",
+   "source": "Google Search Console - ozdilekteyim.com · Page filtresi",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Market: /market altındaki sayfalar.",
+    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 150,
+     "bar_w": 24,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Click",
+       "data": [
+        16975,
+        17339,
+        20405,
+        20017,
+        18306,
+        13844,
+        13739,
+        13406,
+        10206,
+        8976,
+        9493,
+        9631,
+        10016
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Impression",
+       "data": [
+        2227791,
+        2376792,
+        2277437,
+        2288615,
+        1831240,
+        1448665,
+        1259077,
+        1254981,
+        891283,
+        971677,
+        1142177,
+        1010886,
+        1049483
+       ],
+       "color": "teal",
+       "axis": "right",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon",
+       "data": [
+        12.9,
+        9.7,
+        7.4,
+        7.2,
+        8.1,
+        9.6,
+        10.7,
+        9.4,
+        10.3,
+        10.2,
+        9.6,
+        9.7,
+        10.0
+       ],
+       "color": "coral",
+       "axis": "own",
+       "band": [
+        0.56,
+        0.8
+       ],
+       "invert": true,
+       "fmt": "pos",
+       "labels": "above",
+       "labels_text": [
+        "12.9",
+        "9.7",
+        "7.4",
+        "7.2",
+        "8.1",
+        "9.6",
+        "10.7",
+        "9.4",
+        "10.3",
+        "10.2",
+        "9.6",
+        "9.7",
+        "10.0"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 8,
+     "first_col_max": 0.11,
+     "heat": true,
+     "heat_invert_rows": [
+      2
+     ],
+     "head": [
+      "Metrik",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Click",
+       "17.0K",
+       "17.3K",
+       "20.4K",
+       "20.0K",
+       "18.3K",
+       "13.8K",
+       "13.7K",
+       "13.4K",
+       "10.2K",
+       "9.0K",
+       "9.5K",
+       "9.6K",
+       "10.0K"
+      ],
+      [
+       "Impression",
+       "2.23M",
+       "2.38M",
+       "2.28M",
+       "2.29M",
+       "1.83M",
+       "1.45M",
+       "1.26M",
+       "1.25M",
+       "891.3K",
+       "971.7K",
+       "1.14M",
+       "1.01M",
+       "1.05M"
+      ],
+      [
+       "Ort. poz.",
+       "12.9",
+       "9.7",
+       "7.4",
+       "7.2",
+       "8.1",
+       "9.6",
+       "10.7",
+       "9.4",
+       "10.3",
+       "10.2",
+       "9.6",
+       "9.7",
+       "10.0"
+      ],
+      [
+       "CTR",
+       "%0.76",
+       "%0.73",
+       "%0.90",
+       "%0.87",
+       "%1.00",
+       "%0.96",
+       "%1.09",
+       "%1.07",
+       "%1.15",
+       "%0.92",
+       "%0.83",
+       "%0.95",
+       "%0.95"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "Market sayfaları Ağustos'ta {b:10.0K} click ile MoM {g:+%4.0} artmış, yıllık bazda {r:-%41.0} geride kalmıştır. Impression aynı dönemde {r:-%52.9} daralmıştır.",
+      "Click Nisan 2026'dan bu yana {b:9-10K} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {b:7.2-7.4} seviyesinden {r:10.0} seviyesine gerilemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sayfa Grupları"
+   ],
+   "title": "Marka + Kategori Sayfaları: Click, Impression ve Sıralama",
+   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%7.4 · YoY yeni",
+   "source": "Google Search Console - ozdilekteyim.com · Page filtresi",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Marka + Kategori: -cp2 ile biten, marka ve kategoriyi birlikte hedefleyen sayfalar. Eylül 2025'te yayına alındığı için yıllık değişim yerine \"yeni\" yazılmıştır.",
+    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 150,
+     "bar_w": 24,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Click",
+       "data": [
+        13,
+        105,
+        1155,
+        2686,
+        2940,
+        4748,
+        5013,
+        7167,
+        8883,
+        8557,
+        7189,
+        7384,
+        7934
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Impression",
+       "data": [
+        1069,
+        5925,
+        24442,
+        57143,
+        66798,
+        136093,
+        186545,
+        262580,
+        300035,
+        331288,
+        387141,
+        420749,
+        429525
+       ],
+       "color": "teal",
+       "axis": "right",
+       "pad": 1.8
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon",
+       "data": [
+        17.3,
+        10.8,
+        5.3,
+        4.8,
+        6.3,
+        7.5,
+        7.9,
+        7.6,
+        7.3,
+        7.3,
+        7.6,
+        7.9,
+        8.4
+       ],
+       "color": "coral",
+       "axis": "own",
+       "band": [
+        0.56,
+        0.8
+       ],
+       "invert": true,
+       "fmt": "pos",
+       "labels": "above",
+       "labels_text": [
+        "17.3",
+        "10.8",
+        "5.3",
+        "4.8",
+        "6.3",
+        "7.5",
+        "7.9",
+        "7.6",
+        "7.3",
+        "7.3",
+        "7.6",
+        "7.9",
+        "8.4"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 8,
+     "first_col_max": 0.11,
+     "heat": true,
+     "heat_invert_rows": [
+      2
+     ],
+     "head": [
+      "Metrik",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Click",
+       "13",
+       "105",
+       "1.2K",
+       "2.7K",
+       "2.9K",
+       "4.7K",
+       "5.0K",
+       "7.2K",
+       "8.9K",
+       "8.6K",
+       "7.2K",
+       "7.4K",
+       "7.9K"
+      ],
+      [
+       "Impression",
+       "1.1K",
+       "5.9K",
+       "24.4K",
+       "57.1K",
+       "66.8K",
+       "136.1K",
+       "186.5K",
+       "262.6K",
+       "300.0K",
+       "331.3K",
+       "387.1K",
+       "420.7K",
+       "429.5K"
+      ],
+      [
+       "Ort. poz.",
+       "17.3",
+       "10.8",
+       "5.3",
+       "4.8",
+       "6.3",
+       "7.5",
+       "7.9",
+       "7.6",
+       "7.3",
+       "7.3",
+       "7.6",
+       "7.9",
+       "8.4"
+      ],
+      [
+       "CTR",
+       "%1.22",
+       "%1.77",
+       "%4.73",
+       "%4.70",
+       "%4.40",
+       "%3.49",
+       "%2.69",
+       "%2.73",
+       "%2.96",
+       "%2.58",
+       "%1.86",
+       "%1.75",
+       "%1.85"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "Marka + Kategori sayfaları Ağustos'ta {b:7.934} click ve {b:429.5K} impression almıştır; click MoM {g:+%7.4}, impression MoM {g:+%2.1} artmıştır.",
+      "Impression Eylül 2025'ten bu yana her ay artmıştır. Click Nisan 2026'da {b:8.9K} ile zirve yapmış, ortalama pozisyon {b:7.3-8.4} bandında kalmıştır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Query Değişimleri"
+   ],
+   "title": "Non-Brand Sorgularda Click Değişimi",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 | MoM | click değişimine göre sıralı",
+   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı & Google Ads arama hacmi",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Arama hacmi Ağustos 2026 aylık değeridir; hacim verisi dönmeyen sorgularda \"-\" yazılmıştır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.42,
+     "head": [
+      "Click artan",
+      "Hacim (Ağu 2026)",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "benetton çanta",
+       "22.2K",
+       "506",
+       "690",
+       "+184"
+      ],
+      [
+       "çeyiz seti",
+       "14.8K",
+       "160",
+       "326",
+       "+166"
+      ],
+      [
+       "banyo paspası",
+       "22.2K",
+       "315",
+       "465",
+       "+150"
+      ],
+      [
+       "bornoz takımı",
+       "12.1K",
+       "503",
+       "631",
+       "+128"
+      ],
+      [
+       "chimola okul çantası",
+       "5.4K",
+       "16",
+       "139",
+       "+123"
+      ],
+      [
+       "çocuk nevresim takımı",
+       "4.4K",
+       "144",
+       "231",
+       "+87"
+      ],
+      [
+       "crocs",
+       "201.0K",
+       "11",
+       "82",
+       "+71"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.42,
+     "head": [
+      "Click azalan",
+      "Hacim (Ağu 2026)",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "crocs ballet",
+       "1.9K",
+       "233",
+       "0",
+       "-233"
+      ],
+      [
+       "kabin boy valiz",
+       "-",
+       "417",
+       "256",
+       "-161"
+      ],
+      [
+       "plaj havlusu",
+       "18.1K",
+       "633",
+       "474",
+       "-159"
+      ],
+      [
+       "dünya kupası albümü",
+       "1.6K",
+       "107",
+       "0",
+       "-107"
+      ],
+      [
+       "valiz",
+       "74.0K",
+       "850",
+       "752",
+       "-98"
+      ],
+      [
+       "panini dünya kupası albümü 2026",
+       "1.0K",
+       "88",
+       "0",
+       "-88"
+      ],
+      [
+       "tek kişilik pike",
+       "4.4K",
+       "150",
+       "62",
+       "-88"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Artış ev tekstili ve çanta sorgularında yoğunlaşmaktadır: {c:benetton çanta} {g:+184}, {c:çeyiz seti} {g:+166}, {c:banyo paspası} {g:+150}, {c:bornoz takımı} {g:+128}. Okul dönemi yaklaşırken {c:chimola okul çantası} {g:+123} click eklemiştir.",
+      "Düşüşler sezon ve kampanya ürünlerinde yoğunlaşmaktadır: {c:plaj havlusu} hacmi {r:33.1K → 18.1K} ile daralmış, {c:crocs ballet} ve {c:dünya kupası albümü} Ağustos'ta click almamıştır. {c:valiz} sorgusunda hacim {b:74.0K} ile değişmezken pozisyon {r:7.2 → 8.6} gerilemiştir; {c:kabin boy valiz} tarafında da pozisyon {r:7.6 → 9.2} gerilemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Sayfa Değişimleri"
+   ],
+   "title": "Click Değişimi En Yüksek Sayfalar",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 | MoM | click değişimine göre sıralı",
+   "source": "Google Search Console - ozdilekteyim.com · Page kırılımı",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı ozdilekteyim.com altındadır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.56,
+     "head": [
+      "Click artan sayfa",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "/magaza/bornoz-2",
+       "3.764",
+       "5.322",
+       "+1.558"
+      ],
+      [
+       "/magaza/nevresim-nevresim-takimi",
+       "3.064",
+       "3.968",
+       "+904"
+      ],
+      [
+       "/ (anasayfa)",
+       "33.635",
+       "34.409",
+       "+774"
+      ],
+      [
+       "/magaza/ceyiz-setleri3",
+       "1.030",
+       "1.696",
+       "+666"
+      ],
+      [
+       "/magaza/aile-seti-kategori",
+       "1.991",
+       "2.643",
+       "+652"
+      ],
+      [
+       "/market",
+       "2.664",
+       "3.130",
+       "+466"
+      ],
+      [
+       "/magaza/cocuk-bornozu",
+       "1.099",
+       "1.500",
+       "+401"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.56,
+     "head": [
+      "Click azalan sayfa",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "/magaza/panini-fifa-dunya-kupasi-2026-ci",
+       "558",
+       "0",
+       "-558"
+      ],
+      [
+       "/magaza/pike-pike-takimi",
+       "2.052",
+       "1.729",
+       "-323"
+      ],
+      [
+       "/magaza/aninda-indirim-2500-500",
+       "377",
+       "68",
+       "-309"
+      ],
+      [
+       "/magaza/tek-kisilik-pike-takimilari-cp2",
+       "1.147",
+       "858",
+       "-289"
+      ],
+      [
+       "/magaza/crocs-kadin-classic-animal-balle",
+       "276",
+       "0",
+       "-276"
+      ],
+      [
+       "/magaza/plaj-havlusu",
+       "1.621",
+       "1.349",
+       "-272"
+      ],
+      [
+       "/magaza/mayo-bikini",
+       "642",
+       "386",
+       "-256"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "{c:/magaza/bornoz-2} {g:+1.558} click ile en yüksek artışı göstermiştir; {c:nevresim}, {c:çeyiz setleri} ve {c:aile seti} kategori sayfaları da ev tekstili tarafındaki toparlanmayı taşımaktadır.",
+      "Azalan sayfaların önemli bölümü dönemsel ürün ve kampanya sayfalarıdır (dünya kupası albümü, anında indirim, plaj havlusu, mayo-bikini). {c:/magaza/pike-pike-takimi} ve tek kişilik pike takımı sayfalarındaki gerileme ise yaz sezonunun kapanmasıyla ilişkilendirilebilir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "03",
+   "title": "Görünürlük ve Rakipler"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GÖRÜNÜRLÜK",
+    "Rakip Visibility"
+   ],
+   "title": "Rakiplerle Google ve AI Overview Visibility Karşılaştırması",
+   "subtitle": "1 Ağustos 2026 → 31 Ağustos 2026 | 9.4K takip edilen keyword | değer ay sonu, değişim ay başına göre",
+   "source": "SEOmonitor",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Visibility, takip edilen keyword'lerde domainin arama hacmine göre ağırlıklandırılmış sıralama görünürlüğüdür. AIO Mention: AI Overview yanıt metninde anılma; AIO Citation: AI Overview'da kaynak olarak link verilme. AI Overview kolonları mobil ölçümdür. Değişim puan (p) olarak verilmiş, rakipler Google mobil visibility'ye göre sıralanmıştır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.2,
+     "head": [
+      "Domain",
+      "Google Desktop",
+      "Δ",
+      "Google Mobil",
+      "Δ",
+      "AIO Mention",
+      "Δ",
+      "AIO Citation",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "ozdilekteyim.com",
+       "%3.9",
+       "+0.6p",
+       "%3.8",
+       "+1.0p",
+       "%0.2",
+       "-0.4p",
+       "%0.1",
+       "-0.2p"
+      ],
+      [
+       "trendyol.com",
+       "%87.7",
+       "-1.0p",
+       "%87.6",
+       "-1.6p",
+       "%19.1",
+       "-1.3p",
+       "%56.0",
+       "+2.8p"
+      ],
+      [
+       "hepsiburada.com",
+       "%43.5",
+       "-3.3p",
+       "%39.2",
+       "-4.6p",
+       "%15.2",
+       "+9.9p",
+       "%27.7",
+       "+12.9p"
+      ],
+      [
+       "boyner.com.tr",
+       "%23.3",
+       "+1.7p",
+       "%22.1",
+       "+1.2p",
+       "%4.0",
+       "-0.8p",
+       "%4.8",
+       "-5.1p"
+      ],
+      [
+       "amazon.com.tr",
+       "%19.4",
+       "-0.2p",
+       "%17.5",
+       "-0.5p",
+       "%0.8",
+       "-3.9p",
+       "%3.1",
+       "-0.3p"
+      ],
+      [
+       "lcw.com",
+       "%13.6",
+       "+1.5p",
+       "%13.0",
+       "+1.1p",
+       "%0.2",
+       "+0.1p",
+       "%2.4",
+       "-0.5p"
+      ],
+      [
+       "n11.com",
+       "%11.5",
+       "-1.5p",
+       "%10.0",
+       "-1.4p",
+       "%0.3",
+       "+0.3p",
+       "%1.7",
+       "+1.6p"
+      ],
+      [
+       "flo.com.tr",
+       "%5.4",
+       "-0.1p",
+       "%4.9",
+       "-0.6p",
+       "%1.7",
+       "+1.7p",
+       "%1.4",
+       "+1.3p"
+      ],
+      [
+       "englishhome.com",
+       "%2.3",
+       "+0.2p",
+       "%2.3",
+       "+0.1p",
+       "%0.4",
+       "+0.1p",
+       "%1.4",
+       "0.0p"
+      ]
+     ],
+     "highlight_rows": [
+      0
+     ],
+     "font_pt": 9.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 8,
+     "font_pt": 10,
+     "items": [
+      "Özdilekteyim'in Google visibility'si Ağustos'ta desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır; AI Overview tarafında mention {b:%0.2}, citation {b:%0.1} seviyesindedir.",
+      "Google tarafında {c:boyner.com.tr} ({g:+1.7p} / {g:+1.2p}) ve {c:lcw.com} ({g:+1.5p} / {g:+1.1p}) payını artırırken {c:hepsiburada.com} ({r:-3.3p} / {r:-4.6p}) ve {c:n11.com} gerilemiştir.",
+      "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} citation {g:+12.9p} ve mention {g:+9.9p} ile Google'daki gerilemenin tersine AI Overview'da belirgin artış göstermiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GÖRÜNÜRLÜK",
+    "Share of Voice"
+   ],
+   "title": "Organik Share of Voice ve Rakip Dağılımı",
+   "subtitle": "Temmuz 2026 & Ağustos 2026 | 9.368 takip edilen keyword | mobil",
+   "source": "SEOmonitor",
+   "grid": [
+    58,
+    42
+   ],
+   "footnotes": [
+    "Share of Voice, takip edilen keyword'lerde sonuç sayfasında yer alan tüm domainlerin tahmini organik trafiği içindeki paydır. Aylık değer 10, 20 ve ayın son günü ölçümlerinin ortalamasıdır. Değişim puan (p) olarak verilmiştir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.36,
+     "head": [
+      "Domain",
+      "Tem 26 ort.",
+      "Ağu 26 ort.",
+      "Δ",
+      "31 Ağu"
+     ],
+     "rows": [
+      [
+       "trendyol.com",
+       "%21.73",
+       "%21.26",
+       "-0.47p",
+       "%20.91"
+      ],
+      [
+       "hepsiburada.com",
+       "%3.47",
+       "%3.29",
+       "-0.18p",
+       "%3.10"
+      ],
+      [
+       "boyner.com.tr",
+       "%3.02",
+       "%3.10",
+       "+0.08p",
+       "%3.19"
+      ],
+      [
+       "akakce.com",
+       "%3.13",
+       "%2.96",
+       "-0.17p",
+       "%3.25"
+      ],
+      [
+       "mediamarkt.com.tr",
+       "%1.65",
+       "%2.08",
+       "+0.43p",
+       "%2.02"
+      ],
+      [
+       "cimri.com",
+       "%1.32",
+       "%1.43",
+       "+0.11p",
+       "%1.44"
+      ],
+      [
+       "sahibinden.com",
+       "%1.42",
+       "%1.42",
+       "0.00p",
+       "%1.26"
+      ],
+      [
+       "vatanbilgisayar.com",
+       "%1.19",
+       "%1.12",
+       "-0.06p",
+       "%1.15"
+      ],
+      [
+       "lcw.com",
+       "%1.12",
+       "%1.10",
+       "-0.02p",
+       "%1.10"
+      ],
+      [
+       "amazon.com.tr",
+       "%1.15",
+       "%1.10",
+       "-0.05p",
+       "%1.15"
+      ],
+      [
+       "ozdilekteyim.com",
+       "%0.32",
+       "%0.31",
+       "-0.01p",
+       "%0.35"
+      ]
+     ],
+     "highlight_rows": [
+      10
+     ],
+     "font_pt": 9.5,
+     "row_h": 17,
+     "head_h": 21
+    },
+    {
+     "type": "insights",
+     "col": 1,
+     "font_pt": 10.5,
+     "items": [
+      "Özdilekteyim'in payı Ağustos ortalamasında {b:%0.31} seviyesindedir; ay sonu ölçümünde {g:%0.35} ile dönemin en yüksek değerine ulaşmıştır.",
+      "Takip edilen set giyim, ayakkabı ve elektronik gibi geniş kategorileri kapsadığı için pazar yerleri ve fiyat karşılaştırma siteleri ilk sıralarda yer almaktadır; {c:trendyol.com} tek başına {b:%21} civarında pay almaktadır.",
+      "{c:mediamarkt.com.tr} Ağustos'ta {g:+0.43p} ile payını en çok artıran domain olmuştur; {c:hepsiburada.com} gerilemiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "GÖRÜNÜRLÜK",
+    "Kategori Görünürlüğü"
+   ],
+   "title": "Takip Edilen Kategorilerde Visibility",
+   "subtitle": "31 Temmuz 2026 & 31 Ağustos 2026 | mobil | kategori klasörleri",
+   "source": "SEOmonitor",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Arama hacmi, kategorideki takip edilen keyword'lerin Ağustos 2026 aylık hacim toplamıdır. Visibility: arama hacmine göre ağırlıklandırılmış sıralama görünürlüğü. Pozisyonda pozitif değer iyileşmedir; ilk 100'de yer almayan keyword'ler ortalamaya 100 olarak girer. Kategoriler hacme göre sıralıdır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": "full",
+     "first_col_max": 0.26,
+     "head": [
+      "Kategori",
+      "Keyword",
+      "Hacim (Ağu 2026)",
+      "Visibility Tem",
+      "Visibility Ağu",
+      "Δ",
+      "Ort. poz. Tem",
+      "Ort. poz. Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "Erkek Giyim",
+       "1.300",
+       "2.94M",
+       "%4.1",
+       "%3.5",
+       "-0.6p",
+       "83.5",
+       "82.2",
+       "+1.3"
+      ],
+      [
+       "Kadın Giyim",
+       "1.073",
+       "2.28M",
+       "%0.9",
+       "%1.1",
+       "+0.2p",
+       "95.8",
+       "93.7",
+       "+2.1"
+      ],
+      [
+       "Kadın Aksesuar",
+       "316",
+       "1.89M",
+       "%15.1",
+       "%18.8",
+       "+3.7p",
+       "69.6",
+       "67.3",
+       "+2.3"
+      ],
+      [
+       "Kadın Ayakkabı",
+       "297",
+       "1.49M",
+       "%2.7",
+       "%2.5",
+       "-0.2p",
+       "90.0",
+       "84.3",
+       "+5.7"
+      ],
+      [
+       "Yatak Odası Tekstili",
+       "321",
+       "635.7K",
+       "%23.4",
+       "%26.3",
+       "+2.9p",
+       "35.8",
+       "34.3",
+       "+1.5"
+      ],
+      [
+       "Erkek Ayakkabı",
+       "189",
+       "580.3K",
+       "%2.7",
+       "%2.0",
+       "-0.7p",
+       "77.8",
+       "78.8",
+       "-1.0"
+      ],
+      [
+       "Banyo Tekstili",
+       "36",
+       "214.9K",
+       "%16.9",
+       "%14.2",
+       "-2.7p",
+       "77.7",
+       "78.0",
+       "-0.3"
+      ],
+      [
+       "Havlu & Bornoz",
+       "90",
+       "173.1K",
+       "%61.6",
+       "%64.3",
+       "+2.7p",
+       "22.1",
+       "22.7",
+       "-0.6"
+      ],
+      [
+       "Mutfak Tekstili",
+       "25",
+       "37.9K",
+       "%11.6",
+       "%21.0",
+       "+9.4p",
+       "38.0",
+       "36.3",
+       "+1.7"
+      ],
+      [
+       "Setler",
+       "19",
+       "30.7K",
+       "%55.2",
+       "%56.3",
+       "+1.1p",
+       "9.7",
+       "17.0",
+       "-7.3"
+      ]
+     ],
+     "font_pt": 9,
+     "row_h": 15,
+     "head_h": 20
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "Görünürlük ev tekstilinde yoğunlaşmaktadır ({c:Havlu & Bornoz} {g:%64.3}, {c:Setler} {g:%56.3}). {c:Mutfak Tekstili} {g:+9.4p}, {c:Kadın Aksesuar} {g:+3.7p} ve {c:Yatak Odası Tekstili} {g:+2.9p} ile en çok kazanan kategorilerdir.",
+      "En yüksek hacimli {c:Erkek Giyim} ({b:2.94M}), {c:Kadın Giyim} ({b:2.28M}) ve {c:Kadın Aksesuar} ({b:1.89M}) kategorilerinden yalnızca Kadın Aksesuar {b:%18.8} görünürlüğe ulaşmaktadır; giyim ve ayakkabıda {b:%1-4} bandındaki görünürlük büyüme potansiyeli taşımaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "04",
+   "title": "Yapay Zeka Görünürlüğü"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Görünürlük Metrikleri"
+   ],
+   "title": "Yapay Zeka Yanıtlarında Marka Görünürlüğü",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 | 124 prompt | Gemini, Google AI Overview ve ChatGPT",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    58,
+    42
+   ],
+   "footnotes": [
+    "Mention oranı: markanın anıldığı yanıtların izlenen toplam yanıt içindeki payı. Brand Position: markanın yanıt içinde kaçıncı sırada anıldığı; küçük değer daha öndedir. Aylar arasında yanıt sayısı farklı olduğu için karşılaştırma oran üzerinden yapılmıştır.",
+    "Rakip tablosu, Ağustos yanıtlarında her domainin anıldığı yanıt sayısını gösterir."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.28,
+     "head": [
+      "Sağlayıcı",
+      "Mention / Yanıt",
+      "Tem 26",
+      "Ağu 26",
+      "Δ",
+      "Brand Position"
+     ],
+     "rows": [
+      [
+       "Gemini",
+       "273 / 615",
+       "%43.7",
+       "%44.4",
+       "+0.6p",
+       "5.0"
+      ],
+      [
+       "Google AI Overview",
+       "192 / 562",
+       "%28.0",
+       "%34.2",
+       "+6.2p",
+       "1.8"
+      ],
+      [
+       "ChatGPT",
+       "108 / 449",
+       "%24.5",
+       "%24.1",
+       "-0.5p",
+       "3.1"
+      ],
+      [
+       "Toplam",
+       "573 / 1.626",
+       "%32.5",
+       "%35.2",
+       "+2.7p",
+       "-"
+      ]
+     ],
+     "bold_rows": [
+      -1
+     ],
+     "font_pt": 9.5,
+     "row_h": 18,
+     "head_h": 22
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.55,
+     "head": [
+      "Anılan marka",
+      "Yanıt Ağu 26"
+     ],
+     "rows": [
+      [
+       "karaca.com",
+       "629"
+      ],
+      [
+       "ozdilekteyim.com",
+       "573"
+      ],
+      [
+       "trendyol.com",
+       "529"
+      ],
+      [
+       "hepsiburada.com",
+       "346"
+      ],
+      [
+       "chakra.com.tr",
+       "263"
+      ],
+      [
+       "tac.com.tr",
+       "141"
+      ],
+      [
+       "boyner.com.tr",
+       "130"
+      ],
+      [
+       "soley.com.tr",
+       "121"
+      ]
+     ],
+     "highlight_rows": [
+      1
+     ],
+     "font_pt": 9.5,
+     "row_h": 17,
+     "head_h": 21
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 10,
+     "font_pt": 10.5,
+     "items": [
+      "Marka Ağustos'ta {b:1.626 yanıtın 573'ünde} anılmıştır ({g:%35.2}). En belirgin artış {c:Google AI Overview} tarafındadır ({g:+6.2p}); {c:Gemini} {b:%44.4} ile en yüksek orandadır.",
+      "Anılma sayısında Özdilekteyim {b:2. sıradadır}; {c:karaca.com} ev ve mutfak prompt'larında öne çıkmaktadır. ChatGPT tarafında oran %24 bandında kalmakta ve kategori içeriklerinde geliştirme alanı sunmaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "separator",
+   "no": "05",
+   "title": "Değerlendirme"
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "DEĞERLENDİRME",
+    "Öne Çıkan Başlıklar"
+   ],
+   "title": "Önümüzdeki Dönemde Öne Çıkan Üç Başlık",
+   "subtitle": "Ağustos 2026 bulgularından türetilen çalışma alanları",
+   "source": "Google Search Console, SEOmonitor ve Inbound AI Görünürlük İzleme",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Başlıkların önceliklendirilmesi Özdilekteyim ekibinin stratejik tercihleri ve öncelikleriyle güncellenebilir."
+   ],
+   "blocks": [
+    {
+     "type": "panels",
+     "col": "full",
+     "cols": 3,
+     "items": [
+      {
+       "title": "Marka aramalarında organik tıklama payı",
+       "sub": "izleme başlığı",
+       "lines": [
+        "Brand click yıllık %45.0 geriledi; \"özdilek\" hacmi yatay, \"özdilekteyim\" hacmi %49.5 arttı.",
+        "Pozisyon korunurken CTR %25.8 seviyesinden %16.1 seviyesine indi.",
+        "Marka sorgularında ücretli sonuç ve sonuç sayfası yerleşiminin birlikte incelenmesi değerlendirilebilir."
+       ]
+      },
+      {
+       "title": "Ev tekstili kategorilerindeki büyüme",
+       "sub": "büyüme alanı",
+       "lines": [
+        "Bornoz, nevresim, çeyiz ve aile seti sayfaları Ağustos'ta en çok click kazanan sayfalar oldu.",
+        "Marka + Kategori sayfaları 7.9K click ile büyümesini sürdürüyor.",
+        "Sonbahar sezonuna yönelik yatak odası ve battaniye kategorilerinin önceliklendirilmesi değerlendirilebilir."
+       ]
+      },
+      {
+       "title": "Giyim ve ayakkabıda görünürlük",
+       "sub": "fırsat alanı",
+       "lines": [
+        "Kadın Giyim, Erkek Giyim ve ayakkabı kategorilerinde visibility %1-4 bandında.",
+        "Kadın ve Erkek Giyim birlikte 5.2M aylık arama hacmi taşıyor (2026 Ağustos).",
+        "Marka + Kategori sayfa yapısının bu kategorilere genişletilmesi değerlendirilebilir."
+       ]
+      }
+     ]
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 14,
+     "font_pt": 11,
+     "items": [
+      "Dönemin genel tablosu, ev tekstili ve Marka + Kategori sayfalarında organik kazanımın sürdüğünü; yıllık click kaybının ise marka aramalarındaki tıklama payı değişiminden kaynaklandığını göstermektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "closing",
+   "title": "Teşekkürler"
+  }
+ ]
+}

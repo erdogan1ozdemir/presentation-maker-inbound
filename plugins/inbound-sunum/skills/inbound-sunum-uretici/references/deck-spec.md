@@ -273,6 +273,8 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
+| `pad` | Eksen üst payı (varsayılan 1.15). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
+| `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
 
 **Üç metrik tek grafikte (`axis: "own"`).** İki eksene sığmayan üçüncü metrik
 (click bar + impression çizgisi + pozisyon çizgisi gibi) `axis: "own"` ile

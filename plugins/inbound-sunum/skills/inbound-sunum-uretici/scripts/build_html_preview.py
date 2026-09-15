@@ -357,24 +357,28 @@ def h_combo(b):
 
     ax = {}
     for side in ("left", "right"):
-        vals, inv, fmt = [], False, "auto"
+        vals, inv, fmt, pad = [], False, "auto", 1.15
         for s_ in series:
             if s_.get("axis", "left") != side:
                 continue
             vals += [float(v) for v in s_.get("data", []) if v is not None]
             inv = inv or bool(s_.get("invert"))
             fmt = s_.get("fmt", fmt)
+            pad = max(pad, float(s_.get("pad", 1.15)))
         if vals:
-            lo, hi = _axis_scale(vals, inv)
-            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt)
+            lo, hi = _axis_scale(vals, inv, pad)
+            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt, band=(0.0, 1.0))
     # axis:"own" = kendi olcegi, eksen etiketi yok (bkz. inbound_deck.block_combo)
     for j, s_ in enumerate(series):
         if s_.get("axis") == "own":
             vals = [float(v) for v in s_.get("data", []) if v is not None]
             if vals:
                 lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                # band: serinin grafik yuksekliginde kapladigi dilim (0-1). Ucuncu
+                # metrigi barlarin ustunde ayri bir seride tutmak icin kullanilir.
+                bd = s_.get("band") or (0.0, 1.0)
                 ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
-                                     fmt=s_.get("fmt", "auto"))
+                                     fmt=s_.get("fmt", "auto"), band=(float(bd[0]), float(bd[1])))
 
     def eksen(j, s_):
         a = s_.get("axis", "left")
@@ -383,7 +387,9 @@ def h_combo(b):
     def ypos(side, v):
         a = ax[side]
         frac = (float(v) - a["lo"]) / max(1e-9, a["hi"] - a["lo"])
-        return plot_h * ((1 - frac) if a["inv"] else frac)   # tabandan yukseklik
+        frac = (1 - frac) if a["inv"] else frac
+        b0, b1 = a["band"]
+        return plot_h * (b0 + frac * (b1 - b0))   # tabandan yukseklik
 
     o.append(f'<div class="cb" style="height:{plot_h:.0f}px;'
              f'padding:0 {gut}px">')

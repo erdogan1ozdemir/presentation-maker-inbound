@@ -76,3 +76,19 @@ otomatik türetilir.
   dipnot zorunlu.
 - Ağustos 2026 itibarıyla brand click düşüşü talep kaynaklı değil (hacim ↑,
   pozisyon korunuyor, CTR ↓); sonraki destelerde aynı eksen izlenir.
+
+## Dosyalar
+
+| Dosya | Ne işe yarar |
+|---|---|
+| `deck_olustur.py` | Ağustos 2026 destesini üreten script (25 slayt, GA4 bayrağı kapalı) |
+| `deck.json` | Üretilmiş deste tanımı |
+| `veri/gsc.py` | Search Console günlük export'larından aylık segment ve sayfa grubu serisi |
+| `veri/kirilim.py` | Query ve sayfa kırılımları, değişim hesapları |
+| `veri/hacim.py` | Arama hacmi okuma, yakın varyant denetimi, ASCII yazım dışlama |
+| `veri/hacim_kelimeler.json` | Tek talepte istenen keyword listesi |
+
+Ham veriler (`veri/ham/`) repoya konmaz; script çalıştırılmadan önce aynı
+adlarla çekilir: GSC günlük `date,device` export'ları, sorgu/sayfa kırılımları,
+DataForSEO yanıtı, SEOmonitor `seom_sov_ornek.json`, `seom_grup_<ay>.json`,
+`seom_rakip_visibility.json`, `ai_gorunurluk.json`.
