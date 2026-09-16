@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/skills/inbound-sunum-uretici/scripts/otomatik_guncelle.sh\"",
+            "timeout": 45
+          }
+        ]
+      }
+    ]
+  }
+}

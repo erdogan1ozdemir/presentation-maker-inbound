@@ -50,12 +50,29 @@ FAZ 6  Teslim         -> dosya + chat'te FLAG listesi
 
 ## FAZ 0 - Brief
 
-**İlk adım: sürüm kontrolü.** `scripts/surum_kontrol.py` kurulu sürümü
-GitHub'daki güncel sürümle karşılaştırır; üretici ve denetim betikleri bunu
-kendiliğinden yapar ve **eski sürümle deste üretmez** (çıkış kodu 3). Mesaj
-çıkarsa önce güncelle: Claude Code'da `/plugin` menüsünden inbound-sunum,
-claude.ai'de `dist/` altındaki güncel zip. Ağ yoksa `INBOUND_SURUM_ATLA=1`
-ile bilinçli olarak atlanır; bu bir teslim notu olarak chat'e yazılır.
+**İlk adım: güncelle, sonra devam et.** Skill üç katmanda güncel tutulur:
+
+1. **Oturum başında kendiliğinden.** Plugin bir `SessionStart` hook'u taşır
+   (`hooks/hooks.json` → `scripts/otomatik_guncelle.sh`): marketplace için
+   Claude Code'un arka plan güncellemesini açar ve kurulu sürüm geriyse
+   `claude plugin update` ile hemen günceller. Güncelleme olduysa oturuma
+   `[inbound-sunum] ... güncellendi` notu düşer.
+2. **Skill çağrıldığında.** Brief'e geçmeden önce şunu çalıştır:
+   ```bash
+   python3 scripts/surum_kontrol.py
+   ```
+   "eski" dönerse `claude plugin update inbound-sunum@presentation-maker-inbound`
+   komutunu çalıştır, kullanıcıya **`/reload-plugins`** yazmasını söyle ve
+   skill'i yeniden çağır; güncel sürümle devam et. Deste üretimine eski
+   sürümle geçilmez.
+3. **Üretim ve denetimde.** `inbound_deck.py` ve `qa_deck.py` aynı kontrolü
+   yapar ve sürüm geriyse **çalışmaz** (çıkış kodu 3). Ağ yoksa
+   `INBOUND_SURUM_ATLA=1` ile bilinçli atlanır ve bu chat'te teslim notu
+   olarak yazılır.
+
+claude.ai'de (chat, cowork, Projects) otomatik güncelleme yoktur; `dist/`
+altındaki güncel zip elle yüklenir. Skill'in ilk mesajında sürüm numarası
+söylenir ki kullanıcı eski zip'i fark etsin.
 
 
 **Önce markanın hazır bir formatı var mı diye bak.** `reference/` altında
