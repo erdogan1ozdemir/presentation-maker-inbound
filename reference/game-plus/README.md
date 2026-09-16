@@ -81,3 +81,12 @@ düzeninde verilir ve olumlu örneklerin yanına en az bir eleştirel çerçeve 
 3. Elle yazılmış insight cümlelerini yeni rakamlara göre yeniden kur - sayılar
    f-string ile bağlı olanlar kendiliğinden güncellenir, yorum cümleleri değil.
 4. `--check` → `qa_deck.py --pptx` → önizlemede gözle kontrol sırasını izle.
+
+## Açık uyarılar (bir sonraki dönemde kapatılacak)
+
+Deste, v1.13.0'daki kurallardan önce üretildi. `qa_deck.py` şu uyarıları veriyor;
+yeni Game+ dönemi kurulurken kapatılır:
+
+- Aylık seri slaytlarında tablo altında **MoM ve YoY ayrı ok** notu yok (C45).
+- Sıralama değişimleri tablosunda **arama hacmi kolonu** yok (C47).
+- Yıllık impression karşılaştırmasında **Eylül 2025 şerhi** yok (tuzaklar 3.7).

@@ -235,7 +235,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 158,
+     "h": 150,
      "bar_w": 24,
      "cats": [
       "Tem'25",
@@ -465,7 +465,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 158,
+     "h": 150,
      "bar_w": 24,
      "cats": [
       "Tem'25",

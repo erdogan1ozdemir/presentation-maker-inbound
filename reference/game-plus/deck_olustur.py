@@ -143,7 +143,7 @@ def seg_seri(metrik, baslik, dipnot, yorum):
         "footnotes": [dipnot,
                       "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 158, "bar_w": 24, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 150, "bar_w": 24, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [SEG["total"][y][metrik] for y in AYLAR],
                  "color": "gray_bar", "axis": "left"},
                 {"kind": "line", "name": "Non-Brand", "data": [SEG["nonbrand"][y][metrik] for y in AYLAR],
