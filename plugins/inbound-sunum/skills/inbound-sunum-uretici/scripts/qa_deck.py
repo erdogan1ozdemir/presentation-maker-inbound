@@ -522,6 +522,46 @@ def _sayi(t):
         return None
 
 
+CUMLE_SONU = re.compile(r"[a-zçğıöşü\)\]\}%]\.\s+[A-ZÇĞİÖŞÜ0-9{]")
+
+
+def check_insight_bicimi(spec, rep):
+    """Bir bulgu = bir ok; aylik seri slaytinda MoM ve YoY notu."""
+    for i, s in enumerate(spec.get("slides") or [], 1):
+        if s.get("type") != "content":
+            continue
+        bloklar = s.get("blocks") or []
+        for b in bloklar:
+            if b.get("type") != "insights":
+                continue
+            for it in b.get("items") or []:
+                t = plain(str(it))
+                if len(CUMLE_SONU.findall(t)) >= 2:
+                    rep.warn(f"S{i:02d}", "tek okta birden çok bulgu",
+                             f"'{t[:70]}…' ({len(CUMLE_SONU.findall(t)) + 1} cümle)",
+                             "her bulgu kendi okuyla yazılır; bir ok en fazla "
+                             "iki cümle taşır (ikincisi sebep-sonuç)")
+        # 13 aylik seri: tablonun altinda MoM ve YoY notu bulunur
+        seri = any(b.get("type") == "combo" and len(b.get("cats") or []) >= 12
+                   for b in bloklar)
+        tablo = any(b.get("type") == "table" for b in bloklar)
+        if not (seri and tablo):
+            continue
+        basliklar = " ".join(plain(str(x)) for b in bloklar
+                             if b.get("type") == "table"
+                             for x in (b.get("head") or [])).lower()
+        if "mom" in basliklar and "yoy" in basliklar:
+            continue                      # karsilastirma kolonlari zaten var
+        notlar = " ".join(plain(str(x)) for b in bloklar
+                          if b.get("type") == "insights"
+                          for x in (b.get("items") or [])).lower()
+        eksik = [d for d in ("mom", "yoy") if d not in notlar]
+        if eksik:
+            rep.warn(f"S{i:02d}", "değişim notu",
+                     f"aylık seri slaytında {', '.join(x.upper() for x in eksik)} notu yok",
+                     "tablo altında MoM ve YoY ayrı birer ok olarak yazılır")
+
+
 def check_segmentler(spec, rep):
     """Brand / Non-Brand / Toplam uclusu disina cikan segment satiri var mi?
 
@@ -762,6 +802,7 @@ def main():
     check_structure(spec, rep)
     check_skeleton(spec, rep)
     check_segmentler(spec, rep)
+    check_insight_bicimi(spec, rep)
     if a.pptx:
         check_pptx(a.pptx, rep)
 

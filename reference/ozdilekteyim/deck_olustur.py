@@ -71,6 +71,29 @@ def d(seg, metrik, a=SIMDI, b=ONCEKI):
     return pct(SEG[seg][a][metrik], SEG[seg][b][metrik])
 
 
+ET_SIMDI, ET_ONCEKI, ET_GECEN = etiket(SIMDI), etiket(ONCEKI), etiket(GECEN_YIL)
+
+
+def degisim_notu(kalemler, metrik="click", puan=False):
+    """Tablo altına MoM ve YoY için ayrı birer ok üretir.
+
+    kalemler: (etiket, seri) çiftleri. `puan=True` ise fark puan olarak yazılır
+    (ortalama pozisyon gibi toplanamayan metrikler).
+    """
+    out = []
+    for ad, a, b in (("MoM", ONCEKI, SIMDI), ("YoY", GECEN_YIL, SIMDI)):
+        parca = []
+        for et, seri in kalemler:
+            if puan:
+                fark = seri[a][metrik] - seri[b][metrik]
+                parca.append(f"{et} {renk(sifirla(f'{fark:+.1f}'), ters=True)}")
+            else:
+                parca.append(f"{et} {renk(pct(seri[b][metrik], seri[a][metrik]))}")
+        don = f"{etiket(a)} → {etiket(b)}"
+        out.append(f"{ad} ({don}): " + " · ".join(parca))
+    return out
+
+
 T = dict(font_pt=10.5, row_h=20, head_h=24)
 S = []
 S.append({"type": "cover", "title": "Özdilekteyim SEO Değerlendirme", "subtitle": "Ağustos 2026"})
@@ -157,9 +180,10 @@ S.append({
 # ================================================ Google Search Console
 S.append({"type": "separator", "no": "", "title": "Google Search Console Metrikleri"})
 
-DIPNOT_NUM = ("Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra derin sıralardaki "
-              "impression'lar Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık "
-              "impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.")
+DIPNOT_NUM = ("Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın "
+              "dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; "
+              "bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte "
+              "okunmalıdır.")
 
 
 def seg_seri(metrik, baslik, yorum, dipnot):
@@ -172,7 +196,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "grid": [100],
         "footnotes": [dipnot, "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 158, "bar_w": 24, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 124, "bar_w": 24, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
                  "color": "gray_bar", "axis": "left"},
                 {"kind": "line", "name": "Non-Brand", "data": [NB[y][metrik] for y in AYLAR],
@@ -185,8 +209,10 @@ def seg_seri(metrik, baslik, yorum, dipnot):
                   "rows": [["Brand"] + [k(BR[y][metrik]) for y in AYLAR],
                            ["Non-Brand"] + [k(NB[y][metrik]) for y in AYLAR],
                            ["Toplam"] + [k(TOP[y][metrik]) for y in AYLAR]],
-                  "bold_rows": [-1]}, **T),
-            {"type": "insights", "col": "full", "mt": 10, "font_pt": 10.5, "items": [yorum]},
+                  "bold_rows": [-1]}, **{**T, "font_pt": 9.5}),
+            {"type": "insights", "col": "full", "mt": 8, "font_pt": 10,
+             "items": degisim_notu([("Toplam", TOP), ("Brand", BR), ("Non-Brand", NB)],
+                                   metrik) + [yorum]},
         ],
     }
 
@@ -200,10 +226,9 @@ S.append(seg_seri(
     "Toplam satırı Brand ile Non-Brand'in toplamıdır."))
 S.append(seg_seri(
     "impr", "Brand ve Non-Brand Aylık Impression",
-    f"Toplam impression {{r:{k(TOP[GECEN_YIL]['impr'])} → {k(TOP[SIMDI]['impr'])}}} ile yıllık "
-    f"{renk(d('toplam', 'impr', b=GECEN_YIL))} gerilemiştir; düşüşün tamamına yakını non-brand tarafındadır. "
-    f"Brand impression {{b:{k(BR[GECEN_YIL]['impr'])} → {k(BR[SIMDI]['impr'])}}} ile görece dar bir aralıkta kalmıştır.",
-    "Brand ölçeği Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir. " + DIPNOT_NUM))
+    f"Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression "
+    f"{{b:{k(BR[GECEN_YIL]['impr'])} → {k(BR[SIMDI]['impr'])}}} ile dar bir aralıkta kalmıştır.",
+    "Brand ölçeği grafikte sağ eksendedir. " + DIPNOT_NUM))
 
 HEAD = ["Ağu 25", "Tem 26", "Ağu 26", "MoM", "YoY"]
 SEGLER = (("brand", "Brand"), ("nonbrand", "Non-Brand"), ("toplam", "Toplam"))
@@ -269,7 +294,7 @@ S.append({
         "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 116, "bar_w": 26, "cats": ET, "series": [
+        {"type": "combo", "col": "full", "h": 96, "bar_w": 26, "cats": ET, "series": [
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
@@ -283,13 +308,15 @@ S.append({
                        ["özdilekteyim hacmi"] + [k(OZT[y]) for y in AYLAR],
                        ["Brand click"] + [k(BR[y]["click"]) for y in AYLAR],
                        ["Brand CTR"] + [f"%{BR[y]['ctr']:.1f}" for y in AYLAR]]}, **T),
-        {"type": "insights", "col": "full", "mt": 10, "font_pt": 10.5, "items": [
-            f"\"özdilek\" hacmi {{b:{k(OZ[GECEN_YIL])} → {k(OZ[SIMDI])}}} ile yatay, \"özdilekteyim\" hacmi "
-            f"{{g:{k(OZT[GECEN_YIL])} → {k(OZT[SIMDI])}}} ({renk(pct(OZT[SIMDI], OZT[GECEN_YIL]))}) ile artmışken brand click "
-            f"{{r:{k(BR[GECEN_YIL]['click'])} → {k(BR[SIMDI]['click'])}}} ({renk(d('brand', 'click', b=GECEN_YIL))}) gerilemiştir. "
-            f"İki marka teriminde de talebin korunması, brand click düşüşünün talep kaynaklı olmadığına işaret etmektedir.",
-            f"Brand CTR Eylül 2025'ten itibaren {{b:%15-19}} bandına yerleşmiştir; Ağustos 2025'teki {{b:%{BR[GECEN_YIL]['ctr']:.1f}}} "
-            f"seviyesine Nisan 2026 dışında dönülmemiştir.",
+        {"type": "insights", "col": "full", "mt": 10, "font_pt": 10, "items": [
+            f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Brand click {renk(d('brand', 'click'))} · "
+            f"\"özdilek\" hacmi {renk(pct(OZ[SIMDI], OZ[ONCEKI]))} · "
+            f"\"özdilekteyim\" hacmi {renk(pct(OZT[SIMDI], OZT[ONCEKI]))}",
+            f"YoY ({ET_GECEN} → {ET_SIMDI}): Brand click {renk(d('brand', 'click', b=GECEN_YIL))} · "
+            f"\"özdilek\" hacmi {renk(pct(OZ[SIMDI], OZ[GECEN_YIL]))} · "
+            f"\"özdilekteyim\" hacmi {renk(pct(OZT[SIMDI], OZT[GECEN_YIL]))}",
+            f"İki marka teriminde de talep korunurken brand click {{r:{k(BR[GECEN_YIL]['click'])} → {k(BR[SIMDI]['click'])}}} "
+            f"gerilemiştir; düşüşün talep kaynaklı olmadığına işaret etmektedir.",
         ]},
     ],
 })
@@ -351,7 +378,7 @@ def grup_slayt(g, yorum):
             "(yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 150, "bar_w": 24, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 118, "bar_w": 24, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "pad": 1.8},
                 {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
@@ -367,30 +394,31 @@ def grup_slayt(g, yorum):
                            ["Impression"] + [k(a[y]["impr"]) for y in AYLAR],
                            ["Ort. poz."] + [f"{a[y]['poz']:.1f}" for y in AYLAR],
                            ["CTR"] + [f"%{a[y]['ctr']:.2f}" for y in AYLAR]]}, **{**T, "font_pt": 9.5}),
-            {"type": "insights", "col": "full", "mt": 6, "font_pt": 10, "items": yorum},
+            {"type": "insights", "col": "full", "mt": 6, "font_pt": 10,
+             "items": [f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Click {renk(d(g, 'click'))} · "
+                       f"Impression {renk(d(g, 'impr'))} · Ort. pozisyon "
+                       f"{renk(sifirla(f'{a[ONCEKI]['poz'] - a[SIMDI]['poz']:+.1f}'), ters=True)}",
+                       f"YoY ({ET_GECEN} → {ET_SIMDI}): Click "
+                       f"{'yeni' if g == 'cp2' else renk(d(g, 'click', b=GECEN_YIL))} · "
+                       f"Impression {'yeni' if g == 'cp2' else renk(d(g, 'impr', b=GECEN_YIL))} · "
+                       f"Ort. pozisyon "
+                       f"{'-' if g == 'cp2' else renk(sifirla(f'{a[GECEN_YIL]['poz'] - a[SIMDI]['poz']:+.1f}'), ters=True)}"]
+                      + yorum},
         ],
     }
 
 
 MG, MK, CP = SEG["magaza"], SEG["market"], SEG["cp2"]
 S.append(grup_slayt("magaza", [
-    f"Mağaza sayfaları Ağustos'ta {{b:{k(MG[SIMDI]['click'])}}} click almış; MoM {renk(d('magaza', 'click'))}, YoY "
-    f"{renk(d('magaza', 'click', b=GECEN_YIL))}. Impression yıllık {renk(d('magaza', 'impr', b=GECEN_YIL))} daralırken "
-    f"click kaybı daha sınırlı kalmış, CTR {{g:%{MG[GECEN_YIL]['ctr']:.2f} → %{MG[SIMDI]['ctr']:.2f}}} yükselmiştir.",
-    f"Click Kasım 2025'te {{b:{k(MG[202511]['click'])}}} ile zirve yapmıştır; ortalama pozisyon o ay {{b:5.9}}, Şubat 2026'dan "
-    f"bu yana {{b:7.6-8.2}} bandındadır.",
+    f"Impression yıllık {renk(d('magaza', 'impr', b=GECEN_YIL))} daralırken CTR "
+    f"{{g:%{MG[GECEN_YIL]['ctr']:.2f} → %{MG[SIMDI]['ctr']:.2f}}} yükselmiş, click kaybı sınırlı kalmıştır.",
 ]))
 S.append(grup_slayt("market", [
-    f"Market sayfaları Ağustos'ta {{b:{k(MK[SIMDI]['click'])}}} click ile MoM {renk(d('market', 'click'))} artmış, yıllık "
-    f"bazda {renk(d('market', 'click', b=GECEN_YIL))} geride kalmıştır. Impression aynı dönemde "
-    f"{renk(d('market', 'impr', b=GECEN_YIL))} daralmıştır.",
     f"Click Nisan 2026'dan bu yana {{b:9-10K}} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {{b:7.2-7.4}} "
     f"seviyesinden {{r:{MK[SIMDI]['poz']:.1f}}} seviyesine gerilemiştir.",
 ]))
 S.append(grup_slayt("cp2", [
-    f"Marka + Kategori sayfaları Ağustos'ta {{b:{n(CP[SIMDI]['click'])}}} click ve {{b:{k(CP[SIMDI]['impr'])}}} impression "
-    f"almıştır; click MoM {renk(d('cp2', 'click'))}, impression MoM {renk(d('cp2', 'impr'))} artmıştır.",
-    f"Impression Eylül 2025'ten bu yana her ay artmıştır. Click Nisan 2026'da {{b:{k(CP[202604]['click'])}}} ile zirve "
+    f"Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {{b:{k(CP[202604]['click'])}}} ile zirve "
     f"yapmış, ortalama pozisyon {{b:7.3-8.4}} bandında kalmıştır.",
 ]))
 
@@ -494,14 +522,13 @@ S.append({
     "blocks": [
         dict({"type": "table", "col": "full", "first_col_max": 0.20,
               "head": ["Domain", "Google Desktop", "Δ", "Google Mobil", "Δ", "AIO Mention", "Δ", "AIO Citation", "Δ"],
-              "rows": rv_satir, "highlight_rows": [0]}, **{**T, "font_pt": 9.5}),
-        {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
-            "Özdilekteyim'in Google visibility'si Ağustos'ta desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır; "
-            "AI Overview tarafında mention {b:%0.2}, citation {b:%0.1} seviyesindedir.",
+              "rows": rv_satir, "highlight_rows": [0]}, **{**T, "font_pt": 9.5, "row_h": 16}),
+        {"type": "insights", "col": "full", "mt": 6, "font_pt": 9.5, "items": [
+            "Özdilekteyim'in Google visibility'si desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır.",
             "Google tarafında {c:boyner.com.tr} ({g:+1.7p} / {g:+1.2p}) ve {c:lcw.com} ({g:+1.5p} / {g:+1.1p}) payını artırırken "
             "{c:hepsiburada.com} ({r:-3.3p} / {r:-4.6p}) ve {c:n11.com} gerilemiştir.",
-            "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} citation {g:+12.9p} ve mention "
-            "{g:+9.9p} ile Google'daki gerilemenin tersine AI Overview'da belirgin artış göstermiştir.",
+            "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} "
+            "Google'da gerilerken burada citation {g:+12.9p} artmıştır.",
         ]},
     ],
 })
@@ -565,17 +592,16 @@ S.append({
     "source": "SEOmonitor",
     "grid": [100],
     "footnotes": [
-        "Arama hacmi, kategorideki takip edilen keyword'lerin Ağustos 2026 aylık hacim toplamıdır. Visibility: arama hacmine "
-        "göre ağırlıklandırılmış sıralama görünürlüğü. Pozisyonda pozitif değer iyileşmedir; ilk 100'de yer almayan keyword'ler "
-        "ortalamaya 100 olarak girer. Kategoriler hacme göre sıralıdır.",
+        "Arama hacmi, kategorideki takip edilen keyword'lerin Ağustos 2026 aylık toplamıdır; kategoriler hacme göre sıralıdır. "
+        "Visibility: arama hacmine göre ağırlıklandırılmış sıralama görünürlüğü. Pozisyonda pozitif değer iyileşmedir.",
     ],
     "blocks": [
         dict({"type": "table", "col": "full", "first_col_max": 0.26,
               "head": ["Kategori", "Keyword", HB, "Visibility Tem", "Visibility Ağu", "Δ", "Ort. poz. Tem", "Ort. poz. Ağu", "Δ"],
-              "rows": kat}, **{**T, "font_pt": 9, "row_h": 15, "head_h": 20}),
-        {"type": "insights", "col": "full", "mt": 6, "font_pt": 10, "items": [
-            "Görünürlük ev tekstilinde yoğunlaşmaktadır ({c:Havlu & Bornoz} {g:%64.3}, {c:Setler} {g:%56.3}). "
-            "{c:Mutfak Tekstili} {g:+9.4p}, {c:Kadın Aksesuar} {g:+3.7p} ve {c:Yatak Odası Tekstili} {g:+2.9p} ile en çok kazanan kategorilerdir.",
+              "rows": kat}, **{**T, "font_pt": 9, "row_h": 14, "head_h": 20}),
+        {"type": "insights", "col": "full", "mt": 6, "font_pt": 9.5, "items": [
+            "Görünürlük ev tekstilinde yoğunlaşmaktadır: {c:Havlu & Bornoz} {g:%64.3}, {c:Setler} {g:%56.3}; en çok kazananlar "
+            "{c:Mutfak Tekstili} {g:+9.4p} ve {c:Kadın Aksesuar} {g:+3.7p}.",
             "En yüksek hacimli {c:Erkek Giyim} ({b:2.94M}), {c:Kadın Giyim} ({b:2.28M}) ve {c:Kadın Aksesuar} ({b:1.89M}) "
             "kategorilerinden yalnızca Kadın Aksesuar {b:%18.8} görünürlüğe ulaşmaktadır; giyim ve ayakkabıda {b:%1-4} bandındaki "
             "görünürlük büyüme potansiyeli taşımaktadır.",

@@ -876,8 +876,10 @@ buluyor.
 | Deste 10×5.625 inch üretilmişti, gövde metni 6-7pt'ydi | Sahne 13.333×7.5 inch, gövde 9pt ve üstü | canvas + punto tabanı kuralı |
 
 **Eylül 2025 şerhi - her destede geçerli.** Google'ın sonuç sayfası
-sorgularında Eylül 2025'te yaptığı değişiklikten sonra derin sıralardaki
-impression'lar Search Console raporlarına daha sınırlı yansıyor. Bunun iki
+sorgularında Eylül 2025'te yaptığı değişiklikten sonra **ilk 20 sıranın
+dışındaki** sonuçların impression'ları Search Console raporlarına daha sınırlı
+yansıyor. Dipnotta da bu biçimde yazılır: "derin sıralar" gibi belirsiz bir
+ifade yerine sınır sayıyla verilir. Bunun iki
 sonucu var: yıllık impression karşılaştırması olduğundan büyük bir düşüş
 gösterir, ortalama pozisyon ise olduğundan iyi görünür. Yıllık impression ya
 da pozisyon karşılaştırması içeren her slaytta bu şerh dipnota yazılır;

@@ -336,6 +336,22 @@ metrikle yan yana verilir: "Session -%11 daralırken Revenue +%19 artmıştır."
 | ↓ | ↓ daha az | Daralan pazarda pay korunuyor, pozitif okuma |
 | → veya ↑ | ↓ | Performans veya SERP kompozisyonu kaynaklı, incelenmeli |
 
+**Aylık seri slaytlarında değişim notu zorunludur.** 13 aylık seri grafiği +
+tablo taşıyan her slaytta, tablonun altında **MoM ve YoY ayrı birer ok**
+olarak yazılır; okuyucu 13 kolonu kafasında çıkarmak zorunda kalmaz:
+
+```
+➔ MoM (Tem'26 → Ağu'26): Toplam +%2.6 · Brand +%7.2 · Non-Brand %0.0
+➔ YoY (Ağu'25 → Ağu'26): Toplam -%30.9 · Brand -%45.0 · Non-Brand -%18.3
+```
+
+İki dönem de aynı slaytta bulunur; yalnız biri verilmez. Tabloda MoM/YoY
+kolonu zaten varsa (dönem karşılaştırması slaytı) bu not tekrarlanmaz.
+
+**Bir bulgu = bir ok.** İki ayrı bulgu tek okta birleştirilmez; her okun
+kendi cümlesi ve kendi rakamı olur. Bir ok en fazla iki cümle taşır (ikincisi
+sebep-sonuç). Üçüncü bir tespit ayrı ok olarak yazılır.
+
 **Insight biçimi:** `➔` + tek boşluk, her insight tek okla. 1-2 cümle ideal,
 üçüncü cümle sebep-sonuç için. Birinci cümle sayısal, ikinci cümle yorum.
 

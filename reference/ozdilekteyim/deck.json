@@ -227,7 +227,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 158,
+     "h": 124,
      "bar_w": 24,
      "cats": [
       "Ağu'25",
@@ -385,16 +385,18 @@
      "bold_rows": [
       -1
      ],
-     "font_pt": 10.5,
+     "font_pt": 9.5,
      "row_h": 20,
      "head_h": 24
     },
     {
      "type": "insights",
      "col": "full",
-     "mt": 10,
-     "font_pt": 10.5,
+     "mt": 8,
+     "font_pt": 10,
      "items": [
+      "MoM (Tem'26 → Ağu'26): Toplam {g:+%2.6} · Brand {g:+%7.2} · Non-Brand {g:+%0.0}",
+      "YoY (Ağu'25 → Ağu'26): Toplam {r:-%30.9} · Brand {r:-%45.0} · Non-Brand {r:-%18.3}",
       "Toplam click {b:Kas'25} döneminde {b:276.0K} ile serinin en yüksek seviyesine ulaşmış, Şubat 2026'dan itibaren {b:163-212K} bandında seyretmiştir. Ağustos'ta {b:167.9K} ile Temmuz'a göre {g:+%2.6} toparlanmıştır; Nisan'daki brand artışı dışında iki segment benzer eğilim göstermektedir."
      ]
     }
@@ -413,14 +415,14 @@
     100
    ],
    "footnotes": [
-    "Brand ölçeği Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra derin sıralardaki impression'lar Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.",
+    "Brand ölçeği grafikte sağ eksendedir. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.",
     "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
    ],
    "blocks": [
     {
      "type": "combo",
      "col": "full",
-     "h": 158,
+     "h": 124,
      "bar_w": 24,
      "cats": [
       "Ağu'25",
@@ -578,17 +580,19 @@
      "bold_rows": [
       -1
      ],
-     "font_pt": 10.5,
+     "font_pt": 9.5,
      "row_h": 20,
      "head_h": 24
     },
     {
      "type": "insights",
      "col": "full",
-     "mt": 10,
-     "font_pt": 10.5,
+     "mt": 8,
+     "font_pt": 10,
      "items": [
-      "Toplam impression {r:8.47M → 4.58M} ile yıllık {r:-%45.9} gerilemiştir; düşüşün tamamına yakını non-brand tarafındadır. Brand impression {b:444.6K → 391.7K} ile görece dar bir aralıkta kalmıştır."
+      "MoM (Tem'26 → Ağu'26): Toplam {g:+%1.0} · Brand {g:+%0.1} · Non-Brand {g:+%1.1}",
+      "YoY (Ağu'25 → Ağu'26): Toplam {r:-%45.9} · Brand {r:-%11.9} · Non-Brand {r:-%47.8}",
+      "Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression {b:444.6K → 391.7K} ile dar bir aralıkta kalmıştır."
      ]
     }
    ]
@@ -607,7 +611,7 @@
     50
    ],
    "footnotes": [
-    "Pozisyonda pozitif değer iyileşmedir; CTR değişimi puan (p) olarak verilmiştir. Non-Brand pozisyonu, marka ifadelerinin regex ile dışlandığı ayrı bir ölçümden alınmıştır. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra derin sıralardaki impression'lar Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır."
+    "Pozisyonda pozitif değer iyileşmedir; CTR değişimi puan (p) olarak verilmiştir. Non-Brand pozisyonu, marka ifadelerinin regex ile dışlandığı ayrı bir ölçümden alınmıştır. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır."
    ],
    "blocks": [
     {
@@ -822,7 +826,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 116,
+     "h": 96,
      "bar_w": 26,
      "cats": [
       "Ağu'25",
@@ -1000,10 +1004,11 @@
      "type": "insights",
      "col": "full",
      "mt": 10,
-     "font_pt": 10.5,
+     "font_pt": 10,
      "items": [
-      "\"özdilek\" hacmi {b:165.0K → 165.0K} ile yatay, \"özdilekteyim\" hacmi {g:49.5K → 74.0K} ({g:+%49.5}) ile artmışken brand click {r:114.8K → 63.1K} ({r:-%45.0}) gerilemiştir. İki marka teriminde de talebin korunması, brand click düşüşünün talep kaynaklı olmadığına işaret etmektedir.",
-      "Brand CTR Eylül 2025'ten itibaren {b:%15-19} bandına yerleşmiştir; Ağustos 2025'teki {b:%25.8} seviyesine Nisan 2026 dışında dönülmemiştir."
+      "MoM (Tem'26 → Ağu'26): Brand click {g:+%7.2} · \"özdilek\" hacmi {g:+%0.0} · \"özdilekteyim\" hacmi {g:+%22.3}",
+      "YoY (Ağu'25 → Ağu'26): Brand click {r:-%45.0} · \"özdilek\" hacmi {g:+%0.0} · \"özdilekteyim\" hacmi {g:+%49.5}",
+      "İki marka teriminde de talep korunurken brand click {r:114.8K → 63.1K} gerilemiştir; düşüşün talep kaynaklı olmadığına işaret etmektedir."
      ]
     }
    ]
@@ -1118,17 +1123,17 @@
        "+310"
       ],
       [
-       "özdilek nevresim takımı",
-       "5.4K",
-       "1.239",
-       "1.501",
-       "+262"
-      ],
-      [
        "özdilek bornoz takımı",
        "6.6K",
        "1.118",
        "1.380",
+       "+262"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "5.4K",
+       "1.239",
+       "1.501",
        "+262"
       ],
       [
@@ -1189,7 +1194,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 150,
+     "h": 118,
      "bar_w": 24,
      "cats": [
       "Ağu'25",
@@ -1397,8 +1402,9 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "Mağaza sayfaları Ağustos'ta {b:63.7K} click almış; MoM {g:+%3.8}, YoY {r:-%8.9}. Impression yıllık {r:-%26.5} daralırken click kaybı daha sınırlı kalmış, CTR {g:%1.66 → %2.05} yükselmiştir.",
-      "Click Kasım 2025'te {b:94.4K} ile zirve yapmıştır; ortalama pozisyon o ay {b:5.9}, Şubat 2026'dan bu yana {b:7.6-8.2} bandındadır."
+      "MoM (Tem'26 → Ağu'26): Click {g:+%3.8} · Impression {g:+%1.0} · Ort. pozisyon {g:-0.4}",
+      "YoY (Ağu'25 → Ağu'26): Click {r:-%8.9} · Impression {r:-%26.5} · Ort. pozisyon {r:+2.1}",
+      "Impression yıllık {r:-%26.5} daralırken CTR {g:%1.66 → %2.05} yükselmiş, click kaybı sınırlı kalmıştır."
      ]
     }
    ]
@@ -1423,7 +1429,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 150,
+     "h": 118,
      "bar_w": 24,
      "cats": [
       "Ağu'25",
@@ -1631,7 +1637,8 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "Market sayfaları Ağustos'ta {b:10.0K} click ile MoM {g:+%4.0} artmış, yıllık bazda {r:-%41.0} geride kalmıştır. Impression aynı dönemde {r:-%52.9} daralmıştır.",
+      "MoM (Tem'26 → Ağu'26): Click {g:+%4.0} · Impression {g:+%3.8} · Ort. pozisyon {g:-0.3}",
+      "YoY (Ağu'25 → Ağu'26): Click {r:-%41.0} · Impression {r:-%52.9} · Ort. pozisyon {r:+2.9}",
       "Click Nisan 2026'dan bu yana {b:9-10K} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {b:7.2-7.4} seviyesinden {r:10.0} seviyesine gerilemiştir."
      ]
     }
@@ -1657,7 +1664,7 @@
     {
      "type": "combo",
      "col": "full",
-     "h": 150,
+     "h": 118,
      "bar_w": 24,
      "cats": [
       "Ağu'25",
@@ -1865,8 +1872,9 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "Marka + Kategori sayfaları Ağustos'ta {b:7.934} click ve {b:429.5K} impression almıştır; click MoM {g:+%7.4}, impression MoM {g:+%2.1} artmıştır.",
-      "Impression Eylül 2025'ten bu yana her ay artmıştır. Click Nisan 2026'da {b:8.9K} ile zirve yapmış, ortalama pozisyon {b:7.3-8.4} bandında kalmıştır."
+      "MoM (Tem'26 → Ağu'26): Click {g:+%7.4} · Impression {g:+%2.1} · Ort. pozisyon {g:-0.5}",
+      "YoY (Ağu'25 → Ağu'26): Click yeni · Impression yeni · Ort. pozisyon -",
+      "Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {b:8.9K} ile zirve yapmış, ortalama pozisyon {b:7.3-8.4} bandında kalmıştır."
      ]
     }
    ]
@@ -2002,17 +2010,17 @@
        "-98"
       ],
       [
-       "panini dünya kupası albümü 2026",
-       "1.0K",
-       "88",
-       "0",
-       "-88"
-      ],
-      [
        "tek kişilik pike",
        "4.4K",
        "150",
        "62",
+       "-88"
+      ],
+      [
+       "panini dünya kupası albümü 2026",
+       "1.0K",
+       "88",
+       "0",
        "-88"
       ]
      ],
@@ -2318,18 +2326,18 @@
       0
      ],
      "font_pt": 9.5,
-     "row_h": 20,
+     "row_h": 16,
      "head_h": 24
     },
     {
      "type": "insights",
      "col": "full",
-     "mt": 8,
-     "font_pt": 10,
+     "mt": 6,
+     "font_pt": 9.5,
      "items": [
-      "Özdilekteyim'in Google visibility'si Ağustos'ta desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır; AI Overview tarafında mention {b:%0.2}, citation {b:%0.1} seviyesindedir.",
+      "Özdilekteyim'in Google visibility'si desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır.",
       "Google tarafında {c:boyner.com.tr} ({g:+1.7p} / {g:+1.2p}) ve {c:lcw.com} ({g:+1.5p} / {g:+1.1p}) payını artırırken {c:hepsiburada.com} ({r:-3.3p} / {r:-4.6p}) ve {c:n11.com} gerilemiştir.",
-      "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} citation {g:+12.9p} ve mention {g:+9.9p} ile Google'daki gerilemenin tersine AI Overview'da belirgin artış göstermiştir."
+      "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} Google'da gerilerken burada citation {g:+12.9p} artmıştır."
      ]
     }
    ]
@@ -2473,7 +2481,7 @@
     100
    ],
    "footnotes": [
-    "Arama hacmi, kategorideki takip edilen keyword'lerin Ağustos 2026 aylık hacim toplamıdır. Visibility: arama hacmine göre ağırlıklandırılmış sıralama görünürlüğü. Pozisyonda pozitif değer iyileşmedir; ilk 100'de yer almayan keyword'ler ortalamaya 100 olarak girer. Kategoriler hacme göre sıralıdır."
+    "Arama hacmi, kategorideki takip edilen keyword'lerin Ağustos 2026 aylık toplamıdır; kategoriler hacme göre sıralıdır. Visibility: arama hacmine göre ağırlıklandırılmış sıralama görünürlüğü. Pozisyonda pozitif değer iyileşmedir."
    ],
    "blocks": [
     {
@@ -2604,16 +2612,16 @@
       ]
      ],
      "font_pt": 9,
-     "row_h": 15,
+     "row_h": 14,
      "head_h": 20
     },
     {
      "type": "insights",
      "col": "full",
      "mt": 6,
-     "font_pt": 10,
+     "font_pt": 9.5,
      "items": [
-      "Görünürlük ev tekstilinde yoğunlaşmaktadır ({c:Havlu & Bornoz} {g:%64.3}, {c:Setler} {g:%56.3}). {c:Mutfak Tekstili} {g:+9.4p}, {c:Kadın Aksesuar} {g:+3.7p} ve {c:Yatak Odası Tekstili} {g:+2.9p} ile en çok kazanan kategorilerdir.",
+      "Görünürlük ev tekstilinde yoğunlaşmaktadır: {c:Havlu & Bornoz} {g:%64.3}, {c:Setler} {g:%56.3}; en çok kazananlar {c:Mutfak Tekstili} {g:+9.4p} ve {c:Kadın Aksesuar} {g:+3.7p}.",
       "En yüksek hacimli {c:Erkek Giyim} ({b:2.94M}), {c:Kadın Giyim} ({b:2.28M}) ve {c:Kadın Aksesuar} ({b:1.89M}) kategorilerinden yalnızca Kadın Aksesuar {b:%18.8} görünürlüğe ulaşmaktadır; giyim ve ayakkabıda {b:%1-4} bandındaki görünürlük büyüme potansiyeli taşımaktadır."
      ]
     }

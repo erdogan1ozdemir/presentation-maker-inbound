@@ -687,6 +687,11 @@ eksen - ölçek farkı nedeniyle). Altında `heat: true` segment × ay matrisi
 Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
 
+**Tablo altında MoM ve YoY ayrı ok olarak verilir** (`insights` içinde iki
+ayrı madde). 13 kolonluk bir matris dönem değişimini kendiliğinden söylemez;
+her segment için iki oran yazılır: `➔ MoM (<önceki ay> → <cari ay>): …` ve
+`➔ YoY (<geçen yıl aynı ay> → <cari ay>): …`.
+
 **C46 Dönem karşılaştırması, pozisyonlu**
 **Dört metrik de bulunur:** click, impression, CTR ve ortalama pozisyon. CTR ve
 pozisyon atlandığında "impression düştü ama click arttı" tipi ayrışmanın
@@ -733,7 +738,9 @@ gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
   barlarla ve legend'la çakışmaz. 13 aylık seri.
 - Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
-- `insights`: cari ay MoM ve YoY + serinin tepe/dip ayı + pozisyon yönü.
+- `insights`: **MoM ve YoY ayrı birer ok** (click, impression ve pozisyon için
+  tek satırda `·` ile), ardından serinin tepe/dip ayı ve pozisyon yönü ayrı
+  oklarda. Bir okta iki ayrı bulgu toplanmaz.
 Dipnot: grubun URL tanımı (regex birebir), gruplar arası kapsama ilişkisi
 (ör. "Mağaza grubu Marka + Kategori sayfalarını da kapsar"), yeni açılan
 grupta YoY yerine `yeni`, pozisyon çizgisinin ters eksenli ve kendi

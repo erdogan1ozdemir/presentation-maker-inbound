@@ -666,6 +666,21 @@ def table_layout(b, w):
 
     row_h = b.get("row_h", 26)
     head_h = b.get("head_h", 30)
+    # Baslik satiri: uzun kolon adi ("Impression", "Ort. pozisyon") kolona
+    # sigmadiginda sariyor; sabit head_h ile ikinci satir kirpiliyordu. Once
+    # baslik puntosu bir kademe kucultulur, hala sariyorsa head_h satir
+    # sayisina gore acilir. Govde puntosuna dokunulmaz.
+    def _th_satir(pt_):
+        return [len(wrap_lines(plain(str(head[ci])), widths[ci] - pad * 2,
+                               pt_, safety=1.0)) or 1 for ci in range(ncol)]
+
+    satir = _th_satir(th_pt)
+    if max(satir) > 1 and th_pt > 8:
+        kucuk = max(8.0, th_pt - 1)
+        if max(_th_satir(kucuk)) == 1:
+            th_pt = kucuk
+            satir = _th_satir(th_pt)
+    head_h = max(head_h, max(satir) * th_pt * PX_PER_PT * 1.25 + 10)
     row_hs = []
     for r in rows:
         n = len(wrap_lines(plain(str(r[0] if r else "")), widths[0] - pad * 2,
