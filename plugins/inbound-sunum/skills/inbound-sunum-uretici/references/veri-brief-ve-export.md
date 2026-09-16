@@ -25,9 +25,14 @@ Dört blok, tek turda gruplu sorulur. Cevabı zaten bilinen soru tekrar sorulmaz
 1. Sunum hangi dönem için: ay, çeyrek, yarıyıl, yoksa belirli bir değişimin etkisi mi?
 2. Marka ve hangi property'ler? Tek domain mi, alt property'ler de var mı?
 3. İş modeli: e-ticaret (revenue + transaction), lead-gen (form success),
-   abonelik-servis (üyelik, paket sayfaları)?
+   abonelik-servis (üyelik, paket sayfaları)? **Seçilen modelin metrikleri
+   destede zorunludur:** e-ticarette yalnız session ile kapatılan bir GA4
+   bölümü eksik sayılır; revenue track edilmiyorsa bunun kendisi chat'te
+   bildirilir ve ilgili slayt çıkarılır.
 4. Organik trafik **web-only mu, web+app mi** raporlanacak? (Deste genelinde tek
-   kapsam; karar burada verilir.)
+   kapsam; karar burada verilir.) Karar her veri slaytının alt başlığında aynı
+   etiketle tekrarlanır; Search Console'da "web + app", GA4'te "tüm
+   kullanıcılar" yazan bir deste iki farklı kapsamı aynı anda iddia eder.
 5. Sunum kime yapılacak: marka SEO ekibi, pazarlama yönetimi, üst yönetim? Yönetici
    özetinin biçimi buna göre seçilir.
 
@@ -77,6 +82,12 @@ Bunlar veri değil, kullanıcının elindeki bilgi. Sorulmazsa deste eksik çık
    rakipler ayrılıyor mu? Sıra tüm destede sabit kalır.
 3. **Brand kelime seti:** marka yazım varyantları (yanlış yazımlar dahil), üçüncü
    parti markalar brand'e mi non-brand'e mi yazılacak.
+   **Tek yazımla yetinilmez.** Türkçe karakterli ve karaktersiz biçimler, ayrı
+   yazım, birleşik yazım ve sık görülen yanlış yazımlar regex'e girer
+   (`dağı|dagi|dagı`). Tek biçimle ölçülen brand segmenti olduğundan küçük
+   çıkar ve non-brand'i şişirir; gerçek bir destede brand kümesi `"dagi"` tek
+   yazımıyla kurulmuştu (tuzaklar 3.7). Seçilen regex segment tanımları
+   slaytında birebir yazılır.
 4. **Takip edilen kelime sayısı:** SEOmonitor kampanyasının `keywords_count`
    alanından okunur, slayt metnine birebir girer ("599 hedef anahtar kelime takip
    edilmektedir"). Uydurulmaz.

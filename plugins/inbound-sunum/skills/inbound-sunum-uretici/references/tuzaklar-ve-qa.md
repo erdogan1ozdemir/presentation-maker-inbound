@@ -836,3 +836,46 @@ olarak bildirir.
 İkinci sonuç: aynı kaynakta iki farklı yazımın aynı değeri taşıması, yazım
 varyantı bazında kırılım yapılamayacağı anlamına gelir. Kırılım gerekiyorsa
 Search Console tarafındaki gerçek sorgu dağılımına bakılır.
+
+
+### 3.7. Eksik iskeletle teslim edilen deste (gerçek vaka)
+
+Ağustos 2026'da bir marka için üretilen deste 15 slayt ve 3 bölümle teslim
+edildi. Tablolar doğruydu, dil düzgündü; eksik olan **iskeletti**. Denetimden
+geçmediği için de fark edilmedi. Aşağıdaki maddeler o destede tek tek
+görüldü; her biri artık `qa_deck.py` içinde ya da kontrol listesinde karşılık
+buluyor.
+
+| Ne eksikti | Kural | Denetim |
+|---|---|---|
+| Yönetici özeti (KPI + KRİTİK TESPİT) yoktu | Deste C27 ile açılır | `kpi` bloğu yoksa uyarı |
+| Tek grafik vardı, geri kalan her şey tabloydu | En az bir aylık seri grafiği (C45) | grafik bloğu yoksa hata |
+| Segment tanımları slaytı yoktu; brand yalnızca `"dagi"` tek yazımla tanımlanmıştı | C44 zorunlu; regex varyantları ve anonim sorgu şerhi yazılır | brand/non-brand geçip tanım slaytı yoksa uyarı |
+| Değerlendirme/kapanış slaytı yoktu, son veri slaytından Teşekkürler'e geçiliyordu | Kapanış bir sonraki adımla yapılır (C43) | kapanış izi yoksa uyarı |
+| CTR ve ortalama pozisyon destede hiç geçmiyordu | C46 dört metrikle kurulur | kontrol listesi |
+| Sorgu tabloları yalnız impression taşıyordu, hacim kolonu yoktu | C47: hacim kolonu zorunlu | query slaytında hacim kolonu yoksa uyarı |
+| Sayfa slaytı yalnız MoM ve tek tabloydu | Artan ve azalan ayrı tablo, MoM + YoY | kontrol listesi |
+| Search Console "web + app", GA4 "tüm kullanıcılar" diyordu | Kapsam kararı destede tektir | iki farklı kapsam etiketi geçerse uyarı |
+| E-ticaret markasında GA4 tarafında yalnızca session vardı | Model metrikleri: revenue, transaction, CR | kontrol listesi |
+| Yıllık impression -%36.9 için Eylül 2025 şerhi yoktu | Şerh zorunlu (bkz. aşağıda) | impression YoY varken şerh yoksa uyarı |
+| Alt başlık "MoM & YoY" diyordu, tabloda yalnız YoY kolonu vardı | Alt başlıkta beyan edilen her karşılaştırma tabloda kolon olarak bulunur | gözle |
+| SoV ve AI Overview SoV tek günün anlık değeriydi (25 Ağustos) | SoV dönem ortalamasıyla verilir (C20b) | gözle |
+| AI Overview tablosunda mention ve citation ayrı kolon değildi, ayrım yalnız insight cümlesindeydi | İki metrik ayrı kolon (C21b) | gözle |
+| SoV tablosunda kendi satır adı marka adıydı, diğerleri domaindi | Domain kolonunda hepsi domain yazımıyla | gözle |
+| Rakip visibility, kategori visibility ve AI görünürlük bölümü yoktu | C20c · C22 · C51 | gözle |
+| Deste 10×5.625 inch üretilmişti, gövde metni 6-7pt'ydi | Sahne 13.333×7.5 inch, gövde 9pt ve üstü | canvas + punto tabanı kuralı |
+
+**Eylül 2025 şerhi - her destede geçerli.** Google'ın sonuç sayfası
+sorgularında Eylül 2025'te yaptığı değişiklikten sonra derin sıralardaki
+impression'lar Search Console raporlarına daha sınırlı yansıyor. Bunun iki
+sonucu var: yıllık impression karşılaştırması olduğundan büyük bir düşüş
+gösterir, ortalama pozisyon ise olduğundan iyi görünür. Yıllık impression ya
+da pozisyon karşılaştırması içeren her slaytta bu şerh dipnota yazılır;
+yazılmadan "impression -%37 düştü" cümlesi yanlış okunur.
+
+**Düşüş yorumunda yargı ve kesin nedensellik.** Aynı destede "büyümenin
+arkasındaki düşük kaliteli trafiğin ayıklanması bu ayrışmayı açıklamaktadır"
+cümlesi vardı. İki sorun: "düşük kaliteli" yargı kelimesidir, "açıklamaktadır"
+ise doğrulanmamış bir nedenselliği kesin kipe taşır. Karşılığı: "impression
+daralırken click'in korunması, gösterimin daha isabetli sorgulara kaymasıyla
+ilişkilendirilebilir."

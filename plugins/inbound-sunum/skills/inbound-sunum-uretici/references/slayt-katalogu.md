@@ -448,6 +448,10 @@ Share of Click'i %8 olabilir; bunlar çelişki değil farklı metriklerdir. Tek
 tabloda ya da tek başlık altında birleştirilmez, her tablo kendi dönem tabanını
 dipnotta beyan eder.
 
+**Tek gün anlık değeri dönem değeri yerine kullanılmaz.** Ayın ortasında
+alınmış bir SoV ölçümü "Ağustos" diye sunulamaz; ay sonu ölçümü ya da dönem
+ortalaması kullanılır, hangisi olduğu dipnotta yazılır (tuzaklar 3.7).
+
 **Dönem tabanı.** Share of Click günlük seriden **dönem ortalaması** olarak alınır
 (tek gün anlık değer aylık ortalamadan 1 puana kadar sapabilir). Visibility
 **dönem sonu** değeriyle verilir; böylece marka panele baktığında aynı sayıyı
@@ -496,7 +500,11 @@ bu kelimelerdeki AI yanıtlarında bahsedilme ve linklenme oranına göre hesapl
 Insight: lider marka → kendi sıramız → 3. marka → AI tarafında ayrışma.
 
 **C21b AI Overview SoV sıralaması**
-Domain × SoV × sıra tablosu. **Bağlam kutusu zorunlu:** AI Overview'ın ilgili pazarda
+Domain × SoV × sıra tablosu. **Mention ve citation ayrı kolon olur**; "toplam
+görünümün şu kadarı citation" bilgisi yalnızca insight cümlesinde kalmaz.
+**Domain kolonunda her satır domain yazımıyla verilir** - kendi markanı marka
+adıyla, rakipleri domainle yazmak tabloyu okunmaz yapar (`dagi.com.tr`, marka
+adı değil). **Bağlam kutusu zorunlu:** AI Overview'ın ilgili pazarda
 ne zaman yayına alındığı. `AI Overview SoV` ve `AI Search SoV` **farklı metriklerdir**;
 ikisi birden kullanılıyorsa ikisinin de tanımı dipnotta verilir.
 
@@ -676,6 +684,10 @@ Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okun
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
 
 **C46 Dönem karşılaştırması, pozisyonlu**
+**Dört metrik de bulunur:** click, impression, CTR ve ortalama pozisyon. CTR ve
+pozisyon atlandığında "impression düştü ama click arttı" tipi ayrışmanın
+açıklaması destede yer almaz; gerçek bir destede bu iki metrik hiç geçmediği
+için düşüş yorumu dayanaksız kaldı (tuzaklar 3.7).
 `Segment | Click | Impression | CTR | Pozisyon` × (cari ay, önceki ay, geçen yıl
 aynı ay) veya Δ kolonlu düz biçim. Pozisyon impression ağırlıklı ortalamadır;
 aritmetik ortalama kullanılmaz. Pozisyon satırlarında ısı haritası

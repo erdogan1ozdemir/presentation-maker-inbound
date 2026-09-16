@@ -108,7 +108,9 @@ BANNED_TERMS = {"ss.": "session", "pik": "peak", "atıf": "mention",
                 # bolum/breadcrumb adlari (slayt-katalogu C47)
                 "sorgu hareketleri": "Query Değişimleri",
                 "sayfa hareketleri": "Sayfa Değişimleri",
-                "sıralama hareketleri": "Sıralama Değişimleri"}
+                "sıralama hareketleri": "Sıralama Değişimleri",
+                "grand total": "Toplam", "bucket": "bant",
+                "düşük kaliteli": "düşük dönüşümlü"}
 
 PCT_OK = re.compile(r"[+\-]?%\d")               # dogru: %18, +%6.9, -%37
 PCT_BAD = re.compile(r"\d[\d.,]*\s*%")          # yanlis: 34.8%, 2,75%
@@ -406,6 +408,102 @@ def check_structure(spec, rep):
 # Katman 1: yerlesim (uretici olcum motoru)
 # ----------------------------------------------------------------------------
 
+KAPSAM_ETIKET = {"web-only": r"web[- ]only", "web + app": r"web\s*\+\s*app",
+                 "tüm kullanıcılar": r"tüm kullanıcılar"}
+KAPANIS_IZ = ("değerlendirme", "öne çıkan", "sonraki dönem", "plan", "öneri",
+              "yol haritası", "odak")
+TANIM_IZ = ("tanım", "yöntem", "segment")
+
+
+def check_skeleton(spec, rep):
+    """Deste iskeleti: bir M1/M2 destesinde bulunmasi gereken katmanlar.
+
+    Gercek olay (tuzaklar 3.7): tablo tablo dizilmis, yonetici ozeti, trend
+    grafigi, segment tanimi ve kapanis slayti olmayan bir deste teslim edildi.
+    Bu denetim o katmanlarin varligini mekanik olarak arar.
+    """
+    slides = spec.get("slides") or []
+    icerik = [s for s in slides if s.get("type") == "content"]
+    if not icerik:
+        return
+    bloklar = [b.get("type") for s in icerik for b in (s.get("blocks") or [])]
+    metin = " ".join(plain(t) for _w, t in collect(spec)).lower()
+
+    if "kpi" not in bloklar:
+        rep.warn("YAPI", "yönetici özeti", "destede 'kpi' bloğu yok",
+                 "deste KPI kartları + KRİTİK TESPİT ile açılır (C27); "
+                 "bilinçli atlandıysa gerekçesi chat'te yazılır")
+    if not ({"combo", "bar", "line"} & set(bloklar)):
+        rep.err("YAPI", "trend grafiği", "destede hiç grafik bloğu yok",
+                "en az bir aylık seri grafiği konur; yalnız tablo dizilen "
+                "deste dönem içi seyri göstermez (C45)")
+
+    son = [s for s in slides if s.get("type") in ("content", "closing")]
+    kapanis_var = any(
+        any(iz in (plain(s.get("title", "")) + " " +
+                   " ".join(plain(x) for x in (s.get("breadcrumb") or []))).lower()
+            for iz in KAPANIS_IZ) for s in icerik)
+    if son and son[-1].get("type") == "closing" and not kapanis_var:
+        rep.warn("YAPI", "kapanış", "değerlendirme / sonraki adım slaytı yok",
+                 "deste 'Teşekkürler'den önce öne çıkan başlıklar ya da "
+                 "sonraki dönem planıyla kapanır (C43)")
+
+    if "non-brand" in metin or "nonbrand" in metin:
+        tanim = any(
+            any(iz in (plain(s.get("title", "")) + " " +
+                       " ".join(plain(x) for x in (s.get("breadcrumb") or []))).lower()
+                for iz in TANIM_IZ)
+            and any(b.get("type") == "panels" for b in (s.get("blocks") or []))
+            for s in icerik)
+        if not tanim:
+            rep.warn("YAPI", "segment tanımı",
+                     "brand/non-brand ayrımı var ama tanım slaytı yok",
+                     "regex ifadeleri, non-brand hesabı ve anonim sorgu şerhi "
+                     "ayrı bir slaytta beyan edilir (C44)")
+
+    gecen = {ad for ad, rx in KAPSAM_ETIKET.items() if re.search(rx, metin)}
+    if len(gecen) > 1:
+        rep.warn("YAPI", "kapsam etiketi", f"destede birlikte geçiyor: {sorted(gecen)}",
+                 "kapsam kararı deste başında bir kez verilir ve her tabloda "
+                 "aynı etiketle tekrarlanır (web-only / web+app)")
+
+    for i, s in enumerate(slides, 1):
+        if s.get("type") != "content":
+            continue
+        alt = plain(s.get("subtitle", ""))
+        basliklar = " ".join(plain(x) for b in (s.get("blocks") or [])
+                             if b.get("type") == "table"
+                             for x in (b.get("head") or []))
+        iz = (" ".join(plain(x) for x in (s.get("breadcrumb") or [])) + " "
+              + plain(s.get("title", ""))).lower()
+        if "query" in iz and ("değişim" in iz or "hareket" in iz):
+            if "hacim" not in basliklar.lower():
+                rep.warn(f"S{i:02d}", "hacim kolonu",
+                         "query tablosunda arama hacmi kolonu yok",
+                         "pozisyon/click değişimi hacimle birlikte okunur (C47)")
+        if re.search(r"(son\s+)?\d+\s*(gün|hafta|ay)\b", alt.lower()) \
+                and not re.search(r"(20\d\d|oca|şub|mar|nis|may|haz|tem|ağu|eyl|eki|kas|ara)",
+                                  alt.lower()):
+            rep.warn(f"S{i:02d}", "tarihsiz dönem", f"'{alt[:60]}'",
+                     "gün/hafta sayısı yerine tarih aralığı yazılır")
+
+    imp_yoy = any("yoy" in (plain(s.get("subtitle", "")) + " " +
+                            " ".join(plain(x) for b in (s.get("blocks") or [])
+                                     if b.get("type") == "table"
+                                     for x in (b.get("head") or []))).lower()
+                  and "impression" in (plain(s.get("title", "")) + " " +
+                                       " ".join(plain(x) for b in (s.get("blocks") or [])
+                                                if b.get("type") == "table"
+                                                for x in (b.get("head") or []))).lower()
+                  for s in icerik)
+    if imp_yoy and "eylül 2025" not in metin:
+        rep.warn("YAPI", "impression YoY şerhi",
+                 "yıllık impression karşılaştırması var, Eylül 2025 notu yok",
+                 "Eylül 2025'teki sonuç sayfası değişikliğinden sonra derin "
+                 "sıralardaki impression'lar sınırlı raporlanıyor; dipnot "
+                 "olmadan yıllık impression ve pozisyon yanlış okunur")
+
+
 def check_layout(spec, base, rep):
     here = os.path.dirname(os.path.abspath(__file__))
     assets = os.path.normpath(os.path.join(here, "..", "assets"))
@@ -511,6 +609,7 @@ def check_pptx(path, rep):
                 "13.333x7.5 inch olmalı (1280x720 px @96dpi)")
     bad_fonts = set()
     yanlis_display = []
+    kucuk_punto = []
     for i, s in enumerate(prs.slides, 1):
         for shp in s.shapes:
             if not shp.has_text_frame:
@@ -531,6 +630,14 @@ def check_pptx(path, rep):
                     if boy >= 20 and n == "Outfit" and r.text.strip():
                         yanlis_display.append(
                             f"S{i:02d} · {boy:.0f}pt · '{r.text.strip()[:32]}'")
+                    # Govde puntosu tabani: ev standardinda en kucuk metin
+                    # dipnot/grafik etiketi (9pt), tablo hucreleri 9-10.5pt
+                    # arasindadir. 8pt altina inen metin sunumda ve baskida
+                    # okunmaz; genelde deste yanlis olcekte uretildiginde
+                    # (10 inch sahne) toplu halde gorulur - bkz. tuzaklar 3.7.
+                    if 0 < boy < 8 and r.text.strip():
+                        kucuk_punto.append(
+                            f"S{i:02d} · {boy:.1f}pt · '{r.text.strip()[:28]}'")
     if yanlis_display:
         rep.err("DOSYA", "display fontu",
                 f"{len(yanlis_display)} metin 20pt üstünde Outfit ile basılmış: "
@@ -543,6 +650,11 @@ def check_pptx(path, rep):
                 if ic in nt:
                     rep.err(f"S{i:02d} NOT", "konuşmacı notu sızıntısı",
                             f"'{ic}'", "notları teslim öncesi temizle")
+    if kucuk_punto:
+        rep.err("DOSYA", "punto tabanı",
+                f"{len(kucuk_punto)} metin 8pt altında: {kucuk_punto[:4]}",
+                "gövde metni 9pt ve üstünde olur; toplu görülüyorsa deste "
+                "yanlış sahne ölçüsünde üretilmiştir (13.333x7.5 inch)")
     if bad_fonts:
         rep.err("DOSYA", "font", f"{sorted(bad_fonts)}",
                 "yalnızca Bricolage Grotesque ve Outfit kullanılır")
@@ -568,6 +680,7 @@ def main():
     check_language(spec, rep)
     check_numbers(spec, rep)
     check_structure(spec, rep)
+    check_skeleton(spec, rep)
     if a.pptx:
         check_pptx(a.pptx, rep)
 

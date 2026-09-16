@@ -371,9 +371,36 @@ gösteriyor ve tasarım sistemi görünümü tam kontrol edilemiyor. Şekil olar
 
 ## FAZ 5 - Denetim
 
+**Deste yalnızca `inbound_deck.py` ile üretilir.** PPTX'i başka bir yolla
+(python-pptx ile elle, şablon kopyalayarak, başka bir araçla) yazmak ev
+ölçüsünü kaybettirir: sahne 1280×720 px = 13.333×7.5 inch'tir. Gerçek olay
+(tuzaklar 3.7): 10×5.625 inch üretilen bir deste %75 ölçekte kaldı, gövde
+metni 6-7pt'ye indi ve sunumda okunmadı. `qa_deck.py --pptx` bunu hem canvas
+hem punto tabanı kuralıyla yakalar.
+
 ```bash
 python3 scripts/qa_deck.py deck.json --pptx cikti.pptx
 ```
+
+### Teslim öncesi iskelet kontrolü
+
+Script bunların çoğunu mekanik olarak arar (`check_skeleton`), ama listeyi
+kendin de geç - eksik olan varsa ya slaytı ekle ya da neden eklenmediğini
+chat'te yaz:
+
+- [ ] **Yönetici özeti** KPI kartları + KRİTİK TESPİT ile destenin başında mı?
+- [ ] **Segment tanımları** slaytı var mı? Brand regex ifadeleri birebir yazıldı
+      mı, non-brand hesabı ve anonim sorgu şerhi beyan edildi mi?
+- [ ] **Aylık seri grafiği** var mı? İki dönem kıyası trendin yerine geçmez.
+- [ ] **CTR ve ortalama pozisyon** dönem karşılaştırmasında yer alıyor mu?
+- [ ] **Sorgu tablolarında arama hacmi kolonu** var mı, eşik ve kapsam yazıldı mı?
+- [ ] **Sayfa tarafında hem MoM hem YoY**, hem artan hem azalan tablo var mı?
+- [ ] **Kapsam etiketi** (web-only / web+app) bütün bölümlerde aynı mı?
+- [ ] **İş modeli metrikleri** açıldı mı? E-ticarette session tek başına yetmez;
+      revenue, transaction ve dönüşüm oranı istenir.
+- [ ] **Yıllık impression/pozisyon karşılaştırmasında Eylül 2025 şerhi** var mı?
+- [ ] **Kapanış**: değerlendirme ya da sonraki dönem slaytı "Teşekkürler"den
+      önce duruyor mu?
 
 Üç katman tarar: yerleşim (taşma, başlık sarması), dil (em dash, emoji, emir kipi,
 kesin vaat, keskin kelime, otomasyon aracı sızıntısı, iç kısıt ifadesi, terim
