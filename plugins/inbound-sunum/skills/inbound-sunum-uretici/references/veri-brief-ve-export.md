@@ -84,10 +84,11 @@ Bunlar veri değil, kullanıcının elindeki bilgi. Sorulmazsa deste eksik çık
    parti markalar brand'e mi non-brand'e mi yazılacak.
    **Tek yazımla yetinilmez.** Türkçe karakterli ve karaktersiz biçimler, ayrı
    yazım, birleşik yazım ve sık görülen yanlış yazımlar regex'e girer
-   (`dağı|dagi|dagı`). Tek biçimle ölçülen brand segmenti olduğundan küçük
-   çıkar ve non-brand'i şişirir; gerçek bir destede brand kümesi `"dagi"` tek
-   yazımıyla kurulmuştu (tuzaklar 3.7). Seçilen regex segment tanımları
-   slaytında birebir yazılır.
+   (ör. `özdilek|ozdilek`, `gameplus|game ?plus|game\+`). Tek biçimle ölçülen
+   brand segmenti olduğundan küçük çıkar ve non-brand'i şişirir; gerçek bir
+   destede brand kümesi markanın tek bir yazımıyla kurulduğu için brand hacmi
+   eksik ölçüldü (tuzaklar 3.7). Seçilen regex segment tanımları slaytında
+   birebir yazılır.
 4. **Takip edilen kelime sayısı:** SEOmonitor kampanyasının `keywords_count`
    alanından okunur, slayt metnine birebir girer ("599 hedef anahtar kelime takip
    edilmektedir"). Uydurulmaz.

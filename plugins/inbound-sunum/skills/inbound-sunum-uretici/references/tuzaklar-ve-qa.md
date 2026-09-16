@@ -850,7 +850,7 @@ buluyor.
 |---|---|---|
 | Yönetici özeti (KPI + KRİTİK TESPİT) yoktu | Deste C27 ile açılır | `kpi` bloğu yoksa uyarı |
 | Tek grafik vardı, geri kalan her şey tabloydu | En az bir aylık seri grafiği (C45) | grafik bloğu yoksa hata |
-| Segment tanımları slaytı yoktu; brand yalnızca `"dagi"` tek yazımla tanımlanmıştı | C44 zorunlu; regex varyantları ve anonim sorgu şerhi yazılır | brand/non-brand geçip tanım slaytı yoksa uyarı |
+| Segment tanımları slaytı yoktu; brand markanın tek bir yazımıyla tanımlanmıştı (Türkçe karakterli biçim ve yanlış yazımlar dışarıda kaldı) | C44 zorunlu; regex varyantları ve anonim sorgu şerhi yazılır | brand/non-brand geçip tanım slaytı yoksa uyarı |
 | Değerlendirme/kapanış slaytı yoktu, son veri slaytından Teşekkürler'e geçiliyordu | Kapanış bir sonraki adımla yapılır (C43) | kapanış izi yoksa uyarı |
 | CTR ve ortalama pozisyon destede hiç geçmiyordu | C46 dört metrikle kurulur | kontrol listesi |
 | Sorgu tabloları yalnız impression taşıyordu, hacim kolonu yoktu | C47: hacim kolonu zorunlu | query slaytında hacim kolonu yoksa uyarı |
