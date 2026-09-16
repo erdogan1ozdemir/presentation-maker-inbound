@@ -689,8 +689,8 @@
     50
    ],
    "footnotes": [
-    "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", GFN \"geforce now\" · \"gfn\". Google Ads yakın varyantları tek keyword saydığı için \"game plus\" ve \"geforcenow\" aynı seriyi taşımaktadır; çift sayım oluşmaması adına her çiftten biri toplama dahil edilmiştir.",
-    "Arama hacmi bant halinde döndüğü için değerler belirli basamaklarda kümelenmektedir; ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Grafiklerde hacim sol eksende, click sağ eksendedir."
+    "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", GFN \"geforce now\" · \"gfn\". \"game plus\" ve \"geforcenow\" yakın varyant olarak aynı seriyi taşıdığından toplama dahil edilmemiştir.",
+    "Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır; hacim sol, click sağ eksendedir."
    ],
    "blocks": [
     {
@@ -1557,8 +1557,8 @@
     50
    ],
    "footnotes": [
-    "Öncesi: 12 Ağu 2025 - 7 Şub 2026 (180 gün). Sonrası: 15 Şub - 13 Ağu 2026 (180 gün). Geçiş haftası iki pencereye de dahil edilmemiştir.",
-    "Grafik, geçişin 16 hafta öncesi ve 16 hafta sonrasını haftalık toplamlarla gösterir; hem bar hem pozisyon çizgisi rengindeki değişim geçiş haftasını işaretler. Pozisyon çizgisi ters eksenlidir, yükselen çizgi iyileşmedir. Kategori etiketleri ay başlarında verilmiştir."
+    "Öncesi: 12 Ağu 2025 - 7 Şub 2026, sonrası: 15 Şub - 13 Ağu 2026 (180'er gün); geçiş haftası iki pencereye de dahil değildir.",
+    "Grafik geçişin 16 hafta öncesi ve sonrasını haftalık toplamlarla gösterir; renk değişimi geçiş haftasını işaretler. Pozisyon çizgisi ters eksenlidir (yükselen çizgi iyileşme)."
    ],
    "blocks": [
     {

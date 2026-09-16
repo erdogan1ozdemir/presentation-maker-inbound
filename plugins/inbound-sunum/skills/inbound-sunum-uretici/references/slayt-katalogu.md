@@ -98,7 +98,7 @@ Kapak · Akış
 Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · segment ve sayfa
   grubu tanımları (C44)
 Ayraç 02 Google Search Console Metrikleri: aylık click (C45) · aylık impression
-  (C45) · dönem karşılaştırması (C46) · marka arama hacmi ve brand click (C04d)
+  (C45) · ortalama sıralama ve CTR (C45b) · dönem karşılaştırması (C46) · marka arama hacmi ve brand click (C04d)
   · brand query değişimleri (C47) · sayfa grubu başına bir slayt (C54 × N)
   · Query değişimleri (C47) · Sayfa değişimleri (C47)
 Ayraç 03 GA4 Trafik (export gelince)
@@ -704,6 +704,21 @@ ile etiketlenir - okuyucu ekseni okumadan değeri görür.
 ayrı madde). 13 kolonluk bir matris dönem değişimini kendiliğinden söylemez;
 her segment için iki oran yazılır: `➔ MoM (<önceki ay> → <cari ay>): …` ve
 `➔ YoY (<geçen yıl aynı ay> → <cari ay>): …`.
+
+**C45b Ortalama sıralama ve CTR serisi** (click ve impression serilerinin ardından)
+`combo`: CTR toplam **bar** (sol eksen `pct`, `labels: "inside"`), ortalama
+pozisyon toplam **çizgi** (sağ eksen `invert: true`, `fmt: "pos"`, `labels:
+"above"`). Grafikte segment ayrımı yoktur. Altında `heat: true` tablo:
+`Ort. pozisyon | CTR Brand | CTR Non-Brand | CTR Toplam` × 13 ay; pozisyon
+satırı `heat_invert_rows`. Tablo altında MoM ve YoY ayrı ok (pozisyon farkı
+işaretli, CTR farkı puan `p`).
+
+**Segment CTR'ı kendi click / impression oranıdır.** Non-brand CTR "toplam
+CTR − brand CTR" ile bulunamaz; oran metrikleri çıkarma-toplama ile
+türetilmez. Non-brand click ve impression toplamdan çıkarılarak bulunur,
+CTR bu iki değerin oranıdır. Sıralama segment bazında verilmez: non-brand
+pozisyonu ayrı ölçüm gerektirir ve kapsamı farklıdır (tuzaklar 2.9b);
+seri slaytında toplam pozisyon yeterlidir. Dipnotta bu iki kural yazılır.
 
 **C46 Dönem karşılaştırması, pozisyonlu**
 **Dört metrik de bulunur:** click, impression, CTR ve ortalama pozisyon. CTR ve

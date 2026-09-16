@@ -32,7 +32,8 @@ from inbound_deck import (  # noqa: E402
     AGENDA_LOGO, AGENDA_LIST_X, AGENDA_LIST_W, AGENDA_ITEM_PT, AGENDA_ITEM_LH,
     AGENDA_ITEM_GAP, AGENDA_ITEM_NUM_GAP, SEP_NUM_PT, SEP_NUM_W, SEP_TITLE_PT, SEP_TITLE_W,
     CB_GUTTER, CB_LEGEND_H, CB_CAT_H, CB_VAL_H, CB_BAR_LEGEND_H,
-    _axis_scale, _fmt_val,
+    _axis_scale, _fmt_val, _fmt_tick, AXIS_TICKS, footnote_layout, SOURCE_XY,
+    FOOT_MID, FOOT_NOTE_MAX_H, TITLE_SUB_GAP, SUB_BODY_GAP,
     _delta_kind, fit_pt, heat_cells, parse_runs, plain, separator_layout,
     table_layout,
     text_w, wrap_lines,
@@ -393,7 +394,7 @@ def h_combo(b):
 
     o.append(f'<div class="cb" style="height:{plot_h:.0f}px;'
              f'padding:0 {gut}px">')
-    TICKS = 4
+    TICKS = AXIS_TICKS
     for k in range(TICKS + 1):
         gy = plot_h * k / TICKS
         cls = "cb-gl" + (" cb-axis" if k == 0 else "")
@@ -408,7 +409,7 @@ def h_combo(b):
             v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
             pos = "left:0;text-align:right" if side == "left" else "right:0;text-align:left"
             o.append(f'<div class="cb-tick" style="{pos};width:{gut-8}px;'
-                     f'bottom:{gy-7:.1f}px">{esc(_fmt_val(v, a["fmt"]))}</div>')
+                     f'bottom:{gy-7:.1f}px">{esc(_fmt_tick(v, a["fmt"]))}</div>')
 
     # Etiket cakismasi: bkz. inbound_deck.block_combo. ypos tabandan yukseklik
     # dondurdugu icin karsilastirma ust kenardan degil tabandan yapilir.
@@ -769,18 +770,29 @@ def sl_content(s, base):
         o.append('<div class="col full-row">' + "".join(full) + "</div>")
     o.append("</div>")
 
-    if s.get("footnotes"):
-        fns = s["footnotes"]
-        fns = fns if isinstance(fns, list) else [fns]
-        o.append('<div class="fns">' + "".join(
-            f"<div>{runs_html(f, 'ink3')}</div>" for f in fns) + "</div>")
-
-    o.append(f'<img class="logo-bl" src="'
-             f'{_logo("inbound-o-white.png" if dark else "inbound-o-teal.png")}">')
+    class _Ctx:            # footnote_layout kaynak seridinin sag kenarini bekler
+        pass
+    fctx = _Ctx()
     if s.get("source"):
         src = s["source"]
         if not src.strip().lower().startswith("kaynak"):
             src = "Kaynak: " + src.strip()
+        fctx.src_right = SOURCE_XY[0] + text_w(src, PT["pill"], F_DISPLAY, True) + 24
+    if s.get("footnotes"):
+        fns = s["footnotes"]
+        fns = fns if isinstance(fns, list) else [fns]
+        x0, fw, _hs, total = footnote_layout(fns, fctx)
+        if total <= FOOT_NOTE_MAX_H and fw > 300:
+            o.append(f'<div class="fns fns-foot" style="left:{x0:.0f}px;width:{fw:.0f}px;'
+                     f'top:{FOOT_MID - total/2:.0f}px">' + "".join(
+                f"<div>{runs_html(f, 'ink3')}</div>" for f in fns) + "</div>")
+        else:
+            o.append('<div class="fns">' + "".join(
+                f"<div>{runs_html(f, 'ink3')}</div>" for f in fns) + "</div>")
+
+    o.append(f'<img class="logo-bl" src="'
+             f'{_logo("inbound-o-white.png" if dark else "inbound-o-teal.png")}">')
+    if s.get("source"):
         o.append(f'<div class="source-pill">{esc(src)}</div>')
     o.append("</div>")
     return "".join(o)
@@ -798,11 +810,11 @@ html,body{margin:0;padding:0;background:#0b1f1c;font-family:'%(body)s'}
   letter-spacing:.1em;padding:0 0 6px 2px}
 h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0}
 .body{position:absolute;left:%(ml)spx;right:%(mr)spx;top:%(tt)spx;bottom:84px}
-.sub{font-size:%(fs_lead)spx;color:#%(ink2)s;margin:10px 0 0;line-height:1.45}
+.sub{font-size:%(fs_lead)spx;color:#%(ink2)s;margin:%(tsg)spx 0 0;line-height:1.45}
 .slide.dark .sub{color:#cfe0dc}
-.cols{display:grid;margin-top:20px;align-items:start}
+.cols{display:grid;margin-top:%(sbg)spx;align-items:start}
 .col>*{margin-bottom:20px}
-.full-row{margin-top:20px}
+.full-row{margin-top:%(sbg)spx}
 .col>*:last-child{margin-bottom:0}
 .breadcrumb-top{position:absolute;top:28px;left:48px;right:48px;font-size:%(fs_micro)spx;
   white-space:nowrap;overflow:hidden}
@@ -815,6 +827,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .fns{position:absolute;left:%(ml)spx;right:%(mr)spx;bottom:88px;font-size:%(fs_micro)spx;
   color:#%(ink3)s;line-height:1.4}
 .fns div{margin-bottom:2px}
+.fns.fns-foot{right:auto;bottom:auto;line-height:1.3}
 /* cover / closing */
 .cover{display:flex;align-items:center;justify-content:center}
 .cv{text-align:center;position:relative;z-index:2;padding:0 80px}
@@ -1018,7 +1031,7 @@ def render(spec, base):
                      coraldeep=C["coral_deep"], tealsoft=C["teal_soft"],
                      redwash=C["red_wash"], red=C["red"], ml=M_L, mr=M_R, gut=CB_GUTTER,
                      tt=TITLE_TOP, accw=SEP_ACC_W, acch=SEP_ACC_H,
-                     accgap=SEP_ACC_GAP,
+                     accgap=SEP_ACC_GAP, tsg=TITLE_SUB_GAP, sbg=SUB_BODY_GAP,
                      # Punto degerleri PPTX sabitlerinden turetilir; CSS'e sabit
                      # px yazilirsa onizleme ile PPTX gorsel olarak ayrisir
                      # (bkz. tuzaklar 3.6j).

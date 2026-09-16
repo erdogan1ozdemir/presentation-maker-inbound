@@ -196,7 +196,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "grid": [100],
         "footnotes": [dipnot, "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 124, "bar_w": 24, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 196, "bar_w": 26, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "labels": "inside",
                  "labels_text": [k(TOP[y][metrik]) for y in AYLAR]},
@@ -230,6 +230,54 @@ S.append(seg_seri(
     f"Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression "
     f"{{b:{k(BR[GECEN_YIL]['impr'])} → {k(BR[SIMDI]['impr'])}}} ile dar bir aralıkta kalmıştır.",
     "Brand ölçeği grafikte sağ eksendedir. " + DIPNOT_NUM))
+
+# --- siralama ve CTR serisi: pozisyon toplam, CTR segment bazinda (click / impression)
+S.append({
+    "type": "content",
+    "breadcrumb": ["SEARCH CONSOLE", "Aylık Seri"],
+    "title": "Ortalama Sıralama ve CTR",
+    "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+    "source": KAYNAK_GSC,
+    "grid": [100],
+    "footnotes": [
+        "Segment CTR değerleri her segmentin kendi click / impression oranıdır; toplam CTR'dan çıkarılarak bulunmaz. "
+        "Pozisyon çizgisi ters eksenlidir (yükselen çizgi iyileşme), ısı haritasında pozisyon satırı ters okunur. "
+        "Yıllık pozisyon karşılaştırması Eylül 2025 değişikliğiyle birlikte okunmalıdır.",
+    ],
+    "blocks": [
+        {"type": "combo", "col": "full", "h": 164, "bar_w": 26, "cats": ET, "series": [
+            {"kind": "bar", "name": "CTR (Toplam)", "data": [round(TOP[y]["ctr"], 2) for y in AYLAR],
+             "color": "gray_bar", "axis": "left", "fmt": "pct", "labels": "inside",
+             "labels_text": [f"%{TOP[y]['ctr']:.1f}" for y in AYLAR]},
+            {"kind": "line", "name": "Ort. pozisyon (Toplam)", "data": [round(TOP[y]["poz"], 1) for y in AYLAR],
+             "color": "coral", "axis": "right", "invert": True, "fmt": "pos", "labels": "above",
+             "labels_text": [f"{TOP[y]['poz']:.1f}" for y in AYLAR]},
+        ]},
+        dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.13, "heat": True,
+              "heat_invert_rows": [0],
+              "head": ["Metrik"] + ET,
+              "rows": [["Ort. pozisyon"] + [f"{TOP[y]['poz']:.1f}" for y in AYLAR],
+                       ["CTR Brand"] + [f"%{BR[y]['ctr']:.1f}" for y in AYLAR],
+                       ["CTR Non-Brand"] + [f"%{NB[y]['ctr']:.1f}" for y in AYLAR],
+                       ["CTR Toplam"] + [f"%{TOP[y]['ctr']:.1f}" for y in AYLAR]],
+              "bold_rows": [-1]}, **{**T, "font_pt": 9.5}),
+        {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
+            f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Ort. pozisyon "
+            f"{renk(sifirla(f'{TOP[ONCEKI]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)} · CTR Toplam "
+            f"{renk(sifirla(f'{TOP[SIMDI]['ctr'] - TOP[ONCEKI]['ctr']:+.1f}') + 'p')} · Brand "
+            f"{renk(sifirla(f'{BR[SIMDI]['ctr'] - BR[ONCEKI]['ctr']:+.1f}') + 'p')} · Non-Brand "
+            f"{renk(sifirla(f'{NB[SIMDI]['ctr'] - NB[ONCEKI]['ctr']:+.1f}') + 'p')}",
+            f"YoY ({ET_GECEN} → {ET_SIMDI}): Ort. pozisyon "
+            f"{renk(sifirla(f'{TOP[GECEN_YIL]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)} · CTR Toplam "
+            f"{renk(sifirla(f'{TOP[SIMDI]['ctr'] - TOP[GECEN_YIL]['ctr']:+.1f}') + 'p')} · Brand "
+            f"{renk(sifirla(f'{BR[SIMDI]['ctr'] - BR[GECEN_YIL]['ctr']:+.1f}') + 'p')} · Non-Brand "
+            f"{renk(sifirla(f'{NB[SIMDI]['ctr'] - NB[GECEN_YIL]['ctr']:+.1f}') + 'p')}",
+            f"Toplam CTR {{g:%{TOP[GECEN_YIL]['ctr']:.1f} → %{TOP[SIMDI]['ctr']:.1f}}} yükselirken brand CTR "
+            f"{{r:%{BR[GECEN_YIL]['ctr']:.1f} → %{BR[SIMDI]['ctr']:.1f}}} gerilemiştir; artış non-brand tarafından "
+            f"({{g:%{NB[GECEN_YIL]['ctr']:.1f} → %{NB[SIMDI]['ctr']:.1f}}}) gelmektedir.",
+        ]},
+    ],
+})
 
 HEAD = ["Ağu 25", "Tem 26", "Ağu 26", "MoM", "YoY"]
 SEGLER = (("brand", "Brand"), ("nonbrand", "Non-Brand"), ("toplam", "Toplam"))
@@ -295,7 +343,7 @@ S.append({
         "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 88, "bar_w": 26, "cats": ET, "series": [
+        {"type": "combo", "col": "full", "h": 170, "bar_w": 26, "cats": ET, "series": [
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
@@ -379,7 +427,7 @@ def grup_slayt(g, yorum):
             "(yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 118, "bar_w": 24, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 200, "bar_w": 26, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "inside",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},

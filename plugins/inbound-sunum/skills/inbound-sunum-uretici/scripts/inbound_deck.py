@@ -83,8 +83,12 @@ F_BODY = "Outfit"
 # Slayt izgarasi (Design System slides/*.html padding degerleri)
 M_L, M_R = 60, 60                 # icerik slaytlari yan bosluk
 BREADCRUMB_XY = (48, 28)
-TITLE_TOP = 88
+TITLE_TOP = 68                    # breadcrumb 28-46; baslik hemen altinda
 BODY_BOTTOM = 636                 # altinda logo/kaynak seridi
+TITLE_SUB_GAP = 6                 # baslik -> alt baslik
+SUB_BODY_GAP = 12                 # alt baslik -> govde
+FOOT_MID = 671                    # kaynak seridinin dikey merkezi civari
+FOOT_NOTE_MAX_H = 66              # dipnot bandi: 4 satir micro (638-704)
 LOGO_XY = (44, 652)
 LOGO_WH = 36
 SOURCE_XY = (100, 658)
@@ -452,7 +456,7 @@ def chrome(slide, spec, ctx, idx, dark=False):
         textbox(slide, M_L, y, avail, p * PX_PER_PT * 1.15, t, pt=p,
                 family=F_DISPLAY, bold=True,
                 color="white" if inv else "ink", line_pct=1.05, wrap=False)
-        y += p * PX_PER_PT * 1.15 + 10
+        y += p * PX_PER_PT * 1.15 + TITLE_SUB_GAP
 
     if spec.get("subtitle"):
         sub = spec["subtitle"]
@@ -460,7 +464,7 @@ def chrome(slide, spec, ctx, idx, dark=False):
         h = len(lines) * PT["lead"] * PX_PER_PT * 1.45
         textbox(slide, M_L, y, avail, h, sub, pt=PT["lead"],
                 color="white" if inv else "ink2", line_pct=1.45)
-        y += h + 16
+        y += h + SUB_BODY_GAP
 
     logo_name = "inbound-o-white.png" if inv else "inbound-o-teal.png"
     picture(slide, ctx.logo(logo_name), LOGO_XY[0], LOGO_XY[1], w=LOGO_WH, h=LOGO_WH)
@@ -470,6 +474,7 @@ def chrome(slide, spec, ctx, idx, dark=False):
         if not src.strip().lower().startswith("kaynak"):
             src = "Kaynak: " + src.strip()
         w = text_w(src, PT["pill"], F_DISPLAY, True) + 24
+        ctx.src_right = SOURCE_XY[0] + w
         s = rect(slide, SOURCE_XY[0], SOURCE_XY[1], w, 22, fill="coral", radius=8)
         tf = s.text_frame
         tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
@@ -486,17 +491,40 @@ def chrome(slide, spec, ctx, idx, dark=False):
     return y
 
 
+def footnote_layout(notes, ctx):
+    """Dipnot bandinin geometrisi: (x, w, satir_yukseklikleri, toplam).
+
+    Dipnotlar kaynak seridinin SAGINDA, alt bantta durur; govdeden yer yemez.
+    Boylece grafik ve tablo bir arada olan slaytlarda dikey alan grafige
+    kalir (tuzaklar 3.10). HTML onizleme ayni fonksiyonu kullanir.
+    """
+    notes = notes if isinstance(notes, list) else [notes]
+    x0 = getattr(ctx, "src_right", SOURCE_XY[0]) + 18
+    w = STAGE_W - M_R - x0
+    lh = PT["micro"] * PX_PER_PT * 1.3
+    hs = [len(wrap_lines(plain(n), w, PT["micro"], safety=0.94)) * lh for n in notes]
+    return x0, w, hs, sum(hs) + 2 * (len(notes) - 1)
+
+
 def footnotes(slide, notes, ctx, idx):
-    """Yildizli dipnotlar: govde altinda, kaynak seridinin ustunde."""
+    """Dipnotlar: kaynak seridinin saginda, alt bantta. Siğmazsa govde altina
+    duser ve uyari uretir - dipnot kisaltilmalidir."""
     if not notes:
         return BODY_BOTTOM
     notes = notes if isinstance(notes, list) else [notes]
+    paras = [parse_runs(n, "ink3") for n in notes]
+    x0, w, _hs, total = footnote_layout(notes, ctx)
+    if total <= FOOT_NOTE_MAX_H and w > 300:
+        y = FOOT_MID - total / 2
+        textbox(slide, x0, y, w, total, paras, pt=PT["micro"],
+                color="ink3", line_pct=1.3, space_after=2)
+        return BODY_BOTTOM
+    ctx.warn(f"DIPNOT S{idx}: dipnotlar alt banda sigmiyor ({total:.0f}px > "
+             f"{FOOT_NOTE_MAX_H}px); govde altina alindi - dipnot kisaltilmali")
     avail = STAGE_W - M_L - M_R
-    paras, total = [], 0
+    total = 0
     for n in notes:
-        ls = wrap_lines(plain(n), avail, PT["micro"])
-        total += len(ls) * PT["micro"] * PX_PER_PT * 1.45
-        paras.append(parse_runs(n, "ink3"))
+        total += len(wrap_lines(plain(n), avail, PT["micro"])) * PT["micro"] * PX_PER_PT * 1.45
     y = BODY_BOTTOM - total
     textbox(slide, M_L, y, avail, total, paras, pt=PT["micro"],
             color="ink3", line_pct=1.45, space_after=2)
@@ -1155,15 +1183,59 @@ def _fmt_val(v, fmt):
     return f"{v:.0f}"
 
 
+AXIS_TICKS = 4
+
+
+def _nice_step(raw):
+    """1 / 2 / 2.5 / 5 x 10^k basamaklarindan raw'i karsilayan en kucugu."""
+    import math
+    if raw <= 0:
+        return 1.0
+    e = 10 ** math.floor(math.log10(raw))
+    for m in (1, 2, 2.5, 5, 10):
+        if raw <= m * e + 1e-9:
+            return m * e
+    return 10 * e
+
+
 def _axis_scale(vals, invert, pad=1.15):
-    """(vmin, vmax) - bar/cizgi eksen araligi. invert'te kucuk deger iyi."""
+    """(vmin, vmax) - eksen araligi, AXIS_TICKS adim yuvarlak basamakla.
+
+    Eksen etiketleri 132 / 99 / 66 / 33 gibi bolme artiklari degil 150 / 100 /
+    50 gibi okunur basamaklar tasir; adim 1-2-2.5-5 x 10^k kumesinden secilir
+    (tuzaklar 3.10). invert'te (pozisyon) kucuk deger ustte olacak sekilde
+    alt sinir da basamaga oturtulur.
+    """
     if not vals:
         return 0.0, 1.0
     lo, hi = min(vals), max(vals)
     if invert:
-        # pozisyon: en iyi (kucuk) deger ustte, 1'den baslar
-        return max(0.5, lo * 0.85), hi * 1.12
-    return 0.0, (hi * pad or 1.0)
+        lo_t, hi_t = max(0.0, lo * 0.85), hi * 1.12
+        step = _nice_step((hi_t - lo_t) / AXIS_TICKS)
+        import math
+        lo_n = math.floor(lo_t / step) * step
+        return lo_n, lo_n + step * AXIS_TICKS
+    step = _nice_step((hi * pad or 1.0) / AXIS_TICKS)
+    return 0.0, step * AXIS_TICKS
+
+
+def _fmt_tick(v, fmt):
+    """Eksen etiketi: yuvarlak basamakta ondalik basilmaz (100K, 2.5M, 25)."""
+    if fmt == "pct":
+        t = f"%{v:.2f}" if abs(v) < 10 else f"%{v:.1f}"
+        return t.rstrip("0").rstrip(".") if "." in t else t
+    if fmt == "pos":
+        return f"{v:.1f}".replace(".0", "") if abs(v - round(v)) < 1e-9 else f"{v:.1f}"
+    a = abs(v)
+    if fmt == "M" or (fmt == "auto" and a >= 1_000_000):
+        t = f"{v/1_000_000:.2f}".rstrip("0").rstrip(".")
+        return t + "M"
+    if fmt == "K" or (fmt == "auto" and a >= 1_000):
+        t = f"{v/1_000:.2f}".rstrip("0").rstrip(".")
+        return t + "K"
+    if abs(v - round(v)) < 1e-9:
+        return f"{v:.0f}"
+    return f"{v:.2f}".rstrip("0").rstrip(".")
 
 
 def block_combo(slide, b, x, y, w, ctx, idx):
@@ -1292,7 +1364,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         return plot_bot - plot_h * (b0 + frac * (b1 - b0))
 
     # izgara + eksen etiketleri
-    TICKS = 4
+    TICKS = AXIS_TICKS
     for k in range(TICKS + 1):
         gy = plot_bot - plot_h * k / TICKS
         hline(slide, px0, gy, pw, "line_soft" if k else "line", 0.75)
@@ -1304,7 +1376,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             a = ax[side]
             frac = k / TICKS
             v = a["lo"] + (a["hi"] - a["lo"]) * ((1 - frac) if a["inv"] else frac)
-            lbl = _fmt_val(v, a["fmt"])
+            lbl = _fmt_tick(v, a["fmt"])
             if side == "left":
                 textbox(slide, x, gy - 7, gut - 8, 14, lbl, pt=PT["micro"],
                         color="ink3", align="r", line_pct=1.0, wrap=False)

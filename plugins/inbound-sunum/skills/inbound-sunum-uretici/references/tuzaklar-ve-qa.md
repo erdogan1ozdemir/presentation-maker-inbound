@@ -972,3 +972,28 @@ konuyorsa yükseklik **ölçülerek** verilir, sabit sayı yazılmaz. HTML öniz
 akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutlak
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
+
+### 3.10. Dipnot bandı, sıkı başlık bloğu ve yuvarlak eksen basamakları
+
+**Dipnotlar gövdeden yer yiyordu.** Soluk dipnotlar gövdenin altında
+basılıyordu; grafik + tablo + insight taşıyan slaytlarda üç satırlık bir not
+grafiği 40-60 px kısaltıyor, aylık değişimler okunmaz hale geliyordu.
+Dipnotlar artık **alt bantta, kaynak şeridinin sağında** durur (y 638-704,
+en çok 4 satır). Gövde alt sınırı sabit kalır; kazanılan alan grafiğe verilir.
+Sığmayan dipnot gövde altına düşer ve üretici uyarır - o durumda not
+kısaltılır, kural gevşetilmez.
+
+**Başlık bloğu sıkılaştı.** Başlık y 88'den 68'e alındı, başlık-alt başlık
+arası 6 px, alt başlık-gövde arası 12 px. Slayt başına ~30 px daha gövde.
+
+**Eksen etiketleri yuvarlak basamakta.** `_axis_scale` en yüksek değeri 4'e
+bölüp 132 / 99 / 66 / 33 üretiyordu; okuyucu ara değeri zihninde
+yuvarlayamıyordu. Adım artık 1 / 2 / 2.5 / 5 × 10^k kümesinden seçilir ve
+etiketlerde gereksiz ondalık basılmaz. Ters eksenli pozisyonda alt sınır da
+basamağa oturur.
+
+**Oran metriği çıkarma ile türetilmez.** Non-brand CTR = non-brand click /
+non-brand impression. "Toplam CTR − brand CTR" anlamsız bir sayıdır; aynı
+şey dönüşüm oranı, pay ve pozisyon için de geçerlidir. Segment tabloları
+kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
+(slayt kataloğu C45b).

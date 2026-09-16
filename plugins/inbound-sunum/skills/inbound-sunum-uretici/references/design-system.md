@@ -17,10 +17,12 @@ eklerken buraya bakılır.
 | EMU dönüşümü | 1 px = 9525 EMU | HTML ve PPTX aynı koordinatta |
 | İçerik yan boşluk | 60 px | Sol ve sağ |
 | Breadcrumb | x 48, y 28 | 12 px, coral |
-| Başlık üst | y 88 | 36 px (27 pt) Bricolage Bold |
-| Gövde alt sınırı | y 636 | Altında logo + kaynak şeridi |
+| Başlık üst | y 68 | 36 px (27 pt) Bricolage Bold; breadcrumb'ın hemen altında |
+| Başlık → alt başlık | 6 px | Alt başlık → gövde 12 px. Başlık bloğu sıkı tutulur, alan gövdeye kalır |
+| Gövde alt sınırı | y 636 | Altında logo + kaynak şeridi + dipnot bandı |
 | Logo | x 44, y 652, 36 × 36 | Her içerik slaytında |
 | Kaynak pill | x 100, y 658 | Coral zemin, beyaz kalın 11 px |
+| Dipnot bandı | pill'in sağı, y 638-704 | Soluk (`ink3`) 9 pt, en çok 4 satır; gövdeden yer yemez |
 
 ### Punto ölçeği ve 12 pt tavanı
 

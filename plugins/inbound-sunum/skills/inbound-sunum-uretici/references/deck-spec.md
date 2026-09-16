@@ -101,7 +101,7 @@ ayraçlarda farklı punto vermek destede görsel tutarsızlık üretir.
 | `subtitle` | **Dönem beyanı buraya.** Yoksa QA uyarı verir |
 | `source` | Otomatik "Kaynak: " öneki alır. Veri bloğu varsa zorunlu |
 | `grid` | Kolon yüzdeleri. `[100]` tek kolon, `[58,42]` iki kolon |
-| `footnotes` | Gövde altı, yıldızlı bağlam notları |
+| `footnotes` | Bağlam notları. **Alt bantta, kaynak şeridinin sağında** basılır; gövdeden yer yemez. En çok 4 satır (66 px) sığar; sığmazsa üretici notu gövde altına düşürür ve uyarır - not kısaltılır |
 | `bg` | `white` (varsayılan) veya `teal`/`dark` |
 
 **Blok yerleşimi:** her blok `col` ile kolona atanır (verilmezse sırayla dağıtılır).
@@ -275,6 +275,13 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
 | `pad` | Eksen üst payı (varsayılan 1.15). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
 | `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
+
+**Eksen basamakları yuvarlaktır.** Eksen 4 adımdır ve adım 1 / 2 / 2.5 / 5 ×
+10^k kümesinden seçilir: 0-50K-100K-150K-200K, %0-%2-%4-%6-%8, pozisyonda
+6-8-10-12-14. `132K / 99K / 66K / 33K` gibi bölme artıkları basılmaz;
+etiketlerde gereksiz ondalık yoktur (`100K`, `2.5M`, `25`). Üst sınır bu
+yüzden en yüksek değerin bir miktar üstünde kalır; `pad` yalnızca üst payı
+büyütür, basamak seçimi otomatiktir.
 
 **Değer etiketleri çizgiyle çakışmaz.** Bar ve çizgi etiketleri sabit konumda
 basılmaz: üretici önce barın üstünü, sonra barın içini dener, ikisinde de bir
