@@ -963,10 +963,20 @@ sıra artık her bara mutlaka bir yer bulacak şekilde kurulur:
 4. O da doluysa **barın tabanına çerçeveli beyaz etiket** (ince `line`
    kenarlık, `ink2` metin) - bar dar olsa da okunur.
 
-Çizgi etiketleri önce noktanın üstünü, sonra altını dener; ikisi de doluysa
-basılmaz (çizgi değeri tabloda durur). Eşik 13 px'tir. 13 aylık seride bar
-genişliği **44 px** verilir ki "8.47M" gibi değerler tabana sığsın; 26 px bar
-her etiketi çerçeveye düşürür.
+**Seri genelinde tek karar.** Yerleşim bar bar değil seri başına seçilir:
+bütün etiketler tabana sığıyorsa hepsi tabanda beyaz; hepsi barın üstünde
+çizgisiz bir yer buluyorsa hepsi üstte; aksi halde hepsi tabanda çerçeveli.
+Bazısı tabanda bazısı tepede dizilmiş bir seri okuyucuyu yanıltır.
+
+Çizgi etiketleri de her zaman basılır: önce noktanın üstü, sonra altı; ikisi
+de dolu ya da koyu bir alana (bar, koyu zemin) düşüyorsa **çerçeveli** basılır
+ve yerleşmiş etiketlerin üstüne yığılır - etiket etiketin üstüne binmez.
+Eşik 13 px'tir. 13 aylık seride bar genişliği **44 px** verilir ki "8.47M"
+gibi değerler tabana sığsın.
+
+Durum (v1.16.2): bu davranış HTML önizlemede tam; PPTX üreticide seri
+genelinde karar ve çerçeveli çizgi etiketi henüz yok, bar bar karar veriyor.
+Önizlemede onaylanan düzen PPTX'e taşınacak.
 
 Çizgi etiketleri de aynı mantıkla önce noktanın üstünü, sonra altını dener,
 ikisi de doluysa basılmaz. Eşik 13px'tir (etiket yüksekliği 14px).
