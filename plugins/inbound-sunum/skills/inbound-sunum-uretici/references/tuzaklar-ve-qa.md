@@ -298,10 +298,20 @@ Gerçek örnek (Flormar, Tem 2026): total 63.6K click, `contains` 34.0K,
 sorguların tamamı brand'e yazıldı; branded click 34.0K yerine 55.3K göründü ve
 "click'in %87'si markalı" gibi yanlış bir çıkarım üretildi. Gerçek pay %53.5.
 
-**Kural:** her iki segment de **ayrı ayrı ölçülür** (`contains` ve
-`notContains`), fark **"Anonim sorgu" satırı** olarak tabloda gösterilir ve
-Total satırı üçün toplamıdır. Segment payları bu üç satır birlikte okunur.
-Anonim satırında pozisyon türetilemez, `-` bırakılır.
+**Ev standardı - iki segment, üç satır.** Brand `includingRegex` ile
+**doğrudan ölçülür**, non-brand **toplam − brand** ile hesaplanır. Anonim
+hacim böylece non-brand satırının içinde kalır ve **ayrı satır/seri olarak
+gösterilmez**; tablo ve grafiklerde yalnızca `Brand · Non-Brand · Toplam`
+bulunur, Toplam ikisinin toplamına eşittir.
+
+Yönün tersi yasaktır: brand = toplam − non-brand hesabı anonim hacmin tamamını
+brand'e yazar (yukarıdaki yaşanmış hata). Anonim hacmin non-brand'e yazıldığı
+**segment tanımları slaytında beyan edilir** (slayt kataloğu C44).
+
+Anonim hacmin büyüklüğü merak ediliyorsa iç kontrol olarak ölçülebilir
+(`includingRegex` + `excludingRegex` toplamı ile property toplamının farkı),
+ama destede satır açılmaz; müşteri tablosunda açıklanamayan üçüncü bir küme
+segment paylarını okunmaz yapar.
 
 Pozisyon segment bazında da verilir: `dimensions=device` ile üç satır çekilir,
 pozisyon **impression ağırlıklı** ortalanır (aritmetik ortalama yanlış sonuç

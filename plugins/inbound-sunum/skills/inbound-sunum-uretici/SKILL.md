@@ -273,13 +273,30 @@ Bir sayıyı slayta koymadan önce yedi soruyu yanıtla: hangi property, hangi k
 hangi metrik, web-only mi web+app mi, hangi dönem ve karşılaştırma, hangi kaynak
 dosya, revenue gerçekten track ediliyor mu (yoksa ₺0 mı).
 
-**Brand / non-brand:** ayrım `brand_terms` regex'iyle query üzerinden yapılır.
-Yanlış yazımlar brand'e dahil edilir. Üçüncü parti markalar non-brand'e yazılır ve
-slaytta şeffaf belirtilir. Ayrım tanımı deste içinde değişmez; değiştiyse önceki
-dönem yeniden hesaplanır. Total satırı ham toplamdır.
+**Brand / non-brand - ev standardı iki satırdır.** Brand `brand_terms`
+regex'iyle (`includingRegex`) **doğrudan ölçülür**; non-brand **toplam eksi
+brand** ile hesaplanır. Yanlış yazımlar brand'e dahil edilir. Üçüncü parti
+markalar non-brand'e yazılır ve slaytta şeffaf belirtilir. Ayrım tanımı deste
+içinde değişmez; değiştiyse önceki dönem yeniden hesaplanır.
+
+**Anonim sorgular tabloda ve grafikte ayrı satır/seri olmaz.** Query filtresi
+uygulandığında anonim sorgular sonuç kümesinden düşer; "toplam − brand"
+yöntemi bu hacmi non-brand satırına taşır. Bu, segment tanımları slaytında
+beyan edilir. Tablo ve grafiklerde yalnızca üç şey görünür:
+
+| Satır / seri | Nasıl bulunur |
+|---|---|
+| **Brand** | `includingRegex` ile ölçülür |
+| **Non-Brand** | Toplam − Brand |
+| **Toplam** | Filtresiz property değeri |
+
+Brand asla "toplam − non-brand" ile hesaplanmaz: o yöntem anonim hacmi brand'e
+yazar ve marka payını olduğundan yüksek gösterir (tuzaklar 2.9b).
+Non-brand **pozisyonu** çıkarmayla bulunamaz; `excludingRegex` ile ayrıca
+ölçülür ve kapsam farkı dipnota yazılır.
 
 **Sağlama - bunlar tutmuyorsa devam etme:**
-- Total ≥ Branded + Non-Branded, her tabloda
+- Total = Brand + Non-Brand, her tabloda (fark bırakılmaz, üçüncü satır açılmaz)
 - Aynı metriğin farklı slaytlardaki değerleri çelişmiyor
 - İmkansız yüzde yok (-%131 düşüş olamaz)
 - Bin üzeri yüzdenin yanında mutlak değer var: `+%1362 (+395 click)`

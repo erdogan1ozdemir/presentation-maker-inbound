@@ -504,6 +504,86 @@ def check_skeleton(spec, rep):
                  "olmadan yıllık impression ve pozisyon yanlış okunur")
 
 
+SAYI_RX = re.compile(r"^-?[\d.,]+\s*([KkMm])?$")
+
+
+def _sayi(t):
+    """Tablo hucresindeki '1.1K' / '386' / '2.59M' degerini sayiya cevirir."""
+    t = plain(t).strip().replace("\u00a0", " ")
+    m = SAYI_RX.match(t)
+    if not m:
+        return None
+    carp = {"k": 1_000, "m": 1_000_000}.get((m.group(1) or "").lower(), 1)
+    gov = t[:-1] if m.group(1) else t
+    gov = gov.replace(".", "").replace(",", ".") if gov.count(".") > 1 else gov.replace(",", ".")
+    try:
+        return float(gov) * carp
+    except ValueError:
+        return None
+
+
+def check_segmentler(spec, rep):
+    """Brand / Non-Brand / Toplam uclusu disina cikan segment satiri var mi?
+
+    Ev standardi: brand includingRegex ile olculur, non-brand = toplam - brand.
+    Anonim sorgu hacmi non-brand'in icinde kalir; tabloda ve grafikte ayri
+    satir/seri acilmaz (tuzaklar 2.9b). Ayrica Toplam satiri Brand +
+    Non-Brand'e esit olmalidir - esit degilse tabloda aciklanmamis bir kume
+    vardir.
+    """
+    ANON = re.compile(r"anonim|anonymous", re.I)
+    for i, s in enumerate(spec.get("slides") or [], 1):
+        if s.get("type") != "content":
+            continue
+        for b in s.get("blocks") or []:
+            if b.get("type") == "table":
+                etiket = {}
+                for r in b.get("rows") or []:
+                    if not r:
+                        continue
+                    ad = plain(str(r[0])).strip().lower()
+                    if ANON.search(ad):
+                        rep.err(f"S{i:02d}", "anonim sorgu satırı",
+                                f"'{plain(str(r[0]))}'",
+                                "anonim hacim non-brand içinde kalır; ayrı satır "
+                                "açılmaz (tuzaklar 2.9b)")
+                    if ad.startswith("brand"):
+                        etiket["brand"] = r
+                    elif ad.replace(" ", "").startswith("non-brand") or \
+                            ad.replace(" ", "").startswith("nonbrand"):
+                        etiket["nonbrand"] = r
+                    elif ad in ("toplam", "total"):
+                        etiket["toplam"] = r
+                # Toplanamayan metrikler (pozisyon, CTR, oran, pay) sagalamaya
+                # girmez: segmentlerin ortalamasi toplamlarina esit degildir.
+                metrik = plain(str((b.get("head") or [""])[0])).lower()
+                if any(x in metrik for x in ("poz", "ctr", "oran", "pay", "sıra")):
+                    continue
+                if len(etiket) == 3:
+                    n = min(len(v) for v in etiket.values())
+                    for ci in range(1, n):
+                        vb, vn, vt = (_sayi(etiket[k][ci])
+                                      for k in ("brand", "nonbrand", "toplam"))
+                        if None in (vb, vn, vt) or not vt or vt < 100:
+                            continue
+                        fark = abs((vb + vn) - vt) / vt
+                        if fark > 0.03:
+                            basl = (b.get("head") or [""] * (ci + 1))[ci]
+                            rep.err(f"S{i:02d}", "segment sağlaması",
+                                    f"'{plain(str(basl))}' kolonunda Brand + "
+                                    f"Non-Brand ≠ Toplam (fark %{fark*100:.1f})",
+                                    "non-brand = toplam - brand olarak hesaplanır; "
+                                    "açıklanmamış üçüncü küme bırakılmaz")
+                            break
+            if b.get("type") == "combo":
+                for ser in b.get("series") or []:
+                    if ANON.search(plain(str(ser.get("name", "")))):
+                        rep.err(f"S{i:02d}", "anonim sorgu serisi",
+                                f"'{ser.get('name')}'",
+                                "grafikte Brand, Non-Brand ve Toplam gösterilir; "
+                                "anonim seri çizilmez")
+
+
 def check_layout(spec, base, rep):
     here = os.path.dirname(os.path.abspath(__file__))
     assets = os.path.normpath(os.path.join(here, "..", "assets"))
@@ -681,6 +761,7 @@ def main():
     check_numbers(spec, rep)
     check_structure(spec, rep)
     check_skeleton(spec, rep)
+    check_segmentler(spec, rep)
     if a.pptx:
         check_pptx(a.pptx, rep)
 

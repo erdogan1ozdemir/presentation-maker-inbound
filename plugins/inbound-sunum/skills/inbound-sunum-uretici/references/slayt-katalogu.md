@@ -292,14 +292,18 @@ ayrıştırır. Marka hacmi düşerken jenerik sabitse bu marka özelinde bir da
 (col 0, `mt`), `Ortalama Pozisyon` (col 1, `mt`); altında `insights` (col `full`).
 Metrik adı ayrı `title` bloğu yerine **`head[0]`'a** yazılır - dört tablo
 üst üste geldiğinde başlık blokları 34px×2 yer yiyor.
-Satırlar: `Total | Branded | Non-Brand | Anonim sorgu`, `bold_rows: [0]`.
+Satırlar: `Brand | Non-Brand | Toplam`, `bold_rows: [-1]`.
 Kolonlar: `<metrik> | <önceki dönem> | <dönem> | YoY`.
 
 Zorunlu kurallar:
-- **Anonim sorgu satırı atlanmaz** (bkz. tuzaklar 2.9b): brand = total − non-brand
-  hesabı anonim hacmi brand'e yazar ve segment paylarını bozar.
+- **Üç satır, fazlası yok.** Non-Brand = Toplam − Brand; anonim sorgu hacmi bu
+  satırın içindedir ve **ayrı satır olarak açılmaz** (bkz. tuzaklar 2.9b).
+  Brand her zaman `includingRegex` ile doğrudan ölçülür.
+- Toplam satırı Brand + Non-Brand'e **eşittir**; tabloda açıklanmamış artık
+  kalmaz.
 - Pozisyonda **pozitif değer iyileşmedir** (7.1 → 5.1 = +2.1) ve bu dipnotta
-  yazılır; anonim satırında pozisyon türetilemez, `-` bırakılır.
+  yazılır; non-brand pozisyonu `excludingRegex` ile ayrıca ölçülür, kapsam
+  farkı dipnota girer.
 - Sıkışma önlemi: `row_h: 20`, `head_h: 24`, tablo `font_pt: 10.5`,
   insights `font_pt: 10.5`, tek dipnot.
 
@@ -550,12 +554,12 @@ Hepsinde ortak kural: tablo ölçülmüş veriyi taşır, insight yorumu taşır
 
 **C38 Talep ile trafiğin ayrışması** (arama hacmi bölümü)
 İki tablo: sol tarafta marka arama hacmi + branded impression / click / CTR /
-pozisyon; sağ tarafta click payı dağılımı (Branded / Non-Brand / Anonim sorgu,
-önceki ve cari dönem payları). Soru: talep ile marka trafiği aynı yöne mi gidiyor,
+pozisyon; sağ tarafta click payı dağılımı (Brand / Non-Brand, önceki ve cari
+dönem payları). Soru: talep ile marka trafiği aynı yöne mi gidiyor,
 kaybedilen tıklama başka bir segmente mi kaydı?
 Gerçek örnek çıkarım: marka hacmi yatay, branded impression -%62.8 - paralel
-gitmiyor; üç segmentin payı ±2 puan bandında kalmış, yani trafik kaymamış, üçünde
-birlikte azalmış.
+gitmiyor; iki segmentin payı ±2 puan bandında kalmış, yani trafik kaymamış,
+ikisinde birlikte azalmış.
 
 **C39 İlk sayfada yer alan ve CTR'ı geride kalan sorgular** (Search Console bölümü)
 Tablo: `Query | Impression | Pozisyon | CTR | Click`, gösterime göre sıralı,
