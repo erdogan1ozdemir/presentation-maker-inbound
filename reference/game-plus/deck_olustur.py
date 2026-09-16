@@ -526,7 +526,7 @@ S.append({
     "blocks": [
         dict({"type": "table", "col": "full", "first_col_max": 0.26,
               "head": KANAL_BAS, "rows": kanal_satir, "bold_rows": [-1]},
-             **{**T, "font_pt": 9, "row_h": 15, "head_h": 19}),
+             **{**T, "font_pt": 8.5, "row_h": 14, "head_h": 19}),
         {"type": "insights", "col": "full", "mt": 6, "font_pt": 9.5, "items": [
             f"Toplam session MoM {{g:{pct(ktop, ktop6)}}}, YoY {{r:{pct(ktop, ktop5)}}}; yıllık daralma "
             f"{{c:Display}} ve {{c:Paid Social}} kaynaklıdır. {{c:Organic Search}} yıllık "
@@ -648,14 +648,14 @@ S.append({
                        ["Google AI Overview", "276 / 500", "%55.2", "1.83", "249 / 500", "%49.8"],
                        ["ChatGPT", "254 / 531", "%47.8", "2.47", "143 / 531", "%26.9"],
                        ["Toplam", "966 / 1.622", "%59.6", "2.45", "857 / 1.622", "%52.8"]],
-              "bold_rows": [-1]}, **{**T, "row_h": 17, "head_h": 21}),
+              "bold_rows": [-1]}, **{**T, "font_pt": 9.5, "row_h": 15, "head_h": 19}),
         dict({"type": "table", "col": "full", "mt": 6, "first_col_max": 0.30,
               "head": ["En çok Citation alan kaynak", "Citation / Toplam", "Pay", "Farklı prompt"],
               "rows": [["gameplus.com.tr", "1.492 / 9.621", "%15.5", "70"],
                        ["nvidia.com", "1.017 / 9.621", "%10.6", "58"],
                        ["youtube.com", "687 / 9.621", "%7.1", "69"],
                        ["reddit.com", "482 / 9.621", "%5.0", "58"]],
-              "highlight_rows": [0]}, **{**T, "row_h": 17, "head_h": 21}),
+              "highlight_rows": [0]}, **{**T, "font_pt": 9.5, "row_h": 15, "head_h": 19}),
         {"type": "insights", "col": "full", "mt": 6, "font_pt": 10, "items": [
             "Marka {b:1.622 yanıtın 966'sında} anılmaktadır; {c:Gemini} {g:%73.8} ile en yüksek, {c:ChatGPT} {r:%47.8} ile en düşük orandadır.",
             "{c:gameplus.com.tr} {b:1.492 citation} ile ilk sıradadır ve toplam citation'ın {b:%15.5}'ini almaktadır. "

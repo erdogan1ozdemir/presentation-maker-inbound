@@ -276,6 +276,12 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `pad` | Eksen üst payı (varsayılan 1.15). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
 | `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
 
+**Değer etiketleri çizgiyle çakışmaz.** Bar ve çizgi etiketleri sabit konumda
+basılmaz: üretici önce barın üstünü, sonra barın içini dener, ikisinde de bir
+çizgi varsa etiketi basmaz (değer tabloda durur). Bu yüzden çok serili bir
+grafikte bazı barların etiketi görünmeyebilir - beklenen davranıştır
+(tuzaklar 3.9).
+
 **Üç metrik tek grafikte (`axis: "own"`).** İki eksene sığmayan üçüncü metrik
 (click bar + impression çizgisi + pozisyon çizgisi gibi) `axis: "own"` ile
 eklenir: seri kendi min-max ölçeğini alır, eksen etiketi basılmaz. Bu yüzden

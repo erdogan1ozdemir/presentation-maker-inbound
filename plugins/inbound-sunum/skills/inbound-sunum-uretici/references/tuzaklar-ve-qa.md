@@ -933,3 +933,42 @@ alındığı slayta yazılmaz.
 **Notlarda vurgu.** Insight ve not metinlerinde önemli parçalar işaretlenir:
 rakamlar `{b:}` (bold), anahtar terim ve domain `{c:}` (coral `#FF7B52`),
 artış `{g:}`, düşüş `{r:}`. Düz, işaretsiz bir insight bloğu okunmuyor.
+
+### 3.9. Çakışan metin: tablo satırı, grafik etiketi ve panel başlığı
+
+Aynı kökten gelen dört tuzak: **ölçüm ile çizim arasındaki fark**. Metin
+ölçülürken tek satıra sığıyor görünüyor, çizilirken iki satıra kırılıyor ve
+alttaki öğenin üzerine biniyor. Dördü de üreticide çözüldü; deste tarafında
+yapılacak bir ayar yok, ama eski bir deste yeniden üretilmeden bu düzeltmeleri
+almaz.
+
+**Tablo hücresi satır çizgisiyle çakışıyordu.** İlk kolondaki uzun etiket
+("özdilekteyim hacmi", "çocuk nevresim takımı") ölçümde tek satır, çizimde iki
+satır oluyordu; ikinci satır alttaki satırın çizgisine biniyordu. Satır
+yüksekliği artık **%6 temkin payıyla** (`OLCUM_PAY = 0.94`) ve hücrenin gerçek
+font ağırlığıyla (kalın satırlar `F_DISPLAY`) ölçülüyor. Aynı pay kolon
+başlıklarına da uygulanıyor.
+
+**Grafik etiketi çizginin üzerine biniyordu.** Bar değerleri ve çizgi
+etiketleri sabit konumda basılıyordu; çok serili grafikte sayı, çizginin
+tam üstüne düşüyordu. Yeni kural üç kademeli:
+
+1. Etiket **barın üstüne** basılır; o noktada bir çizgi yoksa iş biter.
+2. Çizgi varsa ve bar yeterince yüksekse etiket **barın içine, üst kısmına**
+   (beyaz) alınır.
+3. İkisi de çakışıyorsa **etiket basılmaz** - değer zaten grafiğin altındaki
+   tabloda duruyor. Okunmayan bir sayı, olmayan sayıdan kötüdür.
+
+Çizgi etiketleri de aynı mantıkla önce noktanın üstünü, sonra altını dener,
+ikisi de doluysa basılmaz. Eşik 13px'tir (etiket yüksekliği 14px).
+
+**Panel başlığı alt başlığın üzerine biniyordu.** `panels` kartında başlık
+kutusu sabit tek satır yüksekliğindeydi; iki satıra saran başlık, altındaki
+`sub` metnine giriyordu. Başlık yüksekliği artık sarma sayısına göre
+hesaplanıyor ve kart yüksekliği buna göre açılıyor.
+
+**Kural olarak deste tarafında:** bir metin kutusunun altına başka bir öğe
+konuyorsa yükseklik **ölçülerek** verilir, sabit sayı yazılmaz. HTML önizleme
+akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutlak
+konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
+Slides'ta açılıp bakılması atlanamaz.

@@ -2133,8 +2133,8 @@
      "bold_rows": [
       -1
      ],
-     "font_pt": 9,
-     "row_h": 15,
+     "font_pt": 8.5,
+     "row_h": 14,
      "head_h": 19
     },
     {
@@ -2574,9 +2574,9 @@
      "bold_rows": [
       -1
      ],
-     "font_pt": 10.5,
-     "row_h": 17,
-     "head_h": 21
+     "font_pt": 9.5,
+     "row_h": 15,
+     "head_h": 19
     },
     {
      "type": "table",
@@ -2618,9 +2618,9 @@
      "highlight_rows": [
       0
      ],
-     "font_pt": 10.5,
-     "row_h": 17,
-     "head_h": 21
+     "font_pt": 9.5,
+     "row_h": 15,
+     "head_h": 19
     },
     {
      "type": "insights",

@@ -410,6 +410,22 @@ def h_combo(b):
             o.append(f'<div class="cb-tick" style="{pos};width:{gut-8}px;'
                      f'bottom:{gy-7:.1f}px">{esc(_fmt_val(v, a["fmt"]))}</div>')
 
+    # Etiket cakismasi: bkz. inbound_deck.block_combo. ypos tabandan yukseklik
+    # dondurdugu icin karsilastirma ust kenardan degil tabandan yapilir.
+    cizgi_y = {i: [] for i in range(n)}
+    for j, s_ in enumerate(series):
+        if s_.get("kind") != "line":
+            continue
+        side = eksen(j, s_)
+        if side not in ax:
+            continue
+        for i, v in enumerate(s_["data"][:n]):
+            if v is not None:
+                cizgi_y[i].append(ypos(side, float(v)))
+
+    def bos_mu(i, ly, tol=13.0):
+        return all(abs(ly - cy) > tol for cy in cizgi_y.get(i, []))
+
     for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
             continue
@@ -423,15 +439,17 @@ def h_combo(b):
             bh = max(1.0, ypos(side, float(v or 0)))
             bx = gut + slot * i + (slot - bw) / 2
             lab, ust = "", ""
-            if s_.get("labels") == "inside" and bh > 24:
+            if s_.get("labels") in ("inside", "above") and bh > 18:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
-                # bkz. inbound_deck: sigmayan etiket barin ustune, koyu renkle
-                if text_w(txt, PT["micro"], F_BODY) <= bw - 6:
-                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
-                else:
+                if bos_mu(i, bh + 9):                       # barin ustu
+                    lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
                     ust = (f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
-                           f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{C["ink2"]}">'
+                           f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{lc}">'
                            f'{esc(txt)}</div>')
+                elif bh > 30 and bos_mu(i, bh - 12) and \
+                        text_w(txt, PT["micro"], F_BODY) <= bw - 6:
+                    lab = (f'<span class="cb-bl" style="bottom:auto;top:5px">'
+                           f'{esc(txt)}</span>')
             o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
                      f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
             if ust:
@@ -469,10 +487,18 @@ def h_combo(b):
             pts.append(f"{vx:.1f},{vy:.1f}")
             if s_.get("labels") == "above" or (uc and i in uc):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
-                lbl_html.append(
-                    f'<div class="cb-ll" style="left:{gut+vx-slot/2:.1f}px;'
-                    f'width:{slot:.1f}px;bottom:{plot_h-vy+9:.1f}px;color:#{col}">'
-                    f'{esc(txt)}</div>')
+                taban = plot_h - vy                      # noktanin tabandan yuksekligi
+                digerleri = [c for c in cizgi_y.get(i, []) if abs(c - taban) > 0.5]
+                hedef = None
+                if all(abs(taban + 12 - c) > 13 for c in digerleri):
+                    hedef = taban + 9
+                elif all(abs(taban - 16 - c) > 13 for c in digerleri) and taban > 20:
+                    hedef = taban - 20
+                if hedef is not None:
+                    lbl_html.append(
+                        f'<div class="cb-ll" style="left:{gut+vx-slot/2:.1f}px;'
+                        f'width:{slot:.1f}px;bottom:{hedef:.1f}px;color:#{col}">'
+                        f'{esc(txt)}</div>')
         parca, cari = [], []
         for p in pts:
             if p is None:

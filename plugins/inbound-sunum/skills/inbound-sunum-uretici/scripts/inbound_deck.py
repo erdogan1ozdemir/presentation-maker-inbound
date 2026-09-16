@@ -674,9 +674,15 @@ def table_layout(b, w):
     # sigmadiginda sariyor; sabit head_h ile ikinci satir kirpiliyordu. Once
     # baslik puntosu bir kademe kucultulur, hala sariyorsa head_h satir
     # sayisina gore acilir. Govde puntosuna dokunulmaz.
+    # Olcum payi: PPTX ve Google Slides ayni metni bir tik genis diziyor.
+    # 1.0 ile olculdugunde tek satir gorunen hucre cizimde iki satira kiriliyor
+    # ve satir cizgisiyle ust uste biniyordu (tuzaklar 3.9).
+    OLCUM_PAY = 0.94
+
     def _th_satir(pt_):
         return [len(wrap_lines(plain(str(head[ci])), widths[ci] - pad * 2,
-                               pt_, safety=1.0)) or 1 for ci in range(ncol)]
+                               pt_, F_DISPLAY, True, safety=OLCUM_PAY)) or 1
+                for ci in range(ncol)]
 
     satir = _th_satir(th_pt)
     if max(satir) > 1 and th_pt > 8:
@@ -686,9 +692,12 @@ def table_layout(b, w):
             satir = _th_satir(th_pt)
     head_h = max(head_h, max(satir) * th_pt * PX_PER_PT * 1.25 + 10)
     row_hs = []
-    for r in rows:
+    bold_m = {r if r >= 0 else len(rows) + r for r in (b.get("bold_rows") or [])}
+    for ri, r in enumerate(rows):
+        kalin = ri in bold_m
         n = len(wrap_lines(plain(str(r[0] if r else "")), widths[0] - pad * 2,
-                           td_pt, safety=1.0)) if ncol else 1
+                           td_pt, F_DISPLAY if kalin else F_BODY, kalin,
+                           safety=OLCUM_PAY)) if ncol else 1
         row_hs.append(max(row_h, n * td_pt * PX_PER_PT * 1.35 + 10))
 
     title_h = (PT["h4"] * PX_PER_PT * 1.3 + 8) if b.get("title") else 0
@@ -1303,6 +1312,24 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 textbox(slide, px1 + 8, gy - 7, gut - 8, 14, lbl, pt=PT["micro"],
                         color="ink3", align="l", line_pct=1.0, wrap=False)
 
+    # Etiket cakismasi: bar ve nokta etiketleri cizgilerin uzerine binmemeli.
+    # Kategori basina tum cizgi serilerinin y degeri toplanir; etiket once
+    # barin ustune, sigmazsa barin ortasina konur, ikisi de cizgiye giriyorsa
+    # etiket basilmaz (deger zaten tabloda) - tuzaklar 3.9.
+    cizgi_y = {i: [] for i in range(n)}
+    for j, s_ in enumerate(series):
+        if s_.get("kind") != "line":
+            continue
+        side = eksen(j, s_)
+        if side not in ax:
+            continue
+        for i, v in enumerate(s_["data"][:n]):
+            if v is not None:
+                cizgi_y[i].append(ypos(side, float(v)))
+
+    def bos_mu(i, ly, tol=13.0):
+        return all(abs(ly - cy) > tol for cy in cizgi_y.get(i, []))
+
     # barlar
     for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
@@ -1319,26 +1346,21 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             bh = max(1.0, plot_bot - top)
             bx = px0 + slot * i + (slot - bw) / 2
             rect(slide, bx, top, bw, bh, fill=col)
-            ic = s_.get("labels") == "inside" and bh > 24
-            if ic:
+            if s_.get("labels") in ("inside", "above") and bh > 18:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                # Beyaz etiket yalnizca barin icinde okunur; barin disina tasan
-                # kisim beyaz zeminde kayboluyordu. Sigmiyorsa etiket barin
-                # ustune, koyu renkle basilir.
-                if text_w(txt, PT["micro"], F_BODY) <= bw - 6:
-                    textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
-                            pt=PT["micro"], color="white", align="c",
-                            line_pct=1.0, wrap=False)
-                else:
+                ust = top - CB_VAL_H + 7          # etiketin dikey merkezi
+                orta = top + 12
+                if bos_mu(i, ust):                # once barin ustu
                     textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
                             pt=PT["micro"], family=F_DISPLAY, bold=True,
-                            color="ink2", align="c", line_pct=1.0, wrap=False)
-            elif s_.get("labels") == "above":
-                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
-                        pt=PT["micro"], family=F_DISPLAY, bold=True,
-                        color=s_.get("color", "ink2"), align="c", line_pct=1.0,
-                        wrap=False)
+                            color=s_.get("label_color", "ink2"), align="c",
+                            line_pct=1.0, wrap=False)
+                elif bh > 30 and bos_mu(i, orta) and \
+                        text_w(txt, PT["micro"], F_BODY) <= bw - 6:
+                    textbox(slide, bx - 8, top + 5, bw + 16, 14, txt,
+                            pt=PT["micro"], color="white", align="c",
+                            line_pct=1.0, wrap=False)
+                # ucuncu secenek yok: cizgiyle cakisan etiket basilmaz
 
     # cizgiler
     for j, s_ in enumerate(series):
@@ -1393,10 +1415,19 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             if s_.get("labels") == "above" or (uc and i in uc):
                 v = float(s_["data"][i] or 0)
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                textbox(slide, vx - slot / 2, vy - 19, max(slot, 34), 14, txt,
-                        pt=PT["micro"], family=F_DISPLAY, bold=True,
-                        color=s_.get("color", "coral"), align="c", line_pct=1.0,
-                        wrap=False)
+                # kendi noktasi haric diger serilerle cakisma kontrolu
+                digerleri = [c for c in cizgi_y.get(i, []) if abs(c - vy) > 0.5]
+                ust, alt = vy - 12, vy + 16
+                hedef = None
+                if all(abs(ust - c) > 13 for c in digerleri):
+                    hedef = vy - 19
+                elif all(abs(alt - c) > 13 for c in digerleri) and alt < plot_bot - 6:
+                    hedef = vy + 9
+                if hedef is not None:
+                    textbox(slide, vx - slot / 2, hedef, max(slot, 34), 14, txt,
+                            pt=PT["micro"], family=F_DISPLAY, bold=True,
+                            color=s_.get("color", "coral"), align="c",
+                            line_pct=1.0, wrap=False)
 
     # kategori etiketleri
     for i, cat in enumerate(cats):
@@ -1426,7 +1457,11 @@ def block_panels(slide, b, x, y, w, ctx, idx):
     heights = []
     for it in items:
         hh = pad
-        hh += PT["h4"] * PX_PER_PT * 1.25 + 6
+        # Baslik iki satira sarabiliyor; sabit tek satir yuksekligi alt basligin
+        # ustune biniyordu (tuzaklar 3.9).
+        bl = len(wrap_lines(plain(it.get("title", "")), cw - pad * 2, PT["h4"],
+                            F_DISPLAY, True, safety=0.94)) or 1
+        hh += bl * PT["h4"] * PX_PER_PT * 1.25 + 6
         if it.get("sub"):
             hh += len(wrap_lines(plain(it["sub"]), cw - pad * 2, PT["micro"])) \
                   * PT["micro"] * PX_PER_PT * 1.4 + 8
@@ -1442,10 +1477,13 @@ def block_panels(slide, b, x, y, w, ctx, idx):
         rect(slide, cx, cy, cw, ch, fill=b.get("fill", "white"), radius=16,
              line="line", line_w=0.75)
         ty = cy + pad
-        textbox(slide, cx + pad, ty, cw - pad * 2, PT["h4"] * PX_PER_PT * 1.25,
+        bl = len(wrap_lines(plain(it.get("title", "")), cw - pad * 2, PT["h4"],
+                            F_DISPLAY, True, safety=0.94)) or 1
+        bh_ = bl * PT["h4"] * PX_PER_PT * 1.25
+        textbox(slide, cx + pad, ty, cw - pad * 2, bh_,
                 plain(it.get("title", "")), pt=PT["h4"], family=F_DISPLAY,
                 bold=True, color=it.get("color", "ink"), line_pct=1.25)
-        ty += PT["h4"] * PX_PER_PT * 1.25 + 6
+        ty += bh_ + 6
         if it.get("sub"):
             hh = len(wrap_lines(plain(it["sub"]), cw - pad * 2, PT["micro"])) \
                  * PT["micro"] * PX_PER_PT * 1.4

@@ -295,7 +295,7 @@ S.append({
         "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 96, "bar_w": 26, "cats": ET, "series": [
+        {"type": "combo", "col": "full", "h": 88, "bar_w": 26, "cats": ET, "series": [
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
