@@ -695,10 +695,11 @@ eksen - ölçek farkı nedeniyle). Altında `heat: true` segment × ay matrisi
 Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
 
-**Grafikte değer etiketi.** Bar serisine `labels: "inside"` ve `labels_text`
+**Grafikte değer etiketi.** Bar serisine `labels: "taban"` ve `labels_text`
 ile deste biçiminde değer verilir (`6.7K`); 13 aylık seride `bar_w: 44`.
-Etiket barın tabanında beyaz basılır, sığmazsa üretici sırayla barın üstünü,
-çizgilerin üstünü ve çerçeveli tabanı dener - her bar etiket alır. İki metrikli grafiklerde çizgi serisi de `labels: "above"`
+Değer barın tabanında açık renkte basılır ve çizgilerle yarışmaz; bir ay
+sığmıyorsa üretici seriyi üst yerleşime alır (barın üstü → barın ortası →
+kaydırma). Çizgi etiketi noktanın üstünde, doluysa altında (tuzaklar 3.9). İki metrikli grafiklerde çizgi serisi de `labels: "above"`
 ile etiketlenir - okuyucu ekseni okumadan değeri görür.
 
 **Tablo altında MoM ve YoY ayrı ok olarak verilir** (`insights` içinde iki

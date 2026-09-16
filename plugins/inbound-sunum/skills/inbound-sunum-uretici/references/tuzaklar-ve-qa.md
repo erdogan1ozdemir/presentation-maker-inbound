@@ -962,9 +962,18 @@ etiketleri sabit konumda basılıyordu; çok serili grafikte sayı çizginin tam
 3. **Bir seride tek tip gösterim.** Bir ay çerçeveli çıkıyorsa serinin bütün
    ayları çerçeveli basılır; bazısı düz bazısı çerçeveli olmaz. Etiket basılan
    seride her ay etiket alır; "3 ayda var 10 ayda yok" olmaz.
-4. **Bar değeri için `labels: "taban"`:** bütün aylar sığıyorsa değer barın
-   tabanında beyaz yazılır (üstteki çizgilerle hiç yarışmaz); tek bir ay
-   sığmıyorsa seri üst yerleşime döner. 13 aylık seride `bar_w: 44`.
+4. **Bar değeri varsayılan olarak tabanda, açık renkte** (`labels: "taban"`):
+   bütün aylar sığıyorsa değer barın tabanında beyaz yazılır ve üstteki
+   çizgilerle hiç yarışmaz. Impression ve CTR gibi bar olarak çizilen her
+   metrik böyle verilir; tek bir ay sığmıyorsa seri üst yerleşime döner.
+   13 aylık seride `bar_w: 44`.
+4b. **Üst yerleşimde sıra:** barın hemen üstü → (doluysa) barın ortasına beyaz
+   (bar 30 px'ten yüksekse ve metin sığıyorsa) → yukarı kayarak ilk boş yer.
+   Çizgi etiketinde: noktanın hemen üstü → **noktanın hemen altı** → yukarı
+   kayarak. Yığma son çaredir: gerçek bir destede yerleştirici dört etiketi
+   20-30 px yukarı itmişti ve okuyucu bunları elle geri indirdi. Etiket
+   anlattığı ögeden uzaklaşmamalı; uzaklaşıyorsa alt konumu ya da bar içi
+   tercih edilir.
 5. **İki serinin etiketleri okunmaz hale geliyorsa ikincisinin etiketi
    kaldırılır.** Sayfa grubu grafiğinde click + impression + pozisyon üç
    etiket üst üste yığılıyorsa impression etiketsiz kalır; değer zaten

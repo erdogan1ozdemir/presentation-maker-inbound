@@ -198,7 +198,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "blocks": [
             {"type": "combo", "col": "full", "h": 196, "bar_w": 44, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "labels": "inside",
+                 "color": "gray_bar", "axis": "left", "labels": "taban",
                  "labels_text": [k(TOP[y][metrik]) for y in AYLAR]},
                 {"kind": "line", "name": "Non-Brand", "data": [NB[y][metrik] for y in AYLAR],
                  "color": "teal", "axis": "left"},
@@ -247,7 +247,7 @@ S.append({
     "blocks": [
         {"type": "combo", "col": "full", "h": 164, "bar_w": 44, "cats": ET, "series": [
             {"kind": "bar", "name": "CTR (Toplam)", "data": [round(TOP[y]["ctr"], 2) for y in AYLAR],
-             "color": "gray_bar", "axis": "left", "fmt": "pct", "labels": "inside",
+             "color": "gray_bar", "axis": "left", "fmt": "pct", "labels": "taban",
              "labels_text": [f"%{TOP[y]['ctr']:.1f}" for y in AYLAR]},
             {"kind": "line", "name": "Ort. pozisyon (Toplam)", "data": [round(TOP[y]["poz"], 1) for y in AYLAR],
              "color": "coral", "axis": "right", "invert": True, "fmt": "pos", "labels": "above",

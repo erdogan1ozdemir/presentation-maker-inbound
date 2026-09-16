@@ -813,6 +813,15 @@ def check_pptx(path, rep):
 # ----------------------------------------------------------------------------
 
 def main():
+    # Eski sürümle üretim yapılmaz: düzeltilmiş tuzaklar geri gelir.
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import surum_kontrol
+        surum_kontrol.zorunlu()
+    except SystemExit:
+        raise
+    except Exception:
+        pass
     ap = argparse.ArgumentParser(description="Inbound deste teslim denetimi")
     ap.add_argument("spec")
     ap.add_argument("--pptx", default=None)

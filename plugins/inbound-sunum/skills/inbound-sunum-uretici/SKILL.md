@@ -50,6 +50,14 @@ FAZ 6  Teslim         -> dosya + chat'te FLAG listesi
 
 ## FAZ 0 - Brief
 
+**İlk adım: sürüm kontrolü.** `scripts/surum_kontrol.py` kurulu sürümü
+GitHub'daki güncel sürümle karşılaştırır; üretici ve denetim betikleri bunu
+kendiliğinden yapar ve **eski sürümle deste üretmez** (çıkış kodu 3). Mesaj
+çıkarsa önce güncelle: Claude Code'da `/plugin` menüsünden inbound-sunum,
+claude.ai'de `dist/` altındaki güncel zip. Ağ yoksa `INBOUND_SURUM_ATLA=1`
+ile bilinçli olarak atlanır; bu bir teslim notu olarak chat'e yazılır.
+
+
 **Önce markanın hazır bir formatı var mı diye bak.** `reference/` altında
 markaya özel bir klasör varsa (`reference/game-plus/` gibi) yapı yeniden
 tasarlanmaz: o klasörün README'si okunur, üretici script dönem değerleriyle

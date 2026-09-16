@@ -265,7 +265,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "243.0K",
         "215.0K",
@@ -476,7 +476,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "8.47M",
         "8.06M",
@@ -687,7 +687,7 @@
        "color": "gray_bar",
        "axis": "left",
        "fmt": "pct",
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "%2.9",
         "%2.7",
@@ -2395,20 +2395,20 @@
        "-1.4"
       ],
       [
-       "tek kişilik pike",
-       "4.4K",
-       "62",
-       "-88",
-       "7.3",
-       "-0.6"
-      ],
-      [
        "panini dünya kupası albümü 2026",
        "1.0K",
        "0",
        "-88",
        "-",
        "-"
+      ],
+      [
+       "tek kişilik pike",
+       "4.4K",
+       "62",
+       "-88",
+       "7.3",
+       "-0.6"
       ]
      ],
      "font_pt": 10.5,

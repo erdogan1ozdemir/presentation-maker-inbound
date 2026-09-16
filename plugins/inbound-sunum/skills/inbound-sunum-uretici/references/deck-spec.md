@@ -269,7 +269,7 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `kind` | `bar` veya `line` |
 | `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için) |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
-| `labels` | Bar: `taban` (barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner) ya da `above` (barın üstünde). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). Vermezsen etiket basılmaz |
+| `labels` | Bar: `taban` **(varsayılan tercih)** - barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner. `above` barın üstü (doluysa barın ortası, sonra kaydırma). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). Vermezsen etiket basılmaz |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |

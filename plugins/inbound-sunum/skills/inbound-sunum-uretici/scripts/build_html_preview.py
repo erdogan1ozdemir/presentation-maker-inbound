@@ -450,11 +450,22 @@ def h_combo(b):
     def _cakisir(alt, ust, listede):
         return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
 
-    def yer_bul(i, alt):
-        """alt: istenen taban yuksekligi; cakisma yoksa ayni, varsa yukari kayar."""
+    def _bos(i, alt):
+        return not (_cakisir(alt, alt + LBL_H, engel.get(i, [])) or
+                    _cakisir(alt, alt + LBL_H, bantlar.get(i, [])))
+
+    def yer_bul(i, alt, alt_secenek=None):
+        """alt: istenen taban yuksekligi (ogenin hemen ustu). Sira: oldugu gibi
+        -> alt_secenek (noktanin hemen alti) -> yukari kayarak ilk bos yer.
+        Etiket anlattigi ogeden uzaklasmamali; yigma son caredir (tuzaklar 3.9)."""
+        if _bos(i, alt):
+            bantlar[i].append((alt, alt + LBL_H))
+            return alt
+        if alt_secenek is not None and alt_secenek >= 0 and _bos(i, alt_secenek):
+            bantlar[i].append((alt_secenek, alt_secenek + LBL_H))
+            return alt_secenek
         adim = 0
-        while (_cakisir(alt, alt + LBL_H, engel.get(i, [])) or
-               _cakisir(alt, alt + LBL_H, bantlar.get(i, []))) and adim < 60:
+        while not _bos(i, alt) and adim < 60:
             alt += 2.0
             adim += 1
         bantlar[i].append((alt, alt + LBL_H))
@@ -507,6 +518,14 @@ def h_combo(b):
                 if taban_ok:
                     lab = f'<span class="cb-bl">{esc(txt)}</span>'
                     bantlar[i].append((0.0, 18.0))
+                elif _bos(i, bh + 4):
+                    alt = yer_bul(i, bh + 4)
+                    yerler.append((i, alt, txt, lc, False))
+                elif bh > 30 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and _bos(i, bh / 2 - 7):
+                    # ustu dolu: barin ortasina beyaz
+                    orta = bh / 2 - 7
+                    bantlar[i].append((orta, orta + LBL_H))
+                    lab = (f'<span class="cb-bl" style="bottom:{orta:.1f}px">{esc(txt)}</span>')
                 else:
                     alt = yer_bul(i, bh + 4)
                     yerler.append((i, alt, txt, lc, cerceveli_mi(i, alt)))
@@ -542,7 +561,7 @@ def h_combo(b):
             if s_.get("labels") == "above" or (uc and i in uc):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
                 taban = plot_h - vy                      # noktanin tabandan yuksekligi
-                alt = yer_bul(i, taban + 8)
+                alt = yer_bul(i, taban + 8, taban - 8 - LBL_H)
                 yerler.append((i, alt, txt, col, cerceveli_mi(i, alt)))
         lbl_html = seri_etiketleri(yerler)
         parca, cari = [], []

@@ -1414,10 +1414,21 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     def _cakisir(alt, ust, listede):
         return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
 
-    def yer_bul(i, alt):
+    def _bos(i, alt):
+        return not (_cakisir(alt, alt + LBL_H, engel[i]) or
+                    _cakisir(alt, alt + LBL_H, bantlar[i]))
+
+    def yer_bul(i, alt, alt_secenek=None):
+        """Sira: oldugu gibi -> alt_secenek (noktanin alti) -> yukari kayarak.
+        Etiket anlattigi ogeden uzaklasmamali; yigma son caredir."""
+        if _bos(i, alt):
+            bantlar[i].append((alt, alt + LBL_H))
+            return alt
+        if alt_secenek is not None and alt_secenek >= 0 and _bos(i, alt_secenek):
+            bantlar[i].append((alt_secenek, alt_secenek + LBL_H))
+            return alt_secenek
         adim = 0
-        while (_cakisir(alt, alt + LBL_H, engel[i]) or
-               _cakisir(alt, alt + LBL_H, bantlar[i])) and adim < 60:
+        while not _bos(i, alt) and adim < 60:
             alt += 2.0
             adim += 1
         bantlar[i].append((alt, alt + LBL_H))
@@ -1477,6 +1488,15 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                         pt=PT["micro"], color="white", align="c",
                         line_pct=1.0, wrap=False)
                 bantlar[i].append((0.0, 18.0))
+            elif _bos(i, bh + 4):
+                alt = yer_bul(i, bh + 4)
+                yerler.append((i, alt, txt, lc, False))
+            elif bh > 30 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and _bos(i, bh / 2 - 7):
+                orta = bh / 2 - 7                       # ustu dolu: barin ortasina beyaz
+                bantlar[i].append((orta, orta + LBL_H))
+                textbox(slide, bx - 8, plot_bot - orta - LBL_H, bw + 16, 14, txt,
+                        pt=PT["micro"], color="white", align="c",
+                        line_pct=1.0, wrap=False)
             else:
                 alt = yer_bul(i, bh + 4)
                 yerler.append((i, alt, txt, lc, cerceveli_mi(i, alt)))
@@ -1535,7 +1555,8 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             if s_.get("labels") == "above" or (uc and i in uc):
                 v = float(s_["data"][i] or 0)
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                alt = yer_bul(i, (plot_bot - vy) + 8)
+                taban_ = plot_bot - vy
+                alt = yer_bul(i, taban_ + 8, taban_ - 8 - LBL_H)
                 yerler.append((i, alt, txt, s_.get("color", "coral"), cerceveli_mi(i, alt)))
         seri_ciz(yerler)
 
@@ -2053,6 +2074,15 @@ def build(spec, out_path, assets_dir, base_dir, check_only=False):
 
 
 def main():
+    # Eski sürümle üretim yapılmaz: düzeltilmiş tuzaklar geri gelir.
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import surum_kontrol
+        surum_kontrol.zorunlu()
+    except SystemExit:
+        raise
+    except Exception:
+        pass
     ap = argparse.ArgumentParser(description="deck.json -> Inbound PPTX")
     ap.add_argument("spec")
     ap.add_argument("-o", "--out", default=None)
