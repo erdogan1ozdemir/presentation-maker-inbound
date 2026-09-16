@@ -696,8 +696,9 @@ Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okun
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
 
 **Grafikte değer etiketi.** Bar serisine `labels: "inside"` ve `labels_text`
-ile deste biçiminde değer verilir (`6.7K`); sığmayan etiket üretici tarafından
-barın üstüne alınır. İki metrikli grafiklerde çizgi serisi de `labels: "above"`
+ile deste biçiminde değer verilir (`6.7K`); 13 aylık seride `bar_w: 44`.
+Etiket barın tabanında beyaz basılır, sığmazsa üretici sırayla barın üstünü,
+çizgilerin üstünü ve çerçeveli tabanı dener - her bar etiket alır. İki metrikli grafiklerde çizgi serisi de `labels: "above"`
 ile etiketlenir - okuyucu ekseni okumadan değeri görür.
 
 **Tablo altında MoM ve YoY ayrı ok olarak verilir** (`insights` içinde iki

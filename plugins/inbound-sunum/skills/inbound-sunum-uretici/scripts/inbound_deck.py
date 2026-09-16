@@ -1418,21 +1418,38 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             bh = max(1.0, plot_bot - top)
             bx = px0 + slot * i + (slot - bw) / 2
             rect(slide, bx, top, bw, bh, fill=col)
-            if s_.get("labels") in ("inside", "above") and bh > 18:
+            if s_.get("labels") in ("inside", "above") and bh > 8:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
+                tw = text_w(txt, PT["micro"], F_BODY)
+                lc = s_.get("label_color", "ink2")
                 ust = top - CB_VAL_H + 7          # etiketin dikey merkezi
-                orta = top + 12
-                if bos_mu(i, ust):                # once barin ustu
-                    textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
-                            pt=PT["micro"], family=F_DISPLAY, bold=True,
-                            color=s_.get("label_color", "ink2"), align="c",
-                            line_pct=1.0, wrap=False)
-                elif bh > 30 and bos_mu(i, orta) and \
-                        text_w(txt, PT["micro"], F_BODY) <= bw - 6:
-                    textbox(slide, bx - 8, top + 5, bw + 16, 14, txt,
+                taban = plot_bot - 13
+                # Siralama (tuzaklar 3.9): 1) barin tabanina beyaz, sigiyorsa
+                # 2) barin ustune 3) cizgilerin de ustune 4) barin tabanina
+                # cerceveli beyaz etiket - her bar mutlaka etiket alir, deger
+                # cizgiyle asla ust uste gelmez.
+                if bh > 24 and tw <= bw - 6 and bos_mu(i, taban, 10):
+                    textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
                             pt=PT["micro"], color="white", align="c",
                             line_pct=1.0, wrap=False)
-                # ucuncu secenek yok: cizgiyle cakisan etiket basilmaz
+                elif bos_mu(i, ust):
+                    textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
+                            pt=PT["micro"], family=F_DISPLAY, bold=True,
+                            color=lc, align="c", line_pct=1.0, wrap=False)
+                else:
+                    en_ust = min([top] + cizgi_y.get(i, []))
+                    ust2 = en_ust - CB_VAL_H + 7
+                    if ust2 - 7 > plot_top - 4 and bos_mu(i, ust2):
+                        textbox(slide, px0 + slot * i, en_ust - CB_VAL_H, slot, 14, txt,
+                                pt=PT["micro"], family=F_DISPLAY, bold=True,
+                                color=lc, align="c", line_pct=1.0, wrap=False)
+                    else:
+                        cw_ = tw + 10
+                        rect(slide, px0 + slot * i + (slot - cw_) / 2, plot_bot - 21,
+                             cw_, 16, fill="white", radius=4, line="line", line_w=0.5)
+                        textbox(slide, px0 + slot * i, plot_bot - 20, slot, 14, txt,
+                                pt=PT["micro"], family=F_DISPLAY, bold=True,
+                                color=lc, align="c", line_pct=1.0, wrap=False)
 
     # cizgiler
     for j, s_ in enumerate(series):

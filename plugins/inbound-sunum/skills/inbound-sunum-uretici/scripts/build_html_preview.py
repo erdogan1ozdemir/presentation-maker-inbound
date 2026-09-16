@@ -440,17 +440,27 @@ def h_combo(b):
             bh = max(1.0, ypos(side, float(v or 0)))
             bx = gut + slot * i + (slot - bw) / 2
             lab, ust = "", ""
-            if s_.get("labels") in ("inside", "above") and bh > 18:
+            if s_.get("labels") in ("inside", "above") and bh > 8:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
-                if bos_mu(i, bh + 9):                       # barin ustu
-                    lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
+                tw = text_w(txt, PT["micro"], F_BODY)
+                lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
+                # bkz. inbound_deck.block_combo: taban -> ust -> cizgi ustu -> cerceveli taban
+                if bh > 24 and tw <= bw - 6 and bos_mu(i, 7, 10):
+                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
+                elif bos_mu(i, bh + 9):
                     ust = (f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
                            f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{lc}">'
                            f'{esc(txt)}</div>')
-                elif bh > 30 and bos_mu(i, bh - 12) and \
-                        text_w(txt, PT["micro"], F_BODY) <= bw - 6:
-                    lab = (f'<span class="cb-bl" style="bottom:auto;top:5px">'
-                           f'{esc(txt)}</span>')
+                else:
+                    en_ust = max([bh] + cizgi_y.get(i, []))
+                    if en_ust + 16 < plot_h + 4 and bos_mu(i, en_ust + 9):
+                        ust = (f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
+                               f'width:{slot:.1f}px;bottom:{en_ust+4:.1f}px;color:#{lc}">'
+                               f'{esc(txt)}</div>')
+                    else:
+                        ust = (f'<div class="cb-ll cb-chip" style="left:{gut+slot*i:.1f}px;'
+                               f'width:{slot:.1f}px;bottom:4px;color:#{lc}">'
+                               f'<span>{esc(txt)}</span></div>')
             o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
                      f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
             if ust:
@@ -828,6 +838,8 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
   color:#%(ink3)s;line-height:1.4}
 .fns div{margin-bottom:2px}
 .fns.fns-foot{right:auto;bottom:auto;line-height:1.3}
+.cb-chip span{display:inline-block;background:#fff;border:.5px solid #%(line)s;border-radius:4px;
+  padding:1px 5px;line-height:1.2}
 /* cover / closing */
 .cover{display:flex;align-items:center;justify-content:center}
 .cv{text-align:center;position:relative;z-index:2;padding:0 80px}

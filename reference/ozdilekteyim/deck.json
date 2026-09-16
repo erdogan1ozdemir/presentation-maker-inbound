@@ -228,7 +228,7 @@
      "type": "combo",
      "col": "full",
      "h": 196,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -439,7 +439,7 @@
      "type": "combo",
      "col": "full",
      "h": 196,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -649,7 +649,7 @@
      "type": "combo",
      "col": "full",
      "h": 164,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -1454,7 +1454,7 @@
      "type": "combo",
      "col": "full",
      "h": 200,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -1721,7 +1721,7 @@
      "type": "combo",
      "col": "full",
      "h": 200,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -1988,7 +1988,7 @@
      "type": "combo",
      "col": "full",
      "h": 200,
-     "bar_w": 26,
+     "bar_w": 44,
      "cats": [
       "Ağu'25",
       "Eyl'25",

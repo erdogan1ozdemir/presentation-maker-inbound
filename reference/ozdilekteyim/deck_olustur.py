@@ -196,7 +196,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "grid": [100],
         "footnotes": [dipnot, "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 196, "bar_w": 26, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 196, "bar_w": 44, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "labels": "inside",
                  "labels_text": [k(TOP[y][metrik]) for y in AYLAR]},
@@ -245,7 +245,7 @@ S.append({
         "Yıllık pozisyon karşılaştırması Eylül 2025 değişikliğiyle birlikte okunmalıdır.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 164, "bar_w": 26, "cats": ET, "series": [
+        {"type": "combo", "col": "full", "h": 164, "bar_w": 44, "cats": ET, "series": [
             {"kind": "bar", "name": "CTR (Toplam)", "data": [round(TOP[y]["ctr"], 2) for y in AYLAR],
              "color": "gray_bar", "axis": "left", "fmt": "pct", "labels": "inside",
              "labels_text": [f"%{TOP[y]['ctr']:.1f}" for y in AYLAR]},
@@ -427,7 +427,7 @@ def grup_slayt(g, yorum):
             "(yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 200, "bar_w": 26, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 200, "bar_w": 44, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "inside",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},

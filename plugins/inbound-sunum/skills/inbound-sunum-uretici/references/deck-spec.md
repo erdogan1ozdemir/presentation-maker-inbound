@@ -283,11 +283,11 @@ etiketlerde gereksiz ondalık yoktur (`100K`, `2.5M`, `25`). Üst sınır bu
 yüzden en yüksek değerin bir miktar üstünde kalır; `pad` yalnızca üst payı
 büyütür, basamak seçimi otomatiktir.
 
-**Değer etiketleri çizgiyle çakışmaz.** Bar ve çizgi etiketleri sabit konumda
-basılmaz: üretici önce barın üstünü, sonra barın içini dener, ikisinde de bir
-çizgi varsa etiketi basmaz (değer tabloda durur). Bu yüzden çok serili bir
-grafikte bazı barların etiketi görünmeyebilir - beklenen davranıştır
-(tuzaklar 3.9).
+**Değer etiketleri çizgiyle çakışmaz ve her barda bulunur.** Sıra: barın
+tabanına beyaz (sığıyorsa) → barın üstü → çizgilerin üstü → barın tabanına
+çerçeveli etiket. Çizgi etiketleri üst → alt → basılmaz. 13 kategorili
+seride `bar_w: 44` verilir; dar barda etiket tabana sığmaz ve çerçeveye
+düşer (tuzaklar 3.9).
 
 **Üç metrik tek grafikte (`axis: "own"`).** İki eksene sığmayan üçüncü metrik
 (click bar + impression çizgisi + pozisyon çizgisi gibi) `axis: "own"` ile

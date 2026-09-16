@@ -951,13 +951,22 @@ başlıklarına da uygulanıyor.
 
 **Grafik etiketi çizginin üzerine biniyordu.** Bar değerleri ve çizgi
 etiketleri sabit konumda basılıyordu; çok serili grafikte sayı, çizginin
-tam üstüne düşüyordu. Yeni kural üç kademeli:
+tam üstüne düşüyordu. İlk çözüm "çakışıyorsa basma" idi; bu, 13 barın
+10'unu etiketsiz bırakıp üçünü etiketli gösterdi ve okuyucu "neden üç ayda
+veri var" diye sordu. Etiket bir seride ya hep vardır ya hiç; bu yüzden
+sıra artık her bara mutlaka bir yer bulacak şekilde kurulur:
 
-1. Etiket **barın üstüne** basılır; o noktada bir çizgi yoksa iş biter.
-2. Çizgi varsa ve bar yeterince yüksekse etiket **barın içine, üst kısmına**
-   (beyaz) alınır.
-3. İkisi de çakışıyorsa **etiket basılmaz** - değer zaten grafiğin altındaki
-   tabloda duruyor. Okunmayan bir sayı, olmayan sayıdan kötüdür.
+1. **Barın tabanına, beyaz** - bar 24 px'ten yüksek ve metin bara sığıyorsa.
+   Çizgiler nadiren tabandan geçer; etiket sırası tek hizada okunur.
+2. Sığmıyorsa **barın üstüne**, orada çizgi yoksa.
+3. Orası doluysa **çizgilerin de üstüne** (bar → çizgi → etiket).
+4. O da doluysa **barın tabanına çerçeveli beyaz etiket** (ince `line`
+   kenarlık, `ink2` metin) - bar dar olsa da okunur.
+
+Çizgi etiketleri önce noktanın üstünü, sonra altını dener; ikisi de doluysa
+basılmaz (çizgi değeri tabloda durur). Eşik 13 px'tir. 13 aylık seride bar
+genişliği **44 px** verilir ki "8.47M" gibi değerler tabana sığsın; 26 px bar
+her etiketi çerçeveye düşürür.
 
 Çizgi etiketleri de aynı mantıkla önce noktanın üstünü, sonra altını dener,
 ikisi de doluysa basılmaz. Eşik 13px'tir (etiket yüksekliği 14px).
