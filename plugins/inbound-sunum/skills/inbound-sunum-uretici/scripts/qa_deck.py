@@ -481,7 +481,9 @@ def check_skeleton(spec, rep):
                              for x in (b.get("head") or []))
         iz = (" ".join(plain(x) for x in (s.get("breadcrumb") or [])) + " "
               + plain(s.get("title", ""))).lower()
-        if "query" in iz and ("değişim" in iz or "hareket" in iz):
+        if "query" in iz and ("değişim" in iz or "hareket" in iz) and "brand" not in iz.replace("non-brand", ""):
+            # Brand query slaytinda hacim kolonu yerine uc donem degeri bulunur
+            # (katalog C47b); hacim kurali non-brand tablolari icindir.
             if "hacim" not in basliklar.lower():
                 rep.warn(f"S{i:02d}", "hacim kolonu",
                          "query tablosunda arama hacmi kolonu yok",

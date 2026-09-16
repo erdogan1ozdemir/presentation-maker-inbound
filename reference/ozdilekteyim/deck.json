@@ -1276,167 +1276,6 @@
    "type": "content",
    "breadcrumb": [
     "SEARCH CONSOLE",
-    "Query Değişimleri"
-   ],
-   "title": "Brand Sorgularında Yıllık Click Değişimi",
-   "subtitle": "Ağustos 2026 & Ağustos 2025 | YoY | click değişimine göre sıralı",
-   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı & Google Ads arama hacmi",
-   "grid": [
-    50,
-    50
-   ],
-   "footnotes": [
-    "Arama hacmi Ağustos 2026 aylık değeridir. ASCII yazımlarda (\"ozdilek\", \"ozdilekteyim\") hacim Türkçe karakterli yazımla birlikte değerlendirildiği için ayrıca verilmemiştir. Query tablosu Search Console'un ilk 5.000 sorgusundan oluşturulmuştur."
-   ],
-   "blocks": [
-    {
-     "type": "table",
-     "col": 0,
-     "first_col_max": 0.4,
-     "head": [
-      "Click azalan",
-      "Hacim (Ağu 2026)",
-      "Ağu 25",
-      "Ağu 26",
-      "Δ"
-     ],
-     "rows": [
-      [
-       "özdilek",
-       "165.0K",
-       "43.826",
-       "16.990",
-       "-26.836"
-      ],
-      [
-       "özdilekteyim",
-       "74.0K",
-       "22.956",
-       "12.565",
-       "-10.391"
-      ],
-      [
-       "ozdilek",
-       "-",
-       "3.618",
-       "1.290",
-       "-2.328"
-      ],
-      [
-       "ozdilekteyim",
-       "-",
-       "1.116",
-       "387",
-       "-729"
-      ],
-      [
-       "özdilek market",
-       "5.4K",
-       "1.354",
-       "858",
-       "-496"
-      ],
-      [
-       "özdilek bayan pijama takımları",
-       "390",
-       "502",
-       "113",
-       "-389"
-      ],
-      [
-       "özdilek yatak örtüsü",
-       "2.4K",
-       "626",
-       "317",
-       "-309"
-      ]
-     ],
-     "font_pt": 10.5,
-     "row_h": 20,
-     "head_h": 24
-    },
-    {
-     "type": "table",
-     "col": 1,
-     "first_col_max": 0.4,
-     "head": [
-      "Click artan",
-      "Hacim (Ağu 2026)",
-      "Ağu 25",
-      "Ağu 26",
-      "Δ"
-     ],
-     "rows": [
-      [
-       "özdilek bornoz",
-       "6.6K",
-       "1.232",
-       "1.646",
-       "+414"
-      ],
-      [
-       "özdilek avm",
-       "90.5K",
-       "1.194",
-       "1.504",
-       "+310"
-      ],
-      [
-       "özdilek bornoz takımı",
-       "6.6K",
-       "1.118",
-       "1.380",
-       "+262"
-      ],
-      [
-       "özdilek nevresim takımı",
-       "5.4K",
-       "1.239",
-       "1.501",
-       "+262"
-      ],
-      [
-       "özdilekteyim sipariş takip",
-       "480",
-       "89",
-       "202",
-       "+113"
-      ],
-      [
-       "özdilek pike takımı çift kişilik",
-       "1.6K",
-       "119",
-       "225",
-       "+106"
-      ],
-      [
-       "özdilek izmir",
-       "3.6K",
-       "165",
-       "239",
-       "+74"
-      ]
-     ],
-     "font_pt": 10.5,
-     "row_h": 20,
-     "head_h": 24
-    },
-    {
-     "type": "insights",
-     "col": "full",
-     "mt": 12,
-     "font_pt": 10.5,
-     "items": [
-      "Düşüş kısa marka sorgularında toplanmaktadır: {c:\"özdilek\"} {r:-26.836}, {c:\"özdilekteyim\"} {r:-10.391} click. Bu sorguların ağırlıkla anasayfaya indiği görülmektedir; anasayfa click'i aynı dönemde {r:74.216 → 34.409} gerilemiştir.",
-      "Marka + ürün sorguları ise artış göstermektedir ({c:özdilek bornoz}, {c:özdilek avm}, {c:özdilek nevresim takımı}); ürün niyetli marka aramalarında organik görünürlüğün korunduğu görülmektedir."
-     ]
-    }
-   ]
-  },
-  {
-   "type": "content",
-   "breadcrumb": [
-    "SEARCH CONSOLE",
     "Sayfa Grupları"
    ],
    "title": "Mağaza Sayfaları: Click, Impression ve Sıralama",
@@ -1492,7 +1331,7 @@
        "color": "gray_bar",
        "axis": "left",
        "pad": 1.8,
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "69.9K",
         "68.9K",
@@ -1530,7 +1369,7 @@
        "color": "teal",
        "axis": "right",
        "pad": 1.8,
-       "labels": "uclar",
+       "labels": "above",
        "labels_text": [
         "4.22M",
         "4.27M",
@@ -1759,7 +1598,7 @@
        "color": "gray_bar",
        "axis": "left",
        "pad": 1.8,
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "17.0K",
         "17.3K",
@@ -1797,7 +1636,7 @@
        "color": "teal",
        "axis": "right",
        "pad": 1.8,
-       "labels": "uclar",
+       "labels": "above",
        "labels_text": [
         "2.23M",
         "2.38M",
@@ -2026,7 +1865,7 @@
        "color": "gray_bar",
        "axis": "left",
        "pad": 1.8,
-       "labels": "inside",
+       "labels": "taban",
        "labels_text": [
         "13",
         "105",
@@ -2064,7 +1903,7 @@
        "color": "teal",
        "axis": "right",
        "pad": 1.8,
-       "labels": "uclar",
+       "labels": null,
        "labels_text": [
         "1.1K",
         "5.9K",
@@ -2240,77 +2079,85 @@
     "SEARCH CONSOLE",
     "Query Değişimleri"
    ],
-   "title": "Non-Brand Sorgularda Click Değişimi",
-   "subtitle": "Ağustos 2026 & Temmuz 2026 | MoM | click değişimine göre sıralı",
-   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı & Google Ads arama hacmi",
+   "title": "Brand Sorgularında Click Değişimi",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 (MoM) & Ağustos 2025 (YoY) | yıllık click değişimine göre sıralı",
+   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı",
    "grid": [
     50,
     50
    ],
    "footnotes": [
-    "Arama hacmi Ağustos 2026 aylık değeridir; hacim verisi dönmeyen sorgularda \"-\" yazılmıştır."
+    "Query tablosu Search Console'un ilk 5.000 sorgusundan oluşturulmuştur; sıralama yıllık click değişimine göredir."
    ],
    "blocks": [
     {
      "type": "table",
      "col": 0,
-     "first_col_max": 0.42,
+     "first_col_max": 0.36,
      "head": [
-      "Click artan",
-      "Hacim (Ağu 2026)",
-      "Tem",
-      "Ağu",
-      "Δ"
+      "Click azalan",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM Δ",
+      "YoY Δ"
      ],
      "rows": [
       [
-       "benetton çanta",
-       "22.2K",
-       "506",
-       "690",
-       "+184"
+       "özdilek",
+       "43.826",
+       "16.618",
+       "16.990",
+       "+%2.2",
+       "-%61.2"
       ],
       [
-       "çeyiz seti",
-       "14.8K",
-       "160",
-       "326",
-       "+166"
+       "özdilekteyim",
+       "22.956",
+       "13.024",
+       "12.565",
+       "-%3.5",
+       "-%45.3"
       ],
       [
-       "banyo paspası",
-       "22.2K",
-       "315",
-       "465",
-       "+150"
+       "ozdilek",
+       "3.618",
+       "1.238",
+       "1.290",
+       "+%4.2",
+       "-%64.3"
       ],
       [
-       "bornoz takımı",
-       "12.1K",
-       "503",
-       "631",
-       "+128"
+       "ozdilekteyim",
+       "1.116",
+       "435",
+       "387",
+       "-%11.0",
+       "-%65.3"
       ],
       [
-       "chimola okul çantası",
-       "5.4K",
-       "16",
-       "139",
-       "+123"
+       "özdilek market",
+       "1.354",
+       "812",
+       "858",
+       "+%5.7",
+       "-%36.6"
       ],
       [
-       "çocuk nevresim takımı",
-       "4.4K",
-       "144",
-       "231",
-       "+87"
+       "özdilek bayan pijama takımları",
+       "502",
+       "102",
+       "113",
+       "+%10.8",
+       "-%77.5"
       ],
       [
-       "crocs",
-       "201.0K",
-       "11",
-       "82",
-       "+71"
+       "özdilek yatak örtüsü",
+       "626",
+       "245",
+       "317",
+       "+%29.4",
+       "-%49.4"
       ]
      ],
      "font_pt": 10.5,
@@ -2320,63 +2167,248 @@
     {
      "type": "table",
      "col": 1,
-     "first_col_max": 0.42,
+     "first_col_max": 0.36,
+     "head": [
+      "Click artan",
+      "Ağu 25",
+      "Tem 26",
+      "Ağu 26",
+      "MoM Δ",
+      "YoY Δ"
+     ],
+     "rows": [
+      [
+       "özdilek bornoz",
+       "1.232",
+       "968",
+       "1.646",
+       "+%70.0",
+       "+%33.6"
+      ],
+      [
+       "özdilek avm",
+       "1.194",
+       "1.286",
+       "1.504",
+       "+%17.0",
+       "+%26.0"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "1.239",
+       "1.149",
+       "1.501",
+       "+%30.6",
+       "+%21.1"
+      ],
+      [
+       "özdilek bornoz takımı",
+       "1.118",
+       "970",
+       "1.380",
+       "+%42.3",
+       "+%23.4"
+      ],
+      [
+       "özdilekteyim sipariş takip",
+       "89",
+       "111",
+       "202",
+       "+%82.0",
+       "+%127.0"
+      ],
+      [
+       "özdilek pike takımı çift kişilik",
+       "119",
+       "219",
+       "225",
+       "+%2.7",
+       "+%89.1"
+      ],
+      [
+       "özdilek izmir",
+       "165",
+       "193",
+       "239",
+       "+%23.8",
+       "+%44.8"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 12,
+     "font_pt": 10.5,
+     "items": [
+      "Düşüş kısa marka sorgularında toplanmaktadır: {c:\"özdilek\"} {r:-26.836}, {c:\"özdilekteyim\"} {r:-10.391} click. Bu sorguların ağırlıkla anasayfaya indiği görülmektedir; anasayfa click'i aynı dönemde {r:74.216 → 34.409} gerilemiştir.",
+      "Marka + ürün sorguları ise artış göstermektedir ({c:özdilek bornoz}, {c:özdilek avm}, {c:özdilek nevresim takımı}); ürün niyetli marka aramalarında organik görünürlüğün korunduğu görülmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
+    "Query Değişimleri"
+   ],
+   "title": "Non-Brand Sorgularda Click Değişimi",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 | MoM | click değişimine göre sıralı",
+   "source": "Google Search Console - ozdilekteyim.com · Query kırılımı & Google Ads arama hacmi",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Click ve pozisyon Ağustos 2026 değeridir, Δ Temmuz'a göre değişimdir; pozisyonda pozitif değer iyileşmedir. Arama hacmi Ağustos 2026 aylık değeridir; hacim verisi dönmeyen sorgularda \"-\" yazılmıştır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.4,
+     "head": [
+      "Click artan",
+      "Hacim (Ağu 2026)",
+      "Click",
+      "Δ",
+      "Poz.",
+      "Δ poz."
+     ],
+     "rows": [
+      [
+       "benetton çanta",
+       "22.2K",
+       "690",
+       "+184",
+       "3.4",
+       "+0.1"
+      ],
+      [
+       "çeyiz seti",
+       "14.8K",
+       "326",
+       "+166",
+       "6.8",
+       "+0.5"
+      ],
+      [
+       "banyo paspası",
+       "22.2K",
+       "465",
+       "+150",
+       "7.0",
+       "-0.3"
+      ],
+      [
+       "bornoz takımı",
+       "12.1K",
+       "631",
+       "+128",
+       "4.6",
+       "0.0"
+      ],
+      [
+       "chimola okul çantası",
+       "5.4K",
+       "139",
+       "+123",
+       "7.6",
+       "-1.4"
+      ],
+      [
+       "çocuk nevresim takımı",
+       "4.4K",
+       "231",
+       "+87",
+       "6.6",
+       "+0.5"
+      ],
+      [
+       "crocs",
+       "201.0K",
+       "82",
+       "+71",
+       "7.7",
+       "+17.4"
+      ]
+     ],
+     "font_pt": 10.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.4,
      "head": [
       "Click azalan",
       "Hacim (Ağu 2026)",
-      "Tem",
-      "Ağu",
-      "Δ"
+      "Click",
+      "Δ",
+      "Poz.",
+      "Δ poz."
      ],
      "rows": [
       [
        "crocs ballet",
        "1.9K",
-       "233",
        "0",
-       "-233"
+       "-233",
+       "-",
+       "-"
       ],
       [
        "kabin boy valiz",
        "-",
-       "417",
        "256",
-       "-161"
+       "-161",
+       "9.2",
+       "-1.6"
       ],
       [
        "plaj havlusu",
        "18.1K",
-       "633",
        "474",
-       "-159"
+       "-159",
+       "5.9",
+       "+0.6"
       ],
       [
        "dünya kupası albümü",
        "1.6K",
-       "107",
        "0",
-       "-107"
+       "-107",
+       "-",
+       "-"
       ],
       [
        "valiz",
        "74.0K",
-       "850",
        "752",
-       "-98"
+       "-98",
+       "8.6",
+       "-1.4"
       ],
       [
        "tek kişilik pike",
        "4.4K",
-       "150",
        "62",
-       "-88"
+       "-88",
+       "7.3",
+       "-0.6"
       ],
       [
        "panini dünya kupası albümü 2026",
        "1.0K",
-       "88",
        "0",
-       "-88"
+       "-88",
+       "-",
+       "-"
       ]
      ],
      "font_pt": 10.5,
@@ -2409,61 +2441,69 @@
     50
    ],
    "footnotes": [
-    "URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı ozdilekteyim.com altındadır."
+    "Click ve pozisyon Ağustos 2026 değeridir, Δ Temmuz'a göre değişimdir; pozisyonda pozitif değer iyileşmedir. URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı ozdilekteyim.com altındadır."
    ],
    "blocks": [
     {
      "type": "table",
      "col": 0,
-     "first_col_max": 0.56,
+     "first_col_max": 0.5,
      "head": [
       "Click artan sayfa",
-      "Tem",
-      "Ağu",
-      "Δ"
+      "Click",
+      "Δ",
+      "Poz.",
+      "Δ poz."
      ],
      "rows": [
       [
        "/magaza/bornoz-2",
-       "3.764",
        "5.322",
-       "+1.558"
+       "+1.558",
+       "4.6",
+       "-0.1"
       ],
       [
        "/magaza/nevresim-nevresim-takimi",
-       "3.064",
        "3.968",
-       "+904"
+       "+904",
+       "2.8",
+       "-0.3"
       ],
       [
        "/ (anasayfa)",
-       "33.635",
        "34.409",
-       "+774"
+       "+774",
+       "3.6",
+       "+0.1"
       ],
       [
        "/magaza/ceyiz-setleri3",
-       "1.030",
        "1.696",
-       "+666"
+       "+666",
+       "7.2",
+       "0.0"
       ],
       [
        "/magaza/aile-seti-kategori",
-       "1.991",
        "2.643",
-       "+652"
+       "+652",
+       "4.4",
+       "0.0"
       ],
       [
        "/market",
-       "2.664",
        "3.130",
-       "+466"
+       "+466",
+       "2.2",
+       "+0.1"
       ],
       [
        "/magaza/cocuk-bornozu",
-       "1.099",
        "1.500",
-       "+401"
+       "+401",
+       "5.3",
+       "-0.2"
       ]
      ],
      "font_pt": 10.5,
@@ -2473,55 +2513,63 @@
     {
      "type": "table",
      "col": 1,
-     "first_col_max": 0.56,
+     "first_col_max": 0.5,
      "head": [
       "Click azalan sayfa",
-      "Tem",
-      "Ağu",
-      "Δ"
+      "Click",
+      "Δ",
+      "Poz.",
+      "Δ poz."
      ],
      "rows": [
       [
        "/magaza/panini-fifa-dunya-kupasi-2026-ci",
-       "558",
        "0",
-       "-558"
+       "-558",
+       "-",
+       "-"
       ],
       [
        "/magaza/pike-pike-takimi",
-       "2.052",
        "1.729",
-       "-323"
+       "-323",
+       "5.3",
+       "-0.2"
       ],
       [
        "/magaza/aninda-indirim-2500-500",
-       "377",
        "68",
-       "-309"
+       "-309",
+       "5.3",
+       "+0.6"
       ],
       [
        "/magaza/tek-kisilik-pike-takimilari-cp2",
-       "1.147",
        "858",
-       "-289"
+       "-289",
+       "6.1",
+       "+0.2"
       ],
       [
        "/magaza/crocs-kadin-classic-animal-balle",
-       "276",
        "0",
-       "-276"
+       "-276",
+       "-",
+       "-"
       ],
       [
        "/magaza/plaj-havlusu",
-       "1.621",
        "1.349",
-       "-272"
+       "-272",
+       "6.1",
+       "+0.3"
       ],
       [
        "/magaza/mayo-bikini",
-       "642",
        "386",
-       "-256"
+       "-256",
+       "10.1",
+       "-0.1"
       ]
      ],
      "font_pt": 10.5,
@@ -3115,6 +3163,215 @@
      "items": [
       "Marka Ağustos'ta {b:1.626 yanıtın 573'ünde} anılmıştır ({g:%35.2}). En belirgin artış {c:Google AI Overview} tarafındadır ({g:+6.2p}); {c:Gemini} {b:%44.4} ile en yüksek orandadır.",
       "Anılma sayısında Özdilekteyim {b:2. sıradadır}; {c:karaca.com} ev ve mutfak prompt'larında öne çıkmaktadır. ChatGPT tarafında oran %24 bandında kalmakta ve kategori içeriklerinde geliştirme alanı sunmaktadır."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
+    "Kategori Görünürlüğü"
+   ],
+   "title": "Kategori Bazında Yapay Zeka Görünürlüğü",
+   "subtitle": "Ağustos 2026 & Temmuz 2026 | kategori prompt kümeleri | Gemini, Google AI Overview ve ChatGPT birlikte",
+   "source": "Inbound AI Görünürlük İzleme",
+   "grid": [
+    50,
+    50
+   ],
+   "footnotes": [
+    "Oran: markanın anıldığı yanıtların kümenin toplam yanıtı içindeki payı; üç sağlayıcı birlikte. Marka adıyla sorulan prompt kümeleri (marka görünürlük analizi, pazaryeri görünürlük analizi) kategori tablosuna dahil değildir. Kategoriler Ağustos oranına göre sıralıdır."
+   ],
+   "blocks": [
+    {
+     "type": "table",
+     "col": 0,
+     "first_col_max": 0.4,
+     "head": [
+      "Kategori",
+      "Prompt",
+      "Geçen / Yanıt",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "Nevresim Takımı",
+       "6",
+       "40 / 81",
+       "%50.0",
+       "%49.4",
+       "-0.6p"
+      ],
+      [
+       "Bornoz",
+       "5",
+       "32 / 65",
+       "%45.3",
+       "%49.2",
+       "+3.9p"
+      ],
+      [
+       "Çeyiz Setleri",
+       "3",
+       "18 / 39",
+       "%44.2",
+       "%46.2",
+       "+1.9p"
+      ],
+      [
+       "Genel / Kategori",
+       "8",
+       "47 / 103",
+       "%36.0",
+       "%45.6",
+       "+9.6p"
+      ],
+      [
+       "Yorgan",
+       "3",
+       "16 / 39",
+       "%34.0",
+       "%41.0",
+       "+7.1p"
+      ],
+      [
+       "Alez",
+       "2",
+       "11 / 28",
+       "%34.3",
+       "%39.3",
+       "+5.0p"
+      ],
+      [
+       "Çarşaf",
+       "1",
+       "4 / 13",
+       "%50.0",
+       "%30.8",
+       "-19.2p"
+      ],
+      [
+       "Uyku Seti",
+       "1",
+       "4 / 13",
+       "%11.1",
+       "%30.8",
+       "+19.7p"
+      ],
+      [
+       "Battaniye",
+       "5",
+       "12 / 63",
+       "%20.2",
+       "%19.0",
+       "-1.2p"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 16,
+     "head_h": 20
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.4,
+     "head": [
+      "Kategori",
+      "Prompt",
+      "Geçen / Yanıt",
+      "Tem",
+      "Ağu",
+      "Δ"
+     ],
+     "rows": [
+      [
+       "Havlu",
+       "5",
+       "12 / 69",
+       "%21.8",
+       "%17.4",
+       "-4.4p"
+      ],
+      [
+       "Pike Takımı",
+       "2",
+       "4 / 25",
+       "%16.2",
+       "%16.0",
+       "-0.2p"
+      ],
+      [
+       "Yatak Örtüsü",
+       "3",
+       "5 / 38",
+       "%15.7",
+       "%13.2",
+       "-2.5p"
+      ],
+      [
+       "Yastık",
+       "7",
+       "12 / 92",
+       "%20.2",
+       "%13.0",
+       "-7.1p"
+      ],
+      [
+       "Banyo Paspası & Klozet",
+       "2",
+       "2 / 23",
+       "%2.9",
+       "%8.7",
+       "+5.8p"
+      ],
+      [
+       "Peştemal & Plaj Havlusu",
+       "3",
+       "2 / 40",
+       "%3.7",
+       "%5.0",
+       "+1.3p"
+      ],
+      [
+       "Masa Örtüsü",
+       "2",
+       "1 / 25",
+       "%12.1",
+       "%4.0",
+       "-8.1p"
+      ],
+      [
+       "Mutfak Tekstili",
+       "2",
+       "1 / 27",
+       "%0.0",
+       "%3.7",
+       "+3.7p"
+      ],
+      [
+       "Aksesuar / Halı",
+       "3",
+       "0 / 39",
+       "%0.0",
+       "%0.0",
+       "0.0p"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 16,
+     "head_h": 20
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 8,
+     "font_pt": 10,
+     "items": [
+      "Görünürlük ev tekstilinin çekirdek kategorilerinde yoğunlaşmaktadır: {c:Bornoz} {g:%49.2}, {c:Nevresim Takımı} {g:%49.4}, {c:Çeyiz Setleri} {g:%46.2} ve {c:Genel / Kategori} {g:%45.6}; Genel / Kategori kümesi aylık {g:+9.6p} ile en çok kazanan küme olmuştur.",
+      "{c:Aksesuar / Halı}, {c:Mutfak Tekstili}, {c:Masa Örtüsü} ve {c:Peştemal & Plaj Havlusu} kümelerinde marka yanıtlarda neredeyse hiç anılmamaktadır ({b:%0-5}); bu kategoriler yapay zeka görünürlüğü için içerik geliştirme alanı olarak değerlendirilebilir."
      ]
     }
    ]

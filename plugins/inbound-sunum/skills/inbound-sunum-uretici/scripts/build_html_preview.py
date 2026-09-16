@@ -469,6 +469,14 @@ def h_combo(b):
         return (f'<div class="{cls}" style="left:{gut+slot*i:.1f}px;'
                 f'width:{slot:.1f}px;bottom:{alt:.1f}px;color:#{renk}">{ic}</div>')
 
+    def seri_etiketleri(yerler):
+        """[(i, alt, txt, renk, cerceve)] -> HTML. Bir seride tek tip gosterim:
+        herhangi bir ay cerceve gerektiriyorsa butun aylar cerceveli basilir
+        (tuzaklar 3.9)."""
+        if any(c for *_r, c in yerler):
+            yerler = [(i, alt, t, r, True) for i, alt, t, r, _c in yerler]
+        return [etiket_html(*y) for y in yerler]
+
     for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
             continue
@@ -478,17 +486,33 @@ def h_combo(b):
         bw = min(b.get("bar_w", 40), slot * 0.62)
         col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
         lbls = s_.get("labels_text")
-        etiketli = s_.get("labels") in ("inside", "above")
+        etiketli = s_.get("labels") in ("inside", "above", "taban")
+        # "taban": deger barin tabaninda beyaz yazilir (bar yeterince yuksek ve
+        # metin sigiyorsa); sigmayan ay icin butun seri ust yerlesime doner.
+        taban_ok = False
+        if s_.get("labels") == "taban":
+            taban_ok = all(
+                max(1.0, ypos(side, float(v or 0))) > 24 and
+                text_w(lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"]),
+                       PT["micro"], F_BODY) <= bw - 6
+                for i, v in enumerate(s_["data"][:n]))
+        yerler = []
         for i, v in enumerate(s_["data"][:n]):
             bh = max(1.0, ypos(side, float(v or 0)))
             bx = gut + slot * i + (slot - bw) / 2
-            o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
-                     f'height:{bh:.1f}px;background:#{col}"></div>')
+            lab = ""
             if etiketli:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
                 lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
-                alt = yer_bul(i, bh + 4)
-                o.append(etiket_html(i, alt, txt, lc, cerceveli_mi(i, alt)))
+                if taban_ok:
+                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
+                    bantlar[i].append((0.0, 18.0))
+                else:
+                    alt = yer_bul(i, bh + 4)
+                    yerler.append((i, alt, txt, lc, cerceveli_mi(i, alt)))
+            o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
+                     f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
+        o += seri_etiketleri(yerler)
 
     for j, s_ in enumerate(series):
         if s_.get("kind") != "line":
@@ -498,7 +522,7 @@ def h_combo(b):
             continue
         col = C.get(s_.get("color", "coral"), s_.get("color"))
         # None = bosluk (bkz. inbound_deck.block_combo): cizgi kesilir, nokta yok
-        pts, lbl_html = [], []
+        pts, lbl_html, yerler = [], [], []
         lbls = s_.get("labels_text")
         uc = None
         if s_.get("labels") == "uclar":       # bkz. inbound_deck.block_combo
@@ -519,7 +543,8 @@ def h_combo(b):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
                 taban = plot_h - vy                      # noktanin tabandan yuksekligi
                 alt = yer_bul(i, taban + 8)
-                lbl_html.append(etiket_html(i, alt, txt, col, cerceveli_mi(i, alt)))
+                yerler.append((i, alt, txt, col, cerceveli_mi(i, alt)))
+        lbl_html = seri_etiketleri(yerler)
         parca, cari = [], []
         for p in pts:
             if p is None:

@@ -16,13 +16,18 @@ Kapak · Akış
                       (C45b) · dönem karşılaştırması (click / impression / CTR / pozisyon)
                       marka arama hacmi ve brand click (C04d)
                       brand Query değişimleri (YoY)
-                      Mağaza · Market · Marka + Kategori (her biri ayrı slayt, C54)
-                      non-brand Query değişimleri (MoM) · Sayfa değişimleri (MoM)
+                      Mağaza · Market · Marka + Kategori (her biri ayrı slayt, C54;
+                      Marka + Kategori'de impression etiketi yok)
+                      brand Query değişimleri (Ağu 25 / Tem 26 / Ağu 26, MoM + YoY, C47b)
+                      non-brand Query değişimleri (click, Δ, poz., Δ poz.)
+                      Sayfa değişimleri (click, Δ, poz., Δ poz.)
 03 GA4 Trafik         web-only; export gelince (GA4_HAZIR bayrağı)
 04 Görünürlük ve Rakipler
                       rakip visibility Google + AI Overview (C20c)
                       organik Share of Voice · kategori visibility + hacim (C22)
 05 Yapay Zeka Görünürlüğü
+                      sağlayıcı bazında mention + rakip anılma (C51)
+                      kategori bazında görünürlük (C51b, `veri/ham/ai_kategori.json`)
 06 Değerlendirme · Teşekkürler
 ```
 

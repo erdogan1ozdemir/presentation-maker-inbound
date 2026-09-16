@@ -1384,23 +1384,63 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 textbox(slide, px1 + 8, gy - 7, gut - 8, 14, lbl, pt=PT["micro"],
                         color="ink3", align="l", line_pct=1.0, wrap=False)
 
-    # Etiket cakismasi: bar ve nokta etiketleri cizgilerin uzerine binmemeli.
-    # Kategori basina tum cizgi serilerinin y degeri toplanir; etiket once
-    # barin ustune, sigmazsa barin ortasina konur, ikisi de cizgiye giriyorsa
-    # etiket basilmaz (deger zaten tabloda) - tuzaklar 3.9.
-    cizgi_y = {i: [] for i in range(n)}
+    # Etiket yerlesimi (tuzaklar 3.9) - HTML onizleme ile ayni kural:
+    #  - her ay icin ayri karar; etiket anlattigi ogenin USTUNDE durur (barin
+    #    ustu, noktanin ustu), o ayin noktasini/barini kapatmaz, baska etiketle
+    #    ust uste gelmez; cakisma varsa yukari kayar
+    #  - bar govdesine ya da koyu zemine dusen etiket cerceveli basilir; bir
+    #    seride tek tip gosterim: bir ay cerceveliyse hepsi cerceveli
+    #  - labels:"taban": bar degeri barin tabaninda beyaz (hepsi sigiyorsa)
+    # Olcumler "tabandan yukseklik" olarak tutulur (plot_bot - y).
+    LBL_H = 14.0
+    koyu_slayt = bool(b.get("_dark"))
+    cizgi_h = {i: [] for i in range(n)}
+    bar_h = {i: 0.0 for i in range(n)}
     for j, s_ in enumerate(series):
-        if s_.get("kind") != "line":
-            continue
         side = eksen(j, s_)
         if side not in ax:
             continue
         for i, v in enumerate(s_["data"][:n]):
-            if v is not None:
-                cizgi_y[i].append(ypos(side, float(v)))
+            if v is None:
+                continue
+            hh = plot_bot - ypos(side, float(v))
+            if s_.get("kind") == "line":
+                cizgi_h[i].append(hh)
+            else:
+                bar_h[i] = max(bar_h[i], max(1.0, hh))
+    engel = {i: [(c - 6, c + 6) for c in cizgi_h[i]] for i in range(n)}
+    bantlar = {i: [] for i in range(n)}
 
-    def bos_mu(i, ly, tol=13.0):
-        return all(abs(ly - cy) > tol for cy in cizgi_y.get(i, []))
+    def _cakisir(alt, ust, listede):
+        return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
+
+    def yer_bul(i, alt):
+        adim = 0
+        while (_cakisir(alt, alt + LBL_H, engel[i]) or
+               _cakisir(alt, alt + LBL_H, bantlar[i])) and adim < 60:
+            alt += 2.0
+            adim += 1
+        bantlar[i].append((alt, alt + LBL_H))
+        return alt
+
+    def cerceveli_mi(i, alt):
+        return koyu_slayt or alt < bar_h[i] - 1
+
+    def etiket_ciz(i, alt, txt, renk, cerceve):
+        y_top = plot_bot - alt - LBL_H
+        if cerceve:
+            cw_ = text_w(txt, PT["micro"], F_DISPLAY, True) + 10
+            rect(slide, px0 + slot * i + (slot - cw_) / 2, y_top - 1, cw_, LBL_H + 2,
+                 fill="white", radius=4, line="line", line_w=0.5)
+        textbox(slide, px0 + slot * i, y_top, slot, LBL_H, txt, pt=PT["micro"],
+                family=F_DISPLAY, bold=True, color=renk, align="c",
+                line_pct=1.0, wrap=False)
+
+    def seri_ciz(yerler):
+        if any(c for *_r, c in yerler):
+            yerler = [(i, alt, t, r, True) for i, alt, t, r, _c in yerler]
+        for y_ in yerler:
+            etiket_ciz(*y_)
 
     # barlar
     for j, s_ in enumerate(series):
@@ -1412,44 +1452,35 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         bw = min(b.get("bar_w", 40), slot * 0.62)
         col = s_.get("color", "gray_bar")
         lbls = s_.get("labels_text")
+        etiketli = s_.get("labels") in ("inside", "above", "taban")
+        lc = s_.get("label_color", "ink2")
+
+        def _txt(i, v):
+            return lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
+
+        taban_ok = s_.get("labels") == "taban" and all(
+            max(1.0, plot_bot - ypos(side, float(v or 0))) > 24 and
+            text_w(_txt(i, v), PT["micro"], F_BODY) <= bw - 6
+            for i, v in enumerate(s_["data"][:n]))
+        yerler = []
         for i, v in enumerate(s_["data"][:n]):
             v = float(v or 0)
             top = ypos(side, v)
             bh = max(1.0, plot_bot - top)
             bx = px0 + slot * i + (slot - bw) / 2
             rect(slide, bx, top, bw, bh, fill=col)
-            if s_.get("labels") in ("inside", "above") and bh > 8:
-                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                tw = text_w(txt, PT["micro"], F_BODY)
-                lc = s_.get("label_color", "ink2")
-                ust = top - CB_VAL_H + 7          # etiketin dikey merkezi
-                taban = plot_bot - 13
-                # Siralama (tuzaklar 3.9): 1) barin tabanina beyaz, sigiyorsa
-                # 2) barin ustune 3) cizgilerin de ustune 4) barin tabanina
-                # cerceveli beyaz etiket - her bar mutlaka etiket alir, deger
-                # cizgiyle asla ust uste gelmez.
-                if bh > 24 and tw <= bw - 6 and bos_mu(i, taban, 10):
-                    textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
-                            pt=PT["micro"], color="white", align="c",
-                            line_pct=1.0, wrap=False)
-                elif bos_mu(i, ust):
-                    textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
-                            pt=PT["micro"], family=F_DISPLAY, bold=True,
-                            color=lc, align="c", line_pct=1.0, wrap=False)
-                else:
-                    en_ust = min([top] + cizgi_y.get(i, []))
-                    ust2 = en_ust - CB_VAL_H + 7
-                    if ust2 - 7 > plot_top - 4 and bos_mu(i, ust2):
-                        textbox(slide, px0 + slot * i, en_ust - CB_VAL_H, slot, 14, txt,
-                                pt=PT["micro"], family=F_DISPLAY, bold=True,
-                                color=lc, align="c", line_pct=1.0, wrap=False)
-                    else:
-                        cw_ = tw + 10
-                        rect(slide, px0 + slot * i + (slot - cw_) / 2, plot_bot - 21,
-                             cw_, 16, fill="white", radius=4, line="line", line_w=0.5)
-                        textbox(slide, px0 + slot * i, plot_bot - 20, slot, 14, txt,
-                                pt=PT["micro"], family=F_DISPLAY, bold=True,
-                                color=lc, align="c", line_pct=1.0, wrap=False)
+            if not etiketli:
+                continue
+            txt = _txt(i, v)
+            if taban_ok:
+                textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
+                        pt=PT["micro"], color="white", align="c",
+                        line_pct=1.0, wrap=False)
+                bantlar[i].append((0.0, 18.0))
+            else:
+                alt = yer_bul(i, bh + 4)
+                yerler.append((i, alt, txt, lc, cerceveli_mi(i, alt)))
+        seri_ciz(yerler)
 
     # cizgiler
     for j, s_ in enumerate(series):
@@ -1485,7 +1516,6 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             shp.shadow.inherit = False
         lbls = s_.get("labels_text")
         # labels:"uclar" -> yalnizca ilk, son, en dusuk ve en yuksek nokta
-        # etiketlenir; 30 gunluk seride her noktayi yazmak okunmaz oluyor.
         uc = None
         if s_.get("labels") == "uclar":
             gecerli = [(i2, float(v)) for i2, v in enumerate(s_["data"][:n])
@@ -1494,6 +1524,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 uc = {gecerli[0][0], gecerli[-1][0],
                       min(gecerli, key=lambda t: t[1])[0],
                       max(gecerli, key=lambda t: t[1])[0]}
+        yerler = []
         for i, vx, vy in [p for p in pts if p]:
             d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 4), px(vy - 4),
                                        px(8), px(8))
@@ -1504,19 +1535,9 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             if s_.get("labels") == "above" or (uc and i in uc):
                 v = float(s_["data"][i] or 0)
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                # kendi noktasi haric diger serilerle cakisma kontrolu
-                digerleri = [c for c in cizgi_y.get(i, []) if abs(c - vy) > 0.5]
-                ust, alt = vy - 12, vy + 16
-                hedef = None
-                if all(abs(ust - c) > 13 for c in digerleri):
-                    hedef = vy - 19
-                elif all(abs(alt - c) > 13 for c in digerleri) and alt < plot_bot - 6:
-                    hedef = vy + 9
-                if hedef is not None:
-                    textbox(slide, vx - slot / 2, hedef, max(slot, 34), 14, txt,
-                            pt=PT["micro"], family=F_DISPLAY, bold=True,
-                            color=s_.get("color", "coral"), align="c",
-                            line_pct=1.0, wrap=False)
+                alt = yer_bul(i, (plot_bot - vy) + 8)
+                yerler.append((i, alt, txt, s_.get("color", "coral"), cerceveli_mi(i, alt)))
+        seri_ciz(yerler)
 
     # kategori etiketleri
     for i, cat in enumerate(cats):
@@ -1929,6 +1950,8 @@ def s_content(slide, spec, ctx, idx):
     cursor = [top] * len(grid)
     auto = 0
     for b in spec.get("blocks") or []:
+        b = dict(b)
+        b["_dark"] = dark
         fn = BLOCKS.get(b.get("type"))
         if not fn:
             ctx.warn(f"S{idx}: bilinmeyen blok tipi '{b.get('type')}'")

@@ -269,7 +269,7 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `kind` | `bar` veya `line` |
 | `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için) |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
-| `labels` | `inside` (barın içinde, beyaz), `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta - 30 günlük seride her noktayı yazmak okunmaz olur) |
+| `labels` | Bar: `taban` (barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner) ya da `above` (barın üstünde). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). Vermezsen etiket basılmaz |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
@@ -283,11 +283,14 @@ etiketlerde gereksiz ondalık yoktur (`100K`, `2.5M`, `25`). Üst sınır bu
 yüzden en yüksek değerin bir miktar üstünde kalır; `pad` yalnızca üst payı
 büyütür, basamak seçimi otomatiktir.
 
-**Değer etiketleri çizgiyle çakışmaz ve her barda bulunur.** Sıra: barın
-tabanına beyaz (sığıyorsa) → barın üstü → çizgilerin üstü → barın tabanına
-çerçeveli etiket. Çizgi etiketleri üst → alt → basılmaz. 13 kategorili
-seride `bar_w: 44` verilir; dar barda etiket tabana sığmaz ve çerçeveye
-düşer (tuzaklar 3.9).
+**Değer etiketleri ay bazında yerleşir, hiçbir şeyi kapatmaz.** Etiket
+anlattığı ögenin üstünde durur; o ayın noktası, barı ya da başka bir etiketle
+çakışırsa yukarı kayar. Bar gövdesine ya da koyu zemine düşen etiket
+çerçeveli basılır ve **bir seride tek tip gösterim** vardır: bir ay çerçeveli
+ise hepsi çerçeveli. Etiket basılan seride her ay etiket alır; yarım seri
+olmaz. İki serinin etiketleri okunmaz hale geliyorsa ikincisinin etiketi
+kaldırılır (değer tabloda durur). 13 kategorili seride `bar_w: 44`
+(tuzaklar 3.9).
 
 **Üç metrik tek grafikte (`axis: "own"`).** İki eksene sığmayan üçüncü metrik
 (click bar + impression çizgisi + pozisyon çizgisi gibi) `axis: "own"` ile

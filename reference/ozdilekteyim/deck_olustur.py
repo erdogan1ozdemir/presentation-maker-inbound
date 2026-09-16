@@ -279,6 +279,17 @@ S.append({
     ],
 })
 
+def poz_kol(kume, anahtar, simdi="a26", onceki="t26"):
+    """(cari pozisyon, değişim) - pozitif değişim iyileşme; veri yoksa '-'."""
+    a = kume[simdi].get(anahtar, {}).get("poz")
+    b = kume[onceki].get(anahtar, {}).get("poz")
+    if a is None:
+        return "-", "-"
+    if b is None:
+        return f"{a:.1f}", "-"
+    return f"{a:.1f}", sifirla(f"{b - a:+.1f}")
+
+
 HEAD = ["Ağu 25", "Tem 26", "Ağu 26", "MoM", "YoY"]
 SEGLER = (("brand", "Brand"), ("nonbrand", "Non-Brand"), ("toplam", "Toplam"))
 
@@ -370,37 +381,6 @@ S.append({
     ],
 })
 
-# ------------------------------------------------------------ brand sorguları
-_, br_dus = hareketler(Q, "a26", "a25", lambda q: bool(BRAND.search(q)), 7)
-br_art, _ = hareketler(Q, "a26", "a25", lambda q: bool(BRAND.search(q)), 7)
-S.append({
-    "type": "content",
-    "breadcrumb": ["SEARCH CONSOLE", "Query Değişimleri"],
-    "title": "Brand Sorgularında Yıllık Click Değişimi",
-    "subtitle": "Ağustos 2026 & Ağustos 2025 | YoY | click değişimine göre sıralı",
-    "source": KAYNAK_GSC + " · Query kırılımı & Google Ads arama hacmi",
-    "grid": [50, 50],
-    "footnotes": [
-        "Arama hacmi Ağustos 2026 aylık değeridir. ASCII yazımlarda (\"ozdilek\", \"ozdilekteyim\") hacim Türkçe karakterli "
-        "yazımla birlikte değerlendirildiği için ayrıca verilmemiştir. Query tablosu Search Console'un ilk 5.000 sorgusundan oluşturulmuştur.",
-    ],
-    "blocks": [
-        dict({"type": "table", "col": 0, "first_col_max": 0.40,
-              "head": ["Click azalan", HB, "Ağu 25", "Ağu 26", "Δ"],
-              "rows": [[q, k(hacim(q)), n(b), n(a), n(x)] for q, b, a, x in br_dus]}, **T),
-        dict({"type": "table", "col": 1, "first_col_max": 0.40,
-              "head": ["Click artan", HB, "Ağu 25", "Ağu 26", "Δ"],
-              "rows": [[q, k(hacim(q)), n(b), n(a), f"+{n(x)}"] for q, b, a, x in br_art]}, **T),
-        {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
-            f"Düşüş kısa marka sorgularında toplanmaktadır: {{c:\"özdilek\"}} {{r:{n(br_dus[0][3])}}}, {{c:\"özdilekteyim\"}} "
-            f"{{r:{n(br_dus[1][3])}}} click. Bu sorguların ağırlıkla anasayfaya indiği görülmektedir; anasayfa click'i aynı dönemde "
-            f"{{r:{n(P['a25']['https://www.ozdilekteyim.com/']['click'])} → {n(P['a26']['https://www.ozdilekteyim.com/']['click'])}}} gerilemiştir.",
-            "Marka + ürün sorguları ise artış göstermektedir ({c:özdilek bornoz}, {c:özdilek avm}, {c:özdilek nevresim takımı}); "
-            "ürün niyetli marka aramalarında organik görünürlüğün korunduğu görülmektedir.",
-        ]},
-    ],
-})
-
 # ------------------------------------------------------------ sayfa grupları
 GRUP_TANIM = {
     "magaza": ("Mağaza", "/magaza/ altındaki kategori ve ürün sayfaları. Grup Marka + Kategori sayfalarını da kapsamaktadır."),
@@ -410,7 +390,7 @@ GRUP_TANIM = {
 }
 
 
-def grup_slayt(g, yorum):
+def grup_slayt(g, yorum, impr_etiket="above"):
     ad, tanim = GRUP_TANIM[g]
     a = SEG[g]
     yoy = (lambda m: "yeni") if g == "cp2" else (lambda m: d(g, m, b=GECEN_YIL))
@@ -429,10 +409,10 @@ def grup_slayt(g, yorum):
         "blocks": [
             {"type": "combo", "col": "full", "h": 200, "bar_w": 44, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "inside",
+                 "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "taban",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},
                 {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
-                 "color": "teal", "axis": "right", "pad": 1.8, "labels": "uclar",
+                 "color": "teal", "axis": "right", "pad": 1.8, "labels": impr_etiket,
                  "labels_text": [k(a[y]["impr"]) for y in AYLAR]},
                 {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in AYLAR],
                  "color": "coral", "axis": "own", "band": [0.56, 0.80], "invert": True, "fmt": "pos", "labels": "above",
@@ -468,10 +448,42 @@ S.append(grup_slayt("market", [
     f"Click Nisan 2026'dan bu yana {{b:9-10K}} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {{b:7.2-7.4}} "
     f"seviyesinden {{r:{MK[SIMDI]['poz']:.1f}}} seviyesine gerilemiştir.",
 ]))
-S.append(grup_slayt("cp2", [
+S.append(grup_slayt("cp2", impr_etiket=None, yorum=[
     f"Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {{b:{k(CP[202604]['click'])}}} ile zirve "
     f"yapmış, ortalama pozisyon {{b:7.3-8.4}} bandında kalmıştır.",
 ]))
+
+# ------------------------------------------------------------ brand sorguları
+_, br_dus = hareketler(Q, "a26", "a25", lambda q: bool(BRAND.search(q)), 7)
+br_art, _ = hareketler(Q, "a26", "a25", lambda q: bool(BRAND.search(q)), 7)
+S.append({
+    "type": "content",
+    "breadcrumb": ["SEARCH CONSOLE", "Query Değişimleri"],
+    "title": "Brand Sorgularında Click Değişimi",
+    "subtitle": "Ağustos 2026 & Temmuz 2026 (MoM) & Ağustos 2025 (YoY) | yıllık click değişimine göre sıralı",
+    "source": KAYNAK_GSC + " · Query kırılımı",
+    "grid": [50, 50],
+    "footnotes": [
+        "Query tablosu Search Console'un ilk 5.000 sorgusundan oluşturulmuştur; sıralama yıllık click değişimine göredir.",
+    ],
+    "blocks": [
+        dict({"type": "table", "col": 0, "first_col_max": 0.36,
+              "head": ["Click azalan", "Ağu 25", "Tem 26", "Ağu 26", "MoM Δ", "YoY Δ"],
+              "rows": [[q, n(b), n(Q["t26"].get(q, {}).get("click", 0)), n(a),
+                        pct(a, Q["t26"].get(q, {}).get("click", 0)), pct(a, b)] for q, b, a, x in br_dus]}, **T),
+        dict({"type": "table", "col": 1, "first_col_max": 0.36,
+              "head": ["Click artan", "Ağu 25", "Tem 26", "Ağu 26", "MoM Δ", "YoY Δ"],
+              "rows": [[q, n(b), n(Q["t26"].get(q, {}).get("click", 0)), n(a),
+                        pct(a, Q["t26"].get(q, {}).get("click", 0)), pct(a, b)] for q, b, a, x in br_art]}, **T),
+        {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
+            f"Düşüş kısa marka sorgularında toplanmaktadır: {{c:\"özdilek\"}} {{r:{n(br_dus[0][3])}}}, {{c:\"özdilekteyim\"}} "
+            f"{{r:{n(br_dus[1][3])}}} click. Bu sorguların ağırlıkla anasayfaya indiği görülmektedir; anasayfa click'i aynı dönemde "
+            f"{{r:{n(P['a25']['https://www.ozdilekteyim.com/']['click'])} → {n(P['a26']['https://www.ozdilekteyim.com/']['click'])}}} gerilemiştir.",
+            "Marka + ürün sorguları ise artış göstermektedir ({c:özdilek bornoz}, {c:özdilek avm}, {c:özdilek nevresim takımı}); "
+            "ürün niyetli marka aramalarında organik görünürlüğün korunduğu görülmektedir.",
+        ]},
+    ],
+})
 
 # ------------------------------------------------------------ non-brand sorgu MoM
 nb_art, nb_dus = hareketler(Q, "a26", "t26", lambda q: not BRAND.search(q), 7)
@@ -483,15 +495,16 @@ S.append({
     "source": KAYNAK_GSC + " · Query kırılımı & Google Ads arama hacmi",
     "grid": [50, 50],
     "footnotes": [
+        "Click ve pozisyon Ağustos 2026 değeridir, Δ Temmuz'a göre değişimdir; pozisyonda pozitif değer iyileşmedir. "
         "Arama hacmi Ağustos 2026 aylık değeridir; hacim verisi dönmeyen sorgularda \"-\" yazılmıştır.",
     ],
     "blocks": [
-        dict({"type": "table", "col": 0, "first_col_max": 0.42,
-              "head": ["Click artan", HB, "Tem", "Ağu", "Δ"],
-              "rows": [[q, k(hacim(q)), n(b), n(a), f"+{n(x)}"] for q, b, a, x in nb_art]}, **T),
-        dict({"type": "table", "col": 1, "first_col_max": 0.42,
-              "head": ["Click azalan", HB, "Tem", "Ağu", "Δ"],
-              "rows": [[q, k(hacim(q)), n(b), n(a), n(x)] for q, b, a, x in nb_dus]}, **T),
+        dict({"type": "table", "col": 0, "first_col_max": 0.40,
+              "head": ["Click artan", HB, "Click", "Δ", "Poz.", "Δ poz."],
+              "rows": [[q, k(hacim(q)), n(a), f"+{n(x)}", *poz_kol(Q, q)] for q, b, a, x in nb_art]}, **T),
+        dict({"type": "table", "col": 1, "first_col_max": 0.40,
+              "head": ["Click azalan", HB, "Click", "Δ", "Poz.", "Δ poz."],
+              "rows": [[q, k(hacim(q)), n(a), n(x), *poz_kol(Q, q)] for q, b, a, x in nb_dus]}, **T),
         {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
             "Artış ev tekstili ve çanta sorgularında yoğunlaşmaktadır: {c:benetton çanta} {g:+184}, {c:çeyiz seti} {g:+166}, "
             "{c:banyo paspası} {g:+150}, {c:bornoz takımı} {g:+128}. Okul dönemi yaklaşırken {c:chimola okul çantası} {g:+123} click eklemiştir.",
@@ -511,15 +524,16 @@ S.append({
     "subtitle": "Ağustos 2026 & Temmuz 2026 | MoM | click değişimine göre sıralı",
     "source": KAYNAK_GSC + " · Page kırılımı",
     "grid": [50, 50],
-    "footnotes": ["URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı ozdilekteyim.com altındadır."],
+    "footnotes": ["Click ve pozisyon Ağustos 2026 değeridir, Δ Temmuz'a göre değişimdir; pozisyonda pozitif değer iyileşmedir. "
+                  "URL'ler kök alan adı çıkarılarak kısaltılmıştır; tamamı ozdilekteyim.com altındadır."],
     "blocks": [
-        dict({"type": "table", "col": 0, "first_col_max": 0.56,
-              "head": ["Click artan sayfa", "Tem", "Ağu", "Δ"],
-              "rows": [[(yol(u) if yol(u) != "/" else "/ (anasayfa)")[:40], n(b), n(a), f"+{n(x)}"]
+        dict({"type": "table", "col": 0, "first_col_max": 0.50,
+              "head": ["Click artan sayfa", "Click", "Δ", "Poz.", "Δ poz."],
+              "rows": [[(yol(u) if yol(u) != "/" else "/ (anasayfa)")[:40], n(a), f"+{n(x)}", *poz_kol(P, u)]
                        for u, b, a, x in s_art]}, **T),
-        dict({"type": "table", "col": 1, "first_col_max": 0.56,
-              "head": ["Click azalan sayfa", "Tem", "Ağu", "Δ"],
-              "rows": [[yol(u)[:40], n(b), n(a), n(x)] for u, b, a, x in s_dus]}, **T),
+        dict({"type": "table", "col": 1, "first_col_max": 0.50,
+              "head": ["Click azalan sayfa", "Click", "Δ", "Poz.", "Δ poz."],
+              "rows": [[yol(u)[:40], n(a), n(x), *poz_kol(P, u)] for u, b, a, x in s_dus]}, **T),
         {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
             "{c:/magaza/bornoz-2} {g:+1.558} click ile en yüksek artışı göstermiştir; {c:nevresim}, {c:çeyiz setleri} ve "
             "{c:aile seti} kategori sayfaları da ev tekstili tarafındaki toparlanmayı taşımaktadır.",
@@ -715,6 +729,43 @@ S.append({
             f"En belirgin artış {{c:Google AI Overview}} tarafındadır ({renk(ai_rows[1][4])}); {{c:Gemini}} {{b:{ai_rows[0][3]}}} ile en yüksek orandadır.",
             f"Anılma sayısında Özdilekteyim {{b:{oz_r + 1}. sıradadır}}; {{c:karaca.com}} ev ve mutfak prompt'larında öne çıkmaktadır. "
             "ChatGPT tarafında oran %24 bandında kalmakta ve kategori içeriklerinde geliştirme alanı sunmaktadır.",
+        ]},
+    ],
+})
+
+AIK = json.loads((BASE / "veri/ham/ai_kategori.json").read_text(encoding="utf-8"))
+kat_ai = []
+for ad, v in sorted(AIK["klasor"].items(), key=lambda kv: -(kv[1]["a"][2] / kv[1]["a"][1])):
+    t_, a_ = v["t"], v["a"]
+    ot, oa = t_[2] / t_[1] * 100, a_[2] / a_[1] * 100
+    kat_ai.append([ad, n(a_[0]), f"{n(a_[2])} / {n(a_[1])}", f"%{ot:.1f}", f"%{oa:.1f}",
+                   sifirla(f"{oa - ot:+.1f}") + "p"])
+S.append({
+    "type": "content",
+    "breadcrumb": ["YAPAY ZEKA", "Kategori Görünürlüğü"],
+    "title": "Kategori Bazında Yapay Zeka Görünürlüğü",
+    "subtitle": "Ağustos 2026 & Temmuz 2026 | kategori prompt kümeleri | Gemini, Google AI Overview ve ChatGPT birlikte",
+    "source": "Inbound AI Görünürlük İzleme",
+    "grid": [50, 50],
+    "footnotes": [
+        "Oran: markanın anıldığı yanıtların kümenin toplam yanıtı içindeki payı; üç sağlayıcı birlikte. Marka adıyla "
+        "sorulan prompt kümeleri (marka görünürlük analizi, pazaryeri görünürlük analizi) kategori tablosuna dahil değildir. "
+        "Kategoriler Ağustos oranına göre sıralıdır.",
+    ],
+    "blocks": [
+        dict({"type": "table", "col": 0, "first_col_max": 0.40,
+              "head": ["Kategori", "Prompt", "Geçen / Yanıt", "Tem", "Ağu", "Δ"],
+              "rows": kat_ai[:9]}, **{**T, "font_pt": 9.5, "row_h": 16, "head_h": 20}),
+        dict({"type": "table", "col": 1, "first_col_max": 0.40,
+              "head": ["Kategori", "Prompt", "Geçen / Yanıt", "Tem", "Ağu", "Δ"],
+              "rows": kat_ai[9:]}, **{**T, "font_pt": 9.5, "row_h": 16, "head_h": 20}),
+        {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
+            "Görünürlük ev tekstilinin çekirdek kategorilerinde yoğunlaşmaktadır: {c:Bornoz} {g:%49.2}, {c:Nevresim Takımı} "
+            "{g:%49.4}, {c:Çeyiz Setleri} {g:%46.2} ve {c:Genel / Kategori} {g:%45.6}; Genel / Kategori kümesi aylık "
+            "{g:+9.6p} ile en çok kazanan küme olmuştur.",
+            "{c:Aksesuar / Halı}, {c:Mutfak Tekstili}, {c:Masa Örtüsü} ve {c:Peştemal & Plaj Havlusu} kümelerinde marka "
+            "yanıtlarda neredeyse hiç anılmamaktadır ({b:%0-5}); bu kategoriler yapay zeka görünürlüğü için içerik "
+            "geliştirme alanı olarak değerlendirilebilir.",
         ]},
     ],
 })

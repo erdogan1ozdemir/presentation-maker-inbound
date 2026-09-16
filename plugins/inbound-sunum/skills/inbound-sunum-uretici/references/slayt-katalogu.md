@@ -99,12 +99,12 @@ Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · segment
   grubu tanımları (C44)
 Ayraç 02 Google Search Console Metrikleri: aylık click (C45) · aylık impression
   (C45) · ortalama sıralama ve CTR (C45b) · dönem karşılaştırması (C46) · marka arama hacmi ve brand click (C04d)
-  · brand query değişimleri (C47) · sayfa grubu başına bir slayt (C54 × N)
-  · Query değişimleri (C47) · Sayfa değişimleri (C47)
+  · sayfa grubu başına bir slayt (C54 × N) · brand query değişimleri (C47b)
+  · non-brand Query değişimleri (C47) · Sayfa değişimleri (C47)
 Ayraç 03 GA4 Trafik (export gelince)
 Ayraç 04 Görünürlük ve Rakipler: rakip visibility Google + AI Overview (C20c)
   · organik Share of Voice (C21) · kategori visibility + hacim (C22)
-Ayraç 05 Yapay Zeka Görünürlüğü (C51)
+Ayraç 05 Yapay Zeka Görünürlüğü (C51 · C51b)
 Ayraç 06 Değerlendirme (C43) · Teşekkürler
 ```
 
@@ -741,6 +741,20 @@ Dört blok: `▲ Pozisyonu iyileşen` / `▼ Pozisyonu gerileyen` / `▲ Click a
 olarak yer alır. Kapsam şerhi zorunlu: kaç sorgu/sayfa üzerinden bakıldığı ve
 eşik (ör. "≥ 50 impression alan sorgular").
 
+**Kolon yapısı (MoM query ve sayfa tabloları):** `Query | Hacim (<ay>) |
+Click | Δ | Poz. | Δ poz.` ve `Sayfa | Click | Δ | Poz. | Δ poz.`. Önceki
+ayın click değeri **yazılmaz** - Δ zaten onu anlatır; kazanılan kolon cari
+pozisyon ve pozisyon değişimine verilir, böylece click hareketinin sıralamadan
+mı geldiği tek satırda okunur. Pozisyonda pozitif değer iyileşmedir; dipnotta
+yazılır.
+
+**C47b Brand query değişimleri** (non-brand query slaytının hemen önüne)
+Brand sorguları için hacim kolonu yerine **üç dönem değeri** verilir: `Query |
+<geçen yıl aynı ay> | <önceki ay> | <cari ay> | MoM Δ | YoY Δ`. İki tablo:
+yıllık click değişimine göre azalan ve artan. Hacim, marka talebi slaytında
+(C04d) zaten terim bazında durduğu için burada tekrarlanmaz; `qa_deck.py`
+brand slaytında hacim kolonu aramaz.
+
 **Sorgu tablolarında arama hacmi kolonu zorunludur.** "Pozisyon 3 basamak
 iyileşti" cümlesi hacim olmadan büyüklük taşımaz; 200 hacimli kelimede de
 40.000 hacimli kelimede de aynı görünür.
@@ -759,12 +773,16 @@ karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
 URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
 gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 üç metriği birlikte taşır:
-- `combo` (col `full`): click bar (`left`, `pad: 1.8`), impression çizgi
-  (`right`, `pad: 1.8`), ortalama pozisyon çizgi (`axis: "own"`,
+- `combo` (col `full`): click bar (`left`, `pad: 1.8`, **`labels: "taban"`**
+  - değer barın tabanında beyaz), impression çizgi (`right`, `pad: 1.8`,
+  `labels: "above"` ya da etiketsiz), ortalama pozisyon çizgi (`axis: "own"`,
   `band: [0.56, 0.80]`, `invert: true`, `labels: "above"`, `labels_text` tek
   ondalıklı). `pad` bar ve impression'ı grafiğin alt yarısında tutar, `band`
-  pozisyon çizgisini üstte ayrı bir şeride alır; böylece değer etiketleri
-  barlarla ve legend'la çakışmaz. 13 aylık seri.
+  pozisyon çizgisini üstte ayrı bir şeride alır. 13 aylık seri, `bar_w: 44`.
+  **Impression etiketi click etiketiyle karışıyorsa** (küçük barlar, çizgi bar
+  gövdesinden geçiyor) impression etiketi **kaldırılır** - değer tabloda
+  durur; click ve sıralama yeterlidir. Grup başına karar verilir (Özdilekteyim
+  Marka + Kategori grafiği etiketsiz impression ile kuruldu).
 - Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
 - `insights`: **MoM ve YoY ayrı birer ok** (click, impression ve pozisyon için
@@ -810,6 +828,16 @@ Source Visibility = marka sitesinin citation'ının toplam citation içindeki
 payı). Bir oran aracın kendi arayüzündeki adla anılacaksa formülü önce
 doğrulanır; doğrulanamıyorsa tanım dipnotta açık yazılır ve chat'ten teyit
 istenir.
+
+**C51b Kategori bazında yapay zeka görünürlüğü** (C51'in ardından)
+Prompt klasörleri (kategori kümeleri) bazında anılma oranı: `Kategori | Prompt
+| Marka geçen / Yanıt (cari ay) | Oran <önceki ay> | Oran <cari ay> | Δ`.
+Üç sağlayıcı birlikte; marka adıyla sorulan kümeler (marka görünürlük analizi,
+pazaryeri analizi, marka promptları) tabloya alınmaz, dipnotta belirtilir.
+Satırlar cari ay oranına göre sıralı; 10'dan fazla küme iki kolona bölünür.
+Veri: `inbound-db` `llm_responses` × `prompts.folder_id` × `prompt_folders`,
+ay bazında `brand_mentioned` oranı. Insight: en yüksek üç küme + en çok
+kazanan, ardından %0-5 bandındaki kümeler geliştirme alanı olarak.
 
 **C52 Prompt ve yanıt örnekleri** (2-3 slayt)
 Tablo değil, kart düzeni: `panels` iki kolon, her kartta **prompt** başlıkta

@@ -950,36 +950,30 @@ font ağırlığıyla (kalın satırlar `F_DISPLAY`) ölçülüyor. Aynı pay ko
 başlıklarına da uygulanıyor.
 
 **Grafik etiketi çizginin üzerine biniyordu.** Bar değerleri ve çizgi
-etiketleri sabit konumda basılıyordu; çok serili grafikte sayı, çizginin
-tam üstüne düşüyordu. İlk çözüm "çakışıyorsa basma" idi; bu, 13 barın
-10'unu etiketsiz bırakıp üçünü etiketli gösterdi ve okuyucu "neden üç ayda
-veri var" diye sordu. Etiket bir seride ya hep vardır ya hiç; bu yüzden
-sıra artık her bara mutlaka bir yer bulacak şekilde kurulur:
+etiketleri sabit konumda basılıyordu; çok serili grafikte sayı çizginin tam
+üstüne düşüyordu. Üç deneme sonunda oturan kural (HTML ve PPTX aynı):
 
-1. **Barın tabanına, beyaz** - bar 24 px'ten yüksek ve metin bara sığıyorsa.
-   Çizgiler nadiren tabandan geçer; etiket sırası tek hizada okunur.
-2. Sığmıyorsa **barın üstüne**, orada çizgi yoksa.
-3. Orası doluysa **çizgilerin de üstüne** (bar → çizgi → etiket).
-4. O da doluysa **barın tabanına çerçeveli beyaz etiket** (ince `line`
-   kenarlık, `ink2` metin) - bar dar olsa da okunur.
+1. **Her ay için ayrı karar.** Etiket anlattığı ögenin üstünde durur: bar
+   etiketi barın tepesinin, çizgi etiketi noktanın üstünde. O ayın noktasını,
+   barını ya da yerleşmiş başka bir etiketi kapatıyorsa 2 px adımlarla
+   **yukarı kayar**. Noktalar ±6 px, etiketler 14 px band olarak engel sayılır.
+2. **Kaydırma sonucu bar gövdesine ya da koyu zemine düşen etiket
+   çerçeveli** (beyaz zemin, ince `line` kenarlık) basılır.
+3. **Bir seride tek tip gösterim.** Bir ay çerçeveli çıkıyorsa serinin bütün
+   ayları çerçeveli basılır; bazısı düz bazısı çerçeveli olmaz. Etiket basılan
+   seride her ay etiket alır; "3 ayda var 10 ayda yok" olmaz.
+4. **Bar değeri için `labels: "taban"`:** bütün aylar sığıyorsa değer barın
+   tabanında beyaz yazılır (üstteki çizgilerle hiç yarışmaz); tek bir ay
+   sığmıyorsa seri üst yerleşime döner. 13 aylık seride `bar_w: 44`.
+5. **İki serinin etiketleri okunmaz hale geliyorsa ikincisinin etiketi
+   kaldırılır.** Sayfa grubu grafiğinde click + impression + pozisyon üç
+   etiket üst üste yığılıyorsa impression etiketsiz kalır; değer zaten
+   tabloda. Click ve sıralama okunur olduğu sürece grafik görevini yapar.
 
-**Seri genelinde tek karar.** Yerleşim bar bar değil seri başına seçilir:
-bütün etiketler tabana sığıyorsa hepsi tabanda beyaz; hepsi barın üstünde
-çizgisiz bir yer buluyorsa hepsi üstte; aksi halde hepsi tabanda çerçeveli.
-Bazısı tabanda bazısı tepede dizilmiş bir seri okuyucuyu yanıltır.
-
-Çizgi etiketleri de her zaman basılır: önce noktanın üstü, sonra altı; ikisi
-de dolu ya da koyu bir alana (bar, koyu zemin) düşüyorsa **çerçeveli** basılır
-ve yerleşmiş etiketlerin üstüne yığılır - etiket etiketin üstüne binmez.
-Eşik 13 px'tir. 13 aylık seride bar genişliği **44 px** verilir ki "8.47M"
-gibi değerler tabana sığsın.
-
-Durum (v1.16.2): bu davranış HTML önizlemede tam; PPTX üreticide seri
-genelinde karar ve çerçeveli çizgi etiketi henüz yok, bar bar karar veriyor.
-Önizlemede onaylanan düzen PPTX'e taşınacak.
-
-Çizgi etiketleri de aynı mantıkla önce noktanın üstünü, sonra altını dener,
-ikisi de doluysa basılmaz. Eşik 13px'tir (etiket yüksekliği 14px).
+Yanlış denemeler kayıt olsun diye: "çakışıyorsa basma" 13 barın 3'ünü
+etiketli bıraktı; "seri genelinde tek mod" bir ayın taşması yüzünden bütün
+seriyi tabandan tepeye taşıdı. İkisi de okuyucuya "neden bu ayda var, şunda
+yok" sorusunu sordurdu.
 
 **Panel başlığı alt başlığın üzerine biniyordu.** `panels` kartında başlık
 kutusu sabit tek satır yüksekliğindeydi; iki satıra saran başlık, altındaki
