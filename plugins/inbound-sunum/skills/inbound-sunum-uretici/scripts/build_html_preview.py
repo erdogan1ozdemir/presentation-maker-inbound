@@ -438,14 +438,36 @@ def h_combo(b):
         for i, v in enumerate(s_["data"][:n]):
             bar_h[i] = max(bar_h[i], max(1.0, ypos(side, float(v or 0))))
 
-    def koyu_ustu(i, alt, ust):
-        """Etiket bandi (tabandan alt..ust) koyu bir alana mi dusuyor?"""
-        return koyu_slayt or (alt < bar_h.get(i, 0.0) and ust > 0)
+    # Etiket yerlesimi (tuzaklar 3.9): her ay icin ayri karar. Etiket her zaman
+    # anlattigi ogenin USTUNDE durur (barin ustu, noktanin ustu), o ayin
+    # noktasini ya da barini kapatmaz, baska etiketle ust uste gelmez. Cakisma
+    # varsa etiket yukari kaydirilir; koyu bir alana (bar govdesi, koyu zemin)
+    # dusuyorsa cerceveli basilir.
+    LBL_H = 14.0
+    engel = {i: [(c - 6, c + 6) for c in cizgi_y.get(i, [])] for i in range(n)}
+    bantlar = {i: [] for i in range(n)}
 
-    bantlar = {i: [] for i in range(n)}         # indeks basina yerlesmis etiket bantlari
+    def _cakisir(alt, ust, listede):
+        return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
 
-    def bant_bos(i, alt, ust):
-        return all(ust < a0 - 1 or alt > a1 + 1 for a0, a1 in bantlar.get(i, []))
+    def yer_bul(i, alt):
+        """alt: istenen taban yuksekligi; cakisma yoksa ayni, varsa yukari kayar."""
+        adim = 0
+        while (_cakisir(alt, alt + LBL_H, engel.get(i, [])) or
+               _cakisir(alt, alt + LBL_H, bantlar.get(i, []))) and adim < 60:
+            alt += 2.0
+            adim += 1
+        bantlar[i].append((alt, alt + LBL_H))
+        return alt
+
+    def cerceveli_mi(i, alt):
+        return koyu_slayt or alt < bar_h.get(i, 0.0) - 1
+
+    def etiket_html(i, alt, txt, renk, cerceve):
+        cls = "cb-ll cb-chip" if cerceve else "cb-ll"
+        ic = f"<span>{esc(txt)}</span>" if cerceve else esc(txt)
+        return (f'<div class="{cls}" style="left:{gut+slot*i:.1f}px;'
+                f'width:{slot:.1f}px;bottom:{alt:.1f}px;color:#{renk}">{ic}</div>')
 
     for j, s_ in enumerate(series):
         if s_.get("kind") != "bar":
@@ -457,53 +479,16 @@ def h_combo(b):
         col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
         lbls = s_.get("labels_text")
         etiketli = s_.get("labels") in ("inside", "above")
-        # Yerlesim seri genelinde tek karardir (tuzaklar 3.9):
-        #   "taban"  - hepsi barin tabaninda beyaz (bar yeterince yuksek, metin sigiyor)
-        #   "ust"    - hepsi barin ustunde, hicbiri cizgiyle cakismiyor
-        #   "cip"    - hepsi barin tabaninda cerceveli etiket (her kosulda okunur)
-        mod = None
-        if etiketli:
-            bilgi = []
-            for i, v in enumerate(s_["data"][:n]):
-                bh_ = max(1.0, ypos(side, float(v or 0)))
-                t_ = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
-                bilgi.append((bh_, t_, text_w(t_, PT["micro"], F_BODY)))
-            if all(bh_ > 24 and tw_ <= bw - 6 and bos_mu(i, 7, 10) for i, (bh_, t_, tw_) in enumerate(bilgi)):
-                mod = "taban"
-            elif all(bos_mu(i, bh_ + 9) and bh_ + 18 < plot_h + 4 for i, (bh_, _t, _w) in enumerate(bilgi)):
-                mod = "ust"
-            else:
-                mod = "cip"
         for i, v in enumerate(s_["data"][:n]):
             bh = max(1.0, ypos(side, float(v or 0)))
             bx = gut + slot * i + (slot - bw) / 2
-            lab, ust = "", ""
+            o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
+                     f'height:{bh:.1f}px;background:#{col}"></div>')
             if etiketli:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
                 lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
-                if mod == "taban":
-                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
-                    bantlar[i].append((0.0, 18.0))
-                elif mod == "ust":
-                    cls = "cb-ll cb-chip" if koyu_slayt else "cb-ll"
-                    ic = f"<span>{esc(txt)}</span>" if koyu_slayt else esc(txt)
-                    ust = (f'<div class="{cls}" style="left:{gut+slot*i:.1f}px;'
-                           f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{lc}">{ic}</div>')
-                    bantlar[i].append((bh + 4, bh + 18))
-                else:
-                    ust = (f'<div class="cb-ll cb-chip" style="left:{gut+slot*i:.1f}px;'
-                           f'width:{slot:.1f}px;bottom:4px;color:#{lc}">'
-                           f'<span>{esc(txt)}</span></div>')
-                    bantlar[i].append((0.0, 20.0))
-            o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
-                     f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
-            if ust:
-                o.append(ust)
-            if s_.get("labels") == "above":
-                txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
-                o.append(f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
-                         f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{col}">'
-                         f'{esc(txt)}</div>')
+                alt = yer_bul(i, bh + 4)
+                o.append(etiket_html(i, alt, txt, lc, cerceveli_mi(i, alt)))
 
     for j, s_ in enumerate(series):
         if s_.get("kind") != "line":
@@ -533,28 +518,8 @@ def h_combo(b):
             if s_.get("labels") == "above" or (uc and i in uc):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
                 taban = plot_h - vy                      # noktanin tabandan yuksekligi
-                digerleri = [c for c in cizgi_y.get(i, []) if abs(c - taban) > 0.5]
-                # Ust -> alt; ikisi de doluysa yine ust, ama cerceveli. Bir seride
-                # etiket ya hep vardir ya hic (tuzaklar 3.9).
-                cerceve = False
-                if all(abs(taban + 12 - c) > 13 for c in digerleri) and bant_bos(i, taban + 9, taban + 23):
-                    hedef = taban + 9
-                elif all(abs(taban - 16 - c) > 13 for c in digerleri) and taban > 20 \
-                        and bant_bos(i, taban - 20, taban - 6):
-                    hedef = taban - 20
-                else:
-                    # dolu bantlarin ustune yigilir, cerceveli basilir
-                    hedef, cerceve = taban + 9, True
-                    while not bant_bos(i, hedef, hedef + 14):
-                        hedef += 16
-                if koyu_ustu(i, hedef, hedef + 14):
-                    cerceve = True
-                bantlar[i].append((hedef, hedef + 14))
-                cls = "cb-ll cb-chip" if cerceve else "cb-ll"
-                ic = f"<span>{esc(txt)}</span>" if cerceve else esc(txt)
-                lbl_html.append(
-                    f'<div class="{cls}" style="left:{gut+vx-slot/2:.1f}px;'
-                    f'width:{slot:.1f}px;bottom:{hedef:.1f}px;color:#{col}">{ic}</div>')
+                alt = yer_bul(i, taban + 8)
+                lbl_html.append(etiket_html(i, alt, txt, col, cerceveli_mi(i, alt)))
         parca, cari = [], []
         for p in pts:
             if p is None:
