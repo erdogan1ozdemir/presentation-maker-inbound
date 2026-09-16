@@ -434,6 +434,17 @@ chat'te yaz:
 - [ ] **Yıllık impression/pozisyon karşılaştırmasında Eylül 2025 şerhi** var mı?
 - [ ] **Kapanış**: değerlendirme ya da sonraki dönem slaytı "Teşekkürler"den
       önce duruyor mu?
+- [ ] **Başlıklarda `(1/3)` gibi parça eki var mı?** Her slayt kendi konusunu
+      anlatan bir başlık taşır.
+- [ ] **Dipnotlarda veri sağlama / araç kısıtı anlatımı var mı?** ("ajans
+      arşivinden alınmıştır", "API 16 ay saklar", "kısmi tarama") Bunlar
+      destede yer almaz, chat'ten iletilir.
+- [ ] **Görünürlük ve SoV dönemleri ay etiketiyle mi verilmiş?** (`Ağustos
+      2026`; gün aralığı yazılmaz, değer ayın son günü, değişim yüzde olarak)
+- [ ] **Grafiklerde değer etiketi var mı?** Bar serisi `labels` ile
+      etiketlenir; günlük seride `labels: "uclar"` kullanılır.
+- [ ] **Insight ve notlarda vurgu işaretleri** ({b:} rakam, {c:} anahtar terim,
+      {g:}/{r:} yön) kullanılmış mı?
 
 Üç katman tarar: yerleşim (taşma, başlık sarması), dil (em dash, emoji, emir kipi,
 kesin vaat, keskin kelime, otomasyon aracı sızıntısı, iç kısıt ifadesi, terim

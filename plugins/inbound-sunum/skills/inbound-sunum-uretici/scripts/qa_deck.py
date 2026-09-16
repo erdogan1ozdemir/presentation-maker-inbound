@@ -99,7 +99,12 @@ INTERNAL = ["veri çekilemedi", "ölçülemiyor", "ölçülemedi", "erişemedim"
             "erişilemedi", "çekemedim", "api limiti", "rate limit",
             "sonraki aşamada eklenecek", "eklenecek", "in progress",
             "not started", "blocked", "(shared)", "todo", "tbd", "lorem",
-            "section title", "xxx", "placeholder"]
+            "section title", "xxx", "placeholder",
+            # veri saglama / arac kisiti anlatimi: destede yer almaz, gerekiyorsa
+            # chat'ten sunacak kisiye iletilir (tuzaklar 3.8)
+            "ajans arşiv", "arşivden alın", "api 16 ay", "16 aylık veri",
+            "veri saklamakta", "kısmi tarama", "veri çekilemedi",
+            "search console api", "api limiti", "export alınamadı"]
 
 BANNED_TERMS = {"ss.": "session", "pik": "peak", "atıf": "mention",
                 "makine okunur": "machine-readable", "üst fold": "above the fold",
@@ -525,6 +530,29 @@ def _sayi(t):
 CUMLE_SONU = re.compile(r"[a-zçğıöşü\)\]\}%]\.\s+[A-ZÇĞİÖŞÜ0-9{]")
 
 
+PARCA_RX = re.compile(r"\(\s*\d+\s*/\s*\d+\s*\)")
+GUN_ARALIK_RX = re.compile(
+    r"\d{1,2}\s+(oca|şub|mar|nis|may|haz|tem|ağu|eyl|eki|kas|ara)\w*(\s+\d{4})?"
+    r"\s*[-–→]\s*\d{1,2}\s+(oca|şub|mar|nis|may|haz|tem|ağu|eyl|eki|kas|ara)", re.I)
+
+
+def check_baslik_ve_donem(spec, rep):
+    """Başlıkta parça numarası, alt başlıkta gün bazlı dönem etiketi."""
+    for i, s in enumerate(spec.get("slides") or [], 1):
+        if s.get("type") != "content":
+            continue
+        bas = plain(s.get("title", ""))
+        if PARCA_RX.search(bas):
+            rep.err(f"S{i:02d}", "başlıkta parça numarası", f"'{bas}'",
+                    "(1/3) gibi ekler kullanılmaz; tablo bölünecekse her slayt "
+                    "kendi konusunu anlatan bir başlık alır")
+        alt = plain(s.get("subtitle", ""))
+        if GUN_ARALIK_RX.search(alt):
+            rep.warn(f"S{i:02d}", "gün bazlı dönem etiketi", f"'{alt[:70]}'",
+                     "görünürlük ve SoV dönemleri ay etiketiyle verilir "
+                     "(ör. 'Ağustos 2026'); gün aralığı yazılmaz")
+
+
 def check_insight_bicimi(spec, rep):
     """Bir bulgu = bir ok; aylik seri slaytinda MoM ve YoY notu."""
     for i, s in enumerate(spec.get("slides") or [], 1):
@@ -803,6 +831,7 @@ def main():
     check_skeleton(spec, rep)
     check_segmentler(spec, rep)
     check_insight_bicimi(spec, rep)
+    check_baslik_ve_donem(spec, rep)
     if a.pptx:
         check_pptx(a.pptx, rep)
 

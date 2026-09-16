@@ -891,3 +891,45 @@ cümlesi vardı. İki sorun: "düşük kaliteli" yargı kelimesidir, "açıklama
 ise doğrulanmamış bir nedenselliği kesin kipe taşır. Karşılığı: "impression
 daralırken click'in korunması, gösterimin daha isabetli sorgulara kaymasıyla
 ilişkilendirilebilir."
+
+### 3.8. Google Slides'a aktarımda kolon başlığı, başlık eki ve veri kaynağı dili
+
+İkinci bir gerçek destede (Ağustos 2026) görülen dört tuzak. Üçü `qa_deck.py`
+tarafından yakalanıyor, biri üreticide çözüldü.
+
+**Kolon başlığı Slides'ta ikinci satıra kırılıyor.** PPTX'te tam sığan bir
+başlık (`Eyl'25`, `2024 ort.`, `Impression`) Google Slides'a aktarıldığında
+biraz daha geniş diziliyor ve sarıyor; başlık satırı sabit yükseklikte
+olduğu için ikinci satır kırpılıyordu. Üretici artık iki katman uyguluyor:
+başlıklar **%6 payla** ölçülüyor (`TH_PAY`), buna rağmen sarıyorsa başlık
+puntosu bir kademe küçülüyor, hâlâ sarıyorsa `head_h` satır sayısına göre
+açılıyor. Deste tarafında da kural var: **13+ kolonlu tabloda başlıklar kısa
+yazılır** (`Ağu'25`, `Ort.`), uzun metrik adı ilk kolona alınır.
+
+**Başlıkta parça numarası kullanılmaz.** `Takip Edilen Marka Kelimelerinin
+Arama Hacmi (1/3)` gibi başlıklar destede yer almaz: okuyucu üç slaytın
+aynı şey olduğunu görür ve hiçbiri kendi başına bir şey anlatmaz. Tablo
+bölünecekse her slayt **kendi konusunu** anlatan bir başlık alır ("En Yüksek
+Hacimli Marka Kelimeleri", "Kariyer Sorguları", "Santral Sorguları") ya da
+tablo tek slaytta kalacak şekilde kısaltılır. `qa_deck.py` `(n/m)` desenini
+hata olarak yakalar.
+
+**Veri sağlama ve araç kısıtı dipnotu yazılmaz.** Gerçek örnekler: "2024 yılı
+ve Ocak-Mayıs 2025 değerleri ajans arşivinden alınmıştır; Search Console API
+16 aylık veri saklamaktadır", "30-31 Ağustos rakip verisi kısmi tarama
+içerdiğinden karşılaştırmaya dahil edilmemiştir". Bunlar markanın
+ilgilenmediği iç süreç bilgisidir; verinin nereden geldiği zaten kaynak
+notunda yazıyor. Geçmiş veri elde varsa doğru kabul edilip kullanılır, kısıt
+varsa **chat'ten** sunacak kişiye iletilir (Bölüm 10 akışı). `qa_deck.py` bu
+ifadeleri iç sızıntı listesinde tarar.
+
+**Görünürlük dönemleri gün değil ay etiketiyle verilir.** `1 Ağustos -
+29 Ağustos 2026` gibi bir alt başlık, okuyucuya ayın tamamının
+kapsanmadığını düşündürür ve panelle karşılaştırmayı zorlaştırır. Kural:
+alt başlıkta **`Ağustos 2026`**, tabloda ayın son gününün değeri, yanında
+önceki döneme göre değişim yüzdesi (`-%3.1`). Ölçümün hangi günlerden
+alındığı slayta yazılmaz.
+
+**Notlarda vurgu.** Insight ve not metinlerinde önemli parçalar işaretlenir:
+rakamlar `{b:}` (bold), anahtar terim ve domain `{c:}` (coral `#FF7B52`),
+artış `{g:}`, düşüş `{r:}`. Düz, işaretsiz bir insight bloğu okunmuyor.

@@ -480,9 +480,11 @@ Veri - hepsi `group_id: 0` (All keywords), `domain` parametresiyle domain başı
   `..._citations` → `aio_mentions_visibility` / `aio_citations_visibility`
   (0-1 oran, ×100). Panelin varsayılan cihazı mobil olduğu için AIO kolonları
   **mobil** değerle verilir ve başlık/dipnotta cihaz yazılır.
-- Dönem: **ay başı ve ay sonu günü** (panelde `Aug 01 - Aug 31` seçimi). Değer
-  ay sonu, Δ = ay sonu − ay başı. Tek gün çağrıları (`start_date = end_date`)
-  yanıtı küçük tutar.
+- Dönem: **ay etiketiyle** verilir (`Ağustos 2026`); alt başlıkta ya da kolon
+  adında gün aralığı yazılmaz. Değer **ayın son gününün** ölçümü, değişim ise
+  önceki döneme göre farktır ve **yüzde biçiminde** yazılır (`-%3.1`), puan
+  eki kullanılmaz. Teknik olarak ay başı ve ay sonu tek gün çağrılarıyla
+  (`start_date = end_date`) alınır; bu ayrıntı slayta yazılmaz.
 - Domain seti: kampanyada tanımlı rakipler (`get_share_of_voice` →
   `ai_overview_share_of_voice.domains` listesi ya da panel Competition listesi).
 
@@ -524,6 +526,12 @@ Veri: SEOmonitor `get_group_data` (klasör `group_ids`) →
 `average_rank.mobile.latest`. Insight: artan kategoriler, sonra düşenler; ikisi
 de isimle ve yüzdeyle; yüksek hacimli ama düşük görünürlüklü kategori açık
 alan olarak.
+
+**C22b Dönem içi visibility seyri** (günlük seri)
+Ay içindeki görünürlük hareketini gösteren `combo` çizgisi. 30 günlük seride
+her noktaya etiket basılmaz: `labels: "uclar"` ile **ilk, son, en düşük ve en
+yüksek** nokta etiketlenir. Alt başlık ay etiketi taşır; insight ay başı - ay
+sonu karşılaştırması ve dip/tepe gününü verir.
 
 **C23 Visibility'yi en çok etkileyen kelimeler**
 `Top Search Vol. Keywords` tablosu. Panel export'u görsel olarak konabilir ama
@@ -686,6 +694,11 @@ eksen - ölçek farkı nedeniyle). Altında `heat: true` segment × ay matrisi
 (`first_col_max: 0.10`), son satır Toplam ve `bold_rows: [-1]`.
 Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
+
+**Grafikte değer etiketi.** Bar serisine `labels: "inside"` ve `labels_text`
+ile deste biçiminde değer verilir (`6.7K`); sığmayan etiket üretici tarafından
+barın üstüne alınır. İki metrikli grafiklerde çizgi serisi de `labels: "above"`
+ile etiketlenir - okuyucu ekseni okumadan değeri görür.
 
 **Tablo altında MoM ve YoY ayrı ok olarak verilir** (`insights` içinde iki
 ayrı madde). 13 kolonluk bir matris dönem değişimini kendiliğinden söylemez;

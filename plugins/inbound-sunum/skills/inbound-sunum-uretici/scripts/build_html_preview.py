@@ -422,12 +422,20 @@ def h_combo(b):
         for i, v in enumerate(s_["data"][:n]):
             bh = max(1.0, ypos(side, float(v or 0)))
             bx = gut + slot * i + (slot - bw) / 2
-            lab = ""
+            lab, ust = "", ""
             if s_.get("labels") == "inside" and bh > 24:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
-                lab = f'<span class="cb-bl">{esc(txt)}</span>'
+                # bkz. inbound_deck: sigmayan etiket barin ustune, koyu renkle
+                if text_w(txt, PT["micro"], F_BODY) <= bw - 6:
+                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
+                else:
+                    ust = (f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
+                           f'width:{slot:.1f}px;bottom:{bh+4:.1f}px;color:#{C["ink2"]}">'
+                           f'{esc(txt)}</div>')
             o.append(f'<div class="cb-bar" style="left:{bx:.1f}px;width:{bw:.1f}px;'
                      f'height:{bh:.1f}px;background:#{col}">{lab}</div>')
+            if ust:
+                o.append(ust)
             if s_.get("labels") == "above":
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
                 o.append(f'<div class="cb-ll" style="left:{gut+slot*i:.1f}px;'
@@ -444,6 +452,14 @@ def h_combo(b):
         # None = bosluk (bkz. inbound_deck.block_combo): cizgi kesilir, nokta yok
         pts, lbl_html = [], []
         lbls = s_.get("labels_text")
+        uc = None
+        if s_.get("labels") == "uclar":       # bkz. inbound_deck.block_combo
+            gecerli = [(i2, float(v)) for i2, v in enumerate(s_["data"][:n])
+                       if v is not None]
+            if gecerli:
+                uc = {gecerli[0][0], gecerli[-1][0],
+                      min(gecerli, key=lambda t: t[1])[0],
+                      max(gecerli, key=lambda t: t[1])[0]}
         for i, v in enumerate(s_["data"][:n]):
             if v is None:
                 pts.append(None)
@@ -451,7 +467,7 @@ def h_combo(b):
             vx = slot * i + slot / 2
             vy = plot_h - ypos(side, float(v))
             pts.append(f"{vx:.1f},{vy:.1f}")
-            if s_.get("labels") == "above":
+            if s_.get("labels") == "above" or (uc and i in uc):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v), ax[side]["fmt"])
                 lbl_html.append(
                     f'<div class="cb-ll" style="left:{gut+vx-slot/2:.1f}px;'

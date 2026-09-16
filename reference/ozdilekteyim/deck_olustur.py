@@ -198,7 +198,8 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "blocks": [
             {"type": "combo", "col": "full", "h": 124, "bar_w": 24, "cats": ET, "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left"},
+                 "color": "gray_bar", "axis": "left", "labels": "inside",
+                 "labels_text": [k(TOP[y][metrik]) for y in AYLAR]},
                 {"kind": "line", "name": "Non-Brand", "data": [NB[y][metrik] for y in AYLAR],
                  "color": "teal", "axis": "left"},
                 {"kind": "line", "name": "Brand", "data": [BR[y][metrik] for y in AYLAR],
@@ -380,9 +381,11 @@ def grup_slayt(g, yorum):
         "blocks": [
             {"type": "combo", "col": "full", "h": 118, "bar_w": 24, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "pad": 1.8},
+                 "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "inside",
+                 "labels_text": [k(a[y]["click"]) for y in AYLAR]},
                 {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
-                 "color": "teal", "axis": "right", "pad": 1.8},
+                 "color": "teal", "axis": "right", "pad": 1.8, "labels": "uclar",
+                 "labels_text": [k(a[y]["impr"]) for y in AYLAR]},
                 {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in AYLAR],
                  "color": "coral", "axis": "own", "band": [0.56, 0.80], "invert": True, "fmt": "pos", "labels": "above",
                  "labels_text": [f"{a[y]['poz']:.1f}" for y in AYLAR]},
@@ -497,38 +500,43 @@ RV = json.loads((BASE / "veri/ham/seom_rakip_visibility.json").read_text(encodin
 S.append({"type": "separator", "no": "", "title": "Görünürlük ve Rakipler"})
 
 
-def puan(a, b):
-    return sifirla(f"{b - a:+.1f}") + "p"
+def yuzde_fark(a, b):
+    """Ay sonu değeri ile önceki döneme göre değişim (puan farkı, % biçiminde)."""
+    v = sifirla(f"{b - a:+.1f}")
+    return v if v == "0.0" else f"{v[0]}%{v[1:]}"
 
 
 rv_satir = []
 for dom in sorted(RV["google"], key=lambda dm: (dm != "ozdilekteyim.com", -RV["google"][dm]["m"][1])):
     g_, ai = RV["google"][dom], RV["aio_mobil"][dom]
     me, ci = [x * 100 for x in ai["mention"]], [x * 100 for x in ai["citation"]]
-    rv_satir.append([dom, f"%{g_['d'][1]:.1f}", puan(*g_["d"]), f"%{g_['m'][1]:.1f}", puan(*g_["m"]),
-                     f"%{me[1]:.1f}", puan(*me), f"%{ci[1]:.1f}", puan(*ci)])
+    rv_satir.append([dom, f"%{g_['d'][1]:.1f}", yuzde_fark(*g_["d"]),
+                     f"%{g_['m'][1]:.1f}", yuzde_fark(*g_["m"]),
+                     f"%{me[1]:.1f}", yuzde_fark(*me),
+                     f"%{ci[1]:.1f}", yuzde_fark(*ci)])
 S.append({
     "type": "content",
     "breadcrumb": ["GÖRÜNÜRLÜK", "Rakip Visibility"],
     "title": "Rakiplerle Google ve AI Overview Visibility Karşılaştırması",
-    "subtitle": "1 Ağustos 2026 → 31 Ağustos 2026 | 9.4K takip edilen keyword | değer ay sonu, değişim ay başına göre",
+    "subtitle": "Ağustos 2026 | 9.4K takip edilen keyword | ay sonu değeri ve önceki döneme göre değişim",
     "source": "SEOmonitor",
     "grid": [100],
     "footnotes": [
         "Visibility, takip edilen keyword'lerde domainin arama hacmine göre ağırlıklandırılmış sıralama görünürlüğüdür. "
         "AIO Mention: AI Overview yanıt metninde anılma; AIO Citation: AI Overview'da kaynak olarak link verilme. AI Overview "
-        "kolonları mobil ölçümdür. Değişim puan (p) olarak verilmiş, rakipler Google mobil visibility'ye göre sıralanmıştır.",
+        "kolonları mobil ölçümdür. Rakipler Google mobil visibility'ye göre sıralanmıştır.",
     ],
     "blocks": [
         dict({"type": "table", "col": "full", "first_col_max": 0.20,
-              "head": ["Domain", "Google Desktop", "Δ", "Google Mobil", "Δ", "AIO Mention", "Δ", "AIO Citation", "Δ"],
+              "head": ["Domain", "Google Desktop", "Değişim", "Google Mobil", "Değişim",
+                       "AIO Mention", "Değişim", "AIO Citation", "Değişim"],
               "rows": rv_satir, "highlight_rows": [0]}, **{**T, "font_pt": 9.5, "row_h": 16}),
         {"type": "insights", "col": "full", "mt": 6, "font_pt": 9.5, "items": [
-            "Özdilekteyim'in Google visibility'si desktop {g:%3.3 → %3.9}, mobil {g:%2.8 → %3.8} ile artmıştır.",
-            "Google tarafında {c:boyner.com.tr} ({g:+1.7p} / {g:+1.2p}) ve {c:lcw.com} ({g:+1.5p} / {g:+1.1p}) payını artırırken "
-            "{c:hepsiburada.com} ({r:-3.3p} / {r:-4.6p}) ve {c:n11.com} gerilemiştir.",
+            "Özdilekteyim'in Google visibility'si desktop {g:%3.9} ({g:+%0.6}), mobil {g:%3.8} ({g:+%1.0}) ile artmıştır.",
+            "Google tarafında {c:boyner.com.tr} ({g:+%1.7} / {g:+%1.2}) ve {c:lcw.com} ({g:+%1.5} / {g:+%1.1}) payını artırırken "
+            "{c:hepsiburada.com} ({r:-%3.3} / {r:-%4.6}) ve {c:n11.com} gerilemiştir.",
             "AI Overview'da {c:trendyol.com} {b:%56.0} citation ile ilk sıradadır; {c:hepsiburada.com} "
-            "Google'da gerilerken burada citation {g:+12.9p} artmıştır.",
+            "Google'da gerilerken burada citation {g:+%12.9} artmıştır.",
         ]},
     ],
 })

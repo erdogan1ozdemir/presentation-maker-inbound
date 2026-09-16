@@ -631,9 +631,13 @@ def table_layout(b, w):
                 vals = [r[ci] for r in rows if ci < len(r)]
                 if vals and sum(1 for v in vals if _delta_kind(str(v))) >= max(1, len(vals) // 2):
                     delta_m.add(ci)
+        # Google Slides, PPTX ile ayni fonti bir tik genis dizer; PPTX'te tam
+        # sigan bir kolon basligi Slides'ta ikinci satira kiriliyor. Basliklar
+        # bu yuzden %6 payla olculur (tuzaklar 3.8).
+        TH_PAY = 1.06
         need = []
         for ci in range(ncol):
-            mx = text_w(plain(str(head[ci])), th_pt, F_DISPLAY, True)
+            mx = text_w(plain(str(head[ci])), th_pt, F_DISPLAY, True) * TH_PAY
             for ri, r in enumerate(rows):
                 if ci >= len(r):
                     continue
@@ -1315,11 +1319,20 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             bh = max(1.0, plot_bot - top)
             bx = px0 + slot * i + (slot - bw) / 2
             rect(slide, bx, top, bw, bh, fill=col)
-            if s_.get("labels") == "inside" and bh > 24:
+            ic = s_.get("labels") == "inside" and bh > 24
+            if ic:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
-                        pt=PT["micro"], color="white", align="c", line_pct=1.0,
-                        wrap=False)
+                # Beyaz etiket yalnizca barin icinde okunur; barin disina tasan
+                # kisim beyaz zeminde kayboluyordu. Sigmiyorsa etiket barin
+                # ustune, koyu renkle basilir.
+                if text_w(txt, PT["micro"], F_BODY) <= bw - 6:
+                    textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
+                            pt=PT["micro"], color="white", align="c",
+                            line_pct=1.0, wrap=False)
+                else:
+                    textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
+                            pt=PT["micro"], family=F_DISPLAY, bold=True,
+                            color="ink2", align="c", line_pct=1.0, wrap=False)
             elif s_.get("labels") == "above":
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
                 textbox(slide, px0 + slot * i, top - CB_VAL_H, slot, 14, txt,
@@ -1360,6 +1373,16 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             shp.line.width = Pt(2.25)
             shp.shadow.inherit = False
         lbls = s_.get("labels_text")
+        # labels:"uclar" -> yalnizca ilk, son, en dusuk ve en yuksek nokta
+        # etiketlenir; 30 gunluk seride her noktayi yazmak okunmaz oluyor.
+        uc = None
+        if s_.get("labels") == "uclar":
+            gecerli = [(i2, float(v)) for i2, v in enumerate(s_["data"][:n])
+                       if v is not None]
+            if gecerli:
+                uc = {gecerli[0][0], gecerli[-1][0],
+                      min(gecerli, key=lambda t: t[1])[0],
+                      max(gecerli, key=lambda t: t[1])[0]}
         for i, vx, vy in [p for p in pts if p]:
             d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 4), px(vy - 4),
                                        px(8), px(8))
@@ -1367,10 +1390,10 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             d.fill.fore_color.rgb = RGBColor.from_string(col)
             _no_line(d)
             d.shadow.inherit = False
-            if s_.get("labels") == "above":
+            if s_.get("labels") == "above" or (uc and i in uc):
                 v = float(s_["data"][i] or 0)
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(v, ax[side]["fmt"])
-                textbox(slide, vx - slot / 2, vy - 19, slot, 14, txt,
+                textbox(slide, vx - slot / 2, vy - 19, max(slot, 34), 14, txt,
                         pt=PT["micro"], family=F_DISPLAY, bold=True,
                         color=s_.get("color", "coral"), align="c", line_pct=1.0,
                         wrap=False)

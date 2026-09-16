@@ -269,7 +269,7 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `kind` | `bar` veya `line` |
 | `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için) |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
-| `labels` | `inside` (barın içinde, beyaz) veya `above` (noktanın üstünde, seri renginde) |
+| `labels` | `inside` (barın içinde, beyaz), `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta - 30 günlük seride her noktayı yazmak okunmaz olur) |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
@@ -292,7 +292,10 @@ görünür, otomatik biçimleyicinin yuvarlaması ikisini ayrıştırmaz.
 
 **Bar üstü değer etiketi.** Bar serisine `"labels": "above"` verildiğinde değer
 barın üstüne basılır (`"inside"` barın içine basar, yalnızca bar yeterince
-yüksekse). `labels_text` ile hazır metin listesi geçilebilir - ham sayıyı
+yüksekse). `inside` seçilmiş ama etiket bara sığmıyorsa (13 aylık seride bar
+24px, "243.0K" sığmaz) üretici etiketi kendiliğinden **barın üstüne, koyu
+renkle** taşır: beyaz etiketin barın dışına taşan kısmı beyaz zeminde
+görünmez oluyordu. `labels_text` ile hazır metin listesi geçilebilir - ham sayıyı
 deste formatında (`n(v)` / `k(v)`) yazdırmak için kullanılır. Etiket bandı
 `CB_VAL_H` kadar yer kaplar; blok yüksekliği buna göre seçilir.
 
