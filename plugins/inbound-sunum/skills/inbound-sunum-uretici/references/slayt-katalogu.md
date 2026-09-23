@@ -844,14 +844,20 @@ kazanan, ardından %0-5 bandındaki kümeler geliştirme alanı olarak.
 Search Console'un yapay zeka özellikleri raporu (Generative AI features;
 AI Overview ve AI Mode) export'undan kurulur: `Chart.csv` (günlük),
 `Pages.csv`, `Devices.csv`. Tek slayt, `grid: [64, 36]`:
-- sol: haftalık `combo` bar (`labels: "taban"`), kategori etiketi hafta başı
-  `dd.mm` (15+ hafta için tarih adı sığmaz), yalnız rapor ayına kadar olan
-  tam haftalar;
+- sol: **aylık** `combo` bar (`labels: "taban"`, 4-6 ay için `bar_w` 56-64),
+  kategori `May'26`, `Haz'26` ... rapor ayına kadar. Günlük ya da haftalık
+  seri kullanılmaz: kısa dönemde çok sayıda ince bar okunmaz, ay kıyası
+  destenin geri kalanıyla aynı birimde kalır. **Kısmi ay** (rapor verisinin
+  başladığı ilk ay) kategori etiketinde gün sayısıyla işaretlenir:
+  `May'26 (14 gün)`; gün sayısı export'tan sayılır, elle yazılmaz. Rapor
+  ayından sonraki kısmi ay grafiğe konmaz, yalnız insight'ta günlük ortalama
+  olarak geçer;
 - sağ: en çok impression alan 8-9 sayfa (`Sayfa | Impression`);
 - insight: MoM impression ve günlük ortalama (kısmi ay varsa günlük ortalama
   ile karşılaştırılır), sitenin toplam impression'ına oranı, cihaz payı, öne
   çıkan sayfa türleri.
-Dipnot: rapor kapsamı, verinin başladığı tarih (rapor Mayıs 2026'dan itibaren
+Dipnot: rapor kapsamı, kısmi ayın tarih aralığı ("Mayıs değeri 18-31 Mayıs
+toplamıdır"), verinin başladığı tarih (rapor Mayıs 2026'dan itibaren
 veri tutar - YoY yazılmaz), sayfa tablosunun dönemi (export dönemi rapor
 ayından farklıysa açıkça). Sığmazsa ikiye bölünür: seyir + sayfa listesi.
 

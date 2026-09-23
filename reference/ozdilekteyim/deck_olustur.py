@@ -695,18 +695,15 @@ from collections import defaultdict as _dd
 _GD = BASE / "veri/ham/gsc_genai"
 _gun = [(_dt.date.fromisoformat(r["Date"]), int(r["Impressions"]))
         for r in _csv.DictReader(open(_GD / "Chart.csv", encoding="utf-8"))]
-_hafta = _dd(int)
-for g, v in _gun:
-    if g <= _dt.date(2026, 8, 30):
-        _hafta[g - _dt.timedelta(days=g.weekday())] += v
-_hk = sorted(_hafta)
 _TRA = {5: "May", 6: "Haz", 7: "Tem", 8: "Ağu", 9: "Eyl"}
-_hcat = [f"{h.day:02d}.{h.month:02d}" for h in _hk]      # hafta başı (pazartesi)
+_AYLAR_AI = [(2026, 5), (2026, 6), (2026, 7), (2026, 8)]
 _ay = _dd(lambda: [0, 0])
 for g, v in _gun:
     _ay[(g.year, g.month)][0] += v
     _ay[(g.year, g.month)][1] += 1
 AI_HAZ, AI_TEM, AI_AGU = (_ay[(2026, m)][0] for m in (6, 7, 8))
+AI_MAY_GUN = _ay[(2026, 5)][1]
+_acat = [f"{_TRA[m]}'26" + (f" ({AI_MAY_GUN} gün)" if m == 5 else "") for _y, m in _AYLAR_AI]
 AI_ORT = {m: _ay[(2026, m)][0] / _ay[(2026, m)][1] for m in (6, 7, 8, 9)}
 _cih = {r["Device"]: int(r["Impressions"]) for r in _csv.DictReader(open(_GD / "Devices.csv", encoding="utf-8"))}
 AI_MOBIL = _cih["Mobile"] / sum(_cih.values()) * 100
@@ -717,19 +714,19 @@ S.append({
     "type": "content",
     "breadcrumb": ["YAPAY ZEKA", "Google Yapay Zeka Özellikleri"],
     "title": "Google Arama Yapay Zeka Özelliklerinde Impression",
-    "subtitle": "Mayıs - Ağustos 2026 | haftalık | Search Console yapay zeka özellikleri raporu",
+    "subtitle": "Mayıs - Ağustos 2026 | aylık | Search Console yapay zeka özellikleri raporu",
     "source": KAYNAK_GSC + " · Generative AI features",
     "grid": [64, 36],
     "footnotes": [
         "Rapor, sitenin Google aramadaki yapay zeka özelliklerinde (AI Overview ve AI Mode) aldığı impression'ı gösterir; "
-        "veri 18 Mayıs 2026'dan itibaren mevcuttur. Grafik etiketleri hafta başı tarihidir. Sayfa tablosu 18 Mayıs - "
+        "veri 18 Mayıs 2026'dan itibaren mevcuttur; Mayıs değeri 18-31 Mayıs toplamıdır. Sayfa tablosu 18 Mayıs - "
         "21 Eylül 2026 toplamıdır.",
     ],
     "blocks": [
-        {"type": "combo", "col": 0, "h": 230, "bar_w": 22, "cats": _hcat, "series": [
-            {"kind": "bar", "name": "Haftalık impression", "data": [_hafta[h] for h in _hk],
+        {"type": "combo", "col": 0, "h": 230, "bar_w": 64, "cats": _acat, "series": [
+            {"kind": "bar", "name": "Aylık impression", "data": [_ay[a][0] for a in _AYLAR_AI],
              "color": "gray_bar", "axis": "left", "labels": "taban",
-             "labels_text": [k(_hafta[h]) for h in _hk]},
+             "labels_text": [k(_ay[a][0]) for a in _AYLAR_AI]},
         ]},
         dict({"type": "table", "col": 1, "first_col_max": 0.74,
               "head": ["En çok impression alan sayfa", "Impression"],
