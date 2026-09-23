@@ -177,6 +177,10 @@ DIPNOT_NUM = ("Eylül 2025'te Google sonuç sayfası sorgularında yapılan değ
 
 
 def seg_seri(metrik, baslik, yorum, dipnot):
+    # Brand toplamin ~%20'sinden kucukse tek eksende tabana yapisir: sag eksene
+    # alinir, sag eksen Brand'i her ay Non-Brand'in altinda tutacak en kucuk
+    # yuvarlak sinirla acilir (right_axis:"ordered", tuzaklar 3.12)
+    iki_eksen = max(BR[y][metrik] for y in AYLAR) < 0.2 * max(TOP[y][metrik] for y in AYLAR)
     return {
         "type": "content",
         "breadcrumb": ["SEARCH CONSOLE", "Aylık Seri"],
@@ -186,14 +190,15 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "grid": [100],
         "footnotes": [dipnot, "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 196, "bar_w": 44, "cats": ET, "series": [
+            {"type": "combo", "col": "full", "h": 196, "bar_w": 44, "cats": ET,
+             **({"right_axis": "ordered"} if iki_eksen else {}), "series": [
                 {"kind": "bar", "name": "Toplam", "data": [TOP[y][metrik] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "labels": "taban",
                  "labels_text": [k(TOP[y][metrik]) for y in AYLAR]},
                 {"kind": "line", "name": "Non-Brand", "data": [NB[y][metrik] for y in AYLAR],
                  "color": "teal", "axis": "left"},
                 {"kind": "line", "name": "Brand", "data": [BR[y][metrik] for y in AYLAR],
-                 "color": "coral", "axis": "left"},
+                 "color": "coral", "axis": "right" if iki_eksen else "left"},
             ]},
             dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.10, "heat": True,
                   "head": ["Segment"] + ET,
@@ -219,7 +224,7 @@ S.append(seg_seri(
     "impr", "Brand ve Non-Brand Aylık Impression",
     f"Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression "
     f"{{b:{k(BR[GECEN_YIL]['impr'])} → {k(BR[SIMDI]['impr'])}}} ile dar bir aralıkta kalmıştır.",
-    "Üç seri aynı eksende çizilmiştir; brand impression aylık toplamın %5-9'u bandındadır. " + DIPNOT_NUM))
+    "Brand sağ eksendedir; eksen, Brand her ay Non-Brand'in altında kalacak şekilde ölçeklenmiştir. " + DIPNOT_NUM))
 
 # --- siralama ve CTR serisi: pozisyon toplam, CTR segment bazinda (click / impression)
 S.append({

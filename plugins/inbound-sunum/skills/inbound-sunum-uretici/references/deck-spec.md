@@ -267,14 +267,15 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | Alan | Açıklama |
 |---|---|
 | `kind` | `bar` veya `line` |
-| `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için). **Aynı birimdeki seriler (bir metriğin segmentleri, click ile arama hacmi, toplam ve organik session) tek eksende çizilir** - ayrı eksen küçük seriyi büyüğün üstünde gösterir, `qa_deck` hata verir (tuzaklar 3.12). İkinci eksen yalnızca birimi farklı metrik içindir (CTR - pozisyon, click - impression) |
+| `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için). **Aynı birimdeki seriler (bir metriğin segmentleri, click ile arama hacmi, toplam ve organik session) tek eksende çizilir** - ayrı eksen küçük seriyi büyüğün üstünde gösterir, `qa_deck` hata verir (tuzaklar 3.12). Küçük seri ancak `right_axis: "ordered"` / `"auto"` ile sağ eksene alınır |
+| `right_axis` (blok) | `"ordered"`: sağ eksen, sağdaki serilerin soldakilerle **gerçek büyüklük sırasını her ay koruyacağı en küçük yuvarlak sınırla** açılır (ör. sol 10M, sağ 2M). `"auto"`: seriler solda yazılır; tepe değeri grafik tepesinin %20'sinin altında kalan seri sağa alınır ve eksen `ordered` açılır - sıralı sağ eksen sol eksenin yarısından büyük çıkıyorsa kazanç olmadığı için tek eksende kalınır. Aynı birimdeki küçük segment (Brand), toplamın altındaki alt küme (organik session), hacmin altındaki click için kullanılır |
 | `unit` | Opsiyonel: serinin birimi (`click`, `impression`, `hacim`, `session`, `yuzde`, `poz`). Verilmezse seri adından, bulunamazsa slayt başlığından okunur; eksen denetimi bunu kullanır |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
 | `labels` | Bar: `taban` **(varsayılan tercih)** - barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner. `above` barın üstü (doluysa barın ortası, sonra kaydırma). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). `none`: bilinçli etiketsiz (değer tabloda) - `own` eksende uyarı üretmez. Vermezsen etiket basılmaz. `taban` etiketi aynı ayın çizgi noktasına denk gelirse noktanın üstüne, bar içinde kalacak şekilde kaydırılır |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
-| `pad` | Eksen üst payı (varsayılan 1.15). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
+| `pad` | Eksen üst payı (varsayılan 1.12; 8.7M → 10M eksen). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
 | `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
 
 **Eksen basamakları yuvarlaktır.** Eksen 4 adımdır ve adım 1 / 2 / 2.5 / 5 ×

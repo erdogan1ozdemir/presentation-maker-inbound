@@ -24,6 +24,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
+    combo_eksenleri, combo_yanlari,
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
     BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
     COVER_ART_W, COVER_WM, COVER_TITLE_PT, COVER_SUB_PT, COVER_TITLE_Y,
@@ -356,34 +357,12 @@ def h_combo(b):
     n = len(cats)
     slot = pw / n
 
-    ax = {}
-    for side in ("left", "right"):
-        vals, inv, fmt, pad = [], False, "auto", 1.15
-        for s_ in series:
-            if s_.get("axis", "left") != side:
-                continue
-            vals += [float(v) for v in s_.get("data", []) if v is not None]
-            inv = inv or bool(s_.get("invert"))
-            fmt = s_.get("fmt", fmt)
-            pad = max(pad, float(s_.get("pad", 1.15)))
-        if vals:
-            lo, hi = _axis_scale(vals, inv, pad)
-            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt, band=(0.0, 1.0))
-    # axis:"own" = kendi olcegi, eksen etiketi yok (bkz. inbound_deck.block_combo)
-    for j, s_ in enumerate(series):
-        if s_.get("axis") == "own":
-            vals = [float(v) for v in s_.get("data", []) if v is not None]
-            if vals:
-                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
-                # band: serinin grafik yuksekliginde kapladigi dilim (0-1). Ucuncu
-                # metrigi barlarin ustunde ayri bir seride tutmak icin kullanilir.
-                bd = s_.get("band") or (0.0, 1.0)
-                ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
-                                     fmt=s_.get("fmt", "auto"), band=(float(bd[0]), float(bd[1])))
+    ax = combo_eksenleri(b)   # bkz. inbound_deck.combo_eksenleri
+
+    _yan = combo_yanlari(b)[0]   # bkz. inbound_deck.combo_yanlari
 
     def eksen(j, s_):
-        a = s_.get("axis", "left")
-        return f"own{j}" if a == "own" else a
+        return _yan[j]
 
     def ypos(side, v):
         a = ax[side]

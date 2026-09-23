@@ -248,9 +248,10 @@ Notlar:
 
 **C04d Marka arama hacmi ve brand click** (Search Console bölümünde)
 Talep-performans ayrıştırmasının marka tarafı. `combo`: brand click bar
-ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil), **hepsi aynı
-eksende** - click ve arama hacmi iki sayımdır, ayrı eksende click hacmin üstünde
-görünür (tuzaklar 3.12). Birden fazla bar serisi aynı noktada üst üste çizildiği için
+ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil). Click ile
+hacim aynı düzeydeyse tek eksen; click hacmin çok altındaysa `right_axis:
+"auto"` - serbest ölçekli ikinci eksende click hacmin üstünde görünür
+(tuzaklar 3.12). Birden fazla bar serisi aynı noktada üst üste çizildiği için
 terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
 terimin artıp diğerinin düştüğü durum toplamda kaybolur.
@@ -690,12 +691,18 @@ filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzde
 "toplam eksi brand" yöntemi anonim hacmi non-brand'e taşır.
 
 **C45 Segment aylık serisi** (click ve impression için birer slayt)
-`combo`: Toplam bar (gri) + segment çizgileri (Non-Brand, Brand, varsa GFN),
-**hepsi sol eksende**. Küçük segment sağ eksene alınmaz: Özdilekteyim'de
-0.5M'lik Brand impression sağ eksende 8M'lik Non-Brand'in üstünde çizilmiş,
-grafik "brand daha yüksek" okunmuştu (tuzaklar 3.12). Küçük segment tabana
-yakın düz çizgi olarak kalır; değeri tabloda okunur, dipnotta payı yazılır
-("brand impression aylık toplamın %5-9'u bandındadır"). Altında `heat: true` segment × ay matrisi
+`combo`: Toplam bar (gri) + segment çizgileri (Non-Brand, Brand, varsa GFN).
+Segmentler aynı büyüklük düzeyindeyse (click'te Brand ve Non-Brand gibi) hepsi
+sol eksende. Bir segment toplamın ~%20'sinin altında kalıyorsa tek eksende
+tabana yapışıp okunmaz; **sağ eksene alınır ve combo'ya `right_axis:
+"ordered"` verilir** (ya da seriler solda bırakılıp `right_axis: "auto"`).
+Sağ eksen, küçük segment her ay büyüklerin altında kalacak en küçük yuvarlak
+sınırla açılır: Özdilekteyim impression'da sol 10M, sağ 2M - Brand grafiğin
+alt üçte birinde okunur ama Non-Brand'in üstüne çıkmaz. Serbest ölçekli sağ
+eksen kullanılmaz: 0.5M'lik Brand 8M'lik Non-Brand'in üstünde çizilmiş,
+grafik "brand daha yüksek" okunmuştu (tuzaklar 3.12). Dipnot: "Brand sağ
+eksendedir; eksen, Brand her ay Non-Brand'in altında kalacak şekilde
+ölçeklenmiştir." Altında `heat: true` segment × ay matrisi
 (`first_col_max: 0.10`), son satır Toplam ve `bold_rows: [-1]`.
 Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.

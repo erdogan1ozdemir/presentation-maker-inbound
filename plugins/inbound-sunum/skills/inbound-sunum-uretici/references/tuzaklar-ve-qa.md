@@ -1024,36 +1024,42 @@ kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
 
 ### 3.12. Eksen seçimi grafikteki büyüklük sırasını bozmamalı
 
-**Gerçek vaka (Özdilekteyim Ağustos 2026).** "Brand ve Non-Brand Aylık
-Impression" grafiğinde Brand çizgisi (0.4-0.6M) ölçek farkı nedeniyle sağ
-eksene alınmıştı. Sağ eksen Brand'e göre açıldığı için çizgi, 8M'lik
-Non-Brand'in üstünde çizildi ve grafik "brand impression daha yüksek" okundu.
-Aynı hata Game+ referans destesinde segment, session ve blog grafiklerinde de
-vardı.
+**Gerçek vaka (Özdilekteyim Ağustos 2026), iki tur.**
+1. "Brand ve Non-Brand Aylık Impression" grafiğinde Brand çizgisi (0.4-0.6M)
+   serbest ölçekli sağ eksendeydi. Eksen Brand'e göre açıldığı için çizgi 8M'lik
+   Non-Brand'in üstünde çizildi, grafik "brand impression daha yüksek" okundu.
+2. Tek eksene alınınca Brand tabana yapıştı, çizgiden bir şey okunmadı.
+   Erdoğan'ın çözümü: iki eksen kalsın, ama sağ eksenin üst sınırı Brand'i
+   Non-Brand'in altında tutacak şekilde seçilsin (sol 10M, sağ 2M).
 
 **Kural:**
-1. **Aynı birimdeki seriler tek eksende çizilir.** Bir metriğin segmentleri
-   (Toplam / Brand / Non-Brand / GFN), aynı sayım türünden iki seri (click ve
-   arama hacmi, toplam ve organik session) sağ-sol eksene bölünmez. Küçük seri
-   tabana yakın kalır; bu doğru görüntüdür. Değeri tabloda, payı dipnotta
-   verilir.
-2. **İkinci eksen yalnızca birimi farklı metrik içindir** (CTR - pozisyon,
-   click - impression). Bu durumda da gerçekte büyük olan seri grafikte
-   küçüğün altına inmemelidir. Click bar + impression çizgisinde impression
-   barların üstündeki bantta (`axis: "own"`, `band`) çizilir, sol eksen
-   basamakları üst bantları yanlış ölçekle okutacağı için `axis_labels: false`
-   verilir ve değerler etiketlerle taşınır (katalog C54).
-3. **Bar tabanı etiketi çizgi noktasıyla çakışmaz.** Aynı eksende tabana yakın
-   geçen küçük seri, `labels: "taban"` etiketinin içinden geçiyordu. Üretici
-   taban etiketini o ayın çizgi noktasının üstüne, bar içinde kalacak şekilde
-   kaydırır; bar içine sığmayan ay varsa seri üst yerleşime döner.
+1. **Seriler aynı büyüklük düzeyindeyse tek eksen.** Click'te Brand ve
+   Non-Brand, arama hacmi ile click (aynı düzeyde) gibi.
+2. **Küçük seri tabana yapışıyorsa sıralı sağ eksen:** combo'ya `right_axis:
+   "ordered"` (seri `axis: "right"`) ya da `right_axis: "auto"`. Üretici sağ
+   eksen için yuvarlak adaylar (4 × 1/2/2.5/5 × 10^k) arasından, sağdaki her
+   serinin soldaki her seriyle gerçek büyüklük sırasını **her ayda** koruduğu
+   en küçük sınırı seçer. Sol eksen sınırı her zaman geçerli aday olduğundan
+   sıra hiçbir durumda ters çizilmez. `auto`, sıralı sağ eksen sol eksenin
+   yarısından büyük çıkıyorsa (kazanç yok) tek eksende kalır.
+3. **Serbest ölçekli sağ eksen yalnızca birimi farklı metrik içindir**
+   (CTR - pozisyon). Click bar + impression çizgisinde impression barların
+   üstündeki bantta (`axis: "own"`, `band`) çizilir ve `axis_labels: false`
+   verilir (katalog C54).
+4. **Dipnot sağ eksenin nasıl ölçeklendiğini söyler:** "Brand sağ eksendedir;
+   eksen, Brand her ay Non-Brand'in altında kalacak şekilde ölçeklenmiştir."
+5. **Bar tabanı etiketi çizgi noktasıyla çakışmaz.** Taban etiketi o ayın
+   çizgi noktasının üstüne, bar içinde kalacak şekilde kayar.
+6. **Eksen üst payı %12.** 8.71M için eksen 10M açılır (eski %15 pay 20M'e
+   atlatıyordu, grafik yarıya iniyordu).
 
-**Denetim (`qa_deck.py`):** serinin birimi adından (`click`, `impression`,
-`hacim/hacmi`, `session`, `CTR/oran`, `pozisyon`), bulunamazsa slayt
-başlığından okunur; `unit` alanıyla açıkça verilebilir.
-- Aynı birimdeki seriler farklı eksendeyse **HATA** (aynı birim farklı eksende).
-- Farklı eksendeki iki sayım serisinde değerce her ay büyük olan seri bir ayda
-  bile küçüğün altında çiziliyorsa **UYARI** (görsel sıra ters).
+**Denetim (`qa_deck.py`):** eksen hesabı üreticiyle ortaktır
+(`combo_eksenleri`, `combo_yanlari`). Serinin birimi adından (`click`,
+`impression`, `hacim/hacmi`, `session`, `CTR/oran`, `pozisyon`), bulunamazsa
+slayt başlığından okunur; `unit` alanıyla açıkça verilebilir.
+- Aynı birimdeki iki seri farklı eksende ve büyük olan bir ayda bile küçüğün
+  altında/hizasında çiziliyorsa **HATA** (görsel sıra ters, aynı birim).
+- Farklı birimdeki iki sayım serisinde aynı durum **UYARI**.
 
 ### 3.11. KPI etiketi büyük harf ve Türkçe yazım
 

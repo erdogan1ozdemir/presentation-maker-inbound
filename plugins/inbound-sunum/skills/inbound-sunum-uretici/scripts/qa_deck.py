@@ -720,56 +720,33 @@ def _birim_bul(metin):
 
 
 def _combo_yukseklik(b):
-    """Serilerin grafikteki kesirli yuksekligi (0-1), inbound_deck.block_combo
-    ile ayni eksen hesabi: {j: [yukseklik | None]}."""
-    from inbound_deck import _axis_scale
-    series = b.get("series") or []
-    ax = {}
-    for side in ("left", "right"):
-        vals, inv, pad = [], False, 1.15
-        for s_ in series:
-            if s_.get("axis", "left") != side:
-                continue
-            vals += [float(v) for v in s_.get("data") or [] if v is not None]
-            inv = inv or bool(s_.get("invert"))
-            pad = max(pad, float(s_.get("pad", 1.15)))
-        if vals:
-            lo, hi = _axis_scale(vals, inv, pad)
-            ax[side] = (lo, hi, inv, (0.0, 1.0))
-    for j, s_ in enumerate(series):
-        if s_.get("axis") == "own":
-            vals = [float(v) for v in s_.get("data") or [] if v is not None]
-            if vals:
-                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
-                bd = s_.get("band") or (0.0, 1.0)
-                ax[f"own{j}"] = (lo, hi, bool(s_.get("invert")), (float(bd[0]), float(bd[1])))
+    """Serilerin grafikteki kesirli yuksekligi (0-1): {j: [yukseklik | None]}.
+    Eksen hesabi uretici ile ortaktir (inbound_deck.combo_eksenleri)."""
+    from inbound_deck import combo_eksenleri, combo_yanlari, _eksen_frac
+    ax = combo_eksenleri(b)
+    yan = combo_yanlari(b)[0]
     out = {}
-    for j, s_ in enumerate(series):
-        side = f"own{j}" if s_.get("axis") == "own" else s_.get("axis", "left")
+    for j, s_ in enumerate(b.get("series") or []):
+        side = yan[j]
         if side not in ax:
             continue
-        lo, hi, inv, (b0, b1) = ax[side]
-        ys = []
-        for v in s_.get("data") or []:
-            if v is None:
-                ys.append(None)
-                continue
-            f = (float(v) - lo) / max(1e-9, hi - lo)
-            f = 1 - f if inv else f
-            ys.append(b0 + f * (b1 - b0))
-        out[j] = ys
+        out[j] = [None if v is None else _eksen_frac(ax[side], v)
+                  for v in s_.get("data") or []]
     return out
 
 
 def check_eksen_birimi(spec, rep):
-    """Ayni birimdeki seriler ayni eksende mi; farkli eksendeki sayim serileri
-    gercek buyukluk sirasini koruyor mu? (tuzaklar 3.12)
+    """Grafik, serilerin gercek buyukluk sirasini koruyor mu? (tuzaklar 3.12)
 
-    Brand impression sag eksene alininca 0.5M'lik seri 8M'lik Non-Brand'in
-    ustunde cizilmis, grafik "brand daha yuksek" okunmustu. Ayni metrigin
-    segmentleri (Brand / Non-Brand / Toplam) ve ayni birimdeki seriler (click
-    ile arama hacmi gibi iki sayim) tek eksende cizilir. Birim seri adindan,
-    bulunamazsa slayt basligindan okunur; "unit" alani ile acikca verilebilir.
+    Brand impression kendi olcegiyle sag eksene alininca 0.5M'lik seri 8M'lik
+    Non-Brand'in ustunde cizilmis, grafik "brand daha yuksek" okunmustu. Tek
+    eksende ise Brand tabana yapisip okunmaz kaliyordu. Ev standardi:
+    right_axis:"ordered" - sag eksen sirayi koruyan en kucuk yuvarlak sinirla
+    acilir. Birim seri adindan, bulunamazsa slayt basligindan okunur; "unit"
+    alani ile acikca verilebilir.
+    - ayni birimdeki iki seri farkli eksende ve buyuk olan bir ayda bile
+      kucugun altinda/hizasinda ciziliyorsa HATA
+    - farkli birimdeki iki sayim serisinde ayni durum UYARI
     """
     for i, s in enumerate(spec.get("slides") or [], 1):
         if s.get("type") != "content":
@@ -779,6 +756,10 @@ def check_eksen_birimi(spec, rep):
             if b.get("type") != "combo":
                 continue
             series = b.get("series") or []
+            # once eksen hesabi: right_axis:"auto" serilerin eksenini belirler
+            yk = _combo_yukseklik(b)
+            from inbound_deck import combo_yanlari
+            yan_ = combo_yanlari(b)[0]
             birim, eksen = {}, {}
             for j, ser in enumerate(series):
                 ad = plain(str(ser.get("name", "")))
@@ -786,47 +767,40 @@ def check_eksen_birimi(spec, rep):
                 if not bb and len(baslik_birim) == 1:
                     bb = baslik_birim
                 birim[j] = bb[0] if bb else None
-                eksen[j] = f"own{j}" if ser.get("axis") == "own" else ser.get("axis", "left")
-            gruplar = {}
-            for j, u in birim.items():
-                if u:
-                    gruplar.setdefault(u, []).append(j)
-            for u, js in gruplar.items():
-                if len({eksen[j] for j in js}) > 1:
-                    adlar = ", ".join(f"'{series[j].get('name')}' ({eksen[j]})" for j in js)
-                    rep.err(f"S{i:02d}", "aynı birim farklı eksende",
-                            f"{u}: {adlar}",
-                            "aynı birimdeki seriler (segmentler, iki sayım) tek "
-                            "eksende çizilir; ayrı eksen küçük seriyi büyüğün "
-                            "üstünde gösterir (tuzaklar 3.12)")
-            # farkli eksendeki iki sayim serisi: gercekte buyuk olan grafikte
-            # altta kaliyorsa sira ters okunur
-            yk = _combo_yukseklik(b)
-            sayim = [j for j in birim if birim[j] in _SAYIM and j in yk]
-            for a in sayim:
-                for c in sayim:
+                eksen[j] = yan_[j]
+            for a in yk:
+                for c in yk:
                     if a >= c or eksen[a] == eksen[c]:
                         continue
-                    va, vc = series[a].get("data") or [], series[c].get("data") or []
-                    ciftler = [(x, y, ha, hc) for x, y, ha, hc in zip(va, vc, yk[a], yk[c])
-                               if None not in (x, y, ha, hc)]
-                    if not ciftler:
+                    ayni = birim[a] is not None and birim[a] == birim[c]
+                    sayim = birim[a] in _SAYIM and birim[c] in _SAYIM
+                    if not (ayni or sayim):
                         continue
-                    for buyuk, kucuk, ters in ((a, c, all(x > y for x, y, *_ in ciftler)),
-                                               (c, a, all(y > x for x, y, *_ in ciftler))):
-                        if not ters:
+                    va, vc = series[a].get("data") or [], series[c].get("data") or []
+                    ters = []
+                    for k, (x, y) in enumerate(zip(va, vc)):
+                        ha = yk[a][k] if k < len(yk[a]) else None
+                        hc = yk[c][k] if k < len(yk[c]) else None
+                        if None in (x, y, ha, hc):
                             continue
-                        hb = yk[buyuk]
-                        hk = yk[kucuk]
-                        ay = [k for k, (x, y) in enumerate(zip(hb, hk))
-                              if x is not None and y is not None and x < y - 0.02]
-                        if ay:
-                            rep.warn(f"S{i:02d}", "görsel sıra ters",
-                                     f"'{series[buyuk].get('name')}' değerce hep büyük ama "
-                                     f"{len(ay)} ayda '{series[kucuk].get('name')}' altında çiziliyor",
-                                     "ölçekler aynı birimdeyse tek eksene alınır; farklı "
-                                     "metrikse pad/band ile büyük seri üste taşınır "
-                                     "(tuzaklar 3.12)")
+                        x, y = float(x), float(y)
+                        if (x > y * 1.02 and ha <= hc + 0.02) or (y > x * 1.02 and hc <= ha + 0.02):
+                            ters.append(k)
+                    if not ters:
+                        continue
+                    na, nc = series[a].get("name"), series[c].get("name")
+                    if ayni:
+                        rep.err(f"S{i:02d}", "görsel sıra ters (aynı birim)",
+                                f"'{na}' ({eksen[a]}) ile '{nc}' ({eksen[c]}) {len(ters)} ayda "
+                                f"gerçek büyüklük sırasının tersine çiziliyor",
+                                "combo'ya right_axis:'ordered' verilir; sağ eksen sırayı "
+                                "koruyan en küçük yuvarlak sınırla açılır (tuzaklar 3.12)")
+                    else:
+                        rep.warn(f"S{i:02d}", "görsel sıra ters",
+                                 f"'{na}' ile '{nc}' {len(ters)} ayda gerçek büyüklük "
+                                 f"sırasının tersine çiziliyor",
+                                 "right_axis:'ordered' ya da band ile büyük seri üste "
+                                 "taşınır (tuzaklar 3.12)")
 
 
 def check_layout(spec, base, rep):

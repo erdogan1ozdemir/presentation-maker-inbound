@@ -468,10 +468,11 @@ chat'te yaz:
       2026`; gün aralığı yazılmaz, değer ayın son günü, değişim yüzde olarak)
 - [ ] **Grafiklerde değer etiketi var mı?** Bar serisi `labels` ile
       etiketlenir; günlük seride `labels: "uclar"` kullanılır.
-- [ ] **Grafik büyüklük sırasını doğru gösteriyor mu?** Aynı birimdeki
-      seriler (Brand / Non-Brand / Toplam, click ve arama hacmi) tek eksende;
-      küçük segment sağ eksene alınıp büyüğün üstünde çizilmez. Farklı
-      metrikte de gerçekte büyük olan seri küçüğün altına inmez (tuzaklar 3.12).
+- [ ] **Grafik büyüklük sırasını doğru gösteriyor mu?** Küçük segment
+      (Brand) tabana yapışıyorsa sağ eksene `right_axis: "ordered"` ile alınır:
+      eksen, Brand her ay Non-Brand'in altında kalacak en küçük yuvarlak
+      sınırla açılır (sol 10M / sağ 2M). Serbest ölçekli sağ eksende küçük
+      seri büyüğün üstüne çıkar; tek eksende okunmaz (tuzaklar 3.12).
 - [ ] **Insight ve notlarda vurgu işaretleri** ({b:} rakam, {c:} anahtar terim,
       {g:}/{r:} yön) kullanılmış mı?
 

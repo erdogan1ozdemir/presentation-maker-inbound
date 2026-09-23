@@ -690,7 +690,7 @@
    ],
    "footnotes": [
     "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", GFN \"geforce now\" · \"gfn\". \"game plus\" ve \"geforcenow\" yakın varyant olarak aynı seriyi taşıdığından toplama dahil edilmemiştir.",
-    "Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır; hacim ve click aynı eksendedir."
+    "Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır; GFN click sağ eksendedir, eksen click her ay hacmin altında kalacak şekilde ölçeklenmiştir."
    ],
    "blocks": [
     {
@@ -821,7 +821,8 @@
        "color": "coral",
        "axis": "left"
       }
-     ]
+     ],
+     "right_axis": "auto"
     },
     {
      "type": "table",
@@ -1842,6 +1843,7 @@
     100
    ],
    "footnotes": [
+    "Organik session sağ eksendedir; eksen, organik session her ay toplamın altında kalacak şekilde ölçeklenmiştir.",
     "Tarama aracı kaynaklı bozuk landing page kayıtları ayıklanmıştır; ayrıntı blog slaytının dipnotundadır.",
     "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
    ],
@@ -1909,7 +1911,8 @@
        "color": "coral",
        "axis": "left"
       }
-     ]
+     ],
+     "right_axis": "auto"
     },
     {
      "type": "table",

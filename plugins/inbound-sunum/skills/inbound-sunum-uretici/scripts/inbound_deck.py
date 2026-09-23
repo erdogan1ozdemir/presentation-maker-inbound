@@ -1220,7 +1220,7 @@ def _nice_step(raw):
     return 10 * e
 
 
-def _axis_scale(vals, invert, pad=1.15):
+def _axis_scale(vals, invert, pad=1.12):
     """(vmin, vmax) - eksen araligi, AXIS_TICKS adim yuvarlak basamakla.
 
     Eksen etiketleri 132 / 99 / 66 / 33 gibi bolme artiklari degil 150 / 100 /
@@ -1239,6 +1239,143 @@ def _axis_scale(vals, invert, pad=1.15):
         return lo_n, lo_n + step * AXIS_TICKS
     step = _nice_step((hi * pad or 1.0) / AXIS_TICKS)
     return 0.0, step * AXIS_TICKS
+
+
+AXIS_PAD = 1.12   # eksen ust payi: en yuksek deger ~%89'da, etiket icin yer kalir
+AUTO_RIGHT_ESIK = 0.20   # right_axis:"auto" - bu oranin altindaki seri saga alinir
+AUTO_RIGHT_KAZANC = 0.50  # auto: sag eksen ust siniri sol eksenin yarisini asarsa tek eksen
+
+
+def _eksen_frac(a, v):
+    """Degerin grafik yuksekligindeki kesri (0 taban, 1 tavan), band dahil."""
+    frac = (float(v) - a["lo"]) / max(1e-9, a["hi"] - a["lo"])
+    frac = (1 - frac) if a["inv"] else frac
+    b0, b1 = a["band"]
+    return b0 + frac * (b1 - b0)
+
+
+def _sirali_sag_ust(series, ax, pay=0.06):
+    """right_axis:"ordered" icin sag eksen ust siniri (tuzaklar 3.12).
+
+    Sag eksendeki kucuk seri (Brand gibi) sol eksendeki buyuk serinin
+    (Non-Brand, Toplam) ustunde cizilmemeli; tek eksende ise tabana yapisip
+    okunmaz hale geliyor. Aday ust sinirlar yuvarlak basamaklardir (4 x 1/2/2.5/5
+    x 10^k); gercek buyukluk sirasini her ayda en az `pay` kadar koruyan EN
+    KUCUK sinir secilir. Sol eksenin ust siniri her zaman gecerli adaydir (iki
+    eksen ayni olcekte olur), yani sira hicbir durumda ters cizilmez.
+    """
+    import math
+    L, R = ax["left"], ax["right"]
+    sol = [s_ for s_ in series if s_.get("axis", "left") == "left"]
+    sag = [s_ for s_ in series if s_.get("axis") == "right"]
+    rmax = max(float(v) for s_ in sag for v in s_.get("data") or [] if v is not None)
+    alt_sinir = rmax * AXIS_PAD
+    adaylar = set()
+    k0 = int(math.floor(math.log10(max(alt_sinir, 1e-9)))) - 1
+    for k in range(k0, k0 + 4):
+        for m in (1, 2, 2.5, 5):
+            adaylar.add(AXIS_TICKS * m * 10 ** k)
+    adaylar = sorted(a for a in adaylar if alt_sinir <= a <= L["hi"])
+    adaylar.append(max(L["hi"], alt_sinir))
+
+    def uygun(hi):
+        a_r = dict(R, lo=0.0, hi=hi)
+        for ls in sol:
+            for rs in sag:
+                for vl, vr in zip(ls.get("data") or [], rs.get("data") or []):
+                    if vl is None or vr is None:
+                        continue
+                    vl, vr = float(vl), float(vr)
+                    hl, hr = _eksen_frac(L, vl), _eksen_frac(a_r, vr)
+                    if vl > vr * 1.02 and hl - hr < pay:
+                        return False
+                    if vr > vl * 1.02 and hr - hl < pay:
+                        return False
+        return True
+
+    for hi in adaylar:
+        if uygun(hi):
+            return hi
+    return adaylar[-1]
+
+
+def _eksen_hesapla(series, yan, sirali):
+    ax = {}
+    for side in ("left", "right"):
+        vals, inv, fmt, pad = [], False, "auto", AXIS_PAD
+        for j, s_ in enumerate(series):
+            if yan[j] != side:
+                continue
+            vals += [float(v) for v in s_.get("data", []) if v is not None]
+            inv = inv or bool(s_.get("invert"))
+            fmt = s_.get("fmt", fmt)
+            pad = max(pad, float(s_.get("pad", AXIS_PAD)))
+        if vals:
+            lo, hi = _axis_scale(vals, inv, pad)
+            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt, band=(0.0, 1.0))
+    if sirali and "left" in ax and "right" in ax \
+            and not ax["left"]["inv"] and not ax["right"]["inv"]:
+        ax["right"]["hi"] = _sirali_sag_ust(
+            [dict(s_, axis=yan[j]) for j, s_ in enumerate(series)], ax)
+        ax["right"]["lo"] = 0.0
+    for j, s_ in enumerate(series):
+        if s_.get("axis") == "own":
+            vals = [float(v) for v in s_.get("data", []) if v is not None]
+            if vals:
+                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                # band: serinin grafik yuksekliginde kapladigi dilim (0-1)
+                bd = s_.get("band") or (0.0, 1.0)
+                ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
+                                     fmt=s_.get("fmt", "auto"), band=(float(bd[0]), float(bd[1])))
+    return ax
+
+
+def combo_yanlari(b):
+    """combo serilerinin eksen atamasi: ({j: "left"|"right"|"own<j>"}, sirali).
+
+    Saf fonksiyondur, seri tanimini degistirmez; uretici, onizleme ve qa_deck
+    ayni sonucu alir. right_axis:"auto": tepe degeri grafik tepesinin
+    AUTO_RIGHT_ESIK'inin altinda kalan sol seri tek eksende tabana yapisir,
+    sag eksene alinir ve sag eksen "ordered" acilir (tuzaklar 3.12). Sirayi
+    koruyan sag eksen sol eksenin yarisindan buyuk cikiyorsa ikinci eksen bir
+    sey kazandirmaz; seriler tek eksende kalir.
+    """
+    series = b.get("series") or []
+    yan = {j: (f"own{j}" if s_.get("axis") == "own" else s_.get("axis", "left"))
+           for j, s_ in enumerate(series)}
+    mod = b.get("right_axis")
+    if mod != "auto":
+        return yan, mod == "ordered"
+    if "right" in yan.values():
+        return yan, False
+    sol = [j for j, s_ in enumerate(series) if yan[j] == "left" and not s_.get("invert")]
+    tepe = {j: max([float(v) for v in series[j].get("data") or [] if v is not None] or [0.0])
+            for j in sol}
+    ust = max(tepe.values() or [0.0])
+    kucuk = [j for j in sol if ust and tepe[j] < AUTO_RIGHT_ESIK * ust]
+    if not kucuk or len(kucuk) == len(sol):
+        return yan, False
+    yeni = dict(yan)
+    for j in kucuk:
+        yeni[j] = "right"
+    ax = _eksen_hesapla(series, yeni, True)
+    if "right" in ax and ax["right"]["hi"] <= AUTO_RIGHT_KAZANC * ax["left"]["hi"]:
+        return yeni, True
+    return yan, False
+
+
+def combo_eksenleri(b):
+    """combo blogunun eksenleri: {"left"|"right"|"own<j>": dict(lo, hi, inv,
+    fmt, band)}. PPTX uretici, HTML onizleme ve qa_deck ayni hesabi kullanir.
+    Seri-eksen atamasi combo_yanlari'ndan gelir.
+
+    right_axis:"ordered" (ya da "auto" ile saga alinan seri) - sag eksen, sag
+    serinin sol serilerle gercek buyukluk sirasini koruyacagi en kucuk yuvarlak
+    ust sinirla acilir.
+    """
+    series = b.get("series") or []
+    yan, sirali = combo_yanlari(b)
+    return _eksen_hesapla(series, yan, sirali)
 
 
 def _fmt_tick(v, fmt):
@@ -1346,34 +1483,13 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
                      f"veri tasimiyor - grafik bos cizilecek.")
 
-    # eksen araliklari
-    ax = {}
-    for side in ("left", "right"):
-        vals, inv, fmt, pad = [], False, "auto", 1.15
-        for s_ in series:
-            if s_.get("axis", "left") != side:
-                continue
-            vals += [float(v) for v in s_.get("data", []) if v is not None]
-            inv = inv or bool(s_.get("invert"))
-            fmt = s_.get("fmt", fmt)
-            pad = max(pad, float(s_.get("pad", 1.15)))
-        if vals:
-            lo, hi = _axis_scale(vals, inv, pad)
-            ax[side] = dict(lo=lo, hi=hi, inv=inv, fmt=fmt, band=(0.0, 1.0))
-    for j, s_ in enumerate(series):
-        if s_.get("axis") == "own":
-            vals = [float(v) for v in s_.get("data", []) if v is not None]
-            if vals:
-                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
-                # band: serinin grafik yuksekliginde kapladigi dilim (0-1). Ucuncu
-                # metrigi barlarin ustunde ayri bir seride tutmak icin kullanilir.
-                bd = s_.get("band") or (0.0, 1.0)
-                ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),
-                                     fmt=s_.get("fmt", "auto"), band=(float(bd[0]), float(bd[1])))
+    # eksen araliklari (combo_eksenleri: HTML ve qa_deck ile ortak)
+    ax = combo_eksenleri(b)
+
+    _yan = combo_yanlari(b)[0]
 
     def eksen(j, s_):
-        a = s_.get("axis", "left")
-        return f"own{j}" if a == "own" else a
+        return _yan[j]
 
     if not ax:
         ctx.warn(f"GRAFIK S{idx}: 'combo' blogunda hicbir seri eksene baglanmadi - "

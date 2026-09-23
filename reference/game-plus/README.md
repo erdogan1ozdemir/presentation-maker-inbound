@@ -93,8 +93,10 @@ yeni Game+ dönemi kurulurken kapatılır:
 - Sayı eki denetimi `15.0'i` ifadesini hata sayıyor (S04); okunuş "on beş"
   olarak doğrudur, yeni dönemde ifade yeniden yazılırken kontrol edilir.
 
-**v1.22.0 ile kapatılan:** segment click/impression serisi, marka ve GFN arama
-hacmi, toplam-organik session ve blog session grafiklerinde küçük seri sağ
-eksendeydi ve büyük serinin üstünde çiziliyordu (tuzaklar 3.12). `deck_olustur.py`
-ve `deck.json`'da bütün bu seriler sol eksene alındı, eksen dipnotları
-güncellendi. Onaylanmış PPTX (`decks/`) Temmuz teslimidir, yeniden üretilmedi.
+**v1.22.0-1.23.0 ile kapatılan:** segment click/impression serisi, marka ve GFN
+arama hacmi, toplam-organik session ve blog session grafiklerinde küçük seri
+serbest ölçekli sağ eksendeydi ve büyük serinin üstünde çiziliyordu (tuzaklar
+3.12). Segment ve blog grafikleri tek eksende; GFN click ve organik session
+`right_axis: "auto"` ile sıralı sağ eksende (sağ eksen, küçük seri her ay
+büyüğün altında kalacak şekilde ölçeklenir). Dipnotlar buna göre. Onaylanmış
+PPTX (`decks/`) Temmuz teslimidir, yeniden üretilmedi.

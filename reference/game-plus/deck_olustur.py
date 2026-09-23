@@ -191,7 +191,8 @@ S.append({
         "\"game plus\" ve \"geforcenow\" aynı seriyi taşımaktadır; çift sayım oluşmaması adına "
         "her çiftten biri toplama dahil edilmiştir.",
         "Arama hacmi bant halinde döndüğü için değerler belirli basamaklarda kümelenmektedir; "
-        "ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Hacim ve click aynı eksendedir.",
+        "ay bazında değişim yerine dönem uçları karşılaştırılmıştır. GFN click sağ eksendedir; eksen, click her ay "
+        "hacmin altında kalacak şekilde ölçeklenmiştir.",
     ],
     "blocks": [
         {"type": "combo", "col": 0, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
@@ -200,7 +201,7 @@ S.append({
             {"kind": "line", "name": "Brand click", "data": [SEG["brand"][y]["click"] for y in AYLAR],
              "color": "gold", "axis": "left"},
         ]},
-        {"type": "combo", "col": 1, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
+        {"type": "combo", "col": 1, "h": 142, "bar_w": 14, "cats": ET_KISA, "right_axis": "auto", "series": [
             {"kind": "bar", "name": "GFN arama hacmi", "data": [HACIM_G[y] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "GFN click", "data": [SEG["gfn"][y]["click"] for y in AYLAR],
@@ -456,11 +457,12 @@ S.append({
     "source": "GA4 - Cloud Gaming",
     "grid": [100],
     "footnotes": [
+        "Organik session sağ eksendedir; eksen, organik session her ay toplamın altında kalacak şekilde ölçeklenmiştir.",
         "Tarama aracı kaynaklı bozuk landing page kayıtları ayıklanmıştır; ayrıntı blog slaytının dipnotundadır.",
         "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 190, "bar_w": 30, "cats": GA_ET, "series": [
+        {"type": "combo", "col": "full", "h": 190, "bar_w": 30, "cats": GA_ET, "right_axis": "auto", "series": [
             {"kind": "bar", "name": "Toplam session", "data": [TOPLAM_S[y] for y in GA_AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "Organik session", "data": [ORGANIK_S[y] for y in GA_AYLAR],
