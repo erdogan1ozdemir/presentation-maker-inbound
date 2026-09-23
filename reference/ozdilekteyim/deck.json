@@ -152,6 +152,277 @@
    "type": "content",
    "breadcrumb": [
     "SEARCH CONSOLE",
+    "Genel Performans"
+   ],
+   "title": "Toplam Click, Impression ve Ortalama Pozisyon",
+   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%2.6 · YoY -%30.9",
+   "source": "Google Search Console - ozdilekteyim.com",
+   "grid": [
+    100
+   ],
+   "footnotes": [
+    "Eylül 2025'teki sonuç sayfası değişikliğinden sonra ilk 20 sıra dışındaki impression'lar raporlara sınırlı yansımaktadır; yıllık impression ve pozisyon kıyası bu değişiklikle birlikte okunmalıdır.",
+    "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": "full",
+     "h": 172,
+     "bar_w": 44,
+     "cats": [
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "axis_labels": false,
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Click",
+       "data": [
+        242967,
+        214986,
+        259092,
+        276027,
+        265926,
+        214352,
+        168970,
+        196058,
+        211737,
+        179675,
+        172420,
+        163702,
+        167926
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "pad": 2.4,
+       "labels": "taban",
+       "labels_text": [
+        "243.0K",
+        "215.0K",
+        "259.1K",
+        "276.0K",
+        "265.9K",
+        "214.4K",
+        "169.0K",
+        "196.1K",
+        "211.7K",
+        "179.7K",
+        "172.4K",
+        "163.7K",
+        "167.9K"
+       ]
+      },
+      {
+       "kind": "line",
+       "name": "Impression",
+       "data": [
+        8466199,
+        8057644,
+        7867864,
+        8705430,
+        7783493,
+        6422329,
+        5490787,
+        5809315,
+        4589152,
+        4726203,
+        5128193,
+        4533234,
+        4578774
+       ],
+       "color": "teal",
+       "axis": "own",
+       "band": [
+        0.46,
+        0.7
+       ],
+       "labels": "above",
+       "labels_text": [
+        "8.47M",
+        "8.06M",
+        "7.87M",
+        "8.71M",
+        "7.78M",
+        "6.42M",
+        "5.49M",
+        "5.81M",
+        "4.59M",
+        "4.73M",
+        "5.13M",
+        "4.53M",
+        "4.58M"
+       ]
+      },
+      {
+       "kind": "line",
+       "name": "Ort. pozisyon",
+       "data": [
+        16.5,
+        12.0,
+        7.9,
+        8.0,
+        9.3,
+        10.0,
+        10.0,
+        9.5,
+        9.3,
+        9.3,
+        8.9,
+        8.9,
+        9.3
+       ],
+       "color": "coral",
+       "axis": "own",
+       "band": [
+        0.76,
+        0.94
+       ],
+       "invert": true,
+       "fmt": "pos",
+       "labels": "above",
+       "labels_text": [
+        "16.5",
+        "12.0",
+        "7.9",
+        "8.0",
+        "9.3",
+        "10.0",
+        "10.0",
+        "9.5",
+        "9.3",
+        "9.3",
+        "8.9",
+        "8.9",
+        "9.3"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": "full",
+     "mt": 8,
+     "first_col_max": 0.11,
+     "heat": true,
+     "heat_invert_rows": [
+      2
+     ],
+     "head": [
+      "Metrik",
+      "Ağu'25",
+      "Eyl'25",
+      "Eki'25",
+      "Kas'25",
+      "Ara'25",
+      "Oca'26",
+      "Şub'26",
+      "Mar'26",
+      "Nis'26",
+      "May'26",
+      "Haz'26",
+      "Tem'26",
+      "Ağu'26"
+     ],
+     "rows": [
+      [
+       "Click",
+       "243.0K",
+       "215.0K",
+       "259.1K",
+       "276.0K",
+       "265.9K",
+       "214.4K",
+       "169.0K",
+       "196.1K",
+       "211.7K",
+       "179.7K",
+       "172.4K",
+       "163.7K",
+       "167.9K"
+      ],
+      [
+       "Impression",
+       "8.47M",
+       "8.06M",
+       "7.87M",
+       "8.71M",
+       "7.78M",
+       "6.42M",
+       "5.49M",
+       "5.81M",
+       "4.59M",
+       "4.73M",
+       "5.13M",
+       "4.53M",
+       "4.58M"
+      ],
+      [
+       "Ort. poz.",
+       "16.5",
+       "12.0",
+       "7.9",
+       "8.0",
+       "9.3",
+       "10.0",
+       "10.0",
+       "9.5",
+       "9.3",
+       "9.3",
+       "8.9",
+       "8.9",
+       "9.3"
+      ],
+      [
+       "CTR",
+       "%2.87",
+       "%2.67",
+       "%3.29",
+       "%3.17",
+       "%3.42",
+       "%3.34",
+       "%3.08",
+       "%3.37",
+       "%4.61",
+       "%3.80",
+       "%3.36",
+       "%3.61",
+       "%3.67"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 20,
+     "head_h": 24
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 6,
+     "font_pt": 10,
+     "items": [
+      "MoM (Tem'26 → Ağu'26): Click {g:+%2.6} · Impression {g:+%1.0} · Ort. pozisyon {r:-0.4}",
+      "YoY (Ağu'25 → Ağu'26): Click {r:-%30.9} · Impression {r:-%45.9} · Ort. pozisyon {g:+7.1}",
+      "Yıllık impression {r:-%45.9} daralırken click {r:-%30.9} ile daha sınırlı gerilemiş, CTR {g:%2.87 → %3.67}, ortalama pozisyon {g:16.5 → 9.3} iyileşmiştir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "SEARCH CONSOLE",
     "Aylık Seri"
    ],
    "title": "Brand ve Non-Brand Aylık Click",
@@ -791,8 +1062,8 @@
      "mt": 8,
      "font_pt": 10,
      "items": [
-      "MoM (Tem'26 → Ağu'26): Ort. pozisyon {g:-0.4}",
-      "YoY (Ağu'25 → Ağu'26): Ort. pozisyon {r:+7.1}",
+      "MoM (Tem'26 → Ağu'26): Ort. pozisyon {r:-0.4}",
+      "YoY (Ağu'25 → Ağu'26): Ort. pozisyon {g:+7.1}",
       "Toplam CTR {g:%2.9 → %3.7} yükselirken brand CTR {r:%25.8 → %16.1} gerilemiştir; artış non-brand tarafından ({g:%1.6 → %2.5}) gelmektedir."
      ]
     }
@@ -1538,8 +1809,8 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "MoM (Tem'26 → Ağu'26): Click {g:+%3.8} · Impression {g:+%1.0} · Ort. pozisyon {g:-0.4}",
-      "YoY (Ağu'25 → Ağu'26): Click {r:-%8.9} · Impression {r:-%26.5} · Ort. pozisyon {r:+2.1}",
+      "MoM (Tem'26 → Ağu'26): Click {g:+%3.8} · Impression {g:+%1.0} · Ort. pozisyon {r:-0.4}",
+      "YoY (Ağu'25 → Ağu'26): Click {r:-%8.9} · Impression {r:-%26.5} · Ort. pozisyon {g:+2.1}",
       "Impression yıllık {r:-%26.5} daralırken CTR {g:%1.66 → %2.05} yükselmiş, click kaybı sınırlı kalmıştır."
      ]
     }
@@ -1809,8 +2080,8 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "MoM (Tem'26 → Ağu'26): Click {g:+%4.0} · Impression {g:+%3.8} · Ort. pozisyon {g:-0.3}",
-      "YoY (Ağu'25 → Ağu'26): Click {r:-%41.0} · Impression {r:-%52.9} · Ort. pozisyon {r:+2.9}",
+      "MoM (Tem'26 → Ağu'26): Click {g:+%4.0} · Impression {g:+%3.8} · Ort. pozisyon {r:-0.3}",
+      "YoY (Ağu'25 → Ağu'26): Click {r:-%41.0} · Impression {r:-%52.9} · Ort. pozisyon {g:+2.9}",
       "Click Nisan 2026'dan bu yana {b:9-10K} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {b:7.2-7.4} seviyesinden {r:10.0} seviyesine gerilemiştir."
      ]
     }
@@ -2080,7 +2351,7 @@
      "mt": 6,
      "font_pt": 10,
      "items": [
-      "MoM (Tem'26 → Ağu'26): Click {g:+%7.4} · Impression {g:+%2.1} · Ort. pozisyon {g:-0.5}",
+      "MoM (Tem'26 → Ağu'26): Click {g:+%7.4} · Impression {g:+%2.1} · Ort. pozisyon {r:-0.5}",
       "YoY (Ağu'25 → Ağu'26): Click yeni · Impression yeni · Ort. pozisyon -",
       "Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {b:8.9K} ile zirve yapmış, ortalama pozisyon {b:7.3-8.4} bandında kalmıştır."
      ]
@@ -2208,20 +2479,20 @@
        "+%26.0"
       ],
       [
-       "özdilek nevresim takımı",
-       "1.239",
-       "1.149",
-       "1.501",
-       "+%30.6",
-       "+%21.1"
-      ],
-      [
        "özdilek bornoz takımı",
        "1.118",
        "970",
        "1.380",
        "+%42.3",
        "+%23.4"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "1.239",
+       "1.149",
+       "1.501",
+       "+%30.6",
+       "+%21.1"
       ],
       [
        "özdilekteyim sipariş takip",
@@ -2409,20 +2680,20 @@
        "-1.4"
       ],
       [
-       "tek kişilik pike",
-       "4.4K",
-       "62",
-       "-88",
-       "7.3",
-       "-0.6"
-      ],
-      [
        "panini dünya kupası albümü 2026",
        "1.0K",
        "0",
        "-88",
        "-",
        "-"
+      ],
+      [
+       "tek kişilik pike",
+       "4.4K",
+       "62",
+       "-88",
+       "7.3",
+       "-0.6"
       ]
      ],
      "font_pt": 10.5,

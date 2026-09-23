@@ -596,6 +596,23 @@ def check_baslik_ve_donem(spec, rep):
                      "(ör. 'Ağustos 2026'); gün aralığı yazılmaz")
 
 
+def check_pozisyon_rengi(spec, rep):
+    """Pozisyon degisimi "eski - yeni" farkidir: pozitif iyilesme (yesil),
+    negatif gerileme (kirmizi). Ozdilekteyim'de renk ters cevrilmis, +7.1
+    iyilesme kirmizi basilmisti (katalog C45a)."""
+    RX = re.compile(r"(pozisyon|poz\.)\s*(\{r:\+|\{g:-)", re.I)
+    for i, s in enumerate(spec.get("slides") or [], 1):
+        for b in s.get("blocks") or []:
+            for it in b.get("items") or []:
+                metin = it if isinstance(it, str) else str(it)
+                m = RX.search(metin)
+                if m:
+                    rep.err(f"S{i:02d}", "pozisyon rengi ters",
+                            f"'{metin[max(0, m.start() - 10):m.end() + 8]}'",
+                            "pozisyon farkı eski - yeni: pozitif iyileşme yeşil, "
+                            "negatif gerileme kırmızı (katalog C45a)")
+
+
 def check_insight_bicimi(spec, rep):
     """Bir bulgu = bir ok; aylik seri slaytinda MoM ve YoY notu."""
     for i, s in enumerate(spec.get("slides") or [], 1):
@@ -986,6 +1003,7 @@ def main():
     check_segmentler(spec, rep)
     check_eksen_birimi(spec, rep)
     check_insight_bicimi(spec, rep)
+    check_pozisyon_rengi(spec, rep)
     check_baslik_ve_donem(spec, rep)
     if a.pptx:
         check_pptx(a.pptx, rep)

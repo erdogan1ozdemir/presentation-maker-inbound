@@ -74,8 +74,8 @@ tanımıyla açılır; GA4 ve içerik bölümleri aynı segment diliyle devam ed
 Kapak · Akış
 Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · Segment
   tanımları (C44)
-Ayraç 02 Google Search Console Metrikleri: aylık click serisi (C45) · aylık
-  impression serisi (C45) · dönem karşılaştırması pozisyonlu (C46)
+Ayraç 02 Google Search Console Metrikleri: toplam click, impression ve ortalama
+  pozisyon (C45a) · aylık click serisi (C45) · aylık impression serisi (C45) · dönem karşılaştırması pozisyonlu (C46)
   · Query değişimleri (C47) · Sayfa değişimleri (C47)
 Ayraç 03 <Etki> Geçişi: simetrik pencere tablosu (C31) · haftalık grafik (C48)
 Ayraç 04 GA4 Trafik: toplam ve organik aylık seri (C09) · kanal kırılımı (C11)
@@ -97,7 +97,8 @@ Markaya özgü kurallar: `reference/ozdilekteyim/README.md`.
 Kapak · Akış
 Ayraç 01 Genel Görünüm: yönetici özeti + KRİTİK TESPİT (C27) · segment ve sayfa
   grubu tanımları (C44)
-Ayraç 02 Google Search Console Metrikleri: aylık click (C45) · aylık impression
+Ayraç 02 Google Search Console Metrikleri: toplam click, impression ve ortalama
+  pozisyon (C45a) · aylık click (C45) · aylık impression
   (C45) · ortalama sıralama ve CTR (C45b) · dönem karşılaştırması (C46) · marka arama hacmi ve brand click (C04d)
   · sayfa grubu başına bir slayt (C54 × N) · brand query değişimleri (C47b)
   · non-brand Query değişimleri (C47) · Sayfa değişimleri (C47)
@@ -696,6 +697,24 @@ segmentlerin toplamıdır.
 Anonim sorgu hacminin hangi segmente yazıldığı burada beyan edilir - query
 filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzden
 "toplam eksi brand" yöntemi anonim hacmi non-brand'e taşır.
+
+**C45a Toplam click, impression ve ortalama pozisyon** (GSC bölümünün ilk slaytı)
+Segment kırılımına girmeden önce sitenin toplam görünümü. C54 ile aynı düzen,
+sitenin toplam serisiyle: `combo` (`axis_labels: false`) click bar alt bantta
+(`pad: 2.4`, `labels: "taban"`), impression çizgi barların üstündeki bantta
+(`axis: "own"`, `band: [0.46, 0.70]`, `labels: "above"`), ortalama pozisyon en
+üst bantta (`band: [0.76, 0.94]`, `invert: true`, `labels: "above"`); altında
+`heat: true` tablo `Click | Impression | Ort. poz. | CTR` (pozisyon satırı
+`heat_invert_rows`); insight'ta MoM ve YoY ayrı ok, ardından impression-click-CTR
+kontrastı. Dipnot: Eylül 2025 şerhi (kısa biçim) + bant düzeninin okunuşu.
+Özdilekteyim üreticisinde `grup_slayt("toplam", baslik=..., ilk_not=...)` ile
+kurulur; GSC ayracının hemen ardına girer.
+
+**Pozisyon değişiminin rengi.** Fark "eski - yeni" hesaplanır (10 → 8 = +2
+iyileşme); pozitif yeşil, negatif kırmızıdır. İşareti ayrıca ters çeviren renk
+parametresi kullanılmaz: Özdilekteyim'de +7.1 iyileşme kırmızı, -0.4 gerileme
+yeşil basılmıştı. `qa_deck` pozisyon notunda `{r:+…}` / `{g:-…}` kalıbını
+hata sayar.
 
 **C45 Segment aylık serisi** (click ve impression için birer slayt)
 `combo`: Toplam bar (gri) + segment çizgileri (Non-Brand, Brand, varsa GFN).

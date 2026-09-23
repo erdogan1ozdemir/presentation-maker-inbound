@@ -12,6 +12,7 @@ Kapak · Akış
                       non-brand click + KRİTİK TESPİT) · segment ve sayfa
                       grubu tanımları
 02 Google Search Console Metrikleri
+                      toplam click, impression ve ortalama pozisyon (C45a)
                       aylık click · aylık impression · ortalama sıralama ve CTR
                       (C45b) · dönem karşılaştırması (click / impression / CTR / pozisyon)
                       marka arama hacmi ve brand click (C04d)

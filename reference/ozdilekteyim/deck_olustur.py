@@ -75,7 +75,11 @@ def ek_i(sayi):
 
 
 def renk(s, ters=False):
-    """Yüzde/delta metnini işaretine göre yeşil/kırmızı işaretler."""
+    """Yüzde/delta metnini işaretine göre yeşil/kırmızı işaretler.
+
+    Pozisyon farkı "eski - yeni" olarak hesaplanır (10 → 8 = +2 iyileşme); bu
+    farkta pozitif zaten iyileşmedir, ters=True VERİLMEZ. ters yalnızca işareti
+    kötüleşme anlamı taşıyan bir değer (ör. "yeni - eski" pozisyon) için kullanılır."""
     neg = s.startswith("-")
     if ters:
         neg = not neg
@@ -101,7 +105,7 @@ def degisim_notu(kalemler, metrik="click", puan=False):
         for et, seri in kalemler:
             if puan:
                 fark = seri[a][metrik] - seri[b][metrik]
-                parca.append(f"{et} {renk(sifirla(f'{fark:+.1f}'), ters=True)}")
+                parca.append(f"{et} {renk(sifirla(f'{fark:+.1f}'))}")
             else:
                 parca.append(f"{et} {renk(pct(seri[b][metrik], seri[a][metrik]))}")
         don = f"{etiket(a)} → {etiket(b)}"
@@ -169,6 +173,7 @@ S.append({
 
 # ================================================ Google Search Console
 S.append({"type": "separator", "no": "", "title": "Google Search Console Metrikleri"})
+GSC_AYRAC = len(S) - 1   # toplam click/impression/pozisyon slaydi ayracin hemen ardina girer
 
 DIPNOT_NUM = ("Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın "
               "dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; "
@@ -258,9 +263,9 @@ S.append({
               "bold_rows": [-1]}, **{**T, "font_pt": 9.5}),
         {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
             f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Ort. pozisyon "
-            f"{renk(sifirla(f'{TOP[ONCEKI]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)}",
+            f"{renk(sifirla(f'{TOP[ONCEKI]['poz'] - TOP[SIMDI]['poz']:+.1f}'))}",
             f"YoY ({ET_GECEN} → {ET_SIMDI}): Ort. pozisyon "
-            f"{renk(sifirla(f'{TOP[GECEN_YIL]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)}",
+            f"{renk(sifirla(f'{TOP[GECEN_YIL]['poz'] - TOP[SIMDI]['poz']:+.1f}'))}",
             f"Toplam CTR {{g:%{TOP[GECEN_YIL]['ctr']:.1f} → %{TOP[SIMDI]['ctr']:.1f}}} yükselirken brand CTR "
             f"{{r:%{BR[GECEN_YIL]['ctr']:.1f} → %{BR[SIMDI]['ctr']:.1f}}} gerilemiştir; artış non-brand tarafından "
             f"({{g:%{NB[GECEN_YIL]['ctr']:.1f} → %{NB[SIMDI]['ctr']:.1f}}}) gelmektedir.",
@@ -387,19 +392,22 @@ GRUP_TANIM = {
 }
 
 
-def grup_slayt(g, yorum, impr_etiket="above"):
-    ad, tanim = GRUP_TANIM[g]
+def grup_slayt(g, yorum, impr_etiket="above", baslik=None, kirilim="Sayfa Grupları",
+               kaynak=None, ilk_not=None, h=200):
+    """Click bar + impression ve pozisyon bantli cizgi + 13 ay tablo (katalog C54).
+    g="toplam" ile sitenin toplam serisi icin de kullanilir (katalog C45a)."""
+    ad, tanim = GRUP_TANIM.get(g, (None, None))
     a = SEG[g]
     yoy = (lambda m: "yeni") if g == "cp2" else (lambda m: d(g, m, b=GECEN_YIL))
     return {
         "type": "content",
-        "breadcrumb": ["SEARCH CONSOLE", "Sayfa Grupları"],
-        "title": f"{ad} Sayfaları: Click, Impression ve Sıralama",
+        "breadcrumb": ["SEARCH CONSOLE", kirilim],
+        "title": baslik or f"{ad} Sayfaları: Click, Impression ve Sıralama",
         "subtitle": f"Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM {d(g, 'click')} · YoY {yoy('click')}",
-        "source": KAYNAK_GSC + " · Page filtresi",
+        "source": kaynak or (KAYNAK_GSC + " · Page filtresi"),
         "grid": [100],
         "footnotes": [
-            f"{ad}: {tanim}",
+            ilk_not or f"{ad}: {tanim}",
             "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi "
             "ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
@@ -407,7 +415,7 @@ def grup_slayt(g, yorum, impr_etiket="above"):
             # uc metrik ayri bantlarda: sol eksen basamaklari ust bantlara uzanip
             # impression'i click olceginde okutacagi icin eksen etiketi basilmaz,
             # degerler etiketlerde ve tabloda (tuzaklar 3.12)
-            {"type": "combo", "col": "full", "h": 200, "bar_w": 44, "cats": ET, "axis_labels": False, "series": [
+            {"type": "combo", "col": "full", "h": h, "bar_w": 44, "cats": ET, "axis_labels": False, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
                  "color": "gray_bar", "axis": "left", "pad": 2.4, "labels": "taban",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},
@@ -430,18 +438,31 @@ def grup_slayt(g, yorum, impr_etiket="above"):
             {"type": "insights", "col": "full", "mt": 6, "font_pt": 10,
              "items": [f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Click {renk(d(g, 'click'))} · "
                        f"Impression {renk(d(g, 'impr'))} · Ort. pozisyon "
-                       f"{renk(sifirla(f'{a[ONCEKI]['poz'] - a[SIMDI]['poz']:+.1f}'), ters=True)}",
+                       f"{renk(sifirla(f'{a[ONCEKI]['poz'] - a[SIMDI]['poz']:+.1f}'))}",
                        f"YoY ({ET_GECEN} → {ET_SIMDI}): Click "
                        f"{'yeni' if g == 'cp2' else renk(d(g, 'click', b=GECEN_YIL))} · "
                        f"Impression {'yeni' if g == 'cp2' else renk(d(g, 'impr', b=GECEN_YIL))} · "
                        f"Ort. pozisyon "
-                       f"{'-' if g == 'cp2' else renk(sifirla(f'{a[GECEN_YIL]['poz'] - a[SIMDI]['poz']:+.1f}'), ters=True)}"]
+                       f"{'-' if g == 'cp2' else renk(sifirla(f'{a[GECEN_YIL]['poz'] - a[SIMDI]['poz']:+.1f}'))}"]
                       + yorum},
         ],
     }
 
 
 MG, MK, CP = SEG["magaza"], SEG["market"], SEG["cp2"]
+
+# GSC bolumunun ilk slaydi: sitenin toplam click, impression ve ortalama pozisyonu
+S.insert(GSC_AYRAC + 1, grup_slayt(
+    "toplam", baslik="Toplam Click, Impression ve Ortalama Pozisyon", kirilim="Genel Performans",
+    kaynak=KAYNAK_GSC, h=172,
+    ilk_not="Eylül 2025'teki sonuç sayfası değişikliğinden sonra ilk 20 sıra dışındaki impression'lar raporlara "
+            "sınırlı yansımaktadır; yıllık impression ve pozisyon kıyası bu değişiklikle birlikte okunmalıdır.",
+    yorum=[
+        f"Yıllık impression {renk(d('toplam', 'impr', b=GECEN_YIL))} daralırken click "
+        f"{renk(d('toplam', 'click', b=GECEN_YIL))} ile daha sınırlı gerilemiş, CTR "
+        f"{{g:%{TOP[GECEN_YIL]['ctr']:.2f} → %{TOP[SIMDI]['ctr']:.2f}}}, ortalama pozisyon "
+        f"{{g:{TOP[GECEN_YIL]['poz']:.1f} → {TOP[SIMDI]['poz']:.1f}}} iyileşmiştir.",
+    ]))
 S.append(grup_slayt("magaza", [
     f"Impression yıllık {renk(d('magaza', 'impr', b=GECEN_YIL))} daralırken CTR "
     f"{{g:%{MG[GECEN_YIL]['ctr']:.2f} → %{MG[SIMDI]['ctr']:.2f}}} yükselmiş, click kaybı sınırlı kalmıştır.",
