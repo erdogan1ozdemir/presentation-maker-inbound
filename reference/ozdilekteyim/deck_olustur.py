@@ -340,18 +340,26 @@ S.append({
     "grid": [100],
     "footnotes": [
         "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır "
-        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır.",
+        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Brand click alt bantta bar, arama "
+        "hacimleri üst bantta ortak ölçekte çizgidir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 170, "bar_w": 26, "cats": ET, "series": [
+        {"type": "combo", "col": "full", "h": 184, "bar_w": 50, "cats": ET, "axis_labels": False, "series": [
+            # click ve arama hacmi iki ayri metrik, iki ayri olcek (tuzaklar 3.12):
+            # click alt bantta tabanda etiketli bar, iki hacim ust bantta ortak
+            # olcekte (scale:"hacim") noktanin ustunde etiketli cizgi. Cizgiler
+            # barlarin icinden gecmez, etiketler karismaz (katalog C04d)
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
-             "color": "gray_bar", "axis": "left"},
+             "color": "gray_bar", "axis": "left", "pad": 1.6, "labels": "taban",
+             "labels_text": [k(BR[y]["click"]) for y in AYLAR]},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
-             "color": "teal", "axis": "left"},
+             "color": "teal", "axis": "own", "scale": "hacim", "band": [0.55, 0.93], "labels": "above",
+             "labels_text": [k(OZ[y]) for y in AYLAR]},
             {"kind": "line", "name": "\"özdilekteyim\" arama hacmi", "data": [OZT[y] for y in AYLAR],
-             "color": "coral", "axis": "left"},
+             "color": "coral", "axis": "own", "scale": "hacim", "band": [0.55, 0.93], "labels": "above",
+             "labels_text": [k(OZT[y]) for y in AYLAR]},
         ]},
-        dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.15,
+        dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.24,
               "head": ["Metrik"] + ET,
               "rows": [["özdilek hacmi"] + [k(OZ[y]) for y in AYLAR],
                        ["özdilekteyim hacmi"] + [k(OZT[y]) for y in AYLAR],
@@ -442,7 +450,7 @@ S.append(grup_slayt("market", [
     f"Click Nisan 2026'dan bu yana {{b:9-10K}} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {{b:7.2-7.4}} "
     f"seviyesinden {{r:{MK[SIMDI]['poz']:.1f}}} seviyesine gerilemiştir.",
 ]))
-S.append(grup_slayt("cp2", impr_etiket="none", yorum=[
+S.append(grup_slayt("cp2", yorum=[
     f"Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {{b:{k(CP[202604]['click'])}}} ile zirve "
     f"yapmış, ortalama pozisyon {{b:7.3-8.4}} bandında kalmıştır.",
 ]))
@@ -523,11 +531,11 @@ S.append({
     "blocks": [
         dict({"type": "table", "col": 0, "first_col_max": 0.50,
               "head": ["Click artan sayfa", "Click", "Δ", "Poz.", "Δ poz."],
-              "rows": [[(yol(u) if yol(u) != "/" else "/ (anasayfa)")[:40], n(a), f"+{n(x)}", *poz_kol(P, u)]
+              "rows": [[(yol(u) if yol(u) != "/" else "/ (anasayfa)"), n(a), f"+{n(x)}", *poz_kol(P, u)]
                        for u, b, a, x in s_art]}, **T),
         dict({"type": "table", "col": 1, "first_col_max": 0.50,
               "head": ["Click azalan sayfa", "Click", "Δ", "Poz.", "Δ poz."],
-              "rows": [[yol(u)[:40], n(a), n(x), *poz_kol(P, u)] for u, b, a, x in s_dus]}, **T),
+              "rows": [[yol(u), n(a), n(x), *poz_kol(P, u)] for u, b, a, x in s_dus]}, **T),
         {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
             "{c:/magaza/bornoz-2} {g:+1.558} click ile en yüksek artışı göstermiştir; {c:nevresim}, {c:çeyiz setleri} ve "
             "{c:aile seti} kategori sayfaları da ev tekstili tarafındaki toparlanmayı taşımaktadır.",
@@ -726,21 +734,22 @@ S.append({
     "title": "Google Arama Yapay Zeka Özelliklerinde Impression",
     "subtitle": "Mayıs - Ağustos 2026 | aylık | Search Console yapay zeka özellikleri raporu",
     "source": KAYNAK_GSC + " · Generative AI features",
-    "grid": [64, 36],
+    "grid": [54, 46],
     "footnotes": [
         "Rapor, sitenin Google aramadaki yapay zeka özelliklerinde (AI Overview ve AI Mode) aldığı impression'ı gösterir; "
         "veri 18 Mayıs 2026'dan itibaren mevcuttur; Mayıs değeri 18-31 Mayıs toplamıdır. Sayfa tablosu 18 Mayıs - "
         "21 Eylül 2026 toplamıdır.",
     ],
     "blocks": [
-        {"type": "combo", "col": 0, "h": 230, "bar_w": 64, "cats": _acat, "series": [
+        {"type": "combo", "col": 0, "h": 230, "bar_w": 56, "cats": _acat, "series": [
             {"kind": "bar", "name": "Aylık impression", "data": [_ay[a][0] for a in _AYLAR_AI],
              "color": "gray_bar", "axis": "left", "labels": "taban",
              "labels_text": [k(_ay[a][0]) for a in _AYLAR_AI]},
         ]},
-        dict({"type": "table", "col": 1, "first_col_max": 0.74,
+        # adres kirpilmaz: tablo kolonu en uzun yolu tasiyacak genislikte acilir
+        dict({"type": "table", "col": 1, "first_col_max": 0.80,
               "head": ["En çok impression alan sayfa", "Impression"],
-              "rows": [[_sayfa_ad.get(u, u)[:34], n(v)] for u, v in _sayfa[:9]]},
+              "rows": [[_sayfa_ad.get(u, u), n(v)] for u, v in _sayfa[:9]]},
              **{**T, "font_pt": 9.5, "row_h": 15, "head_h": 20}),
         {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
             f"MoM (Tem'26 → Ağu'26): Impression {renk(pct(AI_AGU, AI_TEM))} ({{b:{k(AI_TEM)} → {k(AI_AGU)}}}) · "

@@ -746,7 +746,9 @@ def check_eksen_birimi(spec, rep):
     alani ile acikca verilebilir.
     - ayni birimdeki iki seri farkli eksende ve buyuk olan bir ayda bile
       kucugun altinda/hizasinda ciziliyorsa HATA
-    - farkli birimdeki iki sayim serisinde ayni durum UYARI
+    Farkli metrikler (click ile arama hacmi, click ile impression) ayri
+    eksende verilir; aralarinda sira denetimi yapilmaz - her eksen kendi
+    metrigini okutur.
     """
     for i, s in enumerate(spec.get("slides") or [], 1):
         if s.get("type") != "content":
@@ -773,8 +775,7 @@ def check_eksen_birimi(spec, rep):
                     if a >= c or eksen[a] == eksen[c]:
                         continue
                     ayni = birim[a] is not None and birim[a] == birim[c]
-                    sayim = birim[a] in _SAYIM and birim[c] in _SAYIM
-                    if not (ayni or sayim):
+                    if not ayni:
                         continue
                     va, vc = series[a].get("data") or [], series[c].get("data") or []
                     ters = []
@@ -789,18 +790,11 @@ def check_eksen_birimi(spec, rep):
                     if not ters:
                         continue
                     na, nc = series[a].get("name"), series[c].get("name")
-                    if ayni:
-                        rep.err(f"S{i:02d}", "görsel sıra ters (aynı birim)",
-                                f"'{na}' ({eksen[a]}) ile '{nc}' ({eksen[c]}) {len(ters)} ayda "
-                                f"gerçek büyüklük sırasının tersine çiziliyor",
-                                "combo'ya right_axis:'ordered' verilir; sağ eksen sırayı "
-                                "koruyan en küçük yuvarlak sınırla açılır (tuzaklar 3.12)")
-                    else:
-                        rep.warn(f"S{i:02d}", "görsel sıra ters",
-                                 f"'{na}' ile '{nc}' {len(ters)} ayda gerçek büyüklük "
-                                 f"sırasının tersine çiziliyor",
-                                 "right_axis:'ordered' ya da band ile büyük seri üste "
-                                 "taşınır (tuzaklar 3.12)")
+                    rep.err(f"S{i:02d}", "görsel sıra ters (aynı birim)",
+                            f"'{na}' ({eksen[a]}) ile '{nc}' ({eksen[c]}) {len(ters)} ayda "
+                            f"gerçek büyüklük sırasının tersine çiziliyor",
+                            "combo'ya right_axis:'ordered' verilir; sağ eksen sırayı "
+                            "koruyan en küçük yuvarlak sınırla açılır (tuzaklar 3.12)")
 
 
 def check_layout(spec, base, rep):

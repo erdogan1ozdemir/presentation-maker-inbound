@@ -997,6 +997,21 @@ akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutl
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
 
+**Bar tabanı etiketi bütün barlara sığmalı.** Tek bir ayın değeri ("100.6K",
+40 px) 44 px barın içine sığmayınca bütün seri üst yerleşime dönüyordu; 13
+aylık seride taban etiketi isteniyorsa `bar_w` en uzun değere göre açılır
+(50 px).
+
+**Tablo etiket kolonu ölçüm payıyla açılır.** Satır yüksekliği etiket
+metnini `OLCUM_PAY` (%94) ile dar ölçüyor, kolon ise tam metin genişliğiyle
+açılıyordu; tam sığan "özdilekteyim hacmi" ikinci satıra kırılıp satırı iki
+kat yükseltti. Etiket kolonu artık aynı payla açılır; sayısal kolonlar
+sarmadığı için pay almaz.
+
+**Tablo hücresindeki adres kırpılmaz.** Sayfa yolu karakter sınırıyla kesilirse
+okuyucu yarım adresi tam sanır. Kolon genişletilir, gerekirse grid oranı
+değiştirilir.
+
 **Koyu çizgi noktası.** Non-Brand (teal) çizgisinin koyu noktaları koyu
 barların üstünde seçilmiyordu. Koyu renkli çizgide nokta açık gri dolgulu ve
 çizgi renginde kenarlı basılır; çizgi rengi değişmez (design-system, grafik
@@ -1047,15 +1062,19 @@ kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
    en küçük sınırı seçer. Sol eksen sınırı her zaman geçerli aday olduğundan
    sıra hiçbir durumda ters çizilmez. `auto`, sıralı sağ eksen sol eksenin
    yarısından büyük çıkıyorsa (kazanç yok) tek eksende kalır.
-3. **Serbest ölçekli sağ eksen yalnızca birimi farklı metrik içindir**
+3. **İki farklı metrik ayrı ölçekte verilir** (click - arama hacmi, click -
+   impression). Tek eksende iki metrik aynı birimmiş gibi okunur (Özdilekteyim
+   "Marka Arama Hacmi ve Brand Click" tek eksendeydi, düzeltildi). Sıra
+   denetimi yalnızca aynı metrikte yapılır.
+4. **Serbest ölçekli sağ eksen yalnızca birimi farklı metrik içindir**
    (CTR - pozisyon). Click bar + impression çizgisinde impression barların
    üstündeki bantta (`axis: "own"`, `band`) çizilir ve `axis_labels: false`
    verilir (katalog C54).
-4. **Dipnot sağ eksenin nasıl ölçeklendiğini söyler:** "Brand sağ eksendedir;
+5. **Dipnot sağ eksenin nasıl ölçeklendiğini söyler:** "Brand sağ eksendedir;
    eksen, Brand her ay Non-Brand'in altında kalacak şekilde ölçeklenmiştir."
-5. **Bar tabanı etiketi çizgi noktasıyla çakışmaz.** Taban etiketi o ayın
+6. **Bar tabanı etiketi çizgi noktasıyla çakışmaz.** Taban etiketi o ayın
    çizgi noktasının üstüne, bar içinde kalacak şekilde kayar.
-6. **Eksen üst payı %12.** 8.71M için eksen 10M açılır (eski %15 pay 20M'e
+7. **Eksen üst payı %12.** 8.71M için eksen 10M açılır (eski %15 pay 20M'e
    atlatıyordu, grafik yarıya iniyordu).
 
 **Denetim (`qa_deck.py`):** eksen hesabı üreticiyle ortaktır
@@ -1064,7 +1083,7 @@ kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
 slayt başlığından okunur; `unit` alanıyla açıkça verilebilir.
 - Aynı birimdeki iki seri farklı eksende ve büyük olan bir ayda bile küçüğün
   altında/hizasında çiziliyorsa **HATA** (görsel sıra ters, aynı birim).
-- Farklı birimdeki iki sayım serisinde aynı durum **UYARI**.
+  Farklı metrikler arasında sıra denetimi yoktur.
 
 ### 3.11. KPI etiketi büyük harf ve Türkçe yazım
 

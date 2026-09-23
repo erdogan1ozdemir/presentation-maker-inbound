@@ -1021,14 +1021,14 @@
     100
    ],
    "footnotes": [
-    "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır."
+    "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Brand click alt bantta bar, arama hacimleri üst bantta ortak ölçekte çizgidir."
    ],
    "blocks": [
     {
      "type": "combo",
      "col": "full",
-     "h": 170,
-     "bar_w": 26,
+     "h": 184,
+     "bar_w": 50,
      "cats": [
       "Ağu'25",
       "Eyl'25",
@@ -1044,6 +1044,7 @@
       "Tem'26",
       "Ağu'26"
      ],
+     "axis_labels": false,
      "series": [
       {
        "kind": "bar",
@@ -1064,7 +1065,24 @@
         63125
        ],
        "color": "gray_bar",
-       "axis": "left"
+       "axis": "left",
+       "pad": 1.6,
+       "labels": "taban",
+       "labels_text": [
+        "114.8K",
+        "77.1K",
+        "91.0K",
+        "102.2K",
+        "100.6K",
+        "83.6K",
+        "64.0K",
+        "76.9K",
+        "98.3K",
+        "68.7K",
+        "61.1K",
+        "58.9K",
+        "63.1K"
+       ]
       },
       {
        "kind": "line",
@@ -1085,7 +1103,28 @@
         165000
        ],
        "color": "teal",
-       "axis": "left"
+       "axis": "own",
+       "scale": "hacim",
+       "band": [
+        0.55,
+        0.93
+       ],
+       "labels": "above",
+       "labels_text": [
+        "165.0K",
+        "165.0K",
+        "165.0K",
+        "201.0K",
+        "201.0K",
+        "201.0K",
+        "165.0K",
+        "165.0K",
+        "165.0K",
+        "165.0K",
+        "135.0K",
+        "165.0K",
+        "165.0K"
+       ]
       },
       {
        "kind": "line",
@@ -1106,7 +1145,28 @@
         74000
        ],
        "color": "coral",
-       "axis": "left"
+       "axis": "own",
+       "scale": "hacim",
+       "band": [
+        0.55,
+        0.93
+       ],
+       "labels": "above",
+       "labels_text": [
+        "49.5K",
+        "60.5K",
+        "74.0K",
+        "90.5K",
+        "90.5K",
+        "74.0K",
+        "60.5K",
+        "74.0K",
+        "60.5K",
+        "74.0K",
+        "74.0K",
+        "60.5K",
+        "74.0K"
+       ]
       }
      ]
     },
@@ -1114,7 +1174,7 @@
      "type": "table",
      "col": "full",
      "mt": 10,
-     "first_col_max": 0.15,
+     "first_col_max": 0.24,
      "head": [
       "Metrik",
       "Ağu'25",
@@ -1857,7 +1917,7 @@
         0.46,
         0.7
        ],
-       "labels": "none",
+       "labels": "above",
        "labels_text": [
         "1.1K",
         "5.9K",
@@ -2148,20 +2208,20 @@
        "+%26.0"
       ],
       [
-       "özdilek bornoz takımı",
-       "1.118",
-       "970",
-       "1.380",
-       "+%42.3",
-       "+%23.4"
-      ],
-      [
        "özdilek nevresim takımı",
        "1.239",
        "1.149",
        "1.501",
        "+%30.6",
        "+%21.1"
+      ],
+      [
+       "özdilek bornoz takımı",
+       "1.118",
+       "970",
+       "1.380",
+       "+%42.3",
+       "+%23.4"
       ],
       [
        "özdilekteyim sipariş takip",
@@ -2477,7 +2537,7 @@
      ],
      "rows": [
       [
-       "/magaza/panini-fifa-dunya-kupasi-2026-ci",
+       "/magaza/panini-fifa-dunya-kupasi-2026-cikartma-albumu-29437",
        "0",
        "-558",
        "-",
@@ -2505,7 +2565,7 @@
        "+0.2"
       ],
       [
-       "/magaza/crocs-kadin-classic-animal-balle",
+       "/magaza/crocs-kadin-classic-animal-ballet-terlik-212478-2ldz-p-14297309",
        "0",
        "-276",
        "-",
@@ -2999,8 +3059,8 @@
    "subtitle": "Mayıs - Ağustos 2026 | aylık | Search Console yapay zeka özellikleri raporu",
    "source": "Google Search Console - ozdilekteyim.com · Generative AI features",
    "grid": [
-    64,
-    36
+    54,
+    46
    ],
    "footnotes": [
     "Rapor, sitenin Google aramadaki yapay zeka özelliklerinde (AI Overview ve AI Mode) aldığı impression'ı gösterir; veri 18 Mayıs 2026'dan itibaren mevcuttur; Mayıs değeri 18-31 Mayıs toplamıdır. Sayfa tablosu 18 Mayıs - 21 Eylül 2026 toplamıdır."
@@ -3010,7 +3070,7 @@
      "type": "combo",
      "col": 0,
      "h": 230,
-     "bar_w": 64,
+     "bar_w": 56,
      "cats": [
       "May'26 (14 gün)",
       "Haz'26",
@@ -3042,7 +3102,7 @@
     {
      "type": "table",
      "col": 1,
-     "first_col_max": 0.74,
+     "first_col_max": 0.8,
      "head": [
       "En çok impression alan sayfa",
       "Impression"
@@ -3053,7 +3113,7 @@
        "27.736"
       ],
       [
-       "/market/inisdibi-premium-maden-suy",
+       "/market/inisdibi-premium-maden-suyu-6x200-ml",
        "7.333"
       ],
       [

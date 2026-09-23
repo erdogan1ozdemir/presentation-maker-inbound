@@ -90,6 +90,10 @@ yeni Game+ dönemi kurulurken kapatılır:
 - Aylık seri slaytlarında tablo altında **MoM ve YoY ayrı ok** notu yok (C45).
 - Sıralama değişimleri tablosunda **arama hacmi kolonu** yok (C47).
 - Yıllık impression karşılaştırmasında **Eylül 2025 şerhi** yok (tuzaklar 3.7).
+- Sayfa değişimleri tablosunda (S13) üç blog adresi 42 karakterde kesilmiş
+  duruyor (`/blog/call-of-duty-oyunlarinin-kronolojik-` gibi). `deck_olustur.py`
+  artık adresi kesmiyor; yeni dönem üretiminde tam adres gelir (tuzaklar,
+  "Tablo hücresindeki adres kırpılmaz").
 - Sayı eki denetimi `15.0'i` ifadesini hata sayıyor (S04); okunuş "on beş"
   olarak doğrudur, yeni dönemde ifade yeniden yazılırken kontrol edilir.
 

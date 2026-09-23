@@ -680,6 +680,11 @@ def heat_cells(b, rows, ncol, dcols):
     return out
 
 
+# Tablo olcum payi: PPTX ve Google Slides ayni metni bir tik genis diziyor;
+# hucre metni genisligin %94'u ile olculur, kolon da ayni payla acilir.
+OLCUM_PAY = 0.94
+
+
 def table_layout(b, w):
     """
     Tablo geometrisini hesaplar: kolon genislikleri, satir yukseklikleri, baslik
@@ -724,7 +729,10 @@ def table_layout(b, w):
                 strong = (ci in delta_m and _delta_kind(val)) or ri in bold_rows_m
                 mx = max(mx, text_w(val, td_pt,
                                     F_DISPLAY if strong else F_BODY, bool(strong)))
-            need.append(mx + pad * 2)
+            # satir yuksekligi olcumu etiket kolonunu OLCUM_PAY ile dar olcuyor;
+            # etiket kolonu ayni payla acilmazsa tam sigan etiket ("özdilekteyim
+            # hacmi") ikinci satira kiriliyor. Sayisal kolonlar sarmaz, pay almaz.
+            need.append((mx / OLCUM_PAY + 4 if ci == 0 else mx) + pad * 2)
         # Ilk kolon (etiket/metrik) artan genisligi tek basina yutmamali: "Yil"
         # gibi kisa bir baslik tablonun yarisini kaplayabiliyordu. Etiket kolonu
         # kendi ihtiyacini alir, tavani tablo genisliginin first_col_max'i kadar;
@@ -756,7 +764,6 @@ def table_layout(b, w):
     # Olcum payi: PPTX ve Google Slides ayni metni bir tik genis diziyor.
     # 1.0 ile olculdugunde tek satir gorunen hucre cizimde iki satira kiriliyor
     # ve satir cizgisiyle ust uste biniyordu (tuzaklar 3.9).
-    OLCUM_PAY = 0.94
 
     def _th_satir(pt_):
         return [len(wrap_lines(plain(str(head[ci])), widths[ci] - pad * 2,
@@ -1347,11 +1354,26 @@ def _eksen_hesapla(series, yan, sirali):
         ax["right"]["hi"] = _sirali_sag_ust(
             [dict(s_, axis=yan[j]) for j, s_ in enumerate(series)], ax)
         ax["right"]["lo"] = 0.0
+    # axis:"own" serileri "scale" adi ortaksa ayni olcegi paylasir: ayni
+    # metrigin iki serisi (iki terimin arama hacmi gibi) ayri bantta ama
+    # birbirine gore dogru buyuklukte cizilir (katalog C04d)
+    grup_deger = {}
+    for s_ in series:
+        if s_.get("axis") == "own" and s_.get("scale"):
+            grup_deger.setdefault(s_["scale"], []).extend(
+                float(v) for v in s_.get("data", []) if v is not None)
     for j, s_ in enumerate(series):
         if s_.get("axis") == "own":
-            vals = [float(v) for v in s_.get("data", []) if v is not None]
+            vals = (grup_deger.get(s_.get("scale")) if s_.get("scale") else None) or \
+                [float(v) for v in s_.get("data", []) if v is not None]
             if vals:
-                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                if s_.get("scale") and not s_.get("invert"):
+                    # eksen etiketi basilmayan bant: yuvarlak basamak gerekmez,
+                    # bant tepe degere gore tam kullanilir
+                    lo, hi = 0.0, max(vals) * float(s_.get("pad", AXIS_PAD))
+                else:
+                    lo, hi = _axis_scale(vals, bool(s_.get("invert")),
+                                         float(s_.get("pad", AXIS_PAD)))
                 # band: serinin grafik yuksekliginde kapladigi dilim (0-1)
                 bd = s_.get("band") or (0.0, 1.0)
                 ax[f"own{j}"] = dict(lo=lo, hi=hi, inv=bool(s_.get("invert")),

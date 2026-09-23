@@ -248,10 +248,17 @@ Notlar:
 
 **C04d Marka arama hacmi ve brand click** (Search Console bölümünde)
 Talep-performans ayrıştırmasının marka tarafı. `combo`: brand click bar
-ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil). Click ile
-hacim aynı düzeydeyse tek eksen; click hacmin çok altındaysa `right_axis:
-"auto"` - serbest ölçekli ikinci eksende click hacmin üstünde görünür
-(tuzaklar 3.12). Birden fazla bar serisi aynı noktada üst üste çizildiği için
+ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil). **Click ve
+arama hacmi iki ayrı metriktir, ayrı ölçekte verilir** - tek eksende click ile
+hacim aynı büyüklükmüş gibi okunur. Düzen (Özdilekteyim Ağustos 2026):
+`axis_labels: false`; click bar `left`, `pad: 1.6`, `labels: "taban"`,
+`bar_w: 50` (en uzun değer "100.6K" barın içine sığmalı); hacim çizgileri
+`axis: "own"`, **`scale: "hacim"`** (terimler ortak ölçekte, birbirine göre
+doğru büyüklükte), `band: [0.55, 0.93]`, `labels: "above"`. Çizgiler barların
+içinden geçmez, click etiketi tabanda, hacim etiketi noktanın üstündedir;
+yakın aylarda alt terimin etiketi noktanın altına, çerçeveli iner. Dipnot:
+"Brand click alt bantta bar, arama hacimleri üst bantta ortak ölçekte
+çizgidir." Birden fazla bar serisi aynı noktada üst üste çizildiği için
 terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
 terimin artıp diğerinin düştüğü durum toplamda kaybolur.
@@ -789,7 +796,7 @@ gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 - `combo` (col `full`, **`axis_labels: false`**): üç metrik üç ayrı bantta.
   Click bar (`left`, `pad: 2.4`, **`labels: "taban"`**) grafiğin alt
   %42'sinde; impression çizgi (`axis: "own"`, `band: [0.46, 0.70]`,
-  `labels: "above"` ya da `"none"`) barların **üstündeki** bantta; ortalama
+  `labels: "above"`) barların **üstündeki** bantta; ortalama
   pozisyon çizgi (`axis: "own"`, `band: [0.76, 0.94]`, `invert: true`,
   `labels: "above"`, `labels_text` tek ondalıklı) en üstte. Impression her ay
   click'ten büyük olduğu için barların altına inmemelidir; sağ eksende
@@ -797,11 +804,10 @@ gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
   impression" okunmuştu (tuzaklar 3.12). Sol eksen basamakları üst bantlara
   uzanıp impression'ı click ölçeğinde okutacağı için eksen etiketi basılmaz;
   değerler etiketlerde ve tabloda. 13 aylık seri, `bar_w: 44`.
-  **Impression etiketi click etiketiyle karışıyorsa** (küçük barlar, çizgi bar
-  gövdesinden geçiyor) impression etiketi **kaldırılır** - değer tabloda
-  durur; click ve sıralama yeterlidir. Etiketsizlik `labels: "none"` ile
-  açıkça yazılır. Grup başına karar verilir (Özdilekteyim Marka + Kategori
-  grafiği etiketsiz impression ile kuruldu).
+  Üç metriğin **üçü de grafikte etiketlidir**; bant düzeni çizgiyi bardan
+  ayırdığı için impression etiketi click etiketiyle karışmaz, gruplar arasında
+  etiket farkı bırakılmaz (Özdilekteyim'de Market grafiğinde etiketli,
+  Marka + Kategori'de etiketsiz impression tutarsız bulundu).
 - Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
 - `insights`: **MoM ve YoY ayrı birer ok** (click, impression ve pozisyon için
@@ -870,7 +876,11 @@ AI Overview ve AI Mode) export'undan kurulur: `Chart.csv` (günlük),
   `May'26 (14 gün)`; gün sayısı export'tan sayılır, elle yazılmaz. Rapor
   ayından sonraki kısmi ay grafiğe konmaz, yalnız insight'ta günlük ortalama
   olarak geçer;
-- sağ: en çok impression alan 8-9 sayfa (`Sayfa | Impression`);
+- sağ: en çok impression alan 8-9 sayfa (`Sayfa | Impression`). **Adres
+  kırpılmaz**: sayfa yolu karakter sınırıyla kesilmez (`[:34]` gibi kesme,
+  "/market/inisdibi-premium-maden-suy" gibi yarım adres üretti). `grid`
+  en uzun yol tek satıra sığacak şekilde açılır (`[54, 46]`, tablo
+  `first_col_max: 0.80`);
 - insight: MoM impression ve günlük ortalama (kısmi ay varsa günlük ortalama
   ile karşılaştırılır), sitenin toplam impression'ına oranı, cihaz payı, öne
   çıkan sayfa türleri.

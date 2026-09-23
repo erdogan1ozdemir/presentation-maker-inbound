@@ -382,10 +382,10 @@ S.append({
     "blocks": [
         dict({"type": "table", "col": 0, "first_col_max": 0.50,
               "head": ["Click artan sayfa", "Haz", "Tem", "Δ"],
-              "rows": [[p[:42], n(h), n(t), f"+{t-h}"] for p, h, t in s_artan]}, **T),
+              "rows": [[p, n(h), n(t), f"+{t-h}"] for p, h, t in s_artan]}, **T),
         dict({"type": "table", "col": 1, "first_col_max": 0.50,
               "head": ["Click azalan sayfa", "Haz", "Tem", "Δ"],
-              "rows": [[p[:42], n(h), n(t), f"{t-h}"] for p, h, t in s_azalan]}, **T),
+              "rows": [[p, n(h), n(t), f"{t-h}"] for p, h, t in s_azalan]}, **T),
         {"type": "insights", "col": "full", "mt": 12, "font_pt": 10.5, "items": [
             "{c:/ubisoft} sayfası {g:+275} click ile en yüksek oransal artışı göstermiştir ({g:+%283.5}); paketler sayfası da {g:+88} click eklemiştir.",
             "En büyük düşüş {c:/gfn/oyunlar/oynamasi-ucretsiz} sayfasındadır ({r:-743}); aynı sayfada pozisyon {r:9.9 → 11.1} gerilemiştir.",

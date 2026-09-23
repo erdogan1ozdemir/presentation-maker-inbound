@@ -277,6 +277,7 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
 | `pad` | Eksen üst payı (varsayılan 1.12; 8.7M → 10M eksen). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
 | `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
+| `scale` | Yalnızca `axis: "own"`: aynı adı taşıyan seriler **ortak ölçeği** paylaşır (iki terimin arama hacmi gibi). Eksen etiketi basılmadığı için ölçek tepe değer × `pad` ile tam kullanılır, yuvarlak basamak aranmaz |
 
 **Eksen basamakları yuvarlaktır.** Eksen 4 adımdır ve adım 1 / 2 / 2.5 / 5 ×
 10^k kümesinden seçilir: 0-50K-100K-150K-200K, %0-%2-%4-%6-%8, pozisyonda
