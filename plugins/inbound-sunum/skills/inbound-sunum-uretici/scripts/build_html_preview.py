@@ -474,6 +474,14 @@ def h_combo(b):
     def cerceveli_mi(i, alt):
         return koyu_slayt or alt < bar_h.get(i, 0.0) - 1
 
+    def _bar_ici(i, bh):
+        alt = bh - LBL_H - 4
+        while alt >= 2:
+            if _bos(i, alt):
+                return alt
+            alt -= 2.0
+        return None
+
     def etiket_html(i, alt, txt, renk, cerceve):
         cls = "cb-ll cb-chip" if cerceve else "cb-ll"
         ic = f"<span>{esc(txt)}</span>" if cerceve else esc(txt)
@@ -521,9 +529,10 @@ def h_combo(b):
                 elif _bos(i, bh + 4):
                     alt = yer_bul(i, bh + 4)
                     yerler.append((i, alt, txt, lc, False))
-                elif bh > 30 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and _bos(i, bh / 2 - 7):
-                    # ustu dolu: barin ortasina beyaz
-                    orta = bh / 2 - 7
+                elif bh > 22 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and \
+                        _bar_ici(i, bh) is not None:
+                    # ustu dolu: barin icinde bos bir yere beyaz (bkz. inbound_deck)
+                    orta = _bar_ici(i, bh)
                     bantlar[i].append((orta, orta + LBL_H))
                     lab = (f'<span class="cb-bl" style="bottom:{orta:.1f}px">{esc(txt)}</span>')
                 else:

@@ -967,8 +967,10 @@ etiketleri sabit konumda basılıyordu; çok serili grafikte sayı çizginin tam
    çizgilerle hiç yarışmaz. Impression ve CTR gibi bar olarak çizilen her
    metrik böyle verilir; tek bir ay sığmıyorsa seri üst yerleşime döner.
    13 aylık seride `bar_w: 44`.
-4b. **Üst yerleşimde sıra:** barın hemen üstü → (doluysa) barın ortasına beyaz
-   (bar 30 px'ten yüksekse ve metin sığıyorsa) → yukarı kayarak ilk boş yer.
+4b. **Üst yerleşimde sıra:** barın hemen üstü → (doluysa) **barın içinde
+   çizgiyle çakışmayan ilk yer**, üstten aşağı taranarak, beyaz metin (bar 22
+   px'ten yüksekse ve metin sığıyorsa) → yukarı kayarak ilk boş yer. Kullanıcı
+   iki ayrı turda yukarı itilmiş bar etiketlerini elle barın içine indirdi.
    Çizgi etiketinde: noktanın hemen üstü → **noktanın hemen altı** → yukarı
    kayarak. Yığma son çaredir: gerçek bir destede yerleştirici dört etiketi
    20-30 px yukarı itmişti ve okuyucu bunları elle geri indirdi. Etiket

@@ -460,6 +460,10 @@ def check_skeleton(spec, rep):
                 for iz in TANIM_IZ)
             and any(b.get("type") == "panels" for b in (s.get("blocks") or []))
             for s in icerik)
+        # Tanim ayri slayt yerine dipnotta da verilebilir (kullanici tercihi):
+        # "Non-Brand = Toplam - Brand" kalibi yeterlidir.
+        if not tanim and re.search(r"non-brand\s*=\s*toplam\s*[-−]\s*brand", metin):
+            tanim = True
         if not tanim:
             rep.warn("YAPI", "segment tanımı",
                      "brand/non-brand ayrımı var ama tanım slaytı yok",
@@ -572,9 +576,16 @@ def check_insight_bicimi(spec, rep):
                              "her bulgu kendi okuyla yazılır; bir ok en fazla "
                              "iki cümle taşır (ikincisi sebep-sonuç)")
         # 13 aylik seri: tablonun altinda MoM ve YoY notu bulunur
-        seri = any(b.get("type") == "combo" and len(b.get("cats") or []) >= 12
-                   for b in bloklar)
-        tablo = any(b.get("type") == "table" for b in bloklar)
+        # Aylik seri slayti: 12+ kategorili grafik VE ayni aylari kolon olarak
+        # tasiyan tablo. Sayfa listesi gibi baska bir tablo seri sayilmaz.
+        cats = set()
+        for b in bloklar:
+            if b.get("type") == "combo" and len(b.get("cats") or []) >= 12:
+                cats |= {plain(str(c)) for c in b["cats"]}
+        seri = bool(cats)
+        tablo = any(b.get("type") == "table" and
+                    len(cats & {plain(str(h)) for h in (b.get("head") or [])}) >= 6
+                    for b in bloklar)
         if not (seri and tablo):
             continue
         basliklar = " ".join(plain(str(x)) for b in bloklar

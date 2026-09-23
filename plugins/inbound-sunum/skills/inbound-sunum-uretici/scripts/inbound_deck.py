@@ -1437,6 +1437,17 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     def cerceveli_mi(i, alt):
         return koyu_slayt or alt < bar_h[i] - 1
 
+    def _bar_ici(i, bh):
+        """Bar govdesinde cizgiyle cakismayan ilk yer (ustten asagi). Kullanici
+        elle duzeltmelerinde etiketi yukari itilmis konumdan barin icine
+        indirmisti - bar ici, kaydirmadan once denenir (tuzaklar 3.9)."""
+        alt = bh - LBL_H - 4
+        while alt >= 2:
+            if _bos(i, alt):
+                return alt
+            alt -= 2.0
+        return None
+
     def etiket_ciz(i, alt, txt, renk, cerceve):
         y_top = plot_bot - alt - LBL_H
         if cerceve:
@@ -1491,10 +1502,12 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             elif _bos(i, bh + 4):
                 alt = yer_bul(i, bh + 4)
                 yerler.append((i, alt, txt, lc, False))
-            elif bh > 30 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and _bos(i, bh / 2 - 7):
-                orta = bh / 2 - 7                       # ustu dolu: barin ortasina beyaz
-                bantlar[i].append((orta, orta + LBL_H))
-                textbox(slide, bx - 8, plot_bot - orta - LBL_H, bw + 16, 14, txt,
+            elif bh > 22 and text_w(txt, PT["micro"], F_BODY) <= bw - 6 and \
+                    _bar_ici(i, bh) is not None:
+                # ustu dolu: barin icinde bos bir yere (ustten asagi taranir) beyaz
+                ic = _bar_ici(i, bh)
+                bantlar[i].append((ic, ic + LBL_H))
+                textbox(slide, bx - 8, plot_bot - ic - LBL_H, bw + 16, 14, txt,
                         pt=PT["micro"], color="white", align="c",
                         line_pct=1.0, wrap=False)
             else:

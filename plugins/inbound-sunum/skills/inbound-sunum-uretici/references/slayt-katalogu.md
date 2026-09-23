@@ -104,7 +104,7 @@ Ayraç 02 Google Search Console Metrikleri: aylık click (C45) · aylık impress
 Ayraç 03 GA4 Trafik (export gelince)
 Ayraç 04 Görünürlük ve Rakipler: rakip visibility Google + AI Overview (C20c)
   · organik Share of Voice (C21) · kategori visibility + hacim (C22)
-Ayraç 05 Yapay Zeka Görünürlüğü (C51 · C51b)
+Ayraç 05 Yapay Zeka Görünürlüğü (C51c · C51 · C51b)
 Ayraç 06 Değerlendirme (C43) · Teşekkürler
 ```
 
@@ -839,6 +839,21 @@ Satırlar cari ay oranına göre sıralı; 10'dan fazla küme iki kolona bölün
 Veri: `inbound-db` `llm_responses` × `prompts.folder_id` × `prompt_folders`,
 ay bazında `brand_mentioned` oranı. Insight: en yüksek üç küme + en çok
 kazanan, ardından %0-5 bandındaki kümeler geliştirme alanı olarak.
+
+**C51c Google arama yapay zeka özelliklerinde impression** (Search Console)
+Search Console'un yapay zeka özellikleri raporu (Generative AI features;
+AI Overview ve AI Mode) export'undan kurulur: `Chart.csv` (günlük),
+`Pages.csv`, `Devices.csv`. Tek slayt, `grid: [64, 36]`:
+- sol: haftalık `combo` bar (`labels: "taban"`), kategori etiketi hafta başı
+  `dd.mm` (15+ hafta için tarih adı sığmaz), yalnız rapor ayına kadar olan
+  tam haftalar;
+- sağ: en çok impression alan 8-9 sayfa (`Sayfa | Impression`);
+- insight: MoM impression ve günlük ortalama (kısmi ay varsa günlük ortalama
+  ile karşılaştırılır), sitenin toplam impression'ına oranı, cihaz payı, öne
+  çıkan sayfa türleri.
+Dipnot: rapor kapsamı, verinin başladığı tarih (rapor Mayıs 2026'dan itibaren
+veri tutar - YoY yazılmaz), sayfa tablosunun dönemi (export dönemi rapor
+ayından farklıysa açıkça). Sığmazsa ikiye bölünür: seyir + sayfa listesi.
 
 **C52 Prompt ve yanıt örnekleri** (2-3 slayt)
 Tablo değil, kart düzeni: `panels` iki kolon, her kartta **prompt** başlıkta

@@ -144,65 +144,6 @@
    ]
   },
   {
-   "type": "content",
-   "breadcrumb": [
-    "GENEL GÖRÜNÜM",
-    "Yöntem"
-   ],
-   "title": "Segment ve Sayfa Grubu Tanımları",
-   "subtitle": "Sorgu segmentleri ve sayfa grupları tüm destede aynı tanımla kullanılmaktadır",
-   "source": "Google Search Console - ozdilekteyim.com",
-   "grid": [
-    100
-   ],
-   "blocks": [
-    {
-     "type": "panels",
-     "col": "full",
-     "cols": 3,
-     "items": [
-      {
-       "title": "Brand",
-       "sub": "doğrudan ölçülür",
-       "lines": [
-        "Query içinde şu ifadeler geçen sorgular:",
-        "\"özdilek\" · \"ozdilek\"",
-        "\"özdilekteyim\" ve marka + ürün sorguları bu kümeye dahildir."
-       ]
-      },
-      {
-       "title": "Non-Brand",
-       "sub": "toplamdan çıkarılır",
-       "lines": [
-        "Toplam eksi brand olarak hesaplanır.",
-        "Query filtresi uygulandığında anonim sorgular sonuç kümesinden düştüğü için bu hacim non-brand satırında yer alır.",
-        "Pozisyon değeri marka ifadeleri dışlanarak ayrıca ölçülür."
-       ]
-      },
-      {
-       "title": "Sayfa grupları",
-       "sub": "URL yapısına göre",
-       "lines": [
-        "Mağaza: /magaza/ altındaki kategori ve ürün sayfaları.",
-        "Market: /market altındaki sayfalar.",
-        "Marka + Kategori: -cp2 ile biten, marka ve kategoriyi birlikte hedefleyen sayfalar."
-       ]
-      }
-     ]
-    },
-    {
-     "type": "insights",
-     "col": "full",
-     "mt": 16,
-     "font_pt": 11,
-     "items": [
-      "Brand ve Non-Brand birbirini tamamlar, toplamları toplam click'i verir. Sayfa grupları sorgu segmentlerinden bağımsızdır; bir sayfa grubu hem brand hem non-brand trafik alabilir.",
-      "Marka + Kategori sayfaları Eylül 2025'ten itibaren yayına alındığı için bu grupta yıllık karşılaştırma yapılmamaktadır."
-     ]
-    }
-   ]
-  },
-  {
    "type": "separator",
    "no": "02",
    "title": "Google Search Console Metrikleri"
@@ -220,7 +161,7 @@
     100
    ],
    "footnotes": [
-    "Toplam satırı Brand ile Non-Brand'in toplamıdır.",
+    "Brand: \"özdilek\" veya \"ozdilek\" geçen sorgular; Non-Brand = Toplam - Brand (anonim sorgular dahil).",
     "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
    ],
    "blocks": [
@@ -849,8 +790,8 @@
      "mt": 8,
      "font_pt": 10,
      "items": [
-      "MoM (Tem'26 → Ağu'26): Ort. pozisyon {g:-0.4} · CTR Toplam {g:+0.1p} · Brand {g:+1.1p} · Non-Brand {g:0.0p}",
-      "YoY (Ağu'25 → Ağu'26): Ort. pozisyon {r:+7.1} · CTR Toplam {g:+0.8p} · Brand {r:-9.7p} · Non-Brand {g:+0.9p}",
+      "MoM (Tem'26 → Ağu'26): Ort. pozisyon {g:-0.4}",
+      "YoY (Ağu'25 → Ağu'26): Ort. pozisyon {r:+7.1}",
       "Toplam CTR {g:%2.9 → %3.7} yükselirken brand CTR {r:%25.8 → %16.1} gerilemiştir; artış non-brand tarafından ({g:%1.6 → %2.5}) gelmektedir."
      ]
     }
@@ -2194,20 +2135,20 @@
        "+%26.0"
       ],
       [
-       "özdilek nevresim takımı",
-       "1.239",
-       "1.149",
-       "1.501",
-       "+%30.6",
-       "+%21.1"
-      ],
-      [
        "özdilek bornoz takımı",
        "1.118",
        "970",
        "1.380",
        "+%42.3",
        "+%23.4"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "1.239",
+       "1.149",
+       "1.501",
+       "+%30.6",
+       "+%21.1"
       ],
       [
        "özdilekteyim sipariş takip",
@@ -2395,20 +2336,20 @@
        "-1.4"
       ],
       [
-       "panini dünya kupası albümü 2026",
-       "1.0K",
-       "0",
-       "-88",
-       "-",
-       "-"
-      ],
-      [
        "tek kişilik pike",
        "4.4K",
        "62",
        "-88",
        "7.3",
        "-0.6"
+      ],
+      [
+       "panini dünya kupası albümü 2026",
+       "1.0K",
+       "0",
+       "-88",
+       "-",
+       "-"
       ]
      ],
      "font_pt": 10.5,
@@ -3039,6 +2980,152 @@
    "type": "content",
    "breadcrumb": [
     "YAPAY ZEKA",
+    "Google Yapay Zeka Özellikleri"
+   ],
+   "title": "Google Arama Yapay Zeka Özelliklerinde Impression",
+   "subtitle": "Mayıs - Ağustos 2026 | haftalık | Search Console yapay zeka özellikleri raporu",
+   "source": "Google Search Console - ozdilekteyim.com · Generative AI features",
+   "grid": [
+    64,
+    36
+   ],
+   "footnotes": [
+    "Rapor, sitenin Google aramadaki yapay zeka özelliklerinde (AI Overview ve AI Mode) aldığı impression'ı gösterir; veri 18 Mayıs 2026'dan itibaren mevcuttur. Grafik etiketleri hafta başı tarihidir. Sayfa tablosu 18 Mayıs - 21 Eylül 2026 toplamıdır."
+   ],
+   "blocks": [
+    {
+     "type": "combo",
+     "col": 0,
+     "h": 230,
+     "bar_w": 22,
+     "cats": [
+      "18.05",
+      "25.05",
+      "01.06",
+      "08.06",
+      "15.06",
+      "22.06",
+      "29.06",
+      "06.07",
+      "13.07",
+      "20.07",
+      "27.07",
+      "03.08",
+      "10.08",
+      "17.08",
+      "24.08"
+     ],
+     "series": [
+      {
+       "kind": "bar",
+       "name": "Haftalık impression",
+       "data": [
+        16818,
+        17028,
+        19330,
+        20028,
+        22337,
+        22154,
+        22755,
+        27016,
+        24837,
+        29503,
+        30360,
+        27080,
+        27512,
+        29193,
+        32154
+       ],
+       "color": "gray_bar",
+       "axis": "left",
+       "labels": "taban",
+       "labels_text": [
+        "16.8K",
+        "17.0K",
+        "19.3K",
+        "20.0K",
+        "22.3K",
+        "22.2K",
+        "22.8K",
+        "27.0K",
+        "24.8K",
+        "29.5K",
+        "30.4K",
+        "27.1K",
+        "27.5K",
+        "29.2K",
+        "32.2K"
+       ]
+      }
+     ]
+    },
+    {
+     "type": "table",
+     "col": 1,
+     "first_col_max": 0.74,
+     "head": [
+      "En çok impression alan sayfa",
+      "Impression"
+     ],
+     "rows": [
+      [
+       "/ (anasayfa)",
+       "27.736"
+      ],
+      [
+       "/market/inisdibi-premium-maden-suy",
+       "7.333"
+      ],
+      [
+       "/magaza/bornoz-2",
+       "5.881"
+      ],
+      [
+       "/magaza/tum-subelerimiz",
+       "4.942"
+      ],
+      [
+       "/magaza/iade-nasil-yapilir",
+       "3.972"
+      ],
+      [
+       "/market/kuzu-eti",
+       "3.669"
+      ],
+      [
+       "/magaza/aninda-indirim-2500-500",
+       "3.573"
+      ],
+      [
+       "/market",
+       "3.304"
+      ],
+      [
+       "/magaza/aninda-indirim-kampanyasi",
+       "2.719"
+      ]
+     ],
+     "font_pt": 9.5,
+     "row_h": 15,
+     "head_h": 20
+    },
+    {
+     "type": "insights",
+     "col": "full",
+     "mt": 8,
+     "font_pt": 10,
+     "items": [
+      "MoM (Tem'26 → Ağu'26): Impression {g:+%6.6} ({b:120.3K → 128.2K}) · günlük ortalama {b:3.881 → 4.136}",
+      "Yapay zeka özelliklerindeki impression Haziran'dan Ağustos'a {g:90.4K → 128.2K} ile artmıştır; Ağustos değeri sitenin toplam impression'ının {b:%2.8}'i büyüklüğündedir. Eylül'ün ilk üç haftasında günlük ortalama {g:5.326} ile artış sürmektedir.",
+      "Impression'ın {b:%80}'i mobildendir. Anasayfanın ardından {c:tüm şubelerimiz}, {c:iade nasıl yapılır} gibi hizmet sayfaları ile {c:bornoz} ve {c:nevresim} kategori sayfaları öne çıkmaktadır; hizmet sorularında yanıtların site sayfalarını kaynak aldığı görülmektedir."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "content",
+   "breadcrumb": [
+    "YAPAY ZEKA",
     "Görünürlük Metrikleri"
    ],
    "title": "Yapay Zeka Yanıtlarında Marka Görünürlüğü",
@@ -3403,7 +3490,7 @@
      "cols": 3,
      "items": [
       {
-       "title": "Marka aramalarında organik tıklama payı",
+       "title": "Brand aramalarda organik tıklama payı",
        "sub": "izleme başlığı",
        "lines": [
         "Brand click yıllık %45.0 geriledi; \"özdilek\" hacmi yatay, \"özdilekteyim\" hacmi %49.5 arttı.",

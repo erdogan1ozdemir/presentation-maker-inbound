@@ -148,34 +148,8 @@ S.append({
     ],
 })
 
-S.append({
-    "type": "content",
-    "breadcrumb": ["GENEL GÖRÜNÜM", "Yöntem"],
-    "title": "Segment ve Sayfa Grubu Tanımları",
-    "subtitle": "Sorgu segmentleri ve sayfa grupları tüm destede aynı tanımla kullanılmaktadır",
-    "source": KAYNAK_GSC,
-    "grid": [100],
-    "blocks": [
-        {"type": "panels", "col": "full", "cols": 3, "items": [
-            {"title": "Brand", "sub": "doğrudan ölçülür",
-             "lines": ["Query içinde şu ifadeler geçen sorgular:",
-                       "\"özdilek\" · \"ozdilek\"",
-                       "\"özdilekteyim\" ve marka + ürün sorguları bu kümeye dahildir."]},
-            {"title": "Non-Brand", "sub": "toplamdan çıkarılır",
-             "lines": ["Toplam eksi brand olarak hesaplanır.",
-                       "Query filtresi uygulandığında anonim sorgular sonuç kümesinden düştüğü için bu hacim non-brand satırında yer alır.",
-                       "Pozisyon değeri marka ifadeleri dışlanarak ayrıca ölçülür."]},
-            {"title": "Sayfa grupları", "sub": "URL yapısına göre",
-             "lines": ["Mağaza: /magaza/ altındaki kategori ve ürün sayfaları.",
-                       "Market: /market altındaki sayfalar.",
-                       "Marka + Kategori: -cp2 ile biten, marka ve kategoriyi birlikte hedefleyen sayfalar."]},
-        ]},
-        {"type": "insights", "col": "full", "mt": 16, "font_pt": 11, "items": [
-            "Brand ve Non-Brand birbirini tamamlar, toplamları toplam click'i verir. Sayfa grupları sorgu segmentlerinden bağımsızdır; bir sayfa grubu hem brand hem non-brand trafik alabilir.",
-            "Marka + Kategori sayfaları Eylül 2025'ten itibaren yayına alındığı için bu grupta yıllık karşılaştırma yapılmamaktadır.",
-        ]},
-    ],
-})
+# Segment tanımları slaytı kullanıcı revizyonuyla çıkarıldı (23.09.2026); tanım
+# click serisi dipnotunda durur.
 
 # ================================================ Google Search Console
 S.append({"type": "separator", "no": "", "title": "Google Search Console Metrikleri"})
@@ -224,7 +198,7 @@ S.append(seg_seri(
     f"Toplam click {{b:{etiket(tepe)}}} döneminde {{b:{k(TOP[tepe]['click'])}}} ile serinin en yüksek seviyesine ulaşmış, "
     f"Şubat 2026'dan itibaren {{b:163-212K}} bandında seyretmiştir. Ağustos'ta {{b:{k(TOP[SIMDI]['click'])}}} ile "
     f"Temmuz'a göre {renk(d('toplam', 'click'))} toparlanmıştır; Nisan'daki brand artışı dışında iki segment benzer eğilim göstermektedir.",
-    "Toplam satırı Brand ile Non-Brand'in toplamıdır."))
+    "Brand: \"özdilek\" veya \"ozdilek\" geçen sorgular; Non-Brand = Toplam - Brand (anonim sorgular dahil)."))
 S.append(seg_seri(
     "impr", "Brand ve Non-Brand Aylık Impression",
     f"Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression "
@@ -263,15 +237,9 @@ S.append({
               "bold_rows": [-1]}, **{**T, "font_pt": 9.5}),
         {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
             f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Ort. pozisyon "
-            f"{renk(sifirla(f'{TOP[ONCEKI]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)} · CTR Toplam "
-            f"{renk(sifirla(f'{TOP[SIMDI]['ctr'] - TOP[ONCEKI]['ctr']:+.1f}') + 'p')} · Brand "
-            f"{renk(sifirla(f'{BR[SIMDI]['ctr'] - BR[ONCEKI]['ctr']:+.1f}') + 'p')} · Non-Brand "
-            f"{renk(sifirla(f'{NB[SIMDI]['ctr'] - NB[ONCEKI]['ctr']:+.1f}') + 'p')}",
+            f"{renk(sifirla(f'{TOP[ONCEKI]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)}",
             f"YoY ({ET_GECEN} → {ET_SIMDI}): Ort. pozisyon "
-            f"{renk(sifirla(f'{TOP[GECEN_YIL]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)} · CTR Toplam "
-            f"{renk(sifirla(f'{TOP[SIMDI]['ctr'] - TOP[GECEN_YIL]['ctr']:+.1f}') + 'p')} · Brand "
-            f"{renk(sifirla(f'{BR[SIMDI]['ctr'] - BR[GECEN_YIL]['ctr']:+.1f}') + 'p')} · Non-Brand "
-            f"{renk(sifirla(f'{NB[SIMDI]['ctr'] - NB[GECEN_YIL]['ctr']:+.1f}') + 'p')}",
+            f"{renk(sifirla(f'{TOP[GECEN_YIL]['poz'] - TOP[SIMDI]['poz']:+.1f}'), ters=True)}",
             f"Toplam CTR {{g:%{TOP[GECEN_YIL]['ctr']:.1f} → %{TOP[SIMDI]['ctr']:.1f}}} yükselirken brand CTR "
             f"{{r:%{BR[GECEN_YIL]['ctr']:.1f} → %{BR[SIMDI]['ctr']:.1f}}} gerilemiştir; artış non-brand tarafından "
             f"({{g:%{NB[GECEN_YIL]['ctr']:.1f} → %{NB[SIMDI]['ctr']:.1f}}}) gelmektedir.",
@@ -703,6 +671,66 @@ rakip = sorted(list(AI["rakip_2026-08"].items()) + [("ozdilekteyim.com", at[0])]
 oz_r = [r[0] for r in rakip].index("ozdilekteyim.com")
 
 S.append({"type": "separator", "no": "", "title": "Yapay Zeka Görünürlüğü"})
+
+# --- Search Console yapay zeka özellikleri (Generative AI features) raporu
+import csv as _csv
+import datetime as _dt
+from collections import defaultdict as _dd
+_GD = BASE / "veri/ham/gsc_genai"
+_gun = [(_dt.date.fromisoformat(r["Date"]), int(r["Impressions"]))
+        for r in _csv.DictReader(open(_GD / "Chart.csv", encoding="utf-8"))]
+_hafta = _dd(int)
+for g, v in _gun:
+    if g <= _dt.date(2026, 8, 30):
+        _hafta[g - _dt.timedelta(days=g.weekday())] += v
+_hk = sorted(_hafta)
+_TRA = {5: "May", 6: "Haz", 7: "Tem", 8: "Ağu", 9: "Eyl"}
+_hcat = [f"{h.day:02d}.{h.month:02d}" for h in _hk]      # hafta başı (pazartesi)
+_ay = _dd(lambda: [0, 0])
+for g, v in _gun:
+    _ay[(g.year, g.month)][0] += v
+    _ay[(g.year, g.month)][1] += 1
+AI_HAZ, AI_TEM, AI_AGU = (_ay[(2026, m)][0] for m in (6, 7, 8))
+AI_ORT = {m: _ay[(2026, m)][0] / _ay[(2026, m)][1] for m in (6, 7, 8, 9)}
+_cih = {r["Device"]: int(r["Impressions"]) for r in _csv.DictReader(open(_GD / "Devices.csv", encoding="utf-8"))}
+AI_MOBIL = _cih["Mobile"] / sum(_cih.values()) * 100
+_sayfa = [(r["Top pages"].replace("https://www.ozdilekteyim.com", "") or "/", int(r["Impressions"]))
+          for r in _csv.DictReader(open(_GD / "Pages.csv", encoding="utf-8"))]
+_sayfa_ad = {"/": "/ (anasayfa)"}
+S.append({
+    "type": "content",
+    "breadcrumb": ["YAPAY ZEKA", "Google Yapay Zeka Özellikleri"],
+    "title": "Google Arama Yapay Zeka Özelliklerinde Impression",
+    "subtitle": "Mayıs - Ağustos 2026 | haftalık | Search Console yapay zeka özellikleri raporu",
+    "source": KAYNAK_GSC + " · Generative AI features",
+    "grid": [64, 36],
+    "footnotes": [
+        "Rapor, sitenin Google aramadaki yapay zeka özelliklerinde (AI Overview ve AI Mode) aldığı impression'ı gösterir; "
+        "veri 18 Mayıs 2026'dan itibaren mevcuttur. Grafik etiketleri hafta başı tarihidir. Sayfa tablosu 18 Mayıs - "
+        "21 Eylül 2026 toplamıdır.",
+    ],
+    "blocks": [
+        {"type": "combo", "col": 0, "h": 230, "bar_w": 22, "cats": _hcat, "series": [
+            {"kind": "bar", "name": "Haftalık impression", "data": [_hafta[h] for h in _hk],
+             "color": "gray_bar", "axis": "left", "labels": "taban",
+             "labels_text": [k(_hafta[h]) for h in _hk]},
+        ]},
+        dict({"type": "table", "col": 1, "first_col_max": 0.74,
+              "head": ["En çok impression alan sayfa", "Impression"],
+              "rows": [[_sayfa_ad.get(u, u)[:34], n(v)] for u, v in _sayfa[:9]]},
+             **{**T, "font_pt": 9.5, "row_h": 15, "head_h": 20}),
+        {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
+            f"MoM (Tem'26 → Ağu'26): Impression {renk(pct(AI_AGU, AI_TEM))} ({{b:{k(AI_TEM)} → {k(AI_AGU)}}}) · "
+            f"günlük ortalama {{b:{AI_ORT[7]:,.0f} → {AI_ORT[8]:,.0f}}}".replace(",", "."),
+            f"Yapay zeka özelliklerindeki impression Haziran'dan Ağustos'a {{g:{k(AI_HAZ)} → {k(AI_AGU)}}} ile artmıştır; "
+            f"Ağustos değeri sitenin toplam impression'ının {{b:%{AI_AGU / TOP[SIMDI]['impr'] * 100:.1f}}}'i büyüklüğündedir. "
+            f"Eylül'ün ilk üç haftasında günlük ortalama {{g:{AI_ORT[9]:,.0f}}} ile artış sürmektedir.".replace(",", "."),
+            f"Impression'ın {{b:%{AI_MOBIL:.0f}}}'i mobildendir. Anasayfanın ardından {{c:tüm şubelerimiz}}, {{c:iade nasıl yapılır}} "
+            f"gibi hizmet sayfaları ile {{c:bornoz}} ve {{c:nevresim}} kategori sayfaları öne çıkmaktadır; hizmet sorularında "
+            f"yanıtların site sayfalarını kaynak aldığı görülmektedir.",
+        ]},
+    ],
+})
 S.append({
     "type": "content",
     "breadcrumb": ["YAPAY ZEKA", "Görünürlük Metrikleri"],
@@ -784,7 +812,7 @@ S.append({
     ],
     "blocks": [
         {"type": "panels", "col": "full", "cols": 3, "items": [
-            {"title": "Marka aramalarında organik tıklama payı", "sub": "izleme başlığı",
+            {"title": "Brand aramalarda organik tıklama payı", "sub": "izleme başlığı",
              "lines": [f"Brand click yıllık %{abs((BR[SIMDI]['click']/BR[GECEN_YIL]['click']-1)*100):.1f} geriledi; \"özdilek\" hacmi yatay, \"özdilekteyim\" hacmi %{(HZ['özdilekteyim'][SIMDI]/HZ['özdilekteyim'][GECEN_YIL]-1)*100:.1f} arttı.",
                        "Pozisyon korunurken CTR %25.8 seviyesinden %16.1 seviyesine indi.",
                        "Marka sorgularında ücretli sonuç ve sonuç sayfası yerleşiminin birlikte incelenmesi değerlendirilebilir."]},
