@@ -24,7 +24,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
-    combo_eksenleri, combo_yanlari,
+    combo_eksenleri, combo_yanlari, nokta_stili,
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
     BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
     COVER_ART_W, COVER_WM, COVER_TITLE_PT, COVER_SUB_PT, COVER_TITLE_Y,
@@ -273,6 +273,19 @@ def h_bar(b):
     return "".join(o)
 
 
+def _nokta_attr(col):
+    """SVG circle dolgu/kenar nitelikleri (bkz. inbound_deck.nokta_stili)."""
+    dolgu, kenar = nokta_stili(col)
+    return (f'fill="#{dolgu}" stroke="#{kenar}" stroke-width="1.25" '
+            f'vector-effect="non-scaling-stroke"' if kenar else f'fill="#{dolgu}"')
+
+
+def _nokta_css(col):
+    dolgu, kenar = nokta_stili(col)
+    return (f"background:#{dolgu};box-shadow:inset 0 0 0 1.25px #{kenar}" if kenar
+            else f"background:#{dolgu}")
+
+
 def h_line(b):
     cats, series = b.get("cats") or [], b.get("series") or []
     if not cats or not series:
@@ -318,7 +331,7 @@ def h_line(b):
                  f'stroke-width="2.25"/>')
         for p_ in pts:
             xx, yy = p_.split(",")
-            o.append(f'<circle cx="{xx}" cy="{yy}" r="3.5" fill="#{col}"/>')
+            o.append(f'<circle cx="{xx}" cy="{yy}" r="3.5" {_nokta_attr(col)}/>')
     o.append("</svg>")
     o.append('<div class="cats">' + "".join(
         f'<span style="width:{100/max(1,n):.4f}%">{esc(c)}</span>' for c in cats)
@@ -344,7 +357,7 @@ def h_combo(b):
         for s_ in series:
             col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
             mark = (f'<i style="background:#{col};height:3px;width:14px;'
-                    f'border-radius:2px"></i><em style="background:#{col}"></em>'
+                    f'border-radius:2px"></i><em style="{_nokta_css(col)}"></em>'
                     if s_.get("kind") == "line"
                     else f'<i style="background:#{col}"></i>')
             chips.append(f'<span>{mark}{esc(s_.get("name",""))}</span>')
@@ -582,7 +595,7 @@ def h_combo(b):
                            f'stroke="#{col}" stroke-width="2.25" '
                            f'vector-effect="non-scaling-stroke"/>' for seg in parca)
                  + "".join(f'<circle cx="{p.split(",")[0]}" cy="{p.split(",")[1]}" '
-                           f'r="4" fill="#{col}"/>' for p in dolu) + "</svg>")
+                           f'r="4" {_nokta_attr(col)}/>' for p in dolu) + "</svg>")
         o += lbl_html
     o.append("</div>")
     o.append('<div class="cats" style="padding:0 %dpx">' % gut

@@ -203,6 +203,13 @@ sistemi görünümü tam kontrol edilemiyor. Bunun yerine düzenlenebilir vektö
   markanın öne çıkması gerekiyorsa `coral`.
 - Çok serili çizgi grafikte polyline + nokta işareti; seri sayısı dörtten fazlaysa
   okunurluk için grafiği bölmek daha iyi.
+- **Koyu renkli çizginin noktası açık gri basılır.** `teal` / `ink` gibi koyu
+  çizgide nokta da koyu olunca `gray_bar` barın üstünde kayboluyordu
+  (Özdilekteyim Non-Brand click). Üretici, parlaklığı düşük çizgi renginde
+  noktayı `#D9D9D9` dolgulu ve çizgi renginde ince kenarlı basar; çizgi rengi
+  değişmez, lejanttaki nokta da aynı biçimdedir. `coral` / `gold` gibi açık
+  çizgilerde nokta çizgiyle aynı renktir. Kural `inbound_deck.nokta_stili`
+  içindedir, deck.json'da ayar gerektirmez.
 - **Aylık metrik grafiği `combo` bloğuyla kurulur:** bir metrik bar (değer barın
   içinde, beyaz), diğeri çizgi (değer noktanın üstünde, seri renginde), iki ayrı
   y ekseni. Ölçekleri farklı metrikleri tek grafikte okunur kılar; çarpanla

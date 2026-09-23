@@ -316,6 +316,37 @@ def plain(s: str) -> str:
 def _no_line(shape):
     shape.line.fill.background()
 
+NOKTA_ACIK = "D9D9D9"   # koyu cizgi serisinin nokta dolgusu (acik gri)
+
+
+def nokta_stili(col_hex):
+    """Cizgi serisinin nokta dolgusu ve kenari: (dolgu, kenar | None).
+
+    Koyu renkli cizgide (Non-Brand teal gibi) nokta da koyu basildiginda koyu
+    barin ustunde kayboluyordu. Koyu cizginin noktasi acik gri dolgulu, cizgi
+    renginde ince kenarli basilir; cizgi rengi degismez (tuzaklar 3.9).
+    Acik renkli cizgilerde (coral, gold) nokta cizgiyle ayni renktir.
+    """
+    h = str(col_hex).lstrip("#")
+    try:
+        r, g, b_ = (int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    except ValueError:
+        return col_hex, None
+    lum = 0.2126 * r + 0.7152 * g + 0.0722 * b_
+    return (NOKTA_ACIK, h) if lum < 0.35 else (h, None)
+
+
+def _nokta_boya(d, col_hex):
+    dolgu, kenar = nokta_stili(col_hex)
+    d.fill.solid()
+    d.fill.fore_color.rgb = RGBColor.from_string(dolgu)
+    if kenar:
+        d.line.color.rgb = RGBColor.from_string(kenar)
+        d.line.width = Pt(1.25)
+    else:
+        _no_line(d)
+
+
 
 def rect(slide, x, y, w, h, fill=None, radius=None, line=None, line_w=1):
     shp_type = MSO_SHAPE.ROUNDED_RECTANGLE if radius else MSO_SHAPE.RECTANGLE
@@ -1162,9 +1193,7 @@ def block_line(slide, b, x, y, w, ctx, idx):
         for (vx, vy) in pts:
             d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 3.5), px(vy - 3.5),
                                        px(7), px(7))
-            d.fill.solid()
-            d.fill.fore_color.rgb = RGBColor.from_string(col)
-            _no_line(d)
+            _nokta_boya(d, col)
             d.shadow.inherit = False
 
     for i, cat in enumerate(cats):
@@ -1445,9 +1474,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 rect(slide, lx, y + 8, 14, 3, fill=col, radius=2)
                 d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(lx + 4.5),
                                            px(y + 5.5), px(8), px(8))
-                d.fill.solid()
-                d.fill.fore_color.rgb = RGBColor.from_string(C.get(col, col))
-                _no_line(d)
+                _nokta_boya(d, C.get(col, col))
                 d.shadow.inherit = False
             else:
                 rect(slide, lx, y + 4, 12, 12, fill=col, radius=3)
@@ -1712,9 +1739,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         for i, vx, vy in [p for p in pts if p]:
             d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(vx - 4), px(vy - 4),
                                        px(8), px(8))
-            d.fill.solid()
-            d.fill.fore_color.rgb = RGBColor.from_string(col)
-            _no_line(d)
+            _nokta_boya(d, col)
             d.shadow.inherit = False
             if s_.get("labels") == "above" or (uc and i in uc):
                 v = float(s_["data"][i] or 0)

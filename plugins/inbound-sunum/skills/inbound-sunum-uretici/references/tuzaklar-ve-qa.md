@@ -997,6 +997,11 @@ akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutl
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
 
+**Koyu çizgi noktası.** Non-Brand (teal) çizgisinin koyu noktaları koyu
+barların üstünde seçilmiyordu. Koyu renkli çizgide nokta açık gri dolgulu ve
+çizgi renginde kenarlı basılır; çizgi rengi değişmez (design-system, grafik
+kuralları).
+
 ### 3.10. Dipnot bandı, sıkı başlık bloğu ve yuvarlak eksen basamakları
 
 **Dipnotlar gövdeden yer yiyordu.** Soluk dipnotlar gövdenin altında
