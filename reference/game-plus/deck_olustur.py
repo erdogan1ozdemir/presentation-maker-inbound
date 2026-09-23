@@ -149,9 +149,9 @@ def seg_seri(metrik, baslik, dipnot, yorum):
                 {"kind": "line", "name": "Non-Brand", "data": [SEG["nonbrand"][y][metrik] for y in AYLAR],
                  "color": "teal", "axis": "left"},
                 {"kind": "line", "name": "GFN", "data": [SEG["gfn"][y][metrik] for y in AYLAR],
-                 "color": "coral", "axis": "right"},
+                 "color": "coral", "axis": "left"},
                 {"kind": "line", "name": "Brand", "data": [SEG["brand"][y][metrik] for y in AYLAR],
-                 "color": "gold", "axis": "right"},
+                 "color": "gold", "axis": "left"},
             ]},
             dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.10, "heat": True,
                   "head": ["Segment"] + ET,
@@ -170,7 +170,7 @@ S.append(seg_seri("click", "Brand, Non-Brand ve GFN Aylık Click",
                   "Toplam click Mart-Mayıs döneminde {b:25-28K} bandına çıkmış, Temmuz'da {b:23.7K} seviyesindedir. "
                   "Seriyi non-brand taşımaktadır; {c:GFN} {r:16.9K → 3.6K} ve {c:Brand} {r:2.2K → 1.5K} ile daralmaktadır."))
 S.append(seg_seri("impr", "Brand, Non-Brand ve GFN Aylık Impression",
-                  "Brand ve GFN ölçekleri Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir.",
+                  "Dört seri aynı eksende çizilmiştir; Brand ve GFN'nin Non-Brand'e göre büyüklüğü grafikte olduğu gibi okunur.",
                   "Toplam impression {g:363.9K → 752.3K} ile iki katından fazla artmıştır; artışın tamamı non-brand tarafındadır. "
                   "{c:Brand} {b:11.8K → 11.6K} ile yatay kalmış, {c:GFN} {r:141.5K → 97.9K} ile daralmıştır."))
 
@@ -191,21 +191,20 @@ S.append({
         "\"game plus\" ve \"geforcenow\" aynı seriyi taşımaktadır; çift sayım oluşmaması adına "
         "her çiftten biri toplama dahil edilmiştir.",
         "Arama hacmi bant halinde döndüğü için değerler belirli basamaklarda kümelenmektedir; "
-        "ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Grafiklerde hacim sol eksende, "
-        "click sağ eksendedir.",
+        "ay bazında değişim yerine dönem uçları karşılaştırılmıştır. Hacim ve click aynı eksendedir.",
     ],
     "blocks": [
         {"type": "combo", "col": 0, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
             {"kind": "bar", "name": "Game+ arama hacmi", "data": [HACIM_B[y] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "Brand click", "data": [SEG["brand"][y]["click"] for y in AYLAR],
-             "color": "gold", "axis": "right"},
+             "color": "gold", "axis": "left"},
         ]},
         {"type": "combo", "col": 1, "h": 142, "bar_w": 14, "cats": ET_KISA, "series": [
             {"kind": "bar", "name": "GFN arama hacmi", "data": [HACIM_G[y] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "GFN click", "data": [SEG["gfn"][y]["click"] for y in AYLAR],
-             "color": "coral", "axis": "right"},
+             "color": "coral", "axis": "left"},
         ]},
         dict({"type": "table", "col": "full", "mt": 12, "first_col_max": 0.13,
               "head": ["Arama hacmi"] + ET,
@@ -465,7 +464,7 @@ S.append({
             {"kind": "bar", "name": "Toplam session", "data": [TOPLAM_S[y] for y in GA_AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "Organik session", "data": [ORGANIK_S[y] for y in GA_AYLAR],
-             "color": "coral", "axis": "right"},
+             "color": "coral", "axis": "left"},
         ]},
         dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.12, "heat": True,
               "head": ["Metrik"] + GA_ET,
@@ -553,7 +552,7 @@ S.append({
             {"kind": "bar", "name": "/blog toplam", "data": [BLOG_S[y] for y in GA_AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "/blog organik", "data": [BLOG_ORG[y] for y in GA_AYLAR],
-             "color": "coral", "axis": "right"},
+             "color": "coral", "axis": "left"},
         ]},
         dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.12, "heat": True,
               "head": ["Metrik"] + GA_ET,

@@ -702,6 +702,133 @@ def check_segmentler(spec, rep):
                                 "anonim seri çizilmez")
 
 
+_BIRIM = [
+    ("poz", re.compile(r"pozisyon|sıra|\bpoz\b", re.I)),
+    ("yuzde", re.compile(r"\bctr\b|oran|pay\b|%", re.I)),
+    ("visibility", re.compile(r"visibility|görünürlük", re.I)),
+    ("impression", re.compile(r"impression|gösterim", re.I)),
+    ("click", re.compile(r"click|tık", re.I)),
+    ("hacim", re.compile(r"hacim|hacmi|volume", re.I)),
+    ("session", re.compile(r"session|oturum", re.I)),
+    ("revenue", re.compile(r"revenue|gelir|ciro", re.I)),
+]
+_SAYIM = {"impression", "click", "hacim", "session", "revenue"}
+
+
+def _birim_bul(metin):
+    return [ad for ad, rx in _BIRIM if rx.search(metin)]
+
+
+def _combo_yukseklik(b):
+    """Serilerin grafikteki kesirli yuksekligi (0-1), inbound_deck.block_combo
+    ile ayni eksen hesabi: {j: [yukseklik | None]}."""
+    from inbound_deck import _axis_scale
+    series = b.get("series") or []
+    ax = {}
+    for side in ("left", "right"):
+        vals, inv, pad = [], False, 1.15
+        for s_ in series:
+            if s_.get("axis", "left") != side:
+                continue
+            vals += [float(v) for v in s_.get("data") or [] if v is not None]
+            inv = inv or bool(s_.get("invert"))
+            pad = max(pad, float(s_.get("pad", 1.15)))
+        if vals:
+            lo, hi = _axis_scale(vals, inv, pad)
+            ax[side] = (lo, hi, inv, (0.0, 1.0))
+    for j, s_ in enumerate(series):
+        if s_.get("axis") == "own":
+            vals = [float(v) for v in s_.get("data") or [] if v is not None]
+            if vals:
+                lo, hi = _axis_scale(vals, bool(s_.get("invert")))
+                bd = s_.get("band") or (0.0, 1.0)
+                ax[f"own{j}"] = (lo, hi, bool(s_.get("invert")), (float(bd[0]), float(bd[1])))
+    out = {}
+    for j, s_ in enumerate(series):
+        side = f"own{j}" if s_.get("axis") == "own" else s_.get("axis", "left")
+        if side not in ax:
+            continue
+        lo, hi, inv, (b0, b1) = ax[side]
+        ys = []
+        for v in s_.get("data") or []:
+            if v is None:
+                ys.append(None)
+                continue
+            f = (float(v) - lo) / max(1e-9, hi - lo)
+            f = 1 - f if inv else f
+            ys.append(b0 + f * (b1 - b0))
+        out[j] = ys
+    return out
+
+
+def check_eksen_birimi(spec, rep):
+    """Ayni birimdeki seriler ayni eksende mi; farkli eksendeki sayim serileri
+    gercek buyukluk sirasini koruyor mu? (tuzaklar 3.12)
+
+    Brand impression sag eksene alininca 0.5M'lik seri 8M'lik Non-Brand'in
+    ustunde cizilmis, grafik "brand daha yuksek" okunmustu. Ayni metrigin
+    segmentleri (Brand / Non-Brand / Toplam) ve ayni birimdeki seriler (click
+    ile arama hacmi gibi iki sayim) tek eksende cizilir. Birim seri adindan,
+    bulunamazsa slayt basligindan okunur; "unit" alani ile acikca verilebilir.
+    """
+    for i, s in enumerate(spec.get("slides") or [], 1):
+        if s.get("type") != "content":
+            continue
+        baslik_birim = _birim_bul(plain(str(s.get("title", ""))))
+        for b in s.get("blocks") or []:
+            if b.get("type") != "combo":
+                continue
+            series = b.get("series") or []
+            birim, eksen = {}, {}
+            for j, ser in enumerate(series):
+                ad = plain(str(ser.get("name", "")))
+                bb = [ser["unit"]] if ser.get("unit") else _birim_bul(ad)
+                if not bb and len(baslik_birim) == 1:
+                    bb = baslik_birim
+                birim[j] = bb[0] if bb else None
+                eksen[j] = f"own{j}" if ser.get("axis") == "own" else ser.get("axis", "left")
+            gruplar = {}
+            for j, u in birim.items():
+                if u:
+                    gruplar.setdefault(u, []).append(j)
+            for u, js in gruplar.items():
+                if len({eksen[j] for j in js}) > 1:
+                    adlar = ", ".join(f"'{series[j].get('name')}' ({eksen[j]})" for j in js)
+                    rep.err(f"S{i:02d}", "aynı birim farklı eksende",
+                            f"{u}: {adlar}",
+                            "aynı birimdeki seriler (segmentler, iki sayım) tek "
+                            "eksende çizilir; ayrı eksen küçük seriyi büyüğün "
+                            "üstünde gösterir (tuzaklar 3.12)")
+            # farkli eksendeki iki sayim serisi: gercekte buyuk olan grafikte
+            # altta kaliyorsa sira ters okunur
+            yk = _combo_yukseklik(b)
+            sayim = [j for j in birim if birim[j] in _SAYIM and j in yk]
+            for a in sayim:
+                for c in sayim:
+                    if a >= c or eksen[a] == eksen[c]:
+                        continue
+                    va, vc = series[a].get("data") or [], series[c].get("data") or []
+                    ciftler = [(x, y, ha, hc) for x, y, ha, hc in zip(va, vc, yk[a], yk[c])
+                               if None not in (x, y, ha, hc)]
+                    if not ciftler:
+                        continue
+                    for buyuk, kucuk, ters in ((a, c, all(x > y for x, y, *_ in ciftler)),
+                                               (c, a, all(y > x for x, y, *_ in ciftler))):
+                        if not ters:
+                            continue
+                        hb = yk[buyuk]
+                        hk = yk[kucuk]
+                        ay = [k for k, (x, y) in enumerate(zip(hb, hk))
+                              if x is not None and y is not None and x < y - 0.02]
+                        if ay:
+                            rep.warn(f"S{i:02d}", "görsel sıra ters",
+                                     f"'{series[buyuk].get('name')}' değerce hep büyük ama "
+                                     f"{len(ay)} ayda '{series[kucuk].get('name')}' altında çiziliyor",
+                                     "ölçekler aynı birimdeyse tek eksene alınır; farklı "
+                                     "metrikse pad/band ile büyük seri üste taşınır "
+                                     "(tuzaklar 3.12)")
+
+
 def check_layout(spec, base, rep):
     here = os.path.dirname(os.path.abspath(__file__))
     assets = os.path.normpath(os.path.join(here, "..", "assets"))
@@ -889,6 +1016,7 @@ def main():
     check_structure(spec, rep)
     check_skeleton(spec, rep)
     check_segmentler(spec, rep)
+    check_eksen_birimi(spec, rep)
     check_insight_bicimi(spec, rep)
     check_baslik_ve_donem(spec, rep)
     if a.pptx:

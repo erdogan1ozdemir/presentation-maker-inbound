@@ -90,3 +90,11 @@ yeni Game+ dönemi kurulurken kapatılır:
 - Aylık seri slaytlarında tablo altında **MoM ve YoY ayrı ok** notu yok (C45).
 - Sıralama değişimleri tablosunda **arama hacmi kolonu** yok (C47).
 - Yıllık impression karşılaştırmasında **Eylül 2025 şerhi** yok (tuzaklar 3.7).
+- Sayı eki denetimi `15.0'i` ifadesini hata sayıyor (S04); okunuş "on beş"
+  olarak doğrudur, yeni dönemde ifade yeniden yazılırken kontrol edilir.
+
+**v1.22.0 ile kapatılan:** segment click/impression serisi, marka ve GFN arama
+hacmi, toplam-organik session ve blog session grafiklerinde küçük seri sağ
+eksendeydi ve büyük serinin üstünde çiziliyordu (tuzaklar 3.12). `deck_olustur.py`
+ve `deck.json`'da bütün bu seriler sol eksene alındı, eksen dipnotları
+güncellendi. Onaylanmış PPTX (`decks/`) Temmuz teslimidir, yeniden üretilmedi.

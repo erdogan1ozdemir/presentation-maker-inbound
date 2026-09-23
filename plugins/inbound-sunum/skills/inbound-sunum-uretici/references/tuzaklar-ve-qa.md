@@ -1022,6 +1022,39 @@ non-brand impression. "Toplam CTR − brand CTR" anlamsız bir sayıdır; aynı
 kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
 (slayt kataloğu C45b).
 
+### 3.12. Eksen seçimi grafikteki büyüklük sırasını bozmamalı
+
+**Gerçek vaka (Özdilekteyim Ağustos 2026).** "Brand ve Non-Brand Aylık
+Impression" grafiğinde Brand çizgisi (0.4-0.6M) ölçek farkı nedeniyle sağ
+eksene alınmıştı. Sağ eksen Brand'e göre açıldığı için çizgi, 8M'lik
+Non-Brand'in üstünde çizildi ve grafik "brand impression daha yüksek" okundu.
+Aynı hata Game+ referans destesinde segment, session ve blog grafiklerinde de
+vardı.
+
+**Kural:**
+1. **Aynı birimdeki seriler tek eksende çizilir.** Bir metriğin segmentleri
+   (Toplam / Brand / Non-Brand / GFN), aynı sayım türünden iki seri (click ve
+   arama hacmi, toplam ve organik session) sağ-sol eksene bölünmez. Küçük seri
+   tabana yakın kalır; bu doğru görüntüdür. Değeri tabloda, payı dipnotta
+   verilir.
+2. **İkinci eksen yalnızca birimi farklı metrik içindir** (CTR - pozisyon,
+   click - impression). Bu durumda da gerçekte büyük olan seri grafikte
+   küçüğün altına inmemelidir. Click bar + impression çizgisinde impression
+   barların üstündeki bantta (`axis: "own"`, `band`) çizilir, sol eksen
+   basamakları üst bantları yanlış ölçekle okutacağı için `axis_labels: false`
+   verilir ve değerler etiketlerle taşınır (katalog C54).
+3. **Bar tabanı etiketi çizgi noktasıyla çakışmaz.** Aynı eksende tabana yakın
+   geçen küçük seri, `labels: "taban"` etiketinin içinden geçiyordu. Üretici
+   taban etiketini o ayın çizgi noktasının üstüne, bar içinde kalacak şekilde
+   kaydırır; bar içine sığmayan ay varsa seri üst yerleşime döner.
+
+**Denetim (`qa_deck.py`):** serinin birimi adından (`click`, `impression`,
+`hacim/hacmi`, `session`, `CTR/oran`, `pozisyon`), bulunamazsa slayt
+başlığından okunur; `unit` alanıyla açıkça verilebilir.
+- Aynı birimdeki seriler farklı eksendeyse **HATA** (aynı birim farklı eksende).
+- Farklı eksendeki iki sayım serisinde değerce her ay büyük olan seri bir ayda
+  bile küçüğün altında çiziliyorsa **UYARI** (görsel sıra ters).
+
 ### 3.11. KPI etiketi büyük harf ve Türkçe yazım
 
 **KPI kart etiketi büyük harfe çevrilmez.** Üretici etiketi `.upper()` ile

@@ -193,7 +193,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
                 {"kind": "line", "name": "Non-Brand", "data": [NB[y][metrik] for y in AYLAR],
                  "color": "teal", "axis": "left"},
                 {"kind": "line", "name": "Brand", "data": [BR[y][metrik] for y in AYLAR],
-                 "color": "coral", "axis": "left" if metrik == "click" else "right"},
+                 "color": "coral", "axis": "left"},
             ]},
             dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.10, "heat": True,
                   "head": ["Segment"] + ET,
@@ -219,7 +219,7 @@ S.append(seg_seri(
     "impr", "Brand ve Non-Brand Aylık Impression",
     f"Yıllık impression kaybının tamamına yakını non-brand tarafındadır; brand impression "
     f"{{b:{k(BR[GECEN_YIL]['impr'])} → {k(BR[SIMDI]['impr'])}}} ile dar bir aralıkta kalmıştır.",
-    "Brand ölçeği grafikte sağ eksendedir. " + DIPNOT_NUM))
+    "Üç seri aynı eksende çizilmiştir; brand impression aylık toplamın %5-9'u bandındadır. " + DIPNOT_NUM))
 
 # --- siralama ve CTR serisi: pozisyon toplam, CTR segment bazinda (click / impression)
 S.append({
@@ -335,16 +335,16 @@ S.append({
     "grid": [100],
     "footnotes": [
         "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır "
-        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir.",
+        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır.",
     ],
     "blocks": [
         {"type": "combo", "col": "full", "h": 170, "bar_w": 26, "cats": ET, "series": [
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
              "color": "gray_bar", "axis": "left"},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
-             "color": "teal", "axis": "right"},
+             "color": "teal", "axis": "left"},
             {"kind": "line", "name": "\"özdilekteyim\" arama hacmi", "data": [OZT[y] for y in AYLAR],
-             "color": "coral", "axis": "right"},
+             "color": "coral", "axis": "left"},
         ]},
         dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.15,
               "head": ["Metrik"] + ET,
@@ -387,19 +387,24 @@ def grup_slayt(g, yorum, impr_etiket="above"):
         "grid": [100],
         "footnotes": [
             f"{ad}: {tanim}",
-            "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir "
-            "(yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
+            "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi "
+            "ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
         "blocks": [
-            {"type": "combo", "col": "full", "h": 200, "bar_w": 44, "cats": ET, "series": [
+            # uc metrik ayri bantlarda: sol eksen basamaklari ust bantlara uzanip
+            # impression'i click olceginde okutacagi icin eksen etiketi basilmaz,
+            # degerler etiketlerde ve tabloda (tuzaklar 3.12)
+            {"type": "combo", "col": "full", "h": 200, "bar_w": 44, "cats": ET, "axis_labels": False, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "pad": 1.8, "labels": "taban",
+                 "color": "gray_bar", "axis": "left", "pad": 2.4, "labels": "taban",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},
+                # impression click'ten her ay buyuktur: barlarin ustundeki bantta
+                # cizilir ki grafik "click > impression" okunmasin (tuzaklar 3.12)
                 {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
-                 "color": "teal", "axis": "right", "pad": 1.8, "labels": impr_etiket,
+                 "color": "teal", "axis": "own", "band": [0.46, 0.70], "labels": impr_etiket,
                  "labels_text": [k(a[y]["impr"]) for y in AYLAR]},
                 {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in AYLAR],
-                 "color": "coral", "axis": "own", "band": [0.56, 0.80], "invert": True, "fmt": "pos", "labels": "above",
+                 "color": "coral", "axis": "own", "band": [0.76, 0.94], "invert": True, "fmt": "pos", "labels": "above",
                  "labels_text": [f"{a[y]['poz']:.1f}" for y in AYLAR]},
             ]},
             dict({"type": "table", "col": "full", "mt": 8, "first_col_max": 0.11, "heat": True,
@@ -432,7 +437,7 @@ S.append(grup_slayt("market", [
     f"Click Nisan 2026'dan bu yana {{b:9-10K}} bandındadır; ortalama pozisyon Ekim-Kasım 2025'teki {{b:7.2-7.4}} "
     f"seviyesinden {{r:{MK[SIMDI]['poz']:.1f}}} seviyesine gerilemiştir.",
 ]))
-S.append(grup_slayt("cp2", impr_etiket=None, yorum=[
+S.append(grup_slayt("cp2", impr_etiket="none", yorum=[
     f"Impression Eylül 2025'ten bu yana her ay artmıştır; click Nisan 2026'da {{b:{k(CP[202604]['click'])}}} ile zirve "
     f"yapmış, ortalama pozisyon {{b:7.3-8.4}} bandında kalmıştır.",
 ]))

@@ -372,7 +372,7 @@
     100
    ],
    "footnotes": [
-    "Brand ölçeği grafikte sağ eksendedir. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.",
+    "Üç seri aynı eksende çizilmiştir; brand impression aylık toplamın %5-9'u bandındadır. Eylül 2025'te Google sonuç sayfası sorgularında yapılan değişiklikten sonra ilk 20 sıranın dışındaki sonuçların impression'ları Search Console raporlarına daha sınırlı yansımaktadır; bu nedenle yıllık impression ve ortalama pozisyon karşılaştırması bu değişiklikle birlikte okunmalıdır.",
     "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
    ],
    "blocks": [
@@ -474,7 +474,7 @@
         391704
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -1020,7 +1020,7 @@
     100
    ],
    "footnotes": [
-    "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Click sol, hacimler sağ eksendedir."
+    "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır."
    ],
    "blocks": [
     {
@@ -1084,7 +1084,7 @@
         165000
        ],
        "color": "teal",
-       "axis": "right"
+       "axis": "left"
       },
       {
        "kind": "line",
@@ -1105,7 +1105,7 @@
         74000
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -1227,7 +1227,7 @@
    ],
    "footnotes": [
     "Mağaza: /magaza/ altındaki kategori ve ürün sayfaları. Grup Marka + Kategori sayfalarını da kapsamaktadır.",
-    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+    "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
    ],
    "blocks": [
     {
@@ -1250,6 +1250,7 @@
       "Tem'26",
       "Ağu'26"
      ],
+     "axis_labels": false,
      "series": [
       {
        "kind": "bar",
@@ -1271,7 +1272,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.8,
+       "pad": 2.4,
        "labels": "taban",
        "labels_text": [
         "69.9K",
@@ -1308,8 +1309,11 @@
         3104903
        ],
        "color": "teal",
-       "axis": "right",
-       "pad": 1.8,
+       "axis": "own",
+       "band": [
+        0.46,
+        0.7
+       ],
        "labels": "above",
        "labels_text": [
         "4.22M",
@@ -1348,8 +1352,8 @@
        "color": "coral",
        "axis": "own",
        "band": [
-        0.56,
-        0.8
+        0.76,
+        0.94
        ],
        "invert": true,
        "fmt": "pos",
@@ -1494,7 +1498,7 @@
    ],
    "footnotes": [
     "Market: /market altındaki sayfalar.",
-    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+    "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
    ],
    "blocks": [
     {
@@ -1517,6 +1521,7 @@
       "Tem'26",
       "Ağu'26"
      ],
+     "axis_labels": false,
      "series": [
       {
        "kind": "bar",
@@ -1538,7 +1543,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.8,
+       "pad": 2.4,
        "labels": "taban",
        "labels_text": [
         "17.0K",
@@ -1575,8 +1580,11 @@
         1049483
        ],
        "color": "teal",
-       "axis": "right",
-       "pad": 1.8,
+       "axis": "own",
+       "band": [
+        0.46,
+        0.7
+       ],
        "labels": "above",
        "labels_text": [
         "2.23M",
@@ -1615,8 +1623,8 @@
        "color": "coral",
        "axis": "own",
        "band": [
-        0.56,
-        0.8
+        0.76,
+        0.94
        ],
        "invert": true,
        "fmt": "pos",
@@ -1761,7 +1769,7 @@
    ],
    "footnotes": [
     "Marka + Kategori: -cp2 ile biten, marka ve kategoriyi birlikte hedefleyen sayfalar. Eylül 2025'te yayına alındığı için yıllık değişim yerine \"yeni\" yazılmıştır.",
-    "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
+    "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur."
    ],
    "blocks": [
     {
@@ -1784,6 +1792,7 @@
       "Tem'26",
       "Ağu'26"
      ],
+     "axis_labels": false,
      "series": [
       {
        "kind": "bar",
@@ -1805,7 +1814,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.8,
+       "pad": 2.4,
        "labels": "taban",
        "labels_text": [
         "13",
@@ -1842,9 +1851,12 @@
         429525
        ],
        "color": "teal",
-       "axis": "right",
-       "pad": 1.8,
-       "labels": null,
+       "axis": "own",
+       "band": [
+        0.46,
+        0.7
+       ],
+       "labels": "none",
        "labels_text": [
         "1.1K",
         "5.9K",
@@ -1882,8 +1894,8 @@
        "color": "coral",
        "axis": "own",
        "band": [
-        0.56,
-        0.8
+        0.76,
+        0.94
        ],
        "invert": true,
        "fmt": "pos",

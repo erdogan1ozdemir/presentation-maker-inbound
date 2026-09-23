@@ -267,9 +267,10 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | Alan | Açıklama |
 |---|---|
 | `kind` | `bar` veya `line` |
-| `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için) |
+| `axis` | `left` / `right` - her eksen kendi ölçeğini alır. `own`: seri kendi ölçeğiyle çizilir, eksen etiketi basılmaz (üçüncü metrik için). **Aynı birimdeki seriler (bir metriğin segmentleri, click ile arama hacmi, toplam ve organik session) tek eksende çizilir** - ayrı eksen küçük seriyi büyüğün üstünde gösterir, `qa_deck` hata verir (tuzaklar 3.12). İkinci eksen yalnızca birimi farklı metrik içindir (CTR - pozisyon, click - impression) |
+| `unit` | Opsiyonel: serinin birimi (`click`, `impression`, `hacim`, `session`, `yuzde`, `poz`). Verilmezse seri adından, bulunamazsa slayt başlığından okunur; eksen denetimi bunu kullanır |
 | `fmt` | `M` · `K` · `pct` · `pos` · `auto` - eksen etiketi biçimi |
-| `labels` | Bar: `taban` **(varsayılan tercih)** - barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner. `above` barın üstü (doluysa barın ortası, sonra kaydırma). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). Vermezsen etiket basılmaz |
+| `labels` | Bar: `taban` **(varsayılan tercih)** - barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner. `above` barın üstü (doluysa barın ortası, sonra kaydırma). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). `none`: bilinçli etiketsiz (değer tabloda) - `own` eksende uyarı üretmez. Vermezsen etiket basılmaz. `taban` etiketi aynı ayın çizgi noktasına denk gelirse noktanın üstüne, bar içinde kalacak şekilde kaydırılır |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
 | `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |

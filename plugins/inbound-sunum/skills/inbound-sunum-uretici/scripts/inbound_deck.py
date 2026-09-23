@@ -1337,7 +1337,8 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' "
                      f"gecersiz axis degeri tasiyor: '{a}' - 'left', 'right' veya "
                      f"'own' olmali. Seri cizilmeyecek.")
-        if a == "own" and s_.get("labels") != "above":
+        # labels:"none" bilincli tercihtir (degerler alttaki tabloda); uyari yok
+        if a == "own" and s_.get("labels") not in ("above", "uclar", "none"):
             ctx.warn(f"GRAFIK S{idx}: 'combo' serisi '{s_.get('name', '?')}' kendi "
                      f"olcegiyle (axis:'own') ciziliyor ama deger etiketi yok - "
                      f"eksen etiketi basilmadigi icin labels:'above' verilmeli.")
@@ -1470,6 +1471,17 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             alt -= 2.0
         return None
 
+    def _taban_yeri(i, bh):
+        """labels:"taban" icin barin tabanindan yukari ilk bos yer. Ayni
+        eksendeki kucuk bir seri (Brand cizgisi gibi) tabana yakin gecerse etiket
+        cizginin ustune alinir; barin disina tasiyorsa None (tuzaklar 3.9)."""
+        alt = 6.0
+        while alt + LBL_H <= bh - 2:
+            if _bos(i, alt):
+                return alt
+            alt += 2.0
+        return None
+
     def etiket_ciz(i, alt, txt, renk, cerceve):
         y_top = plot_bot - alt - LBL_H
         if cerceve:
@@ -1503,7 +1515,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             return lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
 
         taban_ok = s_.get("labels") == "taban" and all(
-            max(1.0, plot_bot - ypos(side, float(v or 0))) > 24 and
+            _taban_yeri(i, max(1.0, plot_bot - ypos(side, float(v or 0)))) is not None and
             text_w(_txt(i, v), PT["micro"], F_BODY) <= bw - 6
             for i, v in enumerate(s_["data"][:n]))
         yerler = []
@@ -1517,10 +1529,11 @@ def block_combo(slide, b, x, y, w, ctx, idx):
                 continue
             txt = _txt(i, v)
             if taban_ok:
-                textbox(slide, bx - 8, plot_bot - 20, bw + 16, 14, txt,
+                ta = _taban_yeri(i, bh)
+                textbox(slide, bx - 8, plot_bot - ta - LBL_H, bw + 16, 14, txt,
                         pt=PT["micro"], color="white", align="c",
                         line_pct=1.0, wrap=False)
-                bantlar[i].append((0.0, 18.0))
+                bantlar[i].append((ta, ta + LBL_H))
             elif _bos(i, bh + 4):
                 alt = yer_bul(i, bh + 4)
                 yerler.append((i, alt, txt, lc, False))

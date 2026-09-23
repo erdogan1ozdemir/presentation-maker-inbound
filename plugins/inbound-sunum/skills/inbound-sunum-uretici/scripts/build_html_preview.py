@@ -482,6 +482,17 @@ def h_combo(b):
             alt -= 2.0
         return None
 
+    def _taban_yeri(i, bh):
+        """labels:"taban" icin barin tabanindan yukari ilk bos yer. Ayni
+        eksendeki kucuk bir seri (Brand cizgisi gibi) tabana yakin gecerse etiket
+        cizginin ustune alinir; barin disina tasiyorsa None (bkz. inbound_deck)."""
+        alt = 6.0
+        while alt + LBL_H <= bh - 2:
+            if _bos(i, alt):
+                return alt
+            alt += 2.0
+        return None
+
     def etiket_html(i, alt, txt, renk, cerceve):
         cls = "cb-ll cb-chip" if cerceve else "cb-ll"
         ic = f"<span>{esc(txt)}</span>" if cerceve else esc(txt)
@@ -511,7 +522,7 @@ def h_combo(b):
         taban_ok = False
         if s_.get("labels") == "taban":
             taban_ok = all(
-                max(1.0, ypos(side, float(v or 0))) > 24 and
+                _taban_yeri(i, max(1.0, ypos(side, float(v or 0)))) is not None and
                 text_w(lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"]),
                        PT["micro"], F_BODY) <= bw - 6
                 for i, v in enumerate(s_["data"][:n]))
@@ -524,8 +535,9 @@ def h_combo(b):
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
                 lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
                 if taban_ok:
-                    lab = f'<span class="cb-bl">{esc(txt)}</span>'
-                    bantlar[i].append((0.0, 18.0))
+                    ta = _taban_yeri(i, bh)
+                    lab = f'<span class="cb-bl" style="bottom:{ta:.1f}px">{esc(txt)}</span>'
+                    bantlar[i].append((ta, ta + LBL_H))
                 elif _bos(i, bh + 4):
                     alt = yer_bul(i, bh + 4)
                     yerler.append((i, alt, txt, lc, False))

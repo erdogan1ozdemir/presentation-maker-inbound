@@ -248,8 +248,9 @@ Notlar:
 
 **C04d Marka arama hacmi ve brand click** (Search Console bölümünde)
 Talep-performans ayrıştırmasının marka tarafı. `combo`: brand click bar
-sol eksende, her marka terimi **ayrı çizgi serisi** (toplam tek seri değil)
-sağ eksende - birden fazla bar serisi aynı noktada üst üste çizildiği için
+ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil), **hepsi aynı
+eksende** - click ve arama hacmi iki sayımdır, ayrı eksende click hacmin üstünde
+görünür (tuzaklar 3.12). Birden fazla bar serisi aynı noktada üst üste çizildiği için
 terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
 terimin artıp diğerinin düştüğü durum toplamda kaybolur.
@@ -689,8 +690,12 @@ filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzde
 "toplam eksi brand" yöntemi anonim hacmi non-brand'e taşır.
 
 **C45 Segment aylık serisi** (click ve impression için birer slayt)
-`combo`: Toplam bar (gri) + Non-Brand çizgi (sol eksen), GFN ve Brand çizgi (sağ
-eksen - ölçek farkı nedeniyle). Altında `heat: true` segment × ay matrisi
+`combo`: Toplam bar (gri) + segment çizgileri (Non-Brand, Brand, varsa GFN),
+**hepsi sol eksende**. Küçük segment sağ eksene alınmaz: Özdilekteyim'de
+0.5M'lik Brand impression sağ eksende 8M'lik Non-Brand'in üstünde çizilmiş,
+grafik "brand daha yüksek" okunmuştu (tuzaklar 3.12). Küçük segment tabana
+yakın düz çizgi olarak kalır; değeri tabloda okunur, dipnotta payı yazılır
+("brand impression aylık toplamın %5-9'u bandındadır"). Altında `heat: true` segment × ay matrisi
 (`first_col_max: 0.10`), son satır Toplam ve `bold_rows: [-1]`.
 Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okunuşu.
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
@@ -774,16 +779,22 @@ karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
 URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
 gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 üç metriği birlikte taşır:
-- `combo` (col `full`): click bar (`left`, `pad: 1.8`, **`labels: "taban"`**
-  - değer barın tabanında beyaz), impression çizgi (`right`, `pad: 1.8`,
-  `labels: "above"` ya da etiketsiz), ortalama pozisyon çizgi (`axis: "own"`,
-  `band: [0.56, 0.80]`, `invert: true`, `labels: "above"`, `labels_text` tek
-  ondalıklı). `pad` bar ve impression'ı grafiğin alt yarısında tutar, `band`
-  pozisyon çizgisini üstte ayrı bir şeride alır. 13 aylık seri, `bar_w: 44`.
+- `combo` (col `full`, **`axis_labels: false`**): üç metrik üç ayrı bantta.
+  Click bar (`left`, `pad: 2.4`, **`labels: "taban"`**) grafiğin alt
+  %42'sinde; impression çizgi (`axis: "own"`, `band: [0.46, 0.70]`,
+  `labels: "above"` ya da `"none"`) barların **üstündeki** bantta; ortalama
+  pozisyon çizgi (`axis: "own"`, `band: [0.76, 0.94]`, `invert: true`,
+  `labels: "above"`, `labels_text` tek ondalıklı) en üstte. Impression her ay
+  click'ten büyük olduğu için barların altına inmemelidir; sağ eksende
+  `pad` ile çizildiğinde bazı aylarda click barının altında kalmış ve "click >
+  impression" okunmuştu (tuzaklar 3.12). Sol eksen basamakları üst bantlara
+  uzanıp impression'ı click ölçeğinde okutacağı için eksen etiketi basılmaz;
+  değerler etiketlerde ve tabloda. 13 aylık seri, `bar_w: 44`.
   **Impression etiketi click etiketiyle karışıyorsa** (küçük barlar, çizgi bar
   gövdesinden geçiyor) impression etiketi **kaldırılır** - değer tabloda
-  durur; click ve sıralama yeterlidir. Grup başına karar verilir (Özdilekteyim
-  Marka + Kategori grafiği etiketsiz impression ile kuruldu).
+  durur; click ve sıralama yeterlidir. Etiketsizlik `labels: "none"` ile
+  açıkça yazılır. Grup başına karar verilir (Özdilekteyim Marka + Kategori
+  grafiği etiketsiz impression ile kuruldu).
 - Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
 - `insights`: **MoM ve YoY ayrı birer ok** (click, impression ve pozisyon için
@@ -792,7 +803,7 @@ gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 Dipnot: grubun URL tanımı (regex birebir), gruplar arası kapsama ilişkisi
 (ör. "Mağaza grubu Marka + Kategori sayfalarını da kapsar"), yeni açılan
 grupta YoY yerine `yeni`, pozisyon çizgisinin ters eksenli ve kendi
-ölçeğinde olduğu.
+ölçeğinde olduğu ve impression'ın barların üstündeki bantta çizildiği.
 
 **C48 Haftalık geçiş grafiği** (SSR / migrasyon slaytının yanına)
 `combo`, ISO hafta bazında click bar + pozisyon çizgi; geçiş haftası renk

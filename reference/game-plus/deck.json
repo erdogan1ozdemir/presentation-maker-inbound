@@ -314,7 +314,7 @@
         3557
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       },
       {
        "kind": "line",
@@ -335,7 +335,7 @@
         1507
        ],
        "color": "gold",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -458,7 +458,7 @@
     100
    ],
    "footnotes": [
-    "Brand ve GFN ölçekleri Non-Brand'in yanında küçük kaldığı için grafikte sağ eksende verilmiştir.",
+    "Dört seri aynı eksende çizilmiştir; Brand ve GFN'nin Non-Brand'e göre büyüklüğü grafikte olduğu gibi okunur.",
     "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."
    ],
    "blocks": [
@@ -544,7 +544,7 @@
         97890
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       },
       {
        "kind": "line",
@@ -565,7 +565,7 @@
         11615
        ],
        "color": "gold",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -690,7 +690,7 @@
    ],
    "footnotes": [
     "Terim kümesi Search Console segmentleriyle aynıdır: brand \"gameplus\" · \"game+\", GFN \"geforce now\" · \"gfn\". \"game plus\" ve \"geforcenow\" yakın varyant olarak aynı seriyi taşıdığından toplama dahil edilmemiştir.",
-    "Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır; hacim sol, click sağ eksendedir."
+    "Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır; hacim ve click aynı eksendedir."
    ],
    "blocks": [
     {
@@ -754,7 +754,7 @@
         1507
        ],
        "color": "gold",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -819,7 +819,7 @@
         3557
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -1907,7 +1907,7 @@
         37749
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
@@ -2230,7 +2230,7 @@
         12843
        ],
        "color": "coral",
-       "axis": "right"
+       "axis": "left"
       }
      ]
     },
