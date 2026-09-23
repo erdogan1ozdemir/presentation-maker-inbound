@@ -454,7 +454,7 @@ MG, MK, CP = SEG["magaza"], SEG["market"], SEG["cp2"]
 # GSC bolumunun ilk slaydi: sitenin toplam click, impression ve ortalama pozisyonu
 S.insert(GSC_AYRAC + 1, grup_slayt(
     "toplam", baslik="Toplam Click, Impression ve Ortalama Pozisyon", kirilim="Genel Performans",
-    kaynak=KAYNAK_GSC, h=172,
+    kaynak=KAYNAK_GSC, h=200,
     ilk_not="Eylül 2025'teki sonuç sayfası değişikliğinden sonra ilk 20 sıra dışındaki impression'lar raporlara "
             "sınırlı yansımaktadır; yıllık impression ve pozisyon kıyası bu değişiklikle birlikte okunmalıdır.",
     yorum=[

@@ -1217,7 +1217,7 @@ def block_line(slide, b, x, y, w, ctx, idx):
 # ----------------------------------------------------------------------------
 
 CB_GUTTER = 54          # eksen etiketi icin sol/sag bosluk
-CB_LEGEND_H = 22
+CB_LEGEND_H = 30   # lejant + grafik alanina bosluk (etiketler lejanta yaslanmasin)
 CB_CAT_H = 20
 CB_VAL_H = 16           # bar ustundeki deger etiketi bandi
 CB_BAR_LEGEND_H = 20    # bar bloğundaki legend satiri
@@ -1415,6 +1415,32 @@ def combo_yanlari(b):
     return yan, False
 
 
+def bant_tavani(b, ax, plot_h, lbl_h=14.0):
+    """Ustte etiketli cizginin en yuksek noktasi, ustune etiket sigacak yerde
+    kalir: nokta ile grafik alaninin tepesi arasinda lbl_h + 6 px bulunur.
+    Asiyorsa bant, sekli bozulmadan (yuksekligi korunarak) asim kadar asagi
+    kaydirilir. Bant tavana dayandiginda etiket noktanin altina iniyor, alttaki
+    serinin etiketleriyle ust uste biniyordu (tuzaklar 3.9). Yerinde gunceller."""
+    yan = combo_yanlari(b)[0]
+    sinir = 1.0 - (lbl_h + 6.0) / max(plot_h, 1.0)
+    for j, s_ in enumerate(b.get("series") or []):
+        k = yan.get(j, "")
+        if not k.startswith("own") or k not in ax:
+            continue
+        if s_.get("labels") not in ("above", "uclar"):
+            continue
+        a = ax[k]
+        vals = [v for v in s_.get("data") or [] if v is not None]
+        if not vals:
+            continue
+        tepe = max(_eksen_frac(a, v) for v in vals)
+        asim = tepe - sinir
+        if asim > 0:
+            b0, b1 = a["band"]
+            kay = min(asim, b0)
+            a["band"] = (b0 - kay, b1 - kay)
+
+
 def combo_eksenleri(b):
     """combo blogunun eksenleri: {"left"|"right"|"own<j>": dict(lo, hi, inv,
     fmt, band)}. PPTX uretici, HTML onizleme ve qa_deck ayni hesabi kullanir.
@@ -1494,7 +1520,8 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             col = s_.get("color", "gray_bar")
             if s_.get("kind") == "line":
                 rect(slide, lx, y + 8, 14, 3, fill=col, radius=2)
-                d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(lx + 4.5),
+                # nokta cizgi parcasinin tam ortasinda (cizgi lx..lx+14, orta lx+7)
+                d = slide.shapes.add_shape(MSO_SHAPE.OVAL, px(lx + 3),
                                            px(y + 5.5), px(8), px(8))
                 _nokta_boya(d, C.get(col, col))
                 d.shadow.inherit = False
@@ -1534,6 +1561,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
 
     # eksen araliklari (combo_eksenleri: HTML ve qa_deck ile ortak)
     ax = combo_eksenleri(b)
+    bant_tavani(b, ax, plot_h)
 
     _yan = combo_yanlari(b)[0]
 
@@ -1602,7 +1630,13 @@ def block_combo(slide, b, x, y, w, ctx, idx):
     def _cakisir(alt, ust, listede):
         return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
 
+    # Tavan: etiket grafik alaninin ustunu gecmez; gecerse lejanta yaslanip
+    # onunla karisiyordu (tuzaklar 3.9). Tavani asan yer bos sayilmaz.
+    TAVAN = plot_h + 2
+
     def _bos(i, alt):
+        if alt + LBL_H > TAVAN:
+            return False
         return not (_cakisir(alt, alt + LBL_H, engel[i]) or
                     _cakisir(alt, alt + LBL_H, bantlar[i]))
 
@@ -1615,10 +1649,17 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         if alt_secenek is not None and alt_secenek >= 0 and _bos(i, alt_secenek):
             bantlar[i].append((alt_secenek, alt_secenek + LBL_H))
             return alt_secenek
-        adim = 0
+        ilk, adim = alt, 0
         while not _bos(i, alt) and adim < 60:
             alt += 2.0
             adim += 1
+        if not _bos(i, alt):
+            # yukarida yer yok (tavan): asagi dogru ilk bos yer
+            alt = ilk
+            while alt >= 0 and not _bos(i, alt):
+                alt -= 2.0
+            if alt < 0:
+                alt = max(0.0, min(ilk, TAVAN - LBL_H))
         bantlar[i].append((alt, alt + LBL_H))
         return alt
 

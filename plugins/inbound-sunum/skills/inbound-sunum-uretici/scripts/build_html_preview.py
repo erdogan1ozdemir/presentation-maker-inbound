@@ -24,7 +24,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from inbound_deck import (  # noqa: E402
-    combo_eksenleri, combo_yanlari, nokta_stili,
+    combo_eksenleri, combo_yanlari, nokta_stili, bant_tavani,
     C, F_BODY, F_DISPLAY, PT, PX_PER_PT, STAGE_H, STAGE_W, M_L, M_R,
     BODY_BOTTOM, TITLE_TOP, SEP_ACC_GAP, SEP_ACC_H, SEP_ACC_W,
     COVER_ART_W, COVER_WM, COVER_TITLE_PT, COVER_SUB_PT, COVER_TITLE_Y,
@@ -361,7 +361,9 @@ def h_combo(b):
                     if s_.get("kind") == "line"
                     else f'<i style="background:#{col}"></i>')
             chips.append(f'<span>{mark}{esc(s_.get("name",""))}</span>')
-        o.append('<div class="lg cb-lg">' + "".join(chips) + "</div>")
+        # lejant yuksekligi PPTX ile ayni (CB_LEGEND_H): grafik alani ondan sonra baslar
+        o.append(f'<div class="lg cb-lg" style="height:{CB_LEGEND_H}px;margin-bottom:0;'
+                 f'align-items:flex-start;padding-top:2px">' + "".join(chips) + "</div>")
         h -= CB_LEGEND_H
 
     plot_h = max(50, h - CB_CAT_H)
@@ -371,6 +373,7 @@ def h_combo(b):
     slot = pw / n
 
     ax = combo_eksenleri(b)   # bkz. inbound_deck.combo_eksenleri
+    bant_tavani(b, ax, plot_h)
 
     _yan = combo_yanlari(b)[0]   # bkz. inbound_deck.combo_yanlari
 
@@ -442,7 +445,13 @@ def h_combo(b):
     def _cakisir(alt, ust, listede):
         return any(not (ust < a0 - 1 or alt > a1 + 1) for a0, a1 in listede)
 
+    # Tavan: etiket grafik alaninin ustunu gecmez; gecerse lejanta yaslanip
+    # onunla karisiyordu (tuzaklar 3.9). Tavani asan yer bos sayilmaz.
+    TAVAN = plot_h + 2
+
     def _bos(i, alt):
+        if alt + LBL_H > TAVAN:
+            return False
         return not (_cakisir(alt, alt + LBL_H, engel.get(i, [])) or
                     _cakisir(alt, alt + LBL_H, bantlar.get(i, [])))
 
@@ -456,10 +465,17 @@ def h_combo(b):
         if alt_secenek is not None and alt_secenek >= 0 and _bos(i, alt_secenek):
             bantlar[i].append((alt_secenek, alt_secenek + LBL_H))
             return alt_secenek
-        adim = 0
+        ilk, adim = alt, 0
         while not _bos(i, alt) and adim < 60:
             alt += 2.0
             adim += 1
+        if not _bos(i, alt):
+            # yukarida yer yok (tavan): asagi dogru ilk bos yer
+            alt = ilk
+            while alt >= 0 and not _bos(i, alt):
+                alt -= 2.0
+            if alt < 0:
+                alt = max(0.0, min(ilk, TAVAN - LBL_H))
         bantlar[i].append((alt, alt + LBL_H))
         return alt
 

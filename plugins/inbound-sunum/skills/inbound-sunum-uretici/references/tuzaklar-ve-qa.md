@@ -997,6 +997,23 @@ akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutl
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
 
+**Lejant ile grafik etiketleri arasında boşluk.** Tepe noktasının üstündeki
+etiketler grafik alanının üstünü aşıp lejantın hemen altına yaslanıyordu
+(Özdilekteyim marka hacmi grafiği, "165.0K" etiketleri lejantla neredeyse
+bitişik). Üç kural:
+- Lejant bandı 30 px (`CB_LEGEND_H`); HTML önizlemede de aynı yükseklik.
+- Etiketin tavanı grafik alanının tepesidir; tavanı aşan etiket noktanın
+  altına iner, orası da doluysa aşağı doğru ilk boş yere yerleşir.
+- Üstte etiketli çizginin bandı (`axis: "own"`), en yüksek noktanın üstünde
+  etiket payı kalacak kadar **şekli korunarak aşağı kaydırılır**
+  (`bant_tavani`). Bandı sıkıştırmak ters etki yapıyordu: pozisyon bandı
+  daralıp etiketleri barların içine düştü.
+- Üç etiketli seri taşıyan bantlı grafikte (C45a, C54) grafik yüksekliği
+  200 px'in altına indirilmez; alan açmak gerekiyorsa dipnot kısaltılır.
+
+**Lejant işareti hizası.** Çizgi serisinin lejant noktası çizgi parçasının tam
+ortasında durur (PPTX'te sağ uca kaymıştı).
+
 **Bar tabanı etiketi bütün barlara sığmalı.** Tek bir ayın değeri ("100.6K",
 40 px) 44 px barın içine sığmayınca bütün seri üst yerleşime dönüyordu; 13
 aylık seride taban etiketi isteniyorsa `bar_w` en uzun değere göre açılır
