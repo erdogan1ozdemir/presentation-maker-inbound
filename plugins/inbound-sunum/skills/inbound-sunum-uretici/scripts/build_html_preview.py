@@ -494,7 +494,7 @@ def h_combo(b):
         """labels:"taban" icin barin tabanindan yukari ilk bos yer. Ayni
         eksendeki kucuk bir seri (Brand cizgisi gibi) tabana yakin gecerse etiket
         cizginin ustune alinir; barin disina tasiyorsa None (bkz. inbound_deck)."""
-        alt = 6.0
+        alt = 3.0
         while alt + LBL_H <= bh - 2:
             if _bos(i, alt):
                 return alt
@@ -522,6 +522,12 @@ def h_combo(b):
         if side not in ax:
             continue
         bw = min(b.get("bar_w", 40), slot * 0.62)
+        if s_.get("labels") == "taban" and s_.get("labels_text"):
+            # taban etiketi barin icinde: en uzun etiket sigacak kadar bar
+            # genisletilir ("243.0K" 44 px bara sigmayinca butun seri ust
+            # yerlesime donup cizgi etiketleriyle karisiyordu - tuzaklar 3.9)
+            gerek = max(text_w(str(t), PT["micro"], F_BODY) for t in s_["labels_text"]) + 8
+            bw = min(max(bw, gerek), slot * 0.72)
         col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
         lbls = s_.get("labels_text")
         etiketli = s_.get("labels") in ("inside", "above", "taban")

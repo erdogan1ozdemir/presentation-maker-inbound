@@ -252,13 +252,10 @@ Talep-performans ayrıştırmasının marka tarafı. `combo`: brand click bar
 ve her marka terimi **ayrı çizgi serisi** (toplam tek seri değil). **Click ve
 arama hacmi iki ayrı metriktir, ayrı ölçekte verilir** - tek eksende click ile
 hacim aynı büyüklükmüş gibi okunur. Düzen (Özdilekteyim Ağustos 2026):
-`axis_labels: false`; click bar `left`, `pad: 1.6`, `labels: "taban"`,
-`bar_w: 50` (en uzun değer "100.6K" barın içine sığmalı); hacim çizgileri
-`axis: "own"`, **`scale: "hacim"`** (terimler ortak ölçekte, birbirine göre
-doğru büyüklükte), `band: [0.55, 0.93]`, `labels: "above"`. Çizgiler barların
-içinden geçmez, click etiketi tabanda, hacim etiketi noktanın üstündedir;
-yakın aylarda alt terimin etiketi noktanın altına, çerçeveli iner. Dipnot:
-"Brand click alt bantta bar, arama hacimleri üst bantta ortak ölçekte
+click bar sol eksende (`pad: 1.3`, `labels: "taban"`, `bar_w: 50`), iki
+terimin hacmi sağ eksende çizgi (`labels: "above"`); iki eksende de sayılar
+görünür. Alttaki terimin çizgisi barların içinden geçer, etiketi çerçeveli
+basılır. Dipnot: "Brand click sol eksende bar, arama hacimleri sağ eksende
 çizgidir." Birden fazla bar serisi aynı noktada üst üste çizildiği için
 terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
@@ -700,13 +697,11 @@ filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzde
 
 **C45a Toplam click, impression ve ortalama pozisyon** (GSC bölümünün ilk slaytı)
 Segment kırılımına girmeden önce sitenin toplam görünümü. C54 ile aynı düzen,
-sitenin toplam serisiyle: `combo` (`axis_labels: false`) click bar alt bantta
-(`pad: 2.4`, `labels: "taban"`), impression çizgi barların üstündeki bantta
-(`axis: "own"`, `band: [0.46, 0.70]`, `labels: "above"`), ortalama pozisyon en
-üst bantta (`band: [0.76, 0.94]`, `invert: true`, `labels: "above"`); altında
+sitenin toplam serisiyle: click sol eksende bar, impression sağ eksende çizgi,
+ortalama pozisyon en üst bantta; iki eksende de sayılar görünür; altında
 `heat: true` tablo `Click | Impression | Ort. poz. | CTR` (pozisyon satırı
 `heat_invert_rows`); insight'ta MoM ve YoY ayrı ok, ardından impression-click-CTR
-kontrastı. Dipnot: Eylül 2025 şerhi (kısa biçim) + bant düzeninin okunuşu.
+kontrastı. Dipnot: Eylül 2025 şerhi (kısa biçim) + eksenlerin okunuşu.
 Özdilekteyim üreticisinde `grup_slayt("toplam", baslik=..., ilk_not=...)` ile
 kurulur; GSC ayracının hemen ardına girer.
 
@@ -812,17 +807,17 @@ karşılık gelmez, sayfa bazında hacim toplamak yanıltıcı olur.
 URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
 gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 üç metriği birlikte taşır:
-- `combo` (col `full`, **`axis_labels: false`**): üç metrik üç ayrı bantta.
-  Click bar (`left`, `pad: 2.4`, **`labels: "taban"`**) grafiğin alt
-  %42'sinde; impression çizgi (`axis: "own"`, `band: [0.46, 0.70]`,
-  `labels: "above"`) barların **üstündeki** bantta; ortalama
-  pozisyon çizgi (`axis: "own"`, `band: [0.76, 0.94]`, `invert: true`,
-  `labels: "above"`, `labels_text` tek ondalıklı) en üstte. Impression her ay
-  click'ten büyük olduğu için barların altına inmemelidir; sağ eksende
-  `pad` ile çizildiğinde bazı aylarda click barının altında kalmış ve "click >
-  impression" okunmuştu (tuzaklar 3.12). Sol eksen basamakları üst bantlara
-  uzanıp impression'ı click ölçeğinde okutacağı için eksen etiketi basılmaz;
-  değerler etiketlerde ve tabloda. 13 aylık seri, `bar_w: 44`.
+- `combo` (col `full`): **iki görünür eksen**. Click bar sol eksende
+  (`pad: 1.15`, `labels: "taban"`), impression çizgi sağ eksende (`pad: 1.3`,
+  `labels: "above"`), ortalama pozisyon en üst bantta (`axis: "own"`,
+  `band: [0.80, 0.97]`, `invert: true`, `labels: "above"`). Sol ve sağ
+  eksende sayılar basılır; eksen etiketi kaldırılmaz. Barlar grafiğin büyük
+  bölümünü kullanır, impression çizgisi barlara yakın geçer: bantlı düzende
+  (click alt %42'de, impression ayrı bantta, eksen sayısı yok) barlar kısa
+  kaldı, click'in aylık değişimi okunmadı ve iki metrik arasında gereksiz
+  boşluk oluştu (Özdilekteyim Mağaza grafiği). Çizgi barın içinden geçtiğinde
+  impression etiketi çerçeveli basılır. 13 aylık seri, `bar_w: 44` (taban
+  etiketi sığmıyorsa üretici barı genişletir).
   Üç metriğin **üçü de grafikte etiketlidir**; bant düzeni çizgiyi bardan
   ayırdığı için impression etiketi click etiketiyle karışmaz, gruplar arasında
   etiket farkı bırakılmaz (Özdilekteyim'de Market grafiğinde etiketli,

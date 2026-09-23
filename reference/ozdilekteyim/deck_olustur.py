@@ -345,23 +345,22 @@ S.append({
     "grid": [100],
     "footnotes": [
         "\"ozdilek\", \"öz dilek\" ve \"özdikek\" yakın varyant olarak \"özdilek\" ile aynı seriyi taşıdığından ayrı satır "
-        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Brand click alt bantta bar, arama "
-        "hacimleri üst bantta ortak ölçekte çizgidir.",
+        "açılmamıştır. Hacim bant halinde döndüğü için dönem uçları karşılaştırılmıştır. Brand click sol eksende bar, arama "
+        "hacimleri sağ eksende çizgidir.",
     ],
     "blocks": [
-        {"type": "combo", "col": "full", "h": 184, "bar_w": 50, "cats": ET, "axis_labels": False, "series": [
-            # click ve arama hacmi iki ayri metrik, iki ayri olcek (tuzaklar 3.12):
-            # click alt bantta tabanda etiketli bar, iki hacim ust bantta ortak
-            # olcekte (scale:"hacim") noktanin ustunde etiketli cizgi. Cizgiler
-            # barlarin icinden gecmez, etiketler karismaz (katalog C04d)
+        {"type": "combo", "col": "full", "h": 184, "bar_w": 50, "cats": ET, "series": [
+            # click ve arama hacmi iki ayri metrik, iki gorunur eksen (C04d):
+            # click sol eksende tabanda etiketli bar, iki hacim sag eksende
+            # (ortak olcek) noktanin ustunde etiketli cizgi
             {"kind": "bar", "name": "Brand click", "data": [BR[y]["click"] for y in AYLAR],
-             "color": "gray_bar", "axis": "left", "pad": 1.6, "labels": "taban",
+             "color": "gray_bar", "axis": "left", "pad": 1.3, "labels": "taban",
              "labels_text": [k(BR[y]["click"]) for y in AYLAR]},
             {"kind": "line", "name": "\"özdilek\" arama hacmi", "data": [OZ[y] for y in AYLAR],
-             "color": "teal", "axis": "own", "scale": "hacim", "band": [0.55, 0.93], "labels": "above",
+             "color": "teal", "axis": "right", "labels": "above",
              "labels_text": [k(OZ[y]) for y in AYLAR]},
             {"kind": "line", "name": "\"özdilekteyim\" arama hacmi", "data": [OZT[y] for y in AYLAR],
-             "color": "coral", "axis": "own", "scale": "hacim", "band": [0.55, 0.93], "labels": "above",
+             "color": "coral", "axis": "right", "labels": "above",
              "labels_text": [k(OZT[y]) for y in AYLAR]},
         ]},
         dict({"type": "table", "col": "full", "mt": 10, "first_col_max": 0.24,
@@ -408,24 +407,22 @@ def grup_slayt(g, yorum, impr_etiket="above", baslik=None, kirilim="Sayfa Grupla
         "grid": [100],
         "footnotes": [
             ilk_not or f"{ad}: {tanim}",
-            "Grafikte click bar; impression barların üstündeki bantta, ortalama pozisyon en üst bantta kendi "
+            "Grafikte click sol eksende bar, impression sağ eksende çizgi; ortalama pozisyon en üst bantta kendi "
             "ölçeğinde ve ters eksenlidir (yükselen çizgi iyileşme). Isı haritasında pozisyon satırı ters okunur.",
         ],
         "blocks": [
-            # uc metrik ayri bantlarda: sol eksen basamaklari ust bantlara uzanip
-            # impression'i click olceginde okutacagi icin eksen etiketi basilmaz,
-            # degerler etiketlerde ve tabloda (tuzaklar 3.12)
-            {"type": "combo", "col": "full", "h": h, "bar_w": 44, "cats": ET, "axis_labels": False, "series": [
+            # click sol eksende, impression sag eksende - iki eksende de sayilar
+            # gorunur; barlar grafigin buyuk bolumunu kullanir ki aylik click
+            # degisimi okunsun. Pozisyon en ust bantta kendi olceginde (C54)
+            {"type": "combo", "col": "full", "h": h, "bar_w": 44, "cats": ET, "series": [
                 {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "pad": 2.4, "labels": "taban",
+                 "color": "gray_bar", "axis": "left", "pad": 1.15, "labels": "taban",
                  "labels_text": [k(a[y]["click"]) for y in AYLAR]},
-                # impression click'ten her ay buyuktur: barlarin ustundeki bantta
-                # cizilir ki grafik "click > impression" okunmasin (tuzaklar 3.12)
                 {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
-                 "color": "teal", "axis": "own", "band": [0.46, 0.70], "labels": impr_etiket,
+                 "color": "teal", "axis": "right", "pad": 1.3, "labels": impr_etiket,
                  "labels_text": [k(a[y]["impr"]) for y in AYLAR]},
                 {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in AYLAR],
-                 "color": "coral", "axis": "own", "band": [0.76, 0.94], "invert": True, "fmt": "pos", "labels": "above",
+                 "color": "coral", "axis": "own", "band": [0.80, 0.97], "invert": True, "fmt": "pos", "labels": "above",
                  "labels_text": [f"{a[y]['poz']:.1f}" for y in AYLAR]},
             ]},
             dict({"type": "table", "col": "full", "mt": 8, "first_col_max": 0.11, "heat": True,
@@ -770,7 +767,7 @@ S.append({
         # adres kirpilmaz: tablo kolonu en uzun yolu tasiyacak genislikte acilir
         dict({"type": "table", "col": 1, "first_col_max": 0.80,
               "head": ["En çok impression alan sayfa", "Impression"],
-              "rows": [[_sayfa_ad.get(u, u), n(v)] for u, v in _sayfa[:9]]},
+              "rows": [[_sayfa_ad.get(u, u), n(v)] for u, v in _sayfa[:10]]},
              **{**T, "font_pt": 9.5, "row_h": 15, "head_h": 20}),
         {"type": "insights", "col": "full", "mt": 8, "font_pt": 10, "items": [
             f"MoM (Tem'26 → Ağu'26): Impression {renk(pct(AI_AGU, AI_TEM))} ({{b:{k(AI_TEM)} → {k(AI_AGU)}}}) · "

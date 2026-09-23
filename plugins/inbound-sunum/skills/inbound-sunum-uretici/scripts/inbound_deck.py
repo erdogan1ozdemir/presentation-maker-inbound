@@ -1245,12 +1245,16 @@ AXIS_TICKS = 4
 
 
 def _nice_step(raw):
-    """1 / 2 / 2.5 / 5 x 10^k basamaklarindan raw'i karsilayan en kucugu."""
+    """1 / 2 / 2.5 / 3 / 4 / 5 / 6 / 8 x 10^k basamaklarindan raw'i karsilayan en kucugu.
+
+    3 ve 4 eklendi: yalniz 1-2-2.5-5 ile 94K tepe icin eksen 200K'ya atliyor,
+    barlar grafigin yarisinda kaliyor ve aylik degisim okunmuyordu (tuzaklar
+    3.10). 0-30-60-90-120 de yuvarlak okunur."""
     import math
     if raw <= 0:
         return 1.0
     e = 10 ** math.floor(math.log10(raw))
-    for m in (1, 2, 2.5, 5, 10):
+    for m in (1, 2, 2.5, 3, 4, 5, 6, 8, 10):
         if raw <= m * e + 1e-9:
             return m * e
     return 10 * e
@@ -1309,7 +1313,7 @@ def _sirali_sag_ust(series, ax, pay=0.06):
     adaylar = set()
     k0 = int(math.floor(math.log10(max(alt_sinir, 1e-9)))) - 1
     for k in range(k0, k0 + 4):
-        for m in (1, 2, 2.5, 5):
+        for m in (1, 2, 2.5, 3, 4, 5, 6, 8):
             adaylar.add(AXIS_TICKS * m * 10 ** k)
     adaylar = sorted(a for a in adaylar if alt_sinir <= a <= L["hi"])
     adaylar.append(max(L["hi"], alt_sinir))
@@ -1681,7 +1685,7 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         """labels:"taban" icin barin tabanindan yukari ilk bos yer. Ayni
         eksendeki kucuk bir seri (Brand cizgisi gibi) tabana yakin gecerse etiket
         cizginin ustune alinir; barin disina tasiyorsa None (tuzaklar 3.9)."""
-        alt = 6.0
+        alt = 3.0
         while alt + LBL_H <= bh - 2:
             if _bos(i, alt):
                 return alt
@@ -1712,6 +1716,12 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         if side not in ax:
             continue
         bw = min(b.get("bar_w", 40), slot * 0.62)
+        if s_.get("labels") == "taban" and s_.get("labels_text"):
+            # taban etiketi barin icinde: en uzun etiket sigacak kadar bar
+            # genisletilir ("243.0K" 44 px bara sigmayinca butun seri ust
+            # yerlesime donup cizgi etiketleriyle karisiyordu - tuzaklar 3.9)
+            gerek = max(text_w(str(t), PT["micro"], F_BODY) for t in s_["labels_text"]) + 8
+            bw = min(max(bw, gerek), slot * 0.72)
         col = s_.get("color", "gray_bar")
         lbls = s_.get("labels_text")
         etiketli = s_.get("labels") in ("inside", "above", "taban")

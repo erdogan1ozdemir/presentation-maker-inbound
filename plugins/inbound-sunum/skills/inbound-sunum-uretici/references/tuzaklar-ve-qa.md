@@ -997,6 +997,25 @@ akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutl
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
 
+**İki metrikli grafikte eksen sayıları kaldırılmaz.** Sayfa grubu, toplam ve
+marka hacmi grafikleri bir dönem bantlı düzene (`axis_labels: false`,
+metrikler ayrı şeritlerde) alınmıştı; Erdoğan'ın geri bildirimi: barlar kısa
+kaldı, click'in değişimi okunmadı, click ile impression arasında gereksiz
+boşluk oluştu, sağ ve sol eksende sayı yoktu. Kural: iki metrik iki görünür
+eksende (sol bar, sağ çizgi), barlar grafik yüksekliğinin çoğunu kullanır;
+yalnız üçüncü metrik (pozisyon) üst bantta kendi ölçeğindedir.
+
+**Eksen basamakları 1 / 2 / 2.5 / 3 / 4 / 5 / 6 / 8 × 10^k.** Yalnız 1-2-2.5-5
+ile 94K tepe için eksen 200K'ya, 201K tepe için 400K'ya atlıyor, seri
+grafiğin yarısına sıkışıyordu. 0-30-60-90-120 ve 0-60-120-180-240 de yuvarlak
+okunur.
+
+**Taban etiketi sığmıyorsa bar genişler.** Üretici `labels: "taban"` serisinde
+en uzun etiketin sığacağı genişliği hesaplar (slot'un %72'sine kadar); tek bir
+ayın etiketi sığmadığı için bütün serinin üst yerleşime dönmesi ("243.0K",
+44 px bar) böylece önlenir. Taban araması 3 px'ten başlar; çizgi noktası
+tabana yakınsa etiket altına sığar, barın ortasına kaçmaz.
+
 **Lejant ile grafik etiketleri arasında boşluk.** Tepe noktasının üstündeki
 etiketler grafik alanının üstünü aşıp lejantın hemen altına yaslanıyordu
 (Özdilekteyim marka hacmi grafiği, "165.0K" etiketleri lejantla neredeyse

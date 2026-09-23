@@ -274,7 +274,7 @@ metrik grafiği. Ölçekleri farklı iki metriği tek grafikte okunur kılar.
 | `labels` | Bar: `taban` **(varsayılan tercih)** - barın tabanında beyaz; hepsi sığmıyorsa üst yerleşime döner. `above` barın üstü (doluysa barın ortası, sonra kaydırma). Çizgi: `above` (noktanın üstünde, seri renginde) ya da `uclar` (yalnız ilk, son, en düşük ve en yüksek nokta). `none`: bilinçli etiketsiz (değer tabloda) - `own` eksende uyarı üretmez. Vermezsen etiket basılmaz. `taban` etiketi aynı ayın çizgi noktasına denk gelirse noktanın üstüne, bar içinde kalacak şekilde kaydırılır |
 | `labels_text` | Etiketleri elle ver: destede yazılan değerle birebir aynı olur |
 | `invert` | Küçük değerin iyi olduğu seri (pozisyon): çizgi yükseldikçe iyileşir, eksen etiketleri gerçek değerleri gösterir |
-| `axis_labels` | `false` verilirse eksen etiketleri çizilmez, grafik alanı genişler |
+| `axis_labels` | `false` verilirse eksen etiketleri çizilmez. **İki metrikli grafikte kullanılmaz**: sol ve sağ eksende sayılar görünür (tuzaklar 3.9) |
 | `pad` | Eksen üst payı (varsayılan 1.12; 8.7M → 10M eksen). 1.8 verilirse o eksendeki en yüksek değer grafiğin ~%55'inde kalır |
 | `band` | Yalnızca `axis: "own"`: serinin kapladığı yükseklik dilimi, ör. `[0.56, 0.80]`. Üçüncü metriği ayrı şeride alır |
 | `scale` | Yalnızca `axis: "own"`: aynı adı taşıyan seriler **ortak ölçeği** paylaşır (iki terimin arama hacmi gibi). Eksen etiketi basılmadığı için ölçek tepe değer × `pad` ile tam kullanılır, yuvarlak basamak aranmaz |
