@@ -276,9 +276,46 @@ def check_language(spec, rep):
 # Katman 3: rakam ve yapi
 # ----------------------------------------------------------------------------
 
+# Sayidan sonra gelen ek, sayinin okunusuna gore uyumlanir: %69'u (altmis
+# dokuz), %80'i (seksen), %2.8'i (sekiz), 573'unde (uc). Yanlis unlu en sik
+# gozden kacan yazim hatasidir.
+_BIRLER = {"0": None, "1": "i", "2": "i", "3": "ü", "4": "ü", "5": "i",
+           "6": "ı", "7": "i", "8": "i", "9": "u"}
+_ONLAR = {"1": "u", "2": "i", "3": "u", "4": "ı", "5": "i", "6": "ı",
+          "7": "i", "8": "i", "9": "ı"}
+
+
+def _son_unlu(sayi: str):
+    """Sayinin okunusundaki son unlunun dar karsiligi (i/ı/u/ü)."""
+    s_ = sayi.replace(".", "").replace(",", "")
+    s_ = s_.lstrip("0") or "0"
+    if s_[-1] != "0":
+        return _BIRLER[s_[-1]]
+    if len(s_) >= 2 and s_[-2] != "0":
+        return _ONLAR[s_[-2]]
+    if s_.endswith("000"):
+        return "i"            # bin
+    if s_.endswith("00"):
+        return "ü"            # yuz
+    return "ı"                # sifir
+
+
+EK_RX = re.compile(r"(\d[\d.]*)'([ıiuü])")
+
+
 def check_numbers(spec, rep):
     for where, raw in collect(spec):
         t = plain(raw)
+
+        for m in EK_RX.finditer(t):
+            sayi = m.group(1).rstrip(".")
+            parca = sayi.split(".")
+            # 2.8 -> "iki nokta sekiz" (ondalik), 1.626 -> "bin alti yuz..." (binlik)
+            okunan = parca[-1] if len(parca) > 1 and len(parca[-1]) < 3 else sayi
+            bek = _son_unlu(okunan)
+            if bek and m.group(2) != bek:
+                rep.err(where, "sayı eki", f"'{m.group(0)}'",
+                        f"okunuşa göre '{sayi}'{bek}' yazılır")
 
         for m in PCT_BAD.finditer(t):
             seg = m.group(0)

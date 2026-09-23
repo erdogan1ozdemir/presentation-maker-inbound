@@ -219,6 +219,26 @@ def text_w(s: str, pt: float, family: str = F_BODY, bold: bool = False,
 WRAP_SAFETY = 0.985
 
 
+# Ingilizce terimler Turkce buyuk harf kuraliyla bozulmasin: yalniz Turkce
+# karakter iceren kelimelerde i -> İ uygulanir ("ORGANİK", ama "CLICK").
+_TR_HARF = set("çğıöşüÇĞİÖŞÜ")
+
+
+def tr_upper(s: str) -> str:
+    out = []
+    for w in str(s).split(" "):
+        if any(ch in _TR_HARF for ch in w) or w.lower() in _TR_KELIME:
+            w = w.replace("i", "İ").replace("ı", "I")
+        out.append(w.upper())
+    return " ".join(out)
+
+
+# Turkce karakter tasimayan ama Turkce olan sik kelimeler
+_TR_KELIME = {"organik", "trafik", "toplam", "kritik", "tespit", "yontem", "not",
+              "ozet", "marka", "kategori", "ilk", "icerik", "sira", "siralama",
+              "ortalama", "ort.", "pozisyon", "gelir", "oturum", "hacim", "sayfa"}
+
+
 def wrap_lines(s: str, max_w: float, pt: float, family: str = F_BODY,
                bold: bool = False, safety: float = WRAP_SAFETY,
                weight: int = None) -> list:
@@ -820,7 +840,7 @@ def block_insights(slide, b, x, y, w, ctx, idx):
     y0, ind, gap = y, 26, b.get("gap", 12)
 
     if b.get("title"):
-        textbox(slide, x, y, w, 20, plain(b["title"]).upper(), pt=PT["xs"],
+        textbox(slide, x, y, w, 20, tr_upper(plain(b["title"])), pt=PT["xs"],
                 family=F_DISPLAY, bold=True, color="coral", line_pct=1.0)
         y += 24
 
@@ -875,7 +895,9 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
         vpt = c.get("pt") or 40
         while vpt > 20 and text_w(val + unit, vpt, F_DISPLAY, True) > cw - 32:
             vpt -= 1
-        LBL_H, DLT_H, UST, ARA, ALT = 18, 18, 22, 8, 12
+        # Etiket yazildigi gibi basilir (buyuk harfe cevrilmez: "ORGANIK CLICK"
+        # hem Turkce kurala aykiri hem okunaksizdi) ve sm puntosunda.
+        LBL_H, DLT_H, UST, ARA, ALT = 20, 18, 22, 8, 12
 
         def _icerik_h(p):
             return UST + p * PX_PER_PT * 1.05 + ARA + LBL_H + (2 + DLT_H if deltas else 0) + ALT
@@ -902,8 +924,8 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
 
         ly = vy + vpt * PX_PER_PT * 1.05 + ARA
         textbox(slide, cx + 12, ly, cw - 24, LBL_H,
-                plain(str(c.get("label", ""))).upper(),
-                pt=PT["micro"], color="white", align="c", line_pct=1.1)
+                plain(str(c.get("label", ""))),
+                pt=PT["sm"], color="white", align="c", line_pct=1.1)
 
         # Delta satiri: etiket once, deger sonra ("MoM  +%8.3    YoY  -%18.9").
         # Etiket normal agirlikta ve hafif soluk, deger kalin - okuma sirasi
@@ -920,7 +942,7 @@ def block_kpi(slide, b, x, y, w, ctx, idx):
                                                  family=F_BODY)))
                 runs.append((str(dd.get("value", "")),
                              dict(bold=True, color="white", family=F_DISPLAY)))
-            textbox(slide, cx + 8, ly + 20, cw - 16, 18, runs, pt=PT["xs"],
+            textbox(slide, cx + 8, ly + LBL_H + 2, cw - 16, 18, runs, pt=PT["xs"],
                     family=F_BODY, color="white", align="c", line_pct=1.1,
                     wrap=False)
 
@@ -1651,7 +1673,7 @@ def block_panels(slide, b, x, y, w, ctx, idx):
 
 def block_note(slide, b, x, y, w, ctx, idx):
     """b = {type:"note", label:"YONTEM", text:"..", fill?:"mint"}"""
-    label = plain(b.get("label", "NOT")).upper()
+    label = tr_upper(plain(b.get("label", "NOT")))
     pad = 16
     pt_ = min(b.get("font_pt", PT["body"]), BODY_PT_MAX)
     lines = wrap_lines(plain(b.get("text", "")), w - pad * 2, pt_)
@@ -1819,7 +1841,7 @@ def s_agenda(slide, spec, ctx, idx):
 
     if spec.get("kicker"):
         textbox(slide, AGENDA_EYEBROW_XY[0], AGENDA_EYEBROW_XY[1],
-                AGENDA_PANEL_W - 60, 18, plain(spec["kicker"]).upper(),
+                AGENDA_PANEL_W - 60, 18, tr_upper(plain(spec["kicker"])),
                 pt=10, family=F_BODY, color="paper", line_pct=1.0)
 
     lines = spec.get("title_lines") or [plain(spec.get("title", "SUNUM AKIŞI"))]

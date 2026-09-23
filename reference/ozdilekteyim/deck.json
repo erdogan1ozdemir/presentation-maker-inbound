@@ -65,7 +65,7 @@
      "cards": [
       {
        "value": "167.9K",
-       "label": "Organik click",
+       "label": "Organik Click",
        "deltas": [
         {
          "label": "MoM",
@@ -93,7 +93,7 @@
       },
       {
        "value": "63.1K",
-       "label": "Brand click",
+       "label": "Brand Click",
        "deltas": [
         {
          "label": "MoM",
@@ -108,7 +108,7 @@
       },
       {
        "value": "104.8K",
-       "label": "Non-Brand click",
+       "label": "Non-Brand Click",
        "deltas": [
         {
          "label": "MoM",
@@ -130,7 +130,7 @@
      "font_pt": 10.5,
      "items": [
       "Organik click Ağustos'ta {b:167.9K} ile aylık bazda {g:+%2.6} artmıştır; artışın kaynağı {c:brand} sorgularıdır ({g:+%7.2}), non-brand click yatay seyretmiştir.",
-      "Yıllık bazda toplam click {r:-%30.9} geridedir. Kaybın {b:%69}'i brand sorgularından gelmektedir: brand click {r:-%45.0}, non-brand click {r:-%18.3}.",
+      "Yıllık bazda toplam click {r:-%30.9} geridedir. Kaybın {b:%69}'u brand sorgularından gelmektedir: brand click {r:-%45.0}, non-brand click {r:-%18.3}.",
       "Aynı dönemde \"özdilek\" arama hacmi {b:165.0K → 165.0K} ile yatay kalmış, \"özdilekteyim\" {g:49.5K → 74.0K} artmıştır; brand sorgularında ortalama pozisyon {b:3.0 → 2.8} ile korunmuştur."
      ]
     },
@@ -2363,7 +2363,7 @@
      "font_pt": 10.5,
      "items": [
       "Artış ev tekstili ve çanta sorgularında yoğunlaşmaktadır: {c:benetton çanta} {g:+184}, {c:çeyiz seti} {g:+166}, {c:banyo paspası} {g:+150}, {c:bornoz takımı} {g:+128}. Okul dönemi yaklaşırken {c:chimola okul çantası} {g:+123} click eklemiştir.",
-      "Düşüşler sezon ve kampanya ürünlerinde yoğunlaşmaktadır: {c:plaj havlusu} hacmi {r:33.1K → 18.1K} ile daralmış, {c:crocs ballet} ve {c:dünya kupası albümü} Ağustos'ta click almamıştır. {c:valiz} sorgusunda hacim {b:74.0K} ile değişmezken pozisyon {r:7.2 → 8.6} gerilemiştir; {c:kabin boy valiz} tarafında da pozisyon {r:7.6 → 9.2} gerilemiştir."
+      "Düşüşler sezon ve kampanya ürünlerinde yoğunlaşmaktadır: {c:plaj havlusu} hacmi {r:33.1K → 18.1K} ile daralmış, {c:crocs ballet} ve {c:dünya kupası albümü} Ağustos'ta click almamıştır. {c:\"valiz\"} sorgusunda hacim {b:74.0K} ile değişmezken pozisyon {r:7.2 → 8.6} gerilemiştir; {c:kabin boy valiz} tarafında da pozisyon {r:7.6 → 9.2} gerilemiştir."
      ]
     }
    ]
@@ -2819,7 +2819,7 @@
     "Kategori Görünürlüğü"
    ],
    "title": "Takip Edilen Kategorilerde Visibility",
-   "subtitle": "31 Temmuz 2026 & 31 Ağustos 2026 | mobil | kategori klasörleri",
+   "subtitle": "Temmuz 2026 & Ağustos 2026 | ay sonu değeri | mobil | kategori klasörleri",
    "source": "SEOmonitor",
    "grid": [
     100

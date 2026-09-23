@@ -1021,3 +1021,22 @@ non-brand impression. "Toplam CTR − brand CTR" anlamsız bir sayıdır; aynı
 şey dönüşüm oranı, pay ve pozisyon için de geçerlidir. Segment tabloları
 kurulurken oran satırları her segmentin kendi pay ve paydasından hesaplanır
 (slayt kataloğu C45b).
+
+### 3.11. KPI etiketi büyük harf ve Türkçe yazım
+
+**KPI kart etiketi büyük harfe çevrilmez.** Üretici etiketi `.upper()` ile
+basıyordu: "Organik click" kartta **ORGANIK CLICK** oldu - Türkçe kuralına göre
+"ORGANİK" olması gerekirken noktasız I'yla yazılmıştı ve 9 pt büyük harf
+okunaksızdı. Etiket artık **yazıldığı gibi** ve 11 pt (`PT["sm"]`) basılır;
+deck.json'da başlık düzeninde yazılır: `Organik Click`, `Brand Click`,
+`Impression`.
+
+**Büyük harfe çevrilen diğer yerler Türkçe kurala uyar.** Not kutusu etiketi,
+insight başlığı ve ajanda üst etiketi `tr_upper()` ile çevrilir: Türkçe
+karakter taşıyan ya da Türkçe olduğu bilinen kelimelerde `i → İ`, `ı → I`
+(KRİTİK TESPİT, ORGANİK); İngilizce terimler (CLICK, AI OVERVIEW) etkilenmez.
+
+**Sayıdan sonra gelen ek okunuşa uyar.** "Kaybın %69'i" yazılmıştı; doğrusu
+"%69'u" (altmış dokuz). Dinamik metinde ek sabit yazılmaz, sayıya göre
+seçilir. `qa_deck.py` sayı + kesme işareti + ek kalıbını okunuşa göre denetler
+ve yanlış ünlüyü hata sayar (`%80'i`, `%2.8'i`, `573'ünde`, `%69'u`).

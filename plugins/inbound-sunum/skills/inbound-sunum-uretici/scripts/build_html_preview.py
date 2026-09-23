@@ -35,7 +35,7 @@ from inbound_deck import (  # noqa: E402
     _axis_scale, _fmt_val, _fmt_tick, AXIS_TICKS, footnote_layout, SOURCE_XY,
     FOOT_MID, FOOT_NOTE_MAX_H, TITLE_SUB_GAP, SUB_BODY_GAP,
     _delta_kind, fit_pt, heat_cells, parse_runs, plain, separator_layout,
-    table_layout,
+    table_layout, tr_upper,
     text_w, wrap_lines,
 )
 
@@ -173,7 +173,7 @@ def h_table(b):
 def h_insights(b):
     o = []
     if b.get("title"):
-        o.append(f'<div class="ins-title">{esc(plain(b["title"])).upper()}</div>')
+        o.append(f'<div class="ins-title">{esc(tr_upper(plain(b["title"])))}</div>')
     fp = min(b.get("font_pt", PT["body"]), 12)
     o.append(f'<ul class="ins" style="font-size:{pt(fp)}">')
     for it in b.get("items") or []:
@@ -201,7 +201,7 @@ def h_kpi(b):
                  + (f'<span style="font-size:{pt(vpt*0.5)}">'
                     f'{esc(c.get("unit",""))}</span>' if c.get("unit") else "")
                  + "</div>")
-        o.append(f'<div class="kpi-l">{esc(plain(str(c.get("label","")))).upper()}</div>')
+        o.append(f'<div class="kpi-l">{esc(plain(str(c.get("label",""))))}</div>')
         deltas = c.get("deltas")
         if not deltas and c.get("delta"):
             deltas = [{"label": "", "value": c["delta"]}]
@@ -621,7 +621,7 @@ def h_panels(b):
 def h_note(b):
     fp = min(b.get("font_pt", PT["body"]), 12)
     return (f'<div class="note" style="background:#{C.get(b.get("fill","mint"))}">'
-            f'<div class="n-label">{esc(plain(b.get("label","NOT"))).upper()}</div>'
+            f'<div class="n-label">{esc(tr_upper(plain(b.get("label","NOT"))))}</div>'
             f'<div class="n-text" style="font-size:{pt(fp)}">'
             f'{runs_html(b.get("text",""))}</div></div>')
 
@@ -711,7 +711,7 @@ def sl_agenda(s):
         eyebrow = (f'<div style="position:absolute;left:{ex}px;top:{ey}px;'
                    f'font-family:\'{F_BODY}\';font-size:10px;letter-spacing:.1em;'
                    f'color:#{C["paper"]}">'
-                   f'{esc(plain(s["kicker"]).upper())}</div>')
+                   f'{esc(tr_upper(plain(s["kicker"])))}</div>')
 
     items = s.get("items") or []
     ipt = s.get("item_pt", AGENDA_ITEM_PT)
@@ -953,7 +953,7 @@ h1{font-family:'%(disp)s';font-weight:700;letter-spacing:-.02em;line-height:1.05
 .kpi-card{color:#fff;border-radius:16px;padding:22px 18px;text-align:center;
   display:flex;flex-direction:column;justify-content:center}
 .kpi-v{font-family:'%(disp)s';font-weight:700;line-height:1;letter-spacing:-.02em}
-.kpi-l{font-size:12px;opacity:.92;letter-spacing:.04em;margin-top:10px}
+.kpi-l{font-size:%(fs_sm)spx;opacity:.95;margin-top:10px}
 .kpi-d{font-family:'%(disp)s';font-weight:400;font-size:13.3px;margin-top:7px}
 .kpi-d b{font-family:'%(disp)s';font-weight:700}
 .kpi-d .kpi-dl{font-family:'%(body)s';font-weight:400;opacity:.85;margin-right:6px}
@@ -1113,6 +1113,7 @@ def render(spec, base):
                      # (bkz. tuzaklar 3.6j).
                      fs_lead=round(PT["lead"] * PX_PER_PT, 2),
                      fs_micro=round(PT["micro"] * PX_PER_PT, 2),
+                     fs_sm=round(PT["sm"] * PX_PER_PT, 2),
                      fs_xs=round(PT["xs"] * PX_PER_PT, 2),
                      fs_pill=round(PT["pill"] * PX_PER_PT, 2),
                      fs_sepno=round(SEP_NUM_PT * PX_PER_PT, 2),

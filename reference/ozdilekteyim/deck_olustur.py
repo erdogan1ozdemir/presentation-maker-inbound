@@ -59,6 +59,21 @@ def sifirla(s):
     return s.lstrip("+-") if float(s.rstrip("p")) == 0 else s
 
 
+def ek_i(sayi):
+    """Belirtme eki: okunuşa göre 'i/ı/u/ü' (69'u, 80'i, 2.8'i)."""
+    s_ = str(sayi).split(".")[-1] if "." in str(sayi) else str(sayi)
+    s_ = s_.lstrip("0") or "0"
+    birler = {"1": "i", "2": "yi", "3": "ü", "4": "ü", "5": "i", "6": "yı", "7": "yi", "8": "i", "9": "u"}
+    onlar = {"1": "u", "2": "yi", "3": "u", "4": "ı", "5": "yi", "6": "ı", "7": "i", "8": "i", "9": "ı"}
+    if s_[-1] != "0":
+        e = birler[s_[-1]]
+    elif len(s_) > 1 and s_[-2] != "0":
+        e = onlar[s_[-2]]
+    else:
+        e = "ü" if s_.endswith("00") else "ı"
+    return "'" + e
+
+
 def renk(s, ters=False):
     """Yüzde/delta metnini işaretine göre yeşil/kırmızı işaretler."""
     neg = s.startswith("-")
@@ -100,6 +115,7 @@ S.append({"type": "cover", "title": "Özdilekteyim SEO Değerlendirme", "subtitl
 S.append({"type": "agenda", "kicker": "Ağustos 2026", "title_lines": ["SUNUM", "AKIŞI"], "items": []})
 
 TOP, BR, NB = SEG["toplam"], SEG["brand"], SEG["nonbrand"]
+KAYIP_PAY = f"{(BR[GECEN_YIL]['click'] - BR[SIMDI]['click']) / (TOP[GECEN_YIL]['click'] - TOP[SIMDI]['click']) * 100:.0f}"
 HZ = {t: dict(zip(H_AYLAR, TERIM[t])) for t in ("özdilek", "özdilekteyim")}
 HB = "Hacim (Ağu 2026)"
 
@@ -114,17 +130,17 @@ S.append({
     "grid": [100],
     "blocks": [
         {"type": "kpi", "col": "full", "cols": 4, "h": 112, "cards": [
-            {"value": k(TOP[SIMDI]["click"]), "label": "Organik click",
+            {"value": k(TOP[SIMDI]["click"]), "label": "Organik Click",
              "deltas": [{"label": "MoM", "value": d("toplam", "click")},
                         {"label": "YoY", "value": d("toplam", "click", b=GECEN_YIL)}]},
             {"value": k(TOP[SIMDI]["impr"]), "label": "Impression",
              "deltas": [{"label": "MoM", "value": d("toplam", "impr")},
                         {"label": "YoY", "value": d("toplam", "impr", b=GECEN_YIL)}]},
-            {"value": k(BR[SIMDI]["click"]), "label": "Brand click",
+            {"value": k(BR[SIMDI]["click"]), "label": "Brand Click",
              "deltas": [{"label": "MoM", "value": d("brand", "click")},
                         {"label": "YoY", "value": d("brand", "click", b=GECEN_YIL)}],
              "accent": "coral"},
-            {"value": k(NB[SIMDI]["click"]), "label": "Non-Brand click",
+            {"value": k(NB[SIMDI]["click"]), "label": "Non-Brand Click",
              "deltas": [{"label": "MoM", "value": d("nonbrand", "click")},
                         {"label": "YoY", "value": d("nonbrand", "click", b=GECEN_YIL)}],
              "accent": "coral"},
@@ -133,7 +149,7 @@ S.append({
             f"Organik click Ağustos'ta {{b:{k(TOP[SIMDI]['click'])}}} ile aylık bazda {renk(d('toplam', 'click'))} artmıştır; "
             f"artışın kaynağı {{c:brand}} sorgularıdır ({renk(d('brand', 'click'))}), non-brand click yatay seyretmiştir.",
             f"Yıllık bazda toplam click {renk(d('toplam', 'click', b=GECEN_YIL))} geridedir. Kaybın "
-            f"{{b:%{(BR[GECEN_YIL]['click'] - BR[SIMDI]['click']) / (TOP[GECEN_YIL]['click'] - TOP[SIMDI]['click']) * 100:.0f}}}'i "
+            f"{{b:%{KAYIP_PAY}}}{ek_i(KAYIP_PAY)} "
             f"brand sorgularından gelmektedir: brand click {renk(d('brand', 'click', b=GECEN_YIL))}, non-brand click "
             f"{renk(d('nonbrand', 'click', b=GECEN_YIL))}.",
             f"Aynı dönemde \"özdilek\" arama hacmi {{b:{k(HZ['özdilek'][GECEN_YIL])} → {k(HZ['özdilek'][SIMDI])}}} ile yatay kalmış, "
@@ -477,7 +493,7 @@ S.append({
             "Artış ev tekstili ve çanta sorgularında yoğunlaşmaktadır: {c:benetton çanta} {g:+184}, {c:çeyiz seti} {g:+166}, "
             "{c:banyo paspası} {g:+150}, {c:bornoz takımı} {g:+128}. Okul dönemi yaklaşırken {c:chimola okul çantası} {g:+123} click eklemiştir.",
             "Düşüşler sezon ve kampanya ürünlerinde yoğunlaşmaktadır: {c:plaj havlusu} hacmi {r:33.1K → 18.1K} ile daralmış, "
-            "{c:crocs ballet} ve {c:dünya kupası albümü} Ağustos'ta click almamıştır. {c:valiz} sorgusunda hacim {b:74.0K} ile "
+            "{c:crocs ballet} ve {c:dünya kupası albümü} Ağustos'ta click almamıştır. {c:\"valiz\"} sorgusunda hacim {b:74.0K} ile "
             "değişmezken pozisyon {r:7.2 → 8.6} gerilemiştir; {c:kabin boy valiz} tarafında da pozisyon {r:7.6 → 9.2} gerilemiştir.",
         ]},
     ],
@@ -626,7 +642,7 @@ S.append({
     "type": "content",
     "breadcrumb": ["GÖRÜNÜRLÜK", "Kategori Görünürlüğü"],
     "title": "Takip Edilen Kategorilerde Visibility",
-    "subtitle": "31 Temmuz 2026 & 31 Ağustos 2026 | mobil | kategori klasörleri",
+    "subtitle": "Temmuz 2026 & Ağustos 2026 | ay sonu değeri | mobil | kategori klasörleri",
     "source": "SEOmonitor",
     "grid": [100],
     "footnotes": [
