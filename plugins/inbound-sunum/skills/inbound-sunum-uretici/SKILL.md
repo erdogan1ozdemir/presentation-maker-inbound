@@ -361,7 +361,7 @@ metrikle yan yana verilir: "Session -%11 daralırken Revenue +%19 artmıştır."
 | ↓ | ↓ daha az | Daralan pazarda pay korunuyor, pozitif okuma |
 | → veya ↑ | ↓ | Performans veya SERP kompozisyonu kaynaklı, incelenmeli |
 
-**Aylık seri slaytlarında değişim notu zorunludur.** 13 aylık seri grafiği +
+**Aylık seri slaytlarında değişim notu zorunludur.** 15 aylık seri grafiği +
 tablo taşıyan her slaytta, tablonun altında **MoM ve YoY ayrı birer ok**
 olarak yazılır; okuyucu 13 kolonu kafasında çıkarmak zorunda kalmaz:
 

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-"""Özdilekteyim arama hacmi (TR, Ağu'25 - Ağu'26) - destede tek hacim kaynağı.
+"""Özdilekteyim arama hacmi (TR, Haz'25 - Ağu'26) - destede tek hacim kaynağı.
 
 Kaynak: DataForSEO · keywords_data/google_ads/search_volume/live
         location_code=2792 (Türkiye) · language_code=tr · search_partners=false
         78 keyword tek talepte · çekim: 15.09.2026 · ham: ham/dfs_hacim.json
+        Haz-Tem 2025 (yalnız marka terimleri, 15 aylık GSC serisiyle eşleşme için):
+        ham/dfs_hacim_ek.json · çekim 24.09.2026 · örtüşen aylar birebir aynı
 
 YAKIN VARYANT BİRLEŞMESİ
 ------------------------
@@ -22,7 +24,7 @@ import json
 from pathlib import Path
 
 HAM = Path(__file__).parent / "ham" / "dfs_hacim.json"
-AYLAR = [202508, 202509, 202510, 202511, 202512, 202601, 202602,
+AYLAR = [202506, 202507, 202508, 202509, 202510, 202511, 202512, 202601, 202602,
          202603, 202604, 202605, 202606, 202607, 202608]
 
 
@@ -35,6 +37,11 @@ def _yukle():
         ms = {m["year"] * 100 + m["month"]: (m["search_volume"] or 0)
               for m in (r["monthly_searches"] or [])}
         out[r["keyword"]] = [ms.get(y, 0) for y in AYLAR]
+    ek = json.loads((HAM.parent / "dfs_hacim_ek.json").read_text(encoding="utf-8"))["aylik"]
+    for kw, aylar in ek.items():
+        if kw in out:
+            for y, v in aylar.items():
+                out[kw][AYLAR.index(int(y))] = v
     return out
 
 

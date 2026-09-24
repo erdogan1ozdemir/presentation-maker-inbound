@@ -155,7 +155,7 @@
     "Genel Performans"
    ],
    "title": "Toplam Click, Impression ve Ortalama Pozisyon",
-   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%2.6 · YoY -%30.9",
+   "subtitle": "Haz 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%2.6 · YoY -%30.9",
    "source": "Google Search Console - ozdilekteyim.com",
    "grid": [
     100
@@ -171,6 +171,8 @@
      "h": 200,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -190,6 +192,8 @@
        "kind": "bar",
        "name": "Click",
        "data": [
+        155770,
+        223615,
         242967,
         214986,
         259092,
@@ -206,9 +210,11 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.15,
+       "pad": 1.5,
        "labels": "taban",
        "labels_text": [
+        "155.8K",
+        "223.6K",
         "243.0K",
         "215.0K",
         "259.1K",
@@ -228,6 +234,8 @@
        "kind": "line",
        "name": "Impression",
        "data": [
+        6736667,
+        6957264,
         8466199,
         8057644,
         7867864,
@@ -244,9 +252,11 @@
        ],
        "color": "teal",
        "axis": "right",
-       "pad": 1.3,
+       "pad": 1.6,
        "labels": "above",
        "labels_text": [
+        "6.74M",
+        "6.96M",
         "8.47M",
         "8.06M",
         "7.87M",
@@ -266,6 +276,8 @@
        "kind": "line",
        "name": "Ort. pozisyon",
        "data": [
+        19.4,
+        17.7,
         16.5,
         12.0,
         7.9,
@@ -290,6 +302,8 @@
        "fmt": "pos",
        "labels": "above",
        "labels_text": [
+        "19.4",
+        "17.7",
         "16.5",
         "12.0",
         "7.9",
@@ -318,6 +332,8 @@
      ],
      "head": [
       "Metrik",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -335,6 +351,8 @@
      "rows": [
       [
        "Click",
+       "155.8K",
+       "223.6K",
        "243.0K",
        "215.0K",
        "259.1K",
@@ -351,6 +369,8 @@
       ],
       [
        "Impression",
+       "6.74M",
+       "6.96M",
        "8.47M",
        "8.06M",
        "7.87M",
@@ -367,6 +387,8 @@
       ],
       [
        "Ort. poz.",
+       "19.4",
+       "17.7",
        "16.5",
        "12.0",
        "7.9",
@@ -383,6 +405,8 @@
       ],
       [
        "CTR",
+       "%2.31",
+       "%3.21",
        "%2.87",
        "%2.67",
        "%3.29",
@@ -422,7 +446,7 @@
     "Aylık Seri"
    ],
    "title": "Brand ve Non-Brand Aylık Click",
-   "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+   "subtitle": "Haz 2025 - Ağu 2026 | 15 aylık seri | Search Console",
    "source": "Google Search Console - ozdilekteyim.com",
    "grid": [
     100
@@ -438,6 +462,8 @@
      "h": 196,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -457,6 +483,8 @@
        "kind": "bar",
        "name": "Toplam",
        "data": [
+        155770,
+        223615,
         242967,
         214986,
         259092,
@@ -475,6 +503,8 @@
        "axis": "left",
        "labels": "taban",
        "labels_text": [
+        "155.8K",
+        "223.6K",
         "243.0K",
         "215.0K",
         "259.1K",
@@ -494,6 +524,8 @@
        "kind": "line",
        "name": "Non-Brand",
        "data": [
+        92258,
+        109667,
         128211,
         137907,
         168069,
@@ -515,6 +547,8 @@
        "kind": "line",
        "name": "Brand",
        "data": [
+        63512,
+        113948,
         114756,
         77079,
         91023,
@@ -542,6 +576,8 @@
      "heat": true,
      "head": [
       "Segment",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -559,6 +595,8 @@
      "rows": [
       [
        "Brand",
+       "63.5K",
+       "113.9K",
        "114.8K",
        "77.1K",
        "91.0K",
@@ -575,6 +613,8 @@
       ],
       [
        "Non-Brand",
+       "92.3K",
+       "109.7K",
        "128.2K",
        "137.9K",
        "168.1K",
@@ -591,6 +631,8 @@
       ],
       [
        "Toplam",
+       "155.8K",
+       "223.6K",
        "243.0K",
        "215.0K",
        "259.1K",
@@ -633,7 +675,7 @@
     "Aylık Seri"
    ],
    "title": "Brand ve Non-Brand Aylık Impression",
-   "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+   "subtitle": "Haz 2025 - Ağu 2026 | 15 aylık seri | Search Console",
    "source": "Google Search Console - ozdilekteyim.com",
    "grid": [
     100
@@ -649,6 +691,8 @@
      "h": 196,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -669,6 +713,8 @@
        "kind": "bar",
        "name": "Toplam",
        "data": [
+        6736667,
+        6957264,
         8466199,
         8057644,
         7867864,
@@ -687,6 +733,8 @@
        "axis": "left",
        "labels": "taban",
        "labels_text": [
+        "6.74M",
+        "6.96M",
         "8.47M",
         "8.06M",
         "7.87M",
@@ -706,6 +754,8 @@
        "kind": "line",
        "name": "Non-Brand",
        "data": [
+        6329351,
+        6538577,
         8021587,
         7610897,
         7383364,
@@ -727,6 +777,8 @@
        "kind": "line",
        "name": "Brand",
        "data": [
+        407316,
+        418687,
         444612,
         446747,
         484500,
@@ -754,6 +806,8 @@
      "heat": true,
      "head": [
       "Segment",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -771,6 +825,8 @@
      "rows": [
       [
        "Brand",
+       "407.3K",
+       "418.7K",
        "444.6K",
        "446.7K",
        "484.5K",
@@ -787,6 +843,8 @@
       ],
       [
        "Non-Brand",
+       "6.33M",
+       "6.54M",
        "8.02M",
        "7.61M",
        "7.38M",
@@ -803,6 +861,8 @@
       ],
       [
        "Toplam",
+       "6.74M",
+       "6.96M",
        "8.47M",
        "8.06M",
        "7.87M",
@@ -845,7 +905,7 @@
     "Aylık Seri"
    ],
    "title": "Ortalama Sıralama ve CTR",
-   "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+   "subtitle": "Haz 2025 - Ağu 2026 | 15 aylık seri | Search Console",
    "source": "Google Search Console - ozdilekteyim.com",
    "grid": [
     100
@@ -860,6 +920,8 @@
      "h": 164,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -879,6 +941,8 @@
        "kind": "bar",
        "name": "CTR (Toplam)",
        "data": [
+        2.31,
+        3.21,
         2.87,
         2.67,
         3.29,
@@ -898,6 +962,8 @@
        "fmt": "pct",
        "labels": "taban",
        "labels_text": [
+        "%2.3",
+        "%3.2",
         "%2.9",
         "%2.7",
         "%3.3",
@@ -917,6 +983,8 @@
        "kind": "line",
        "name": "Ort. pozisyon (Toplam)",
        "data": [
+        19.4,
+        17.7,
         16.5,
         12.0,
         7.9,
@@ -937,6 +1005,8 @@
        "fmt": "pos",
        "labels": "above",
        "labels_text": [
+        "19.4",
+        "17.7",
         "16.5",
         "12.0",
         "7.9",
@@ -965,6 +1035,8 @@
      ],
      "head": [
       "Metrik",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -982,6 +1054,8 @@
      "rows": [
       [
        "Ort. pozisyon",
+       "19.4",
+       "17.7",
        "16.5",
        "12.0",
        "7.9",
@@ -998,6 +1072,8 @@
       ],
       [
        "CTR Brand",
+       "%15.6",
+       "%27.2",
        "%25.8",
        "%17.3",
        "%18.8",
@@ -1014,6 +1090,8 @@
       ],
       [
        "CTR Non-Brand",
+       "%1.5",
+       "%1.7",
        "%1.6",
        "%1.8",
        "%2.3",
@@ -1030,6 +1108,8 @@
       ],
       [
        "CTR Toplam",
+       "%2.3",
+       "%3.2",
        "%2.9",
        "%2.7",
        "%3.3",
@@ -1282,7 +1362,7 @@
     "Marka Talebi"
    ],
    "title": "Marka Arama Hacmi ve Brand Click",
-   "subtitle": "Ağu 2025 - Ağu 2026 | Türkiye | marka terimleri ayrı satırlarda, organik click ile yan yana",
+   "subtitle": "Haz 2025 - Ağu 2026 | Türkiye | marka terimleri ayrı satırlarda, organik click ile yan yana",
    "source": "Google Ads arama hacmi & Google Search Console",
    "grid": [
     100
@@ -1297,6 +1377,8 @@
      "h": 184,
      "bar_w": 50,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1316,6 +1398,8 @@
        "kind": "bar",
        "name": "Brand click",
        "data": [
+        63512,
+        113948,
         114756,
         77079,
         91023,
@@ -1335,6 +1419,8 @@
        "pad": 1.3,
        "labels": "taban",
        "labels_text": [
+        "63.5K",
+        "113.9K",
         "114.8K",
         "77.1K",
         "91.0K",
@@ -1357,6 +1443,8 @@
         165000,
         165000,
         165000,
+        165000,
+        165000,
         201000,
         201000,
         201000,
@@ -1372,6 +1460,8 @@
        "axis": "right",
        "labels": "above",
        "labels_text": [
+        "165.0K",
+        "165.0K",
         "165.0K",
         "165.0K",
         "165.0K",
@@ -1391,6 +1481,8 @@
        "kind": "line",
        "name": "\"özdilekteyim\" arama hacmi",
        "data": [
+        60500,
+        49500,
         49500,
         60500,
         74000,
@@ -1409,6 +1501,8 @@
        "axis": "right",
        "labels": "above",
        "labels_text": [
+        "60.5K",
+        "49.5K",
         "49.5K",
         "60.5K",
         "74.0K",
@@ -1433,6 +1527,8 @@
      "first_col_max": 0.24,
      "head": [
       "Metrik",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1453,6 +1549,8 @@
        "165.0K",
        "165.0K",
        "165.0K",
+       "165.0K",
+       "165.0K",
        "201.0K",
        "201.0K",
        "201.0K",
@@ -1466,6 +1564,8 @@
       ],
       [
        "özdilekteyim hacmi",
+       "60.5K",
+       "49.5K",
        "49.5K",
        "60.5K",
        "74.0K",
@@ -1482,6 +1582,8 @@
       ],
       [
        "Brand click",
+       "63.5K",
+       "113.9K",
        "114.8K",
        "77.1K",
        "91.0K",
@@ -1498,6 +1600,8 @@
       ],
       [
        "Brand CTR",
+       "%15.6",
+       "%27.2",
        "%25.8",
        "%17.3",
        "%18.8",
@@ -1537,7 +1641,7 @@
     "Sayfa Grupları"
    ],
    "title": "Mağaza Sayfaları: Click, Impression ve Sıralama",
-   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%3.8 · YoY -%8.9",
+   "subtitle": "Haz 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%3.8 · YoY -%8.9",
    "source": "Google Search Console - ozdilekteyim.com · Page filtresi",
    "grid": [
     100
@@ -1553,6 +1657,8 @@
      "h": 200,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1572,6 +1678,8 @@
        "kind": "bar",
        "name": "Click",
        "data": [
+        41364,
+        57134,
         69920,
         68900,
         82642,
@@ -1588,9 +1696,11 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.15,
+       "pad": 1.5,
        "labels": "taban",
        "labels_text": [
+        "41.4K",
+        "57.1K",
         "69.9K",
         "68.9K",
         "82.6K",
@@ -1610,6 +1720,8 @@
        "kind": "line",
        "name": "Impression",
        "data": [
+        3328089,
+        3654270,
         4223987,
         4266636,
         4492796,
@@ -1626,9 +1738,11 @@
        ],
        "color": "teal",
        "axis": "right",
-       "pad": 1.3,
+       "pad": 1.6,
        "labels": "above",
        "labels_text": [
+        "3.33M",
+        "3.65M",
         "4.22M",
         "4.27M",
         "4.49M",
@@ -1648,6 +1762,8 @@
        "kind": "line",
        "name": "Ort. pozisyon",
        "data": [
+        8.8,
+        10.6,
         10.2,
         7.9,
         6.0,
@@ -1672,6 +1788,8 @@
        "fmt": "pos",
        "labels": "above",
        "labels_text": [
+        "8.8",
+        "10.6",
         "10.2",
         "7.9",
         "6.0",
@@ -1700,6 +1818,8 @@
      ],
      "head": [
       "Metrik",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1717,6 +1837,8 @@
      "rows": [
       [
        "Click",
+       "41.4K",
+       "57.1K",
        "69.9K",
        "68.9K",
        "82.6K",
@@ -1733,6 +1855,8 @@
       ],
       [
        "Impression",
+       "3.33M",
+       "3.65M",
        "4.22M",
        "4.27M",
        "4.49M",
@@ -1749,6 +1873,8 @@
       ],
       [
        "Ort. poz.",
+       "8.8",
+       "10.6",
        "10.2",
        "7.9",
        "6.0",
@@ -1765,6 +1891,8 @@
       ],
       [
        "CTR",
+       "%1.24",
+       "%1.56",
        "%1.66",
        "%1.61",
        "%1.84",
@@ -1804,7 +1932,7 @@
     "Sayfa Grupları"
    ],
    "title": "Market Sayfaları: Click, Impression ve Sıralama",
-   "subtitle": "Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%4.0 · YoY -%41.0",
+   "subtitle": "Haz 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM +%4.0 · YoY -%41.0",
    "source": "Google Search Console - ozdilekteyim.com · Page filtresi",
    "grid": [
     100
@@ -1820,6 +1948,8 @@
      "h": 200,
      "bar_w": 44,
      "cats": [
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1839,6 +1969,8 @@
        "kind": "bar",
        "name": "Click",
        "data": [
+        11147,
+        15052,
         16975,
         17339,
         20405,
@@ -1855,9 +1987,11 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.15,
+       "pad": 1.5,
        "labels": "taban",
        "labels_text": [
+        "11.1K",
+        "15.1K",
         "17.0K",
         "17.3K",
         "20.4K",
@@ -1877,6 +2011,8 @@
        "kind": "line",
        "name": "Impression",
        "data": [
+        1580572,
+        1902492,
         2227791,
         2376792,
         2277437,
@@ -1893,9 +2029,11 @@
        ],
        "color": "teal",
        "axis": "right",
-       "pad": 1.3,
+       "pad": 1.6,
        "labels": "above",
        "labels_text": [
+        "1.58M",
+        "1.90M",
         "2.23M",
         "2.38M",
         "2.28M",
@@ -1915,6 +2053,8 @@
        "kind": "line",
        "name": "Ort. pozisyon",
        "data": [
+        10.5,
+        13.9,
         12.9,
         9.7,
         7.4,
@@ -1939,6 +2079,8 @@
        "fmt": "pos",
        "labels": "above",
        "labels_text": [
+        "10.5",
+        "13.9",
         "12.9",
         "9.7",
         "7.4",
@@ -1967,6 +2109,8 @@
      ],
      "head": [
       "Metrik",
+      "Haz'25",
+      "Tem'25",
       "Ağu'25",
       "Eyl'25",
       "Eki'25",
@@ -1984,6 +2128,8 @@
      "rows": [
       [
        "Click",
+       "11.1K",
+       "15.1K",
        "17.0K",
        "17.3K",
        "20.4K",
@@ -2000,6 +2146,8 @@
       ],
       [
        "Impression",
+       "1.58M",
+       "1.90M",
        "2.23M",
        "2.38M",
        "2.28M",
@@ -2016,6 +2164,8 @@
       ],
       [
        "Ort. poz.",
+       "10.5",
+       "13.9",
        "12.9",
        "9.7",
        "7.4",
@@ -2032,6 +2182,8 @@
       ],
       [
        "CTR",
+       "%0.71",
+       "%0.79",
        "%0.76",
        "%0.73",
        "%0.90",
@@ -2122,7 +2274,7 @@
        ],
        "color": "gray_bar",
        "axis": "left",
-       "pad": 1.15,
+       "pad": 1.5,
        "labels": "taban",
        "labels_text": [
         "13",
@@ -2160,7 +2312,7 @@
        ],
        "color": "teal",
        "axis": "right",
-       "pad": 1.3,
+       "pad": 1.6,
        "labels": "above",
        "labels_text": [
         "1.1K",
@@ -2452,20 +2604,20 @@
        "+%26.0"
       ],
       [
-       "özdilek nevresim takımı",
-       "1.239",
-       "1.149",
-       "1.501",
-       "+%30.6",
-       "+%21.1"
-      ],
-      [
        "özdilek bornoz takımı",
        "1.118",
        "970",
        "1.380",
        "+%42.3",
        "+%23.4"
+      ],
+      [
+       "özdilek nevresim takımı",
+       "1.239",
+       "1.149",
+       "1.501",
+       "+%30.6",
+       "+%21.1"
       ],
       [
        "özdilekteyim sipariş takip",
@@ -2653,20 +2805,20 @@
        "-1.4"
       ],
       [
-       "panini dünya kupası albümü 2026",
-       "1.0K",
-       "0",
-       "-88",
-       "-",
-       "-"
-      ],
-      [
        "tek kişilik pike",
        "4.4K",
        "62",
        "-88",
        "7.3",
        "-0.6"
+      ],
+      [
+       "panini dünya kupası albümü 2026",
+       "1.0K",
+       "0",
+       "-88",
+       "-",
+       "-"
       ]
      ],
      "font_pt": 10.5,

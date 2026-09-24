@@ -257,7 +257,7 @@ terimin hacmi sağ eksende çizgi (`labels: "above"`); iki eksende de sayılar
 görünür. Alttaki terimin çizgisi barların içinden geçer, etiketi çerçeveli
 basılır. Dipnot: "Brand click sol eksende bar, arama hacimleri sağ eksende
 çizgidir." Birden fazla bar serisi aynı noktada üst üste çizildiği için
-terimler bar olarak verilmez; altında `table`: `Metrik | <13 ay>`, satırlar her marka terimi
+terimler bar olarak verilmez; altında `table`: `Metrik | <15 ay>`, satırlar her marka terimi
 ayrı, ardından `Brand click` ve `Brand CTR`. Marka terimleri toplanmaz; bir
 terimin artıp diğerinin düştüğü durum toplamda kaybolur.
 Terim seti: yakın varyantlar (aynı seriyi dönen yazımlar) tek satırda; hangi
@@ -375,10 +375,10 @@ VitrA ve Özdilekteyim destelerindeki desen. Slayt iskeleti üç katman:
 
 *C15a - Aylık Impression & Click*
 ```
-bar  (Impression, 13 ay, gold)          h≈84
-bar  (Click, 13 ay, gray_bar)           h≈84   ← ayrı grafik, ayrı ölçek
+bar  (Impression, 15 ay, gold)          h≈84
+bar  (Click, 15 ay, gray_bar)           h≈84   ← ayrı grafik, ayrı ölçek
 note (label: "Değişim")                        ← MoM ve YoY tek satırda
-table (Metrik × 13 ay)                         ← tam seri, slaytın en altı
+table (Metrik × 15 ay)                         ← tam seri, slaytın en altı
 ```
 - İki metrik **ayrı grafiklerde** verilir. Ölçekleri farklı olduğu için aynı
   eksende okunmaz; çarpanla ölçeklemek müşteri destesinde hoş durmuyor.
@@ -695,6 +695,16 @@ Anonim sorgu hacminin hangi segmente yazıldığı burada beyan edilir - query
 filtresi uygulandığında anonim sorgular sonuç kümesinden düşer, bu yüzden
 "toplam eksi brand" yöntemi anonim hacmi non-brand'e taşır.
 
+**GSC aylık serileri 15 aydır.** Search Console 16 ay saklar; rapor ayından
+geriye 15 tam ay alınır (Ağustos 2026 raporu için Haziran 2025 - Ağustos 2026).
+YoY kıyası yine geçen yılın aynı ayıdır; seri iki ay daha uzun olduğu için YoY
+ayının öncesi de grafikte görünür. Seriyle eşleşen arama hacmi (C04d) aynı
+aralıkla çekilir (Google Ads hacmi `date_from` ile). Verisi olmayan ay (yeni
+açılan sayfa grubu) boş kolon olarak gösterilmez; grup kendi ilk ayından
+başlar ve alt başlıktaki dönem de o aydan yazılır (Özdilekteyim Marka +
+Kategori: Ağu 2025 - Ağu 2026). Tablo 16 kolona çıktığında üretici hücre iç
+boşluğunu daraltır; etiket kolonu sarmaz.
+
 **C45a Toplam click, impression ve ortalama pozisyon** (GSC bölümünün ilk slaytı)
 Segment kırılımına girmeden önce sitenin toplam görünümü. C54 ile aynı düzen,
 sitenin toplam serisiyle: click sol eksende bar, impression sağ eksende çizgi,
@@ -729,7 +739,7 @@ Dipnot ikilisi: Toplam satırının neyi topladığı + ısı haritasının okun
 Insight: sayısal açılış cümlesi + segment yönlerinin kontrastı.
 
 **Grafikte değer etiketi.** Bar serisine `labels: "taban"` ve `labels_text`
-ile deste biçiminde değer verilir (`6.7K`); 13 aylık seride `bar_w: 44`.
+ile deste biçiminde değer verilir (`6.7K`); 15 aylık seride `bar_w: 44`.
 Değer barın tabanında açık renkte basılır ve çizgilerle yarışmaz; bir ay
 sığmıyorsa üretici seriyi üst yerleşime alır (barın üstü → barın ortası →
 kaydırma). Çizgi etiketi noktanın üstünde, doluysa altında (tuzaklar 3.9). İki metrikli grafiklerde çizgi serisi de `labels: "above"`
@@ -744,7 +754,7 @@ her segment için iki oran yazılır: `➔ MoM (<önceki ay> → <cari ay>): …
 `combo`: CTR toplam **bar** (sol eksen `pct`, `labels: "inside"`), ortalama
 pozisyon toplam **çizgi** (sağ eksen `invert: true`, `fmt: "pos"`, `labels:
 "above"`). Grafikte segment ayrımı yoktur. Altında `heat: true` tablo:
-`Ort. pozisyon | CTR Brand | CTR Non-Brand | CTR Toplam` × 13 ay; pozisyon
+`Ort. pozisyon | CTR Brand | CTR Non-Brand | CTR Toplam` × 15 ay; pozisyon
 satırı `heat_invert_rows`. Tablo altında MoM ve YoY ayrı ok (pozisyon farkı
 işaretli, CTR farkı puan `p`).
 
@@ -808,7 +818,7 @@ URL yapısıyla tanımlanan her sayfa grubu (mağaza, market, marka + kategori
 gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
 üç metriği birlikte taşır:
 - `combo` (col `full`): **iki görünür eksen**. Click bar sol eksende
-  (`pad: 1.15`, `labels: "taban"`), impression çizgi sağ eksende (`pad: 1.3`,
+  (`pad: 1.5`, `labels: "taban"`), impression çizgi sağ eksende (`pad: 1.6`,
   `labels: "above"`), ortalama pozisyon en üst bantta (`axis: "own"`,
   `band: [0.80, 0.97]`, `invert: true`, `labels: "above"`). Sol ve sağ
   eksende sayılar basılır; eksen etiketi kaldırılmaz. Barlar grafiğin büyük
@@ -816,13 +826,13 @@ gibi) **kendi slaytını** alır; gruplar tek slaytta birleştirilmez. Slayt
   (click alt %42'de, impression ayrı bantta, eksen sayısı yok) barlar kısa
   kaldı, click'in aylık değişimi okunmadı ve iki metrik arasında gereksiz
   boşluk oluştu (Özdilekteyim Mağaza grafiği). Çizgi barın içinden geçtiğinde
-  impression etiketi çerçeveli basılır. 13 aylık seri, `bar_w: 44` (taban
+  impression etiketi çerçeveli basılır. 15 aylık seri, `bar_w: 44` (taban
   etiketi sığmıyorsa üretici barı genişletir).
   Üç metriğin **üçü de grafikte etiketlidir**; bant düzeni çizgiyi bardan
   ayırdığı için impression etiketi click etiketiyle karışmaz, gruplar arasında
   etiket farkı bırakılmaz (Özdilekteyim'de Market grafiğinde etiketli,
   Marka + Kategori'de etiketsiz impression tutarsız bulundu).
-- Altında `table`: `Metrik | <13 ay>`, satırlar `Click`, `Impression`,
+- Altında `table`: `Metrik | <15 ay>`, satırlar `Click`, `Impression`,
   `Ort. pozisyon` (+ istenirse `CTR`). Pozisyon satırı `heat_invert_rows`.
 - `insights`: **MoM ve YoY ayrı birer ok** (click, impression ve pozisyon için
   tek satırda `·` ile), ardından serinin tepe/dip ayı ve pozisyon yönü ayrı

@@ -311,7 +311,7 @@ görünür, otomatik biçimleyicinin yuvarlaması ikisini ayrıştırmaz.
 
 **Bar üstü değer etiketi.** Bar serisine `"labels": "above"` verildiğinde değer
 barın üstüne basılır (`"inside"` barın içine basar, yalnızca bar yeterince
-yüksekse). `inside` seçilmiş ama etiket bara sığmıyorsa (13 aylık seride bar
+yüksekse). `inside` seçilmiş ama etiket bara sığmıyorsa (15 aylık seride bar
 24px, "243.0K" sığmaz) üretici etiketi kendiliğinden **barın üstüne, koyu
 renkle** taşır: beyaz etiketin barın dışına taşan kısmı beyaz zeminde
 görünmez oluyordu. `labels_text` ile hazır metin listesi geçilebilir - ham sayıyı

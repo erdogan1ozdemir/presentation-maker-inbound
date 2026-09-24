@@ -966,7 +966,7 @@ etiketleri sabit konumda basılıyordu; çok serili grafikte sayı çizginin tam
    bütün aylar sığıyorsa değer barın tabanında beyaz yazılır ve üstteki
    çizgilerle hiç yarışmaz. Impression ve CTR gibi bar olarak çizilen her
    metrik böyle verilir; tek bir ay sığmıyorsa seri üst yerleşime döner.
-   13 aylık seride `bar_w: 44`.
+   15 aylık seride `bar_w: 44` (taban etiketi sığmıyorsa üretici genişletir).
 4b. **Üst yerleşimde sıra:** barın hemen üstü → (doluysa) **barın içinde
    çizgiyle çakışmayan ilk yer**, üstten aşağı taranarak, beyaz metin (bar 22
    px'ten yüksekse ve metin sığıyorsa) → yukarı kayarak ilk boş yer. Kullanıcı
@@ -996,6 +996,23 @@ konuyorsa yükseklik **ölçülerek** verilir, sabit sayı yazılmaz. HTML öniz
 akış düzeni kullandığı için bu tür çakışmaları göstermez; PPTX mutlak
 konumlanır. Bu yüzden `qa_deck.py --pptx` ve üretilmiş dosyanın Google
 Slides'ta açılıp bakılması atlanamaz.
+
+**Etiket barın bittiği yeri kapatmaz.** Çizgi etiketi (özellikle çerçeveli
+chip) bar tepesine denk geldiğinde barın nerede bittiği görünmüyordu
+(Özdilekteyim Mağaza ve Marka + Kategori). Bar üst kenarı etiket yerleşiminde
+engeldir: etiket ya tamamen barın üstünde ya kenardan en az ~7 px aşağıda,
+barın içinde durur.
+
+**Taban etiketi bar bazında.** `labels: "taban"` serisinde değer tabana
+sığıyorsa orada, bar kısaysa barın hemen üstünde basılır. Eski kural (bir
+bar sığmazsa bütün seri üst yerleşime) büyük barlarda etiketi barın ortasına
+kaçırıyor, seri içinde üç ayrı konum oluşuyordu.
+
+**Üç metrikli grafikte üst şerit boş bırakılır.** Pozisyon bandı (0.80-0.97)
+barlar ve impression etiketleriyle aynı şeride düştüğünde pozisyon etiketleri
+barların içine itiliyordu. Click sol eksen `pad: 1.5`, impression sağ eksen
+`pad: 1.6`: barlar ve çizgi grafiğin alt ~%65'inde kalır, üst şerit pozisyon
+ve etiketlerindir.
 
 **İki metrikli grafikte eksen sayıları kaldırılmaz.** Sayfa grubu, toplam ve
 marka hacmi grafikleri bir dönem bantlı düzene (`axis_labels: false`,

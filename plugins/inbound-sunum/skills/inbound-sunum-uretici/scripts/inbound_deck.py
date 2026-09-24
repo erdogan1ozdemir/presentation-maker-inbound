@@ -733,6 +733,14 @@ def table_layout(b, w):
             # etiket kolonu ayni payla acilmazsa tam sigan etiket ("özdilekteyim
             # hacmi") ikinci satira kiriliyor. Sayisal kolonlar sarmaz, pay almaz.
             need.append((mx / OLCUM_PAY + 4 if ci == 0 else mx) + pad * 2)
+        # Genis tabloda (15 aylik seri gibi) once hucre ic boslugu daraltilir;
+        # etiket kolonu 90 px'e sikisip "Ort. pozisyon" gibi etiketler iki
+        # satira kiriliyor ve tablo govdeyi tasiyordu (tuzaklar 3.9).
+        for yeni_pad in (9, 7):
+            if sum(need) <= w:
+                break
+            need = [x - 2 * (pad - yeni_pad) for x in need]
+            pad = yeni_pad
         # Ilk kolon (etiket/metrik) artan genisligi tek basina yutmamali: "Yil"
         # gibi kisa bir baslik tablonun yarisini kaplayabiliyordu. Etiket kolonu
         # kendi ihtiyacini alir, tavani tablo genisliginin first_col_max'i kadar;
@@ -1629,6 +1637,12 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             else:
                 bar_h[i] = max(bar_h[i], max(1.0, hh))
     engel = {i: [(c - 6, c + 6) for c in cizgi_h[i]] for i in range(n)}
+    # Bar ust kenari da engeldir: cizgi etiketi barin tepesini ortmez, ya
+    # tamamen barin ustunde ya tamamen icinde durur. Kenari kapatan cerceveli
+    # etiket barin nerede bittigini gizliyordu (tuzaklar 3.9).
+    for i in range(n):
+        if bar_h.get(i, 0.0) > 1.0:
+            engel[i].append((bar_h[i] - 7.0, bar_h[i] + 3.0))
     bantlar = {i: [] for i in range(n)}
 
     def _cakisir(alt, ust, listede):
@@ -1730,10 +1744,11 @@ def block_combo(slide, b, x, y, w, ctx, idx):
         def _txt(i, v):
             return lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
 
-        taban_ok = s_.get("labels") == "taban" and all(
-            _taban_yeri(i, max(1.0, plot_bot - ypos(side, float(v or 0)))) is not None and
-            text_w(_txt(i, v), PT["micro"], F_BODY) <= bw - 6
-            for i, v in enumerate(s_["data"][:n]))
+        # "taban" bar bazinda karar verilir: deger barin tabanina sigiyorsa
+        # orada (beyaz), bar kisaysa barin hemen ustunde (koyu). Butun seriyi
+        # tek bir kisa bar yuzunden ust yerlesime atmak, buyuk barlarda
+        # etiketin barin ortasina kacmasina yol aciyordu (tuzaklar 3.9).
+        taban_mod = s_.get("labels") == "taban"
         yerler = []
         for i, v in enumerate(s_["data"][:n]):
             v = float(v or 0)
@@ -1744,12 +1759,16 @@ def block_combo(slide, b, x, y, w, ctx, idx):
             if not etiketli:
                 continue
             txt = _txt(i, v)
-            if taban_ok:
-                ta = _taban_yeri(i, bh)
+            ta = (_taban_yeri(i, bh) if taban_mod and
+                  text_w(txt, PT["micro"], F_BODY) <= bw - 6 else None)
+            if ta is not None:
                 textbox(slide, bx - 8, plot_bot - ta - LBL_H, bw + 16, 14, txt,
                         pt=PT["micro"], color="white", align="c",
                         line_pct=1.0, wrap=False)
                 bantlar[i].append((ta, ta + LBL_H))
+            elif taban_mod:
+                alt = yer_bul(i, bh + 4)
+                yerler.append((i, alt, txt, lc, False))
             elif _bos(i, bh + 4):
                 alt = yer_bul(i, bh + 4)
                 yerler.append((i, alt, txt, lc, False))

@@ -440,6 +440,12 @@ def h_combo(b):
     # dusuyorsa cerceveli basilir.
     LBL_H = 14.0
     engel = {i: [(c - 6, c + 6) for c in cizgi_y.get(i, [])] for i in range(n)}
+    # Bar ust kenari da engeldir: cizgi etiketi barin tepesini ortmez, ya
+    # tamamen barin ustunde ya tamamen icinde durur. Kenari kapatan cerceveli
+    # etiket barin nerede bittigini gizliyordu (tuzaklar 3.9).
+    for i in range(n):
+        if bar_h.get(i, 0.0) > 1.0:
+            engel[i].append((bar_h[i] - 7.0, bar_h[i] + 3.0))
     bantlar = {i: [] for i in range(n)}
 
     def _cakisir(alt, ust, listede):
@@ -531,15 +537,7 @@ def h_combo(b):
         col = C.get(s_.get("color", "gray_bar"), s_.get("color"))
         lbls = s_.get("labels_text")
         etiketli = s_.get("labels") in ("inside", "above", "taban")
-        # "taban": deger barin tabaninda beyaz yazilir (bar yeterince yuksek ve
-        # metin sigiyorsa); sigmayan ay icin butun seri ust yerlesime doner.
-        taban_ok = False
-        if s_.get("labels") == "taban":
-            taban_ok = all(
-                _taban_yeri(i, max(1.0, ypos(side, float(v or 0)))) is not None and
-                text_w(lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"]),
-                       PT["micro"], F_BODY) <= bw - 6
-                for i, v in enumerate(s_["data"][:n]))
+        taban_mod = s_.get("labels") == "taban"   # bar bazinda (bkz. inbound_deck)
         yerler = []
         for i, v in enumerate(s_["data"][:n]):
             bh = max(1.0, ypos(side, float(v or 0)))
@@ -548,10 +546,14 @@ def h_combo(b):
             if etiketli:
                 txt = lbls[i] if lbls and i < len(lbls) else _fmt_val(float(v or 0), ax[side]["fmt"])
                 lc = C.get(s_.get("label_color", "ink2"), C["ink2"])
-                if taban_ok:
-                    ta = _taban_yeri(i, bh)
+                ta = (_taban_yeri(i, bh) if taban_mod and
+                      text_w(txt, PT["micro"], F_BODY) <= bw - 6 else None)
+                if ta is not None:
                     lab = f'<span class="cb-bl" style="bottom:{ta:.1f}px">{esc(txt)}</span>'
                     bantlar[i].append((ta, ta + LBL_H))
+                elif taban_mod:
+                    alt = yer_bul(i, bh + 4)
+                    yerler.append((i, alt, txt, lc, False))
                 elif _bos(i, bh + 4):
                     alt = yer_bul(i, bh + 4)
                     yerler.append((i, alt, txt, lc, False))

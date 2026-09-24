@@ -29,6 +29,10 @@ assert AYLAR == H_AYLAR, "GSC ve hacim ay dizileri eşleşmiyor"
 ET = [etiket(y) for y in AYLAR]
 ET_KISA = [e[:3] for e in ET]
 SIMDI, ONCEKI, GECEN_YIL = 202608, 202607, 202508
+_TRAY_UZUN = {1: "Oca", 2: "Şub", 3: "Mar", 4: "Nis", 5: "May", 6: "Haz", 7: "Tem", 8: "Ağu", 9: "Eyl",
+             10: "Eki", 11: "Kas", 12: "Ara"}
+SERI_ARALIK = (f"{_TRAY_UZUN[AYLAR[0] % 100]} {AYLAR[0] // 100} - {_TRAY_UZUN[AYLAR[-1] % 100]} {AYLAR[-1] // 100}")
+SERI_AY = len(AYLAR)   # GSC 16 ay saklar; seri 15 ay (Haz'25 - Ağu'26)
 KAYNAK_GSC = "Google Search Console - ozdilekteyim.com"
 KAYNAK_HACIM = "Google Ads arama hacmi (Ağu 2026)"
 
@@ -190,7 +194,7 @@ def seg_seri(metrik, baslik, yorum, dipnot):
         "type": "content",
         "breadcrumb": ["SEARCH CONSOLE", "Aylık Seri"],
         "title": baslik,
-        "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+        "subtitle": f"{SERI_ARALIK} | {SERI_AY} aylık seri | Search Console",
         "source": KAYNAK_GSC,
         "grid": [100],
         "footnotes": [dipnot, "Isı haritasında satırın en yüksek ayı yeşil, en düşük ayı kırmızı gösterilmektedir."],
@@ -236,7 +240,7 @@ S.append({
     "type": "content",
     "breadcrumb": ["SEARCH CONSOLE", "Aylık Seri"],
     "title": "Ortalama Sıralama ve CTR",
-    "subtitle": "Ağu 2025 - Ağu 2026 | 13 aylık seri | Search Console",
+    "subtitle": f"{SERI_ARALIK} | {SERI_AY} aylık seri | Search Console",
     "source": KAYNAK_GSC,
     "grid": [100],
     "footnotes": [
@@ -340,7 +344,7 @@ S.append({
     "type": "content",
     "breadcrumb": ["SEARCH CONSOLE", "Marka Talebi"],
     "title": "Marka Arama Hacmi ve Brand Click",
-    "subtitle": "Ağu 2025 - Ağu 2026 | Türkiye | marka terimleri ayrı satırlarda, organik click ile yan yana",
+    "subtitle": f"{SERI_ARALIK} | Türkiye | marka terimleri ayrı satırlarda, organik click ile yan yana",
     "source": "Google Ads arama hacmi & Google Search Console",
     "grid": [100],
     "footnotes": [
@@ -393,16 +397,20 @@ GRUP_TANIM = {
 
 def grup_slayt(g, yorum, impr_etiket="above", baslik=None, kirilim="Sayfa Grupları",
                kaynak=None, ilk_not=None, h=200):
-    """Click bar + impression ve pozisyon bantli cizgi + 13 ay tablo (katalog C54).
+    """Click bar + impression ve pozisyon bantli cizgi + aylik tablo (katalog C54).
     g="toplam" ile sitenin toplam serisi icin de kullanilir (katalog C45a)."""
     ad, tanim = GRUP_TANIM.get(g, (None, None))
     a = SEG[g]
+    # grup yalniz verisi olan aylarla cizilir (Marka + Kategori sayfalari
+    # Agustos 2025'te acildi; oncesi bos kolon olarak gosterilmez)
+    ay = [y for y in AYLAR if a[y]["impr"]]
+    et = [etiket(y) for y in ay]
     yoy = (lambda m: "yeni") if g == "cp2" else (lambda m: d(g, m, b=GECEN_YIL))
     return {
         "type": "content",
         "breadcrumb": ["SEARCH CONSOLE", kirilim],
         "title": baslik or f"{ad} Sayfaları: Click, Impression ve Sıralama",
-        "subtitle": f"Ağu 2025 - Ağu 2026 | aylık | Ağustos 2026 click MoM {d(g, 'click')} · YoY {yoy('click')}",
+        "subtitle": f"{_TRAY_UZUN[ay[0] % 100]} {ay[0] // 100} - {_TRAY_UZUN[ay[-1] % 100]} {ay[-1] // 100} | aylık | Ağustos 2026 click MoM {d(g, 'click')} · YoY {yoy('click')}",
         "source": kaynak or (KAYNAK_GSC + " · Page filtresi"),
         "grid": [100],
         "footnotes": [
@@ -414,24 +422,24 @@ def grup_slayt(g, yorum, impr_etiket="above", baslik=None, kirilim="Sayfa Grupla
             # click sol eksende, impression sag eksende - iki eksende de sayilar
             # gorunur; barlar grafigin buyuk bolumunu kullanir ki aylik click
             # degisimi okunsun. Pozisyon en ust bantta kendi olceginde (C54)
-            {"type": "combo", "col": "full", "h": h, "bar_w": 44, "cats": ET, "series": [
-                {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in AYLAR],
-                 "color": "gray_bar", "axis": "left", "pad": 1.15, "labels": "taban",
-                 "labels_text": [k(a[y]["click"]) for y in AYLAR]},
-                {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in AYLAR],
-                 "color": "teal", "axis": "right", "pad": 1.3, "labels": impr_etiket,
-                 "labels_text": [k(a[y]["impr"]) for y in AYLAR]},
-                {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in AYLAR],
+            {"type": "combo", "col": "full", "h": h, "bar_w": 44, "cats": et, "series": [
+                {"kind": "bar", "name": "Click", "data": [a[y]["click"] for y in ay],
+                 "color": "gray_bar", "axis": "left", "pad": 1.5, "labels": "taban",
+                 "labels_text": [k(a[y]["click"]) for y in ay]},
+                {"kind": "line", "name": "Impression", "data": [a[y]["impr"] for y in ay],
+                 "color": "teal", "axis": "right", "pad": 1.6, "labels": impr_etiket,
+                 "labels_text": [k(a[y]["impr"]) for y in ay]},
+                {"kind": "line", "name": "Ort. pozisyon", "data": [round(a[y]["poz"], 1) for y in ay],
                  "color": "coral", "axis": "own", "band": [0.80, 0.97], "invert": True, "fmt": "pos", "labels": "above",
-                 "labels_text": [f"{a[y]['poz']:.1f}" for y in AYLAR]},
+                 "labels_text": [f"{a[y]['poz']:.1f}" for y in ay]},
             ]},
             dict({"type": "table", "col": "full", "mt": 8, "first_col_max": 0.11, "heat": True,
                   "heat_invert_rows": [2],
-                  "head": ["Metrik"] + ET,
-                  "rows": [["Click"] + [k(a[y]["click"]) for y in AYLAR],
-                           ["Impression"] + [k(a[y]["impr"]) for y in AYLAR],
-                           ["Ort. poz."] + [f"{a[y]['poz']:.1f}" for y in AYLAR],
-                           ["CTR"] + [f"%{a[y]['ctr']:.2f}" for y in AYLAR]]}, **{**T, "font_pt": 9.5}),
+                  "head": ["Metrik"] + et,
+                  "rows": [["Click"] + [k(a[y]["click"]) for y in ay],
+                           ["Impression"] + [k(a[y]["impr"]) for y in ay],
+                           ["Ort. poz."] + [f"{a[y]['poz']:.1f}" for y in ay],
+                           ["CTR"] + [f"%{a[y]['ctr']:.2f}" for y in ay]]}, **{**T, "font_pt": 9.5}),
             {"type": "insights", "col": "full", "mt": 6, "font_pt": 10,
              "items": [f"MoM ({ET_ONCEKI} → {ET_SIMDI}): Click {renk(d(g, 'click'))} · "
                        f"Impression {renk(d(g, 'impr'))} · Ort. pozisyon "
